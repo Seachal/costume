@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="costumetrade.mapper.SpMenuMapper">
-  <resultMap id="BaseResultMap" type="costumetrade.domain.SpMenu">
+<mapper namespace="costumetrade.user.mapper.SpMenuMapper">
+  <resultMap id="BaseResultMap" type="costumetrade.user.domain.SpMenu">
     <id column="id" jdbcType="BIGINT" property="id" />
     <result column="menu_name" jdbcType="VARCHAR" property="menuName" />
     <result column="parent_id" jdbcType="BIGINT" property="parentId" />
@@ -31,7 +31,7 @@
     delete from sp_menu
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="costumetrade.domain.SpMenu">
+  <insert id="insert" parameterType="costumetrade.user.domain.SpMenu">
     insert into sp_menu (id, menu_name, parent_id, 
       is_del, menu_url, menu_level, 
       create_date, update_date)
@@ -39,7 +39,7 @@
       #{isDel,jdbcType=INTEGER}, #{menuUrl,jdbcType=VARCHAR}, #{menuLevel,jdbcType=INTEGER}, 
       #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="costumetrade.domain.SpMenu">
+  <insert id="insertSelective" parameterType="costumetrade.user.domain.SpMenu">
     insert into sp_menu
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -94,7 +94,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.domain.SpMenu">
+  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.user.domain.SpMenu">
     update sp_menu
     <set>
       <if test="menuName != null">
@@ -121,7 +121,7 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="costumetrade.domain.SpMenu">
+  <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SpMenu">
     update sp_menu
     set menu_name = #{menuName,jdbcType=VARCHAR},
       parent_id = #{parentId,jdbcType=BIGINT},

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="costumetrade.order.mapper.SpPCateMapper">
-  <resultMap id="BaseResultMap" type="costumetrade.domain.SpPCate">
+  <resultMap id="BaseResultMap" type="costumetrade.order.domain.SpPCate">
     <id column="corpId" jdbcType="INTEGER" property="corpid" />
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="fastcode" jdbcType="VARCHAR" property="fastcode" />
