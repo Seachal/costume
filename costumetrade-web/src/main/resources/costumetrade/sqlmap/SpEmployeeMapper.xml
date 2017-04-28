@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="costumetrade.user.mapper.SpEmployeeMapper">
+  <resultMap id="BaseResultMap" type="costumetrade.user.domain.SpEmployee">
+    <id column="corpId" jdbcType="INTEGER" property="corpid" />
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="subbelong" jdbcType="VARCHAR" property="subbelong" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="cphone" jdbcType="VARCHAR" property="cphone" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="birthdate" jdbcType="TIMESTAMP" property="birthdate" />
+    <result column="card_id" jdbcType="VARCHAR" property="cardId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    corpId, id, status, subbelong, create_time, create_by, modify_time, modify_by, 
+    name, password, phone, cphone, address, email, birthdate, card_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployeeKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sp_employee
+    where 1=1
+     <if test="corpid != null">
+       and corpId = #{corpid,jdbcType=INTEGER}
+      </if>
+     <if test="id != null">
+      and id = #{id,jdbcType=VARCHAR}
+      </if>
+  </select>
+  
+  <select id="getAllEmployees" parameterType="String"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sp_employee
+    where 
+ 	subbelong = #{subbelong,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployeeKey">
+    delete from sp_employee
+    where corpId = #{corpid,jdbcType=INTEGER}
+      <if test="id != null">
+      and id = #{id,jdbcType=VARCHAR}
+      </if>
+  </delete>
+  <insert id="insert" parameterType="costumetrade.user.domain.SpEmployee">
+    insert into sp_employee (corpId, id, status, 
+      subbelong, create_time, create_by, 
+      modify_time, modify_by, 
+      name, password, phone, 
+      cphone, address, email, 
+      birthdate, card_id)
+    values (#{corpid,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{subbelong,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{cphone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
+      #{birthdate,jdbcType=TIMESTAMP}, #{cardId,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="costumetrade.user.domain.SpEmployee">
+    insert into sp_employee
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="corpid != null">
+        corpId,
+      </if>
+      <if test="id != null">
+        id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="subbelong != null">
+        subbelong,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="modifyBy != null">
+        modify_by,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="cphone != null">
+        cphone,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="birthdate != null">
+        birthdate,
+      </if>
+      <if test="cardId != null">
+        card_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="corpid != null">
+        #{corpid,jdbcType=INTEGER},
+      </if>
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="subbelong != null">
+        #{subbelong,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyBy != null">
+        #{modifyBy,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="cphone != null">
+        #{cphone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="birthdate != null">
+        #{birthdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cardId != null">
+        #{cardId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.user.domain.SpEmployee">
+    update sp_employee
+    <set>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="subbelong != null">
+        subbelong = #{subbelong,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyBy != null">
+        modify_by = #{modifyBy,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="cphone != null">
+        cphone = #{cphone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="birthdate != null">
+        birthdate = #{birthdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cardId != null">
+        card_id = #{cardId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where corpId = #{corpid,jdbcType=INTEGER}
+      and id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployee">
+    update sp_employee
+    set status = #{status,jdbcType=INTEGER},
+      subbelong = #{subbelong,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      modify_by = #{modifyBy,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      cphone = #{cphone,jdbcType=VARCHAR},
+      address = #{address,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      birthdate = #{birthdate,jdbcType=TIMESTAMP},
+      card_id = #{cardId,jdbcType=VARCHAR}
+    where corpId = #{corpid,jdbcType=INTEGER}
+      and id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

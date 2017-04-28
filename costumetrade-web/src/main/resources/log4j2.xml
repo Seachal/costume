@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="error">
+    <Properties>
+        <!-- 如下设置为日志默认输出路径,当前用户主目录,如果需要设置,可以在JVM设置类似:
+            -DLOG_HOME=/Users/kyle/Develop/costumetrade/costumetrade/web/target/logs
+        -->
+        <Property name="LOG_HOME">${sys:user.home}/logs</Property>
+    </Properties>
+
+    <Appenders>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{3} - %msg%n"/>
+        </Console>
+
+        <RollingFile name="app" fileName="${sys:LOG_HOME}/app.log"
+                     filePattern="${sys:LOG_HOME}/app-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{3} - %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+        
+        <RollingRandomAccessFile name="EscapeLoginFile" fileName="${sys:LOG_HOME}/escape-login.log"
+                 filePattern="${sys:LOG_HOME}/escape-login-%d{yyyy-MM-dd}.log.gz">
+	      <PatternLayout>
+	        <Pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{3} - %msg%n</Pattern>
+	      </PatternLayout>
+	      <Policies>
+	      	<OnStartupTriggeringPolicy />
+	        <TimeBasedTriggeringPolicy />
+	        <SizeBasedTriggeringPolicy size="250 MB"/>
+	      </Policies>
+	    </RollingRandomAccessFile>
+
+        <RollingFile name="error" fileName="${sys:LOG_HOME}/error.log"
+                     filePattern="${sys:LOG_HOME}/error-%d{yyyy-MM-dd}.log">
+            <!-- 添加过滤器ThresholdFilter,可以有选择的输出某个级别以上的类别
+             onMatch="ACCEPT" onMismatch="DENY"意思是匹配就接受,否则直接拒绝  -->
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{3} - %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+    
+    	<AsyncLogger name="costumetrade.common.login.EscapeLoginAspect" level="warn" additivity="false">
+            <AppenderRef ref="EscapeLoginFile"/>
+            <AppenderRef ref="console"/>
+        </AsyncLogger>
+        
+        <Logger name="costumetrade" level="debug" additivity="false">
+            <appenderRef ref="console"/>
+        </Logger>
+
+        <Root level="error">
+            <AppenderRef ref="app"/>
+            <AppenderRef ref="console"/>
+        </Root>
+    </Loggers>
+</Configuration>
