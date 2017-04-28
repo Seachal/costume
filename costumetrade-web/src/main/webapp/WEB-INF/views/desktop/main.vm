@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>$!projectTitle$!projectVersion</title>
+	<link rel="shortcut icon" href="../app/newMain/images/public/hrfax.ico"/>
+    <link type="text/css" rel="stylesheet" href="../core/css/global.css" />
+    <link type="text/css" rel="stylesheet" href="../desktop/css/main.css" />
+    <link type="text/css" rel="stylesheet" href="../core/css/ui.css" />
+    <style>
+		body{padding:0 !important}
+	</style>
+</head>
+
+<body>
+    <input type="hidden" id="userId" value="$!loginInfo.userId" />
+    <input type="hidden" id="hidUserAccount" value="$!userAccount"/>
+    <div id="head" class="head">
+        <h1 class="logo">
+            <img src="../app/newMain/images/public/logo.png" />
+        ##			<span>$!sysInfoProvider.getSystemVersion()</span>
+        </h1>
+		<label class="fr mt10 mr10" style="color:#fff">
+			<span>运营机构：浙江惠瀜网络科技有限公司</span>
+			<span class="ml10">服务热线：4007-828-080</span>
+		</label>
+        <ul class="nav">
+            <li>$!loginInfo.userName</li>
+            <li class="separator">&nbsp;</li>
+            <li>$!loginInfo.deptName</li>
+            <li class="separator">&nbsp;</li>
+            <li>$!loginInfo.roleNames</li>
+            <li class="separator">&nbsp;</li>
+            <li><a href="javascript:void(0);" id="btnLogout" class="logout">退出</a></li>
+        </ul>
+    </div>
+    <div id="body" class="body">
+        <div id="body-side" class="body-side">
+            <b id="menu-toggle" class="menu-toggle">&nbsp;</b>
+            <h2 id="add" class="menu-head"><span>应用菜单</span></h2>
+            <div id="menu-body" class="menu-body">
+                <dl id="menu">
+
+                </dl>
+            </div>
+        </div>
+        <div id="body-main" class="body-main">
+            <div class="tabs">
+                <div class="tabs-head">
+                    <div class="tabs-items">
+                        <ul id="tabs-head">
+                        	
+                        </ul>
+                    </div>
+                    <div class="tabs-action">
+                        <b id="tabs-scroll-right" class="tabs-btn-right">&nbsp;</b>
+                        <b id="tabs-scroll-left" class="tabs-btn-left">&nbsp;</b>
+                        <b id="tabs-open-fav" class="tabs-btn-fav">&nbsp;</b>
+                        <b id="tabs-close-all" class="tabs-btn-close">&nbsp;</b>
+                    </div>
+                    <div class="tabs-fav">
+	                    <ul id="tabs-fav">
+	                    	
+	                    </ul>
+                    </div>
+                </div>
+                <div class="tabs-line">&nbsp;</div>
+                <div id="tabs-body" class="tabs-body">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="../core/js/third/jQuery/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../core/js/cardry/core/cardry.core.js"></script>
+    <script type="text/javascript" src="../core/js/cardry/ui/tools/cardry.tabs.js"></script>
+	<script type="text/javascript" src="../core/js/cardry/ui/tools/cardry.dialog.js"></script>
+	<script type="text/javascript" src="../core/js/cardry/ui/tools/cardry.abnormal.js"></script>
+	<script type="text/javascript">
+    	var menuJson = $!menuJson;
+        var logOut = "$!logOut";
+		
+		var urlRef = (window.location.href).replace('http://', '');
+		var urlStr = urlRef.substring(urlRef.indexOf('/'), urlRef.indexOf('/login'));
+
+        function getUrl(){
+            var mapUrl="";
+            if(urlStr){
+				mapUrl=urlStr;
+			}else{
+				mapUrl="";
+			}
+			return mapUrl;
+        }
+	</script>
+    <script type="text/javascript" src="../desktop/js/main.js"></script>
+    <!--[if IE 6]>
+	<script type="text/javascript" src="../desktop/js/main.ie6.js"></script>
+    <![endif]-->
+</body>
+</html>

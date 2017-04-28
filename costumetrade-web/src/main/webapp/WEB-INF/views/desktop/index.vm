@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link type="text/css" rel="stylesheet" href="$!staticServer/static/css/desktop/global.css" />
+#set($staticImagePath = '$!staticServer/static/img')
+</head>
+<body>
+	<div>
+		<input type="file" id="file" style="display:none"/>
+		<img id="upload" src="$!staticServer/static/img/desktop/workflow.png">
+	</div>
+	
+	<div style="display:none">	
+		<img id="uploadedFile">
+	</div>
+	
+</body>
+<script type="text/javascript" src="$!staticServer/static/js/lib/jquery/jquery-1.12.4.min.js"></script>
+<script type="text/javascript" src="$!staticServer/static/js/utils/ossupload.js"></script>
+<script type="text/javascript">
+$(function(){
+	$("#upload").click(function(){
+		$("#file").trigger("click");
+	});
+});
+ </script>
+</html>
