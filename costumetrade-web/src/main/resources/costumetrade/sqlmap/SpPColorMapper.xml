@@ -31,7 +31,7 @@
     where corpId = #{corpid,jdbcType=INTEGER}
       and id = #{id,jdbcType=VARCHAR}
   </delete>
-  <insert id="insert" parameterType="costumetrade.domain.SpPColor">
+  <insert id="insert" parameterType="costumetrade.order.domain.SpPColor">
     insert into sp_pcolor (corpId, id, barcode, 
       create_time, create_by, modify_time, 
       modify_by)

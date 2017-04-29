@@ -34,7 +34,7 @@
 	      </Policies>
 	    </RollingRandomAccessFile>
 
-        <RollingFile name="error" fileName="${sys:LOG_HOME}/error.log"
+        <RollingFile name="debug" fileName="${sys:LOG_HOME}/error.log"
                      filePattern="${sys:LOG_HOME}/error-%d{yyyy-MM-dd}.log">
             <!-- 添加过滤器ThresholdFilter,可以有选择的输出某个级别以上的类别
              onMatch="ACCEPT" onMismatch="DENY"意思是匹配就接受,否则直接拒绝  -->
@@ -59,7 +59,7 @@
             <appenderRef ref="console"/>
         </Logger>
 
-        <Root level="error">
+        <Root level="debug">
             <AppenderRef ref="app"/>
             <AppenderRef ref="console"/>
         </Root>

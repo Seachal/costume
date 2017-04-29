@@ -30,10 +30,10 @@ public class SpColorController {
 
 	@RequestMapping("/getAllColors")
 	@ResponseBody
-	public ApiResponse getAllColors(@RequestBody int corpId) {
+	public ApiResponse getAllColors(String corpId) {
 		
 		List<SpPColor> colorLists = new ArrayList<SpPColor>();
-		colorLists = spPColorService.getSpPColors(corpId);
+		colorLists = spPColorService.getSpPColors(Integer.valueOf(corpId));
 
 		return  ApiResponse.getInstance(colorLists);
 	}
