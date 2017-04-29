@@ -17,15 +17,15 @@
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from sp_pcate
+    from sp_product_type
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from sp_pcate
+    delete from sp_product_type
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SpPCate">
-    insert into sp_pcate (id, cateName, corpId, 
+    insert into sp_product_type (id, cateName, corpId, 
       fastcode, create_time, create_by, 
       modify_time, modify_by)
     values (#{id,jdbcType=INTEGER}, #{catename,jdbcType=VARCHAR}, #{corpid,jdbcType=INTEGER}, 
@@ -33,7 +33,7 @@
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.SpPCate">
-    insert into sp_pcate
+    insert into sp_product_type
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -88,7 +88,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SpPCate">
-    update sp_pcate
+    update sp_product_type
     <set>
       <if test="catename != null">
         cateName = #{catename,jdbcType=VARCHAR},
@@ -115,7 +115,7 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SpPCate">
-    update sp_pcate
+    update sp_product_type
     set cateName = #{catename,jdbcType=VARCHAR},
       corpId = #{corpid,jdbcType=INTEGER},
       fastcode = #{fastcode,jdbcType=VARCHAR},
