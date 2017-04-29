@@ -33,7 +33,7 @@ public class SpEmployeeController {
 	
 	@RequestMapping("/getAllEmployees")
 	@ResponseBody
-	public ApiResponse getAllEmployees(@RequestBody String subId) {
+	public ApiResponse getAllEmployees(String subId) {
 		
 		List<SpEmployee> employeeLists = new ArrayList<SpEmployee>();
 		employeeLists = spEmployeeService.getAllEmployees(subId);
@@ -48,7 +48,7 @@ public class SpEmployeeController {
 
 	@RequestMapping("/saveEmployee")
 	@ResponseBody
-	public ApiResponse saveEmployee(@RequestBody SpEmployee spEmployee) {
+	public ApiResponse saveEmployee(SpEmployee spEmployee) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);

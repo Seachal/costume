@@ -67,7 +67,7 @@ public class SpMenuController {
 	
 	@RequestMapping("/getEmployeeMenus")
 	@ResponseBody
-	public ApiResponse getEmployeeMenus(@RequestBody Long employeeId) {
+	public ApiResponse getEmployeeMenus(Long employeeId) {
 
 		List<SpMenuEmployee> menuEmployeeLists = new ArrayList<SpMenuEmployee>();
 		menuEmployeeLists = spMenuEmployeeService.getAllMenuEmployees(employeeId);

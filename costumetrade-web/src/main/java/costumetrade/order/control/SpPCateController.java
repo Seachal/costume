@@ -30,7 +30,7 @@ public class SpPCateController {
 
 	@RequestMapping("/getAllCates")
 	@ResponseBody
-	public ApiResponse getAllCates(@RequestBody int corpId) {
+	public ApiResponse getAllCates(int corpId) {
 		
 		List<SpPCate> CateLists = new ArrayList<SpPCate>();
 		CateLists = spPCateService.getSpPCates(corpId);
@@ -40,7 +40,7 @@ public class SpPCateController {
 
 	@RequestMapping("/saveCate")
 	@ResponseBody
-	public ApiResponse saveCate(@RequestBody SpPCate spPCate) {
+	public ApiResponse saveCate(SpPCate spPCate) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);

@@ -30,7 +30,7 @@ public class SpSizeController {
 
 	@RequestMapping("/getAllSizes")
 	@ResponseBody
-	public ApiResponse getAllSizes(@RequestBody int corpId) {
+	public ApiResponse getAllSizes(int corpId) {
 		
 		List<SpPSize> sizeLists = new ArrayList<SpPSize>();
 		sizeLists = spPSizeService.getSpPSizes(corpId);
@@ -40,7 +40,7 @@ public class SpSizeController {
 
 	@RequestMapping("/saveSize")
 	@ResponseBody
-	public ApiResponse saveSize(@RequestBody SpPSize spPSize) {
+	public ApiResponse saveSize(SpPSize spPSize) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
