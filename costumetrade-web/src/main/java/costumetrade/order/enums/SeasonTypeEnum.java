@@ -2,8 +2,6 @@ package costumetrade.order.enums;
 
 import org.apache.commons.lang3.StringUtils;
 
-import costumetrade.common.Enum.EnumAutoTask;
-
 public enum SeasonTypeEnum {
 
 	SEASON_SPRING("spring","春"),
