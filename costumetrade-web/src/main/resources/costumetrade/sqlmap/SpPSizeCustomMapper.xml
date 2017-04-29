@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="costumetrade.order.mapper.SpPCateMapper">
-  <resultMap id="BaseResultMap" type="costumetrade.order.domain.SpPCate">
+<mapper namespace="costumetrade.order.mapper.SpPSizeCustomMapper">
+  <resultMap id="BaseResultMap" type="costumetrade.order.domain.SpPSizeCustom">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="cateName" jdbcType="VARCHAR" property="catename" />
     <result column="corpId" jdbcType="INTEGER" property="corpid" />
-    <result column="fastcode" jdbcType="VARCHAR" property="fastcode" />
+    <result column="customName" jdbcType="VARCHAR" property="customname" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
     <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, cateName, corpId, fastcode, create_time, create_by, modify_time, modify_by
+    id, corpId, customName, value, create_time, create_by, modify_time, modify_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from sp_pcate
+    from sp_psize_custom
     where id = #{id,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from sp_pcate
+    delete from sp_psize_custom
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="costumetrade.order.domain.SpPCate">
-    insert into sp_pcate (id, cateName, corpId, 
-      fastcode, create_time, create_by, 
+  <insert id="insert" parameterType="costumetrade.order.domain.SpPSizeCustom">
+    insert into sp_psize_custom (id, corpId, customName, 
+      value, create_time, create_by, 
       modify_time, modify_by)
-    values (#{id,jdbcType=INTEGER}, #{catename,jdbcType=VARCHAR}, #{corpid,jdbcType=INTEGER}, 
-      #{fastcode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{corpid,jdbcType=INTEGER}, #{customname,jdbcType=VARCHAR}, 
+      #{value,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="costumetrade.order.domain.SpPCate">
-    insert into sp_pcate
+  <insert id="insertSelective" parameterType="costumetrade.order.domain.SpPSizeCustom">
+    insert into sp_psize_custom
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
       </if>
-      <if test="catename != null">
-        cateName,
-      </if>
       <if test="corpid != null">
         corpId,
       </if>
-      <if test="fastcode != null">
-        fastcode,
+      <if test="customname != null">
+        customName,
+      </if>
+      <if test="value != null">
+        value,
       </if>
       <if test="createTime != null">
         create_time,
@@ -64,14 +64,14 @@
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="catename != null">
-        #{catename,jdbcType=VARCHAR},
-      </if>
       <if test="corpid != null">
         #{corpid,jdbcType=INTEGER},
       </if>
-      <if test="fastcode != null">
-        #{fastcode,jdbcType=VARCHAR},
+      <if test="customname != null">
+        #{customname,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null">
+        #{value,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -87,17 +87,17 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SpPCate">
-    update sp_pcate
+  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SpPSizeCustom">
+    update sp_psize_custom
     <set>
-      <if test="catename != null">
-        cateName = #{catename,jdbcType=VARCHAR},
-      </if>
       <if test="corpid != null">
         corpId = #{corpid,jdbcType=INTEGER},
       </if>
-      <if test="fastcode != null">
-        fastcode = #{fastcode,jdbcType=VARCHAR},
+      <if test="customname != null">
+        customName = #{customname,jdbcType=VARCHAR},
+      </if>
+      <if test="value != null">
+        value = #{value,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -114,11 +114,11 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SpPCate">
-    update sp_pcate
-    set cateName = #{catename,jdbcType=VARCHAR},
-      corpId = #{corpid,jdbcType=INTEGER},
-      fastcode = #{fastcode,jdbcType=VARCHAR},
+  <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SpPSizeCustom">
+    update sp_psize_custom
+    set corpId = #{corpid,jdbcType=INTEGER},
+      customName = #{customname,jdbcType=VARCHAR},
+      value = #{value,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},

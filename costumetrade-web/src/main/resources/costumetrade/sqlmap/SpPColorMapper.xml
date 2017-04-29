@@ -2,59 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="costumetrade.order.mapper.SpPColorMapper">
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.SpPColor">
-    <id column="corpId" jdbcType="INTEGER" property="corpid" />
-    <id column="id" jdbcType="VARCHAR" property="id" />
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="corpId" jdbcType="INTEGER" property="corpid" />
+    <result column="colorName" jdbcType="VARCHAR" property="colorname" />
     <result column="barcode" jdbcType="VARCHAR" property="barcode" />
-    <result column="colorName" jdbcType="VARCHAR" property="colorName" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
     <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    corpId, id, barcode,colorName, create_time, create_by, modify_time, modify_by
+    id, corpId, colorName, barcode, create_time, create_by, modify_time, modify_by
   </sql>
-  <select id="selectByPrimaryKey" parameterType="costumetrade.order.domain.SpPColorKey" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from sp_pcolor
-    where corpId = #{corpid,jdbcType=INTEGER}
-      and id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="getSpPColors" parameterType="int" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from sp_pcolor
-    where corpId = #{corpid,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="costumetrade.order.domain.SpPColorKey">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sp_pcolor
-    where  id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SpPColor">
-    insert into sp_pcolor (corpId, id, barcode, colorName,
-      create_time, create_by, modify_time, 
-      modify_by)
-    values (#{corpid,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR}, #{colorName,jdbcType=VARCHAR},
-      #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, 
-      #{modifyBy,jdbcType=VARCHAR})
+    insert into sp_pcolor (id, corpId, colorName, 
+      barcode, create_time, create_by, 
+      modify_time, modify_by)
+    values (#{id,jdbcType=INTEGER}, #{corpid,jdbcType=INTEGER}, #{colorname,jdbcType=VARCHAR}, 
+      #{barcode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
+      #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.SpPColor">
     insert into sp_pcolor
     <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
       <if test="corpid != null">
         corpId,
       </if>
-      <if test="id != null">
-        id,
+      <if test="colorname != null">
+        colorName,
       </if>
       <if test="barcode != null">
         barcode,
       </if>
-       <if test="colorName != null">
-        colorName,
-      </if>
- 
       <if test="createTime != null">
         create_time,
       </if>
@@ -69,17 +61,17 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
       <if test="corpid != null">
         #{corpid,jdbcType=INTEGER},
       </if>
-      <if test="id != null">
-        #{id,jdbcType=VARCHAR},
+      <if test="colorname != null">
+        #{colorname,jdbcType=VARCHAR},
       </if>
       <if test="barcode != null">
         #{barcode,jdbcType=VARCHAR},
-      </if>
-        <if test="colorName != null">
-        #{colorName,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -98,13 +90,15 @@
   <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SpPColor">
     update sp_pcolor
     <set>
+      <if test="corpid != null">
+        corpId = #{corpid,jdbcType=INTEGER},
+      </if>
+      <if test="colorname != null">
+        colorName = #{colorname,jdbcType=VARCHAR},
+      </if>
       <if test="barcode != null">
         barcode = #{barcode,jdbcType=VARCHAR},
       </if>
-       <if test="colorName != null">
-        colorName = #{colorName,jdbcType=VARCHAR},
-      </if>
-      
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -118,18 +112,17 @@
         modify_by = #{modifyBy,jdbcType=VARCHAR},
       </if>
     </set>
-    where corpId = #{corpid,jdbcType=INTEGER}
-      and id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SpPColor">
     update sp_pcolor
-    set barcode = #{barcode,jdbcType=VARCHAR},
-       colorName = #{colorName,jdbcType=VARCHAR},
+    set corpId = #{corpid,jdbcType=INTEGER},
+      colorName = #{colorname,jdbcType=VARCHAR},
+      barcode = #{barcode,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       modify_by = #{modifyBy,jdbcType=VARCHAR}
-    where corpId = #{corpid,jdbcType=INTEGER}
-      and id = #{id,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>
