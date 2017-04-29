@@ -1,18 +1,28 @@
 package costumetrade.order.domain;
 
 import costumetrade.common.Entity;
-
 import java.util.Date;
 
 public class SpPColor extends Entity {
     /**
-     *  条形编码
+     *  颜色编号
      */
-    private String barcode;
+    private Integer id;
+
+    /**
+     *  企业ID
+     */
+    private Integer corpid;
+
     /**
      *  颜色名称
      */
-    private String colorName;
+    private String colorname;
+
+    /**
+     *  条形编码
+     */
+    private String barcode;
 
     /**
      *  创建时间
@@ -33,15 +43,16 @@ public class SpPColor extends Entity {
      *  修改人
      */
     private String modifyBy;
-    /**
-     *  企业ID
-     */
-    private Integer corpid;
 
-    /**
-     *  颜色编号
-     */
-    private String id;
+    private static final long serialVersionUID = 1L;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getCorpid() {
         return corpid;
@@ -51,15 +62,13 @@ public class SpPColor extends Entity {
         this.corpid = corpid;
     }
 
-    public String getId() {
-        return id;
+    public String getColorname() {
+        return colorname;
     }
 
-    public void setId(String id) {
-        this.id = id == null ? null : id.trim();
+    public void setColorname(String colorname) {
+        this.colorname = colorname == null ? null : colorname.trim();
     }
-
-    private static final long serialVersionUID = 1L;
 
     public String getBarcode() {
         return barcode;
@@ -69,15 +78,7 @@ public class SpPColor extends Entity {
         this.barcode = barcode == null ? null : barcode.trim();
     }
 
-    public String getColorName() {
-		return colorName;
-	}
-
-	public void setColorName(String colorName) {
-		this.colorName = colorName;
-	}
-
-	public Date getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 

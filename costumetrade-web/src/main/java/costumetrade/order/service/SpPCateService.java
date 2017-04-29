@@ -3,7 +3,6 @@ package costumetrade.order.service;
 import java.util.List;
 
 import costumetrade.order.domain.SpPCate;
-import costumetrade.order.domain.SpPCateKey;
 
 
 public interface SpPCateService {
@@ -22,5 +21,5 @@ public interface SpPCateService {
 	 * 删除商品种类
 	 * 
 	 * */
-	public int deleteSpPCate(SpPCateKey spPCateKey);
+	public int deleteSpPCate(int  id);
 }

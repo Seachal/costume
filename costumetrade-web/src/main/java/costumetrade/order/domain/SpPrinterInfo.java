@@ -29,8 +29,20 @@ public class SpPrinterInfo extends Entity {
      *  分店ID
      */
     private String subid;
+    
+    private Integer id ;
+    
+    
 
-    public Integer getCorpid() {
+    public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getCorpid() {
         return corpid;
     }
 

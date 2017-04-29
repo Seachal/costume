@@ -3,7 +3,6 @@ package costumetrade.order.service;
 import java.util.List;
 
 import costumetrade.order.domain.SpPBrand;
-import costumetrade.order.domain.SpPBrandKey;
 
 
 public interface SpPBrandService {
@@ -22,5 +21,5 @@ public interface SpPBrandService {
 	 * 删除品牌信息
 	 * 
 	 * */
-	public int deleteSpPBrand(SpPBrandKey spPBrandKey);
+	public int deleteSpPBrand(int id);
 }

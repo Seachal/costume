@@ -1,10 +1,24 @@
 package costumetrade.order.domain;
 
 import costumetrade.common.Entity;
-
 import java.util.Date;
 
 public class SpPSize extends Entity {
+    /**
+     *  
+     */
+    private Integer id;
+
+    /**
+     *  企业ID
+     */
+    private Integer corpid;
+
+    /**
+     *  识别编码:尺码名称，字符类型，允许1-10个字符（最多5个汉字）
+     */
+    private String sizename;
+
     /**
      *  条码编码:用于生成商品条码
      */
@@ -31,15 +45,14 @@ public class SpPSize extends Entity {
     private String modifyBy;
 
     private static final long serialVersionUID = 1L;
-    /**
-     *  企业ID
-     */
-    private Integer corpid;
 
-    /**
-     *  识别编码:尺码名称，字符类型，允许1-10个字符（最多5个汉字）
-     */
-    private String id;
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getCorpid() {
         return corpid;
@@ -49,12 +62,12 @@ public class SpPSize extends Entity {
         this.corpid = corpid;
     }
 
-    public String getId() {
-        return id;
+    public String getSizename() {
+        return sizename;
     }
 
-    public void setId(String id) {
-        this.id = id == null ? null : id.trim();
+    public void setSizename(String sizename) {
+        this.sizename = sizename == null ? null : sizename.trim();
     }
 
     public String getBarcode() {

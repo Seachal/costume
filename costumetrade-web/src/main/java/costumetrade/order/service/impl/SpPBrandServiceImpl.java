@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import costumetrade.order.domain.SpPBrand;
-import costumetrade.order.domain.SpPBrandKey;
 import costumetrade.order.mapper.SpPBrandMapper;
 import costumetrade.order.service.SpPBrandService;
 
@@ -24,17 +23,17 @@ public class SpPBrandServiceImpl implements SpPBrandService{
 	public int saveSpPBrand(SpPBrand spPBrand) {
 		int save = 0;
 		//查询对应ID的员工是否存在，存在的话进行update 不存在save
-		SpPBrandKey spPBrandKey = new SpPBrandKey();
-		if(spPBrand.getId() != null && spPBrand.getCorpid() != null){
-			spPBrandKey.setId(spPBrand.getId());
-			spPBrandKey.setCorpid(spPBrand.getCorpid());
-
-			SpPBrand getSize = spPBrandMapper.selectByPrimaryKey(spPBrandKey);
-			if(getSize != null){
+	
+		if(spPBrand.getId() != null){
+			
+			SpPBrand getBrand = spPBrandMapper.selectByPrimaryKey(spPBrand.getId());
+			if(getBrand != null){
 				save = spPBrandMapper.updateByPrimaryKeySelective(spPBrand);
 			}else {
 				save = spPBrandMapper.insert(spPBrand) ;
 			}
+		}else {
+			save = spPBrandMapper.insert(spPBrand) ;
 		}
 		 
 		
@@ -42,9 +41,9 @@ public class SpPBrandServiceImpl implements SpPBrandService{
 		
 		 
 	}
-	public int deleteSpPBrand(SpPBrandKey spPBrandKey) {
+	public int deleteSpPBrand(int  id) {
 	
-		return spPBrandMapper.deleteByPrimaryKey(spPBrandKey);
+		return spPBrandMapper.deleteByPrimaryKey(id);
 	}
 	
 	

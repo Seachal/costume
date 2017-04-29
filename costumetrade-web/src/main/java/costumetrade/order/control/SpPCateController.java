@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.domain.SpPCate;
-import costumetrade.order.domain.SpPCateKey;
 import costumetrade.order.service.SpPCateService;
 
 /**
@@ -62,18 +61,13 @@ public class SpPCateController {
 
 	@RequestMapping("/deleteCate")
 	@ResponseBody
-	public ApiResponse deleteCate(@RequestParam SpPCateKey spPCateKey) {
+	public ApiResponse deleteCate(int id) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		
-		if(spPCateKey == null ){
-			result.setCode(ResponseInfo.LACK_PARAM.code);
-			result.setMsg(ResponseInfo.LACK_PARAM.msg);
-			return result;
-		}
-		int delete = spPCateService.deleteSpPCate(spPCateKey);
+	
+		int delete = spPCateService.deleteSpPCate(id);
 		if(delete<=0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);

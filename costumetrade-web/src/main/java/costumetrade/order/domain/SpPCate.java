@@ -1,11 +1,24 @@
 package costumetrade.order.domain;
 
 import costumetrade.common.Entity;
-
 import java.util.Date;
 
 public class SpPCate extends Entity {
-	private static final long serialVersionUID = 1L;
+    /**
+     *  主键
+     */
+    private Integer id;
+
+    /**
+     *  种类名称
+     */
+    private String catename;
+
+    /**
+     *  企业ID
+     */
+    private Integer corpid;
+
     /**
      *  助记简码
      */
@@ -31,16 +44,23 @@ public class SpPCate extends Entity {
      */
     private String modifyBy;
 
-   
-    /**
-     *  企业ID
-     */
-    private Integer corpid;
+    private static final long serialVersionUID = 1L;
 
-    /**
-     *  种类编码
-     */
-    private String id;
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getCatename() {
+        return catename;
+    }
+
+    public void setCatename(String catename) {
+        this.catename = catename == null ? null : catename.trim();
+    }
 
     public Integer getCorpid() {
         return corpid;
@@ -48,14 +68,6 @@ public class SpPCate extends Entity {
 
     public void setCorpid(Integer corpid) {
         this.corpid = corpid;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id == null ? null : id.trim();
     }
 
     public String getFastcode() {

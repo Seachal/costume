@@ -5,15 +5,15 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.domain.SpPSize;
+import costumetrade.order.domain.SpPSizeCustom;
 import costumetrade.order.domain.SpPSizeKey;
+import costumetrade.order.service.SpPSizeCustomService;
 import costumetrade.order.service.SpPSizeService;
 
 /**
@@ -27,6 +27,8 @@ import costumetrade.order.service.SpPSizeService;
 public class SpSizeController {
 	@Autowired
 	private SpPSizeService spPSizeService;
+	@Autowired
+	private SpPSizeCustomService spPSizeCustomService;
 
 	@RequestMapping("/getAllSizes")
 	@ResponseBody
@@ -62,18 +64,62 @@ public class SpSizeController {
 
 	@RequestMapping("/deleteSize")
 	@ResponseBody
-	public ApiResponse deleteSize(@RequestParam SpPSizeKey spPSizeKey) {
+	public ApiResponse deleteSize(int id) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
+	
+		int delete = spPSizeService.deleteSpPSize(id);
+		if(delete<=0){
+			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			return result;
+		}
+		return result;
+	}
+	
+	@RequestMapping("/getAllSizeCustom")
+	@ResponseBody
+	public ApiResponse getAllSizeCustom(int corpId) {
 		
-		if(spPSizeKey == null ){
+		List<SpPSizeCustom> sizeCustomLists = new ArrayList<SpPSizeCustom>();
+		sizeCustomLists = spPSizeCustomService.getSpPSizeCustoms(corpId);
+
+		return  ApiResponse.getInstance(sizeCustomLists);
+	}
+
+	@RequestMapping("/saveSizeCustom")
+	@ResponseBody
+	public ApiResponse saveSizeCustom(SpPSizeCustom spPSizeCustom) {
+
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(spPSizeCustom == null ){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		int delete = spPSizeService.deleteSpPSize(spPSizeKey);
+		int save = spPSizeCustomService.saveSpPSizeCustom(spPSizeCustom);
+		if(save<=0){
+			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			return result;
+		}
+		return result;
+
+	}
+
+	@RequestMapping("/deleteSizeCustom")
+	@ResponseBody
+	public ApiResponse deleteSizeCustom(int id) {
+
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+	
+		int delete = spPSizeCustomService.deleteSpPSizeCustom(id);
 		if(delete<=0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);

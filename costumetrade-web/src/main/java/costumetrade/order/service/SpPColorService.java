@@ -2,7 +2,6 @@ package costumetrade.order.service;
 import java.util.List;
 
 import costumetrade.order.domain.SpPColor;
-import costumetrade.order.domain.SpPColorKey;
 
 
 public interface SpPColorService {
@@ -21,5 +20,5 @@ public interface SpPColorService {
 	 * 删除颜色信息
 	 * 
 	 * */
-	public int deleteSpPColor(SpPColorKey spPColorKey);
+	public int deleteSpPColor(int  id);
 }

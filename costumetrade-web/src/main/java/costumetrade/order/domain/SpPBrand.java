@@ -1,11 +1,25 @@
 package costumetrade.order.domain;
 
 import costumetrade.common.Entity;
-
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class SpPBrand extends Entity {
+    /**
+     *  主键
+     */
+    private Integer id;
+
+    /**
+     *  企业ID
+     */
+    private Integer corpid;
+
+    /**
+     *  品牌名称
+     */
+    private String brandname;
+
     /**
      *  助记简码
      */
@@ -67,15 +81,14 @@ public class SpPBrand extends Entity {
     private String modifyBy;
 
     private static final long serialVersionUID = 1L;
-    /**
-     *  企业ID
-     */
-    private Integer corpid;
 
-    /**
-     *  品牌编号ID
-     */
-    private Integer id;
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getCorpid() {
         return corpid;
@@ -85,12 +98,12 @@ public class SpPBrand extends Entity {
         this.corpid = corpid;
     }
 
-    public Integer getId() {
-        return id;
+    public String getBrandname() {
+        return brandname;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setBrandname(String brandname) {
+        this.brandname = brandname == null ? null : brandname.trim();
     }
 
     public String getFastcode() {

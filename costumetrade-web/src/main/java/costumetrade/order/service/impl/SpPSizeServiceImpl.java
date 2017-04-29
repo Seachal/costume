@@ -24,27 +24,23 @@ public class SpPSizeServiceImpl implements SpPSizeService{
 	public int saveSpPSize(SpPSize spPSize) {
 		int save = 0;
 		//查询对应ID的员工是否存在，存在的话进行update 不存在save
-		SpPSizeKey spPSizeKey = new SpPSizeKey();
-		if(spPSize.getId() != null && spPSize.getCorpid() != null){
-			spPSizeKey.setId(spPSize.getId());
-			spPSizeKey.setCorpid(spPSize.getCorpid());
-
-			SpPSize getSize = spPSizeMapper.selectByPrimaryKey(spPSizeKey);
+		if(spPSize.getId() != null){
+			SpPSize getSize = spPSizeMapper.selectByPrimaryKey(spPSize.getId());
 			if(getSize != null){
 				save = spPSizeMapper.updateByPrimaryKeySelective(spPSize);
 			}else {
 				save = spPSizeMapper.insert(spPSize) ;
 			}
+		}else {
+			save = spPSizeMapper.insert(spPSize) ;
 		}
-		 
 		
 		return save;
-		
 		 
 	}
-	public int deleteSpPSize(SpPSizeKey spPSizeKey) {
+	public int deleteSpPSize(int id) {
 	
-		return spPSizeMapper.deleteByPrimaryKey(spPSizeKey);
+		return spPSizeMapper.deleteByPrimaryKey(id);
 	}
 	
 	

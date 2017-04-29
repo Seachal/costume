@@ -22,5 +22,5 @@ public interface SpPSizeService {
 	 * 删除尺码信息
 	 * 
 	 * */
-	public int deleteSpPSize(SpPSizeKey spPSizeKey);
+	public int deleteSpPSize(int id);
 }

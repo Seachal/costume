@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import costumetrade.order.domain.SpPColor;
-import costumetrade.order.domain.SpPColorKey;
 import costumetrade.order.mapper.SpPColorMapper;
 import costumetrade.order.service.SpPColorService;
 
@@ -24,16 +23,14 @@ public class SpPColorServiceImpl implements SpPColorService{
 	public int saveSpPColor(SpPColor spPColor) {
 		int save = 0;
 		//查询对应ID的员工是否存在，存在的话进行update 不存在save
-		SpPColorKey spPColorKey = new SpPColorKey();
-		if(spPColor.getCorpid() != null){
-			spPColorKey.setCorpid(spPColor.getCorpid());
+		if(spPColor.getId() != null){
 
-			SpPColor getColor = spPColorMapper.selectByPrimaryKey(spPColorKey);
+			SpPColor getColor = spPColorMapper.selectByPrimaryKey(spPColor.getId());
 			if(getColor != null){
 				save = spPColorMapper.updateByPrimaryKeySelective(spPColor);
-			}else {
-				save = spPColorMapper.insert(spPColor) ;
 			}	
+		}else {
+			save = spPColorMapper.insert(spPColor) ;
 		}
 			
 		 
@@ -42,9 +39,9 @@ public class SpPColorServiceImpl implements SpPColorService{
 		
 		 
 	}
-	public int deleteSpPColor(SpPColorKey spPColorKey) {
+	public int deleteSpPColor(int id) {
 	
-		return spPColorMapper.deleteByPrimaryKey(spPColorKey);
+		return spPColorMapper.deleteByPrimaryKey(id);
 	}
 	
 	
