@@ -25,8 +25,7 @@ public class SpPColorServiceImpl implements SpPColorService{
 		int save = 0;
 		//查询对应ID的员工是否存在，存在的话进行update 不存在save
 		SpPColorKey spPColorKey = new SpPColorKey();
-		if(spPColor.getId() != null && spPColor.getCorpid() != null){
-			spPColorKey.setId(spPColor.getId());
+		if(spPColor.getCorpid() != null){
 			spPColorKey.setCorpid(spPColor.getCorpid());
 
 			SpPColor getColor = spPColorMapper.selectByPrimaryKey(spPColorKey);

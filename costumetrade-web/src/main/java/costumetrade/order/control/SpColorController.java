@@ -40,7 +40,7 @@ public class SpColorController {
 
 	@RequestMapping("/saveColor")
 	@ResponseBody
-	public ApiResponse saveColor(@RequestBody SpPColor spPColor) {
+	public ApiResponse saveColor(SpPColor spPColor) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);

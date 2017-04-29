@@ -9,6 +9,10 @@ public class SpPColor extends Entity {
      *  条形编码
      */
     private String barcode;
+    /**
+     *  颜色名称
+     */
+    private String colorName;
 
     /**
      *  创建时间
@@ -65,7 +69,15 @@ public class SpPColor extends Entity {
         this.barcode = barcode == null ? null : barcode.trim();
     }
 
-    public Date getCreateTime() {
+    public String getColorName() {
+		return colorName;
+	}
+
+	public void setColorName(String colorName) {
+		this.colorName = colorName;
+	}
+
+	public Date getCreateTime() {
         return createTime;
     }
 
