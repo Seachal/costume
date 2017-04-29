@@ -3,7 +3,6 @@ package costumetrade.order.service;
 import java.util.List;
 
 import costumetrade.order.domain.SpPSize;
-import costumetrade.order.domain.SpPSizeKey;
 
 
 public interface SpPSizeService {
