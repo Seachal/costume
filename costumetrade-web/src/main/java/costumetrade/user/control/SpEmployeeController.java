@@ -37,11 +37,12 @@ public class SpEmployeeController {
 		
 		List<SpEmployee> employeeLists = new ArrayList<SpEmployee>();
 		employeeLists = spEmployeeService.getAllEmployees(subId);
-		CacheableLong count = new CacheableLong(10);
-		cache.add("产品_品牌_样式_id", count);
-		if(null!=cache.get("产品_品牌_样式_id")){
-			count = (CacheableLong)cache.get("产品_品牌_样式_id");
-			cache.add("产品_品牌_样式_id", new CacheableLong(count.getLong()+2l));
+		CacheableLong cacheLong = (CacheableLong)cache.get("产品_品牌_样式_id");
+		if(null!=cacheLong){
+			cache.add("产品_品牌_样式_id", new CacheableLong(cacheLong.getLong()+2l));
+		}else{
+			CacheableLong  count = new CacheableLong(10);
+			cache.add("产品_品牌_样式_id", count);
 		}
 		return  ApiResponse.getInstance(employeeLists);
 	}
