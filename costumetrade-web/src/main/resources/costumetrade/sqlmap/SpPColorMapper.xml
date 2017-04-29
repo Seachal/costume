@@ -5,13 +5,14 @@
     <id column="corpId" jdbcType="INTEGER" property="corpid" />
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="barcode" jdbcType="VARCHAR" property="barcode" />
+    <result column="colorName" jdbcType="VARCHAR" property="colorName" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
     <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    corpId, id, barcode, create_time, create_by, modify_time, modify_by
+    corpId, id, barcode,colorName, create_time, create_by, modify_time, modify_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="costumetrade.order.domain.SpPColorKey" resultMap="BaseResultMap">
     select 
@@ -28,14 +29,13 @@
   </select>
   <delete id="deleteByPrimaryKey" parameterType="costumetrade.order.domain.SpPColorKey">
     delete from sp_pcolor
-    where corpId = #{corpid,jdbcType=INTEGER}
-      and id = #{id,jdbcType=VARCHAR}
+    where  id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SpPColor">
-    insert into sp_pcolor (corpId, id, barcode, 
+    insert into sp_pcolor (corpId, id, barcode, colorName,
       create_time, create_by, modify_time, 
       modify_by)
-    values (#{corpid,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR}, 
+    values (#{corpid,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR}, #{colorName,jdbcType=VARCHAR},
       #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, 
       #{modifyBy,jdbcType=VARCHAR})
   </insert>
@@ -51,6 +51,10 @@
       <if test="barcode != null">
         barcode,
       </if>
+       <if test="colorName != null">
+        colorName,
+      </if>
+ 
       <if test="createTime != null">
         create_time,
       </if>
@@ -74,6 +78,9 @@
       <if test="barcode != null">
         #{barcode,jdbcType=VARCHAR},
       </if>
+        <if test="colorName != null">
+        #{colorName,jdbcType=VARCHAR},
+      </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -94,6 +101,10 @@
       <if test="barcode != null">
         barcode = #{barcode,jdbcType=VARCHAR},
       </if>
+       <if test="colorName != null">
+        colorName = #{colorName,jdbcType=VARCHAR},
+      </if>
+      
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -113,6 +124,7 @@
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SpPColor">
     update sp_pcolor
     set barcode = #{barcode,jdbcType=VARCHAR},
+       colorName = #{colorName,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},

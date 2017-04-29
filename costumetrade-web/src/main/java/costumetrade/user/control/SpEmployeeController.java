@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import costumetrade.cache.Cache;
+import costumetrade.cache.CacheableLong;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.user.domain.SpEmployee;
@@ -26,14 +28,21 @@ import costumetrade.user.service.SpEmployeeService;
 public class SpEmployeeController {
 	@Autowired
 	private SpEmployeeService spEmployeeService;
-
+	@Autowired
+	private Cache cache;
+	
 	@RequestMapping("/getAllEmployees")
 	@ResponseBody
 	public ApiResponse getAllEmployees(@RequestBody String subId) {
 		
 		List<SpEmployee> employeeLists = new ArrayList<SpEmployee>();
 		employeeLists = spEmployeeService.getAllEmployees(subId);
-
+		CacheableLong count = new CacheableLong(10);
+		cache.add("产品_品牌_样式_id", count);
+		if(null!=cache.get("产品_品牌_样式_id")){
+			count = (CacheableLong)cache.get("产品_品牌_样式_id");
+			cache.add("产品_品牌_样式_id", new CacheableLong(count.getLong()+2l));
+		}
 		return  ApiResponse.getInstance(employeeLists);
 	}
 
