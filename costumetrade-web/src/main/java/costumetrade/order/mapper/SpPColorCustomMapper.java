@@ -20,4 +20,6 @@ public interface SpPColorCustomMapper {
     int updateByPrimaryKey(SpPColorCustom record);
     
     List<SpPColorCustom> getSpPColorCustoms(int corpId);
+    
+    SpPColorCustom selectByCustomValue(SpPColorCustom record);
 }

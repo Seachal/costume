@@ -20,4 +20,6 @@ public interface SpPSizeCustomMapper {
     int updateByPrimaryKey(SpPSizeCustom record);
     
     List<SpPSizeCustom>  getSpPSizeCustoms(int corpId);
+    
+    SpPSizeCustom selectByCustomValue(SpPSizeCustom record);
 }

@@ -1,5 +1,8 @@
 package costumetrade.order.enums;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 
 public enum SeasonTypeEnum {
@@ -40,5 +43,15 @@ public enum SeasonTypeEnum {
                return seasonTypeEnum;
        }
 	   return null;
+   }
+   
+   public static List<String> getSeasonTypeEnum(){
+	   List<String> list = new ArrayList<String>();
+	   list.add(SeasonTypeEnum.SEASON_SPRING.getValue());
+	   list.add(SeasonTypeEnum.SEASON_SUMMER.getValue());
+	   list.add(SeasonTypeEnum.SEASON_AUTUMN.getValue());
+	   list.add(SeasonTypeEnum.SEASON_WINTER.getValue());
+	  
+	   return list;
    }
 }
