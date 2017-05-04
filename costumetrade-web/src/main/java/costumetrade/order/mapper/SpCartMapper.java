@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import costumetrade.order.domain.SpCart;
+import costumetrade.order.query.PayParam;
 @Mapper
 public interface SpCartMapper {
     int deleteByPrimaryKey(Integer id);
@@ -20,4 +21,8 @@ public interface SpCartMapper {
     int updateByPrimaryKey(SpCart record);
     
     List<SpCart> getSpCarts(int corpId);
+    
+    int deleteByIds(List<Integer> list);
+    
+    int insert(PayParam param );
 }
