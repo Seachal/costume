@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="costumetrade.order.mapper.SpFiancialMapper">
-  <resultMap id="BaseResultMap" type="costumetrade.order.domain.SpFiancial">
+<mapper namespace="costumetrade.order.mapper.SsFinancialMapper">
+  <resultMap id="BaseResultMap" type="costumetrade.order.domain.SsFinancial">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="financial_tag" jdbcType="VARCHAR" property="financialTag" />
     <result column="order_no" jdbcType="VARCHAR" property="orderNo" />
     <result column="buyer_client_id" jdbcType="INTEGER" property="buyerClientId" />
     <result column="seller_client_id" jdbcType="INTEGER" property="sellerClientId" />
-    <result column="customer_type" jdbcType="SMALLINT" property="customerType" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="income" jdbcType="DECIMAL" property="income" />
     <result column="pay" jdbcType="DECIMAL" property="pay" />
@@ -24,9 +23,9 @@
     <result column="rela_no" jdbcType="VARCHAR" property="relaNo" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, financial_tag, order_no, buyer_client_id, seller_client_id, customer_type, remark, 
-    income, pay, rela_id, rela_type, income_date, receiptpay_type, pay_type, pay_date, 
-    partner_cardno, pay_bank, pay_channel, bussi_type, rela_no
+    id, financial_tag, order_no, buyer_client_id, seller_client_id, remark, income, pay, 
+    rela_id, rela_type, income_date, receiptpay_type, pay_type, pay_date, partner_cardno, 
+    pay_bank, pay_channel, bussi_type, rela_no
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -38,23 +37,23 @@
     delete from ss_financial
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="costumetrade.order.domain.SpFiancial">
+  <insert id="insert" parameterType="costumetrade.order.domain.SsFinancial">
     insert into ss_financial (id, financial_tag, order_no, 
-      buyer_client_id, seller_client_id, customer_type, 
-      remark, income, pay, 
-      rela_id, rela_type, income_date, 
-      receiptpay_type, pay_type, pay_date, 
-      partner_cardno, pay_bank, pay_channel, 
-      bussi_type, rela_no)
+      buyer_client_id, seller_client_id, remark, 
+      income, pay, rela_id, 
+      rela_type, income_date, receiptpay_type, 
+      pay_type, pay_date, partner_cardno, 
+      pay_bank, pay_channel, bussi_type, 
+      rela_no)
     values (#{id,jdbcType=INTEGER}, #{financialTag,jdbcType=VARCHAR}, #{orderNo,jdbcType=VARCHAR}, 
-      #{buyerClientId,jdbcType=INTEGER}, #{sellerClientId,jdbcType=INTEGER}, #{customerType,jdbcType=SMALLINT}, 
-      #{remark,jdbcType=VARCHAR}, #{income,jdbcType=DECIMAL}, #{pay,jdbcType=DECIMAL}, 
-      #{relaId,jdbcType=BIGINT}, #{relaType,jdbcType=SMALLINT}, #{incomeDate,jdbcType=DECIMAL}, 
-      #{receiptpayType,jdbcType=SMALLINT}, #{payType,jdbcType=SMALLINT}, #{payDate,jdbcType=TIMESTAMP}, 
-      #{partnerCardno,jdbcType=VARCHAR}, #{payBank,jdbcType=SMALLINT}, #{payChannel,jdbcType=SMALLINT}, 
-      #{bussiType,jdbcType=SMALLINT}, #{relaNo,jdbcType=VARCHAR})
+      #{buyerClientId,jdbcType=INTEGER}, #{sellerClientId,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{income,jdbcType=DECIMAL}, #{pay,jdbcType=DECIMAL}, #{relaId,jdbcType=BIGINT}, 
+      #{relaType,jdbcType=SMALLINT}, #{incomeDate,jdbcType=DECIMAL}, #{receiptpayType,jdbcType=SMALLINT}, 
+      #{payType,jdbcType=SMALLINT}, #{payDate,jdbcType=TIMESTAMP}, #{partnerCardno,jdbcType=VARCHAR}, 
+      #{payBank,jdbcType=SMALLINT}, #{payChannel,jdbcType=SMALLINT}, #{bussiType,jdbcType=SMALLINT}, 
+      #{relaNo,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="costumetrade.order.domain.SpFiancial">
+  <insert id="insertSelective" parameterType="costumetrade.order.domain.SsFinancial">
     insert into ss_financial
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -71,9 +70,6 @@
       </if>
       <if test="sellerClientId != null">
         seller_client_id,
-      </if>
-      <if test="customerType != null">
-        customer_type,
       </if>
       <if test="remark != null">
         remark,
@@ -134,8 +130,126 @@
       <if test="sellerClientId != null">
         #{sellerClientId,jdbcType=INTEGER},
       </if>
-      <if test="customerType != null">
-        #{customerType,jdbcType=SMALLINT},
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="income != null">
+        #{income,jdbcType=DECIMAL},
+      </if>
+      <if test="pay != null">
+        #{pay,jdbcType=DECIMAL},
+      </if>
+      <if test="relaId != null">
+        #{relaId,jdbcType=BIGINT},
+      </if>
+      <if test="relaType != null">
+        #{relaType,jdbcType=SMALLINT},
+      </if>
+      <if test="incomeDate != null">
+        #{incomeDate,jdbcType=DECIMAL},
+      </if>
+      <if test="receiptpayType != null">
+        #{receiptpayType,jdbcType=SMALLINT},
+      </if>
+      <if test="payType != null">
+        #{payType,jdbcType=SMALLINT},
+      </if>
+      <if test="payDate != null">
+        #{payDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="partnerCardno != null">
+        #{partnerCardno,jdbcType=VARCHAR},
+      </if>
+      <if test="payBank != null">
+        #{payBank,jdbcType=SMALLINT},
+      </if>
+      <if test="payChannel != null">
+        #{payChannel,jdbcType=SMALLINT},
+      </if>
+      <if test="bussiType != null">
+        #{bussiType,jdbcType=SMALLINT},
+      </if>
+      <if test="relaNo != null">
+        #{relaNo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <insert id="insertFiancial" parameterType="costumetrade.order.query.PayParam">
+    insert into ss_financial
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="financialTag != null">
+        financial_tag,
+      </if>
+      <if test="orderNo != null">
+        order_no,
+      </if>
+      <if test="buyerClientId != null">
+        buyer_client_id,
+      </if>
+      <if test="sellerClientId != null">
+        seller_client_id,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="income != null">
+        income,
+      </if>
+      <if test="pay != null">
+        pay,
+      </if>
+      <if test="relaId != null">
+        rela_id,
+      </if>
+      <if test="relaType != null">
+        rela_type,
+      </if>
+      <if test="incomeDate != null">
+        income_date,
+      </if>
+      <if test="receiptpayType != null">
+        receiptpay_type,
+      </if>
+      <if test="payType != null">
+        pay_type,
+      </if>
+      <if test="payDate != null">
+        pay_date,
+      </if>
+      <if test="partnerCardno != null">
+        partner_cardno,
+      </if>
+      <if test="payBank != null">
+        pay_bank,
+      </if>
+      <if test="payChannel != null">
+        pay_channel,
+      </if>
+      <if test="bussiType != null">
+        bussi_type,
+      </if>
+      <if test="relaNo != null">
+        rela_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="financialTag != null">
+        #{financialTag,jdbcType=VARCHAR},
+      </if>
+      <if test="orderNo != null">
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerClientId != null">
+        #{buyerClientId,jdbcType=INTEGER},
+      </if>
+      <if test="sellerClientId != null">
+        #{sellerClientId,jdbcType=INTEGER},
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
@@ -181,7 +295,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SpFiancial">
+  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SsFinancial">
     update ss_financial
     <set>
       <if test="financialTag != null">
@@ -195,9 +309,6 @@
       </if>
       <if test="sellerClientId != null">
         seller_client_id = #{sellerClientId,jdbcType=INTEGER},
-      </if>
-      <if test="customerType != null">
-        customer_type = #{customerType,jdbcType=SMALLINT},
       </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
@@ -244,13 +355,12 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SpFiancial">
+  <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsFinancial">
     update ss_financial
     set financial_tag = #{financialTag,jdbcType=VARCHAR},
       order_no = #{orderNo,jdbcType=VARCHAR},
       buyer_client_id = #{buyerClientId,jdbcType=INTEGER},
       seller_client_id = #{sellerClientId,jdbcType=INTEGER},
-      customer_type = #{customerType,jdbcType=SMALLINT},
       remark = #{remark,jdbcType=VARCHAR},
       income = #{income,jdbcType=DECIMAL},
       pay = #{pay,jdbcType=DECIMAL},
