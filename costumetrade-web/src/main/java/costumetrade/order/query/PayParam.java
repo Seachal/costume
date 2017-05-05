@@ -10,7 +10,7 @@ public class PayParam extends Entity{
     
     private Integer operate;//订单状态  1：新增   2、已付款  3、审核  4、发货  5、收货  6、已取消
     private Integer corpId ;
-    private String orderId ;
+   
     /**
      *  
      */
@@ -35,11 +35,6 @@ public class PayParam extends Entity{
      *  卖家客户号
      */
     private Integer sellerClientId;
-
-    /**
-     *  录单人员类型:使用标准码operOrderType
-     */
-    private Short customerType;
 
     /**
      *  备注
@@ -151,14 +146,6 @@ public class PayParam extends Entity{
 
     public void setSellerClientId(Integer sellerClientId) {
         this.sellerClientId = sellerClientId;
-    }
-
-    public Short getCustomerType() {
-        return customerType;
-    }
-
-    public void setCustomerType(Short customerType) {
-        this.customerType = customerType;
     }
 
     public String getRemark() {
@@ -287,14 +274,6 @@ public class PayParam extends Entity{
 
 	public void setCorpId(Integer corpId) {
 		this.corpId = corpId;
-	}
-
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
 	}
     
     

@@ -23,6 +23,5 @@ public interface SpCartMapper {
     List<SpCart> getSpCarts(int corpId);
     
     int deleteByIds(List<Integer> list);
-    
-    int insert(PayParam param );
+   
 }

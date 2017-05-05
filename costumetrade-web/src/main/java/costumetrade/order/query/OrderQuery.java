@@ -1,10 +1,5 @@
 package costumetrade.order.query;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-
 import costumetrade.common.Entity;
 import costumetrade.order.domain.SpStoDetail;
 import costumetrade.order.domain.SpStoOrder;

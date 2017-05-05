@@ -4,7 +4,7 @@ import costumetrade.common.Entity;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class SpFiancial extends Entity {
+public class SsFinancial extends Entity {
     /**
      *  
      */
@@ -29,11 +29,6 @@ public class SpFiancial extends Entity {
      *  卖家客户号
      */
     private Integer sellerClientId;
-
-    /**
-     *  录单人员类型:使用标准码operOrderType
-     */
-    private Short customerType;
 
     /**
      *  备注
@@ -145,14 +140,6 @@ public class SpFiancial extends Entity {
 
     public void setSellerClientId(Integer sellerClientId) {
         this.sellerClientId = sellerClientId;
-    }
-
-    public Short getCustomerType() {
-        return customerType;
-    }
-
-    public void setCustomerType(Short customerType) {
-        this.customerType = customerType;
     }
 
     public String getRemark() {

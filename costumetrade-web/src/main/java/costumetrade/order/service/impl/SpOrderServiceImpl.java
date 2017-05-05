@@ -14,6 +14,7 @@ import costumetrade.order.domain.SpStoOrder;
 import costumetrade.order.mapper.SpCartMapper;
 import costumetrade.order.mapper.SpStoDetailMapper;
 import costumetrade.order.mapper.SpStoOrderMapper;
+import costumetrade.order.mapper.SsFinancialMapper;
 import costumetrade.order.query.OrderDetailKeyParam;
 import costumetrade.order.query.OrderDetailParam;
 import costumetrade.order.query.OrderDetailQuery;
@@ -30,6 +31,8 @@ public class SpOrderServiceImpl implements SpOrderService{
 	private SpStoOrderMapper spStoOrderMapper;
 	@Autowired
 	private SpCartMapper spCartMapper;
+	@Autowired
+	private SsFinancialMapper ssFinancialMapper;
 	@Override
 	public int saveOrders(OrderQuery query) {
 		long orderNo=new Date().getTime();
@@ -117,7 +120,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 		// TODO Auto-generated method stub
 		int operate = 0;
 		SpStoOrder spStoOrder = spStoOrderMapper.selectByOrderId(param);
-		if(spStoOrder.getOrderstatus() == 1 || spStoOrder.getOrderstatus() == 2){ //订单状态  1：新增   2、已付款  3、审核  4、发货  5、收货  6、已取消
+		if(spStoOrder.getOrderstatus() == 1){ //订单状态  1：新增   2、已付款  3、审核  4、发货  5、收货  6、已取消
 			spStoOrder = new SpStoOrder();
 			spStoOrder.setCorpid(param.getCorpId());
 			spStoOrder.setPayorderno(param.getOrderId());
@@ -144,16 +147,16 @@ public class SpOrderServiceImpl implements SpOrderService{
 		
 		SpStoOrder spStoOrder = new SpStoOrder();
 		spStoOrder.setCorpid(param.getCorpId());
-		spStoOrder.setPayorderno(param.getOrderId());
+		spStoOrder.setPayorderno(param.getOrderNo());
 		spStoOrder.setOrderstatus(param.getOperate());
 		int operate = spStoOrderMapper.updateByPrimaryKeySelective(spStoOrder);
 		if(update <= 0 || operate <= 0){
 			return 0;
-		}else{
-			return spCartMapper.insert(param);
-			
 		}
-		
+		if(param.getPayType() == 1){ //1、线下支付  2、微信支付
+			operate = ssFinancialMapper.insertFiancial(param);
+		}	
+		return operate;
 	}
 	
 	
