@@ -5,7 +5,10 @@
  */
 package costumetrade.common.conf;
 
+import java.util.Map;
 import java.util.Properties;
+
+import org.apache.commons.lang3.StringUtils;
 
 import costumetrade.common.util.PropertiesUtils;
 
@@ -16,7 +19,12 @@ import costumetrade.common.util.PropertiesUtils;
  */
 public class ConfigProperties {
 	
-	private static final Properties properties = PropertiesUtils.getProperties("config.properties");
+	private static  Properties properties = null;
+	static {
+		 Map<String, String> map = System.getenv();  
+		 String fileName = "config."+(StringUtils.isBlank(map.get("APP_ENV"))?"TEST":map.get("APP_ENV"))+".properties";
+		properties = PropertiesUtils.getProperties(fileName);
+	}
 	
 	public static String getProperty(String key){
 		return properties.getProperty(key);
