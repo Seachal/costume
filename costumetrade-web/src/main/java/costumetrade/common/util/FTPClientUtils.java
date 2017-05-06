@@ -31,7 +31,7 @@ public class FTPClientUtils {
 	
 	private ThreadLocal<FTPClient> ftpClientThreadLocal = new ThreadLocal<FTPClient>();  
 	private String url;
-	private Integer port  = 5521;
+	private Integer port  = 21;
 	private String username;
 	private String password;
 	private Integer clientTimeout = 20000;
@@ -84,11 +84,11 @@ public class FTPClientUtils {
 	    */
 	public  boolean uploadFileToFTP(String remoteRelativePath, String localfilename, String localAbsoluteFile) {  
 	    boolean success = false;  
-	    File file = new File(localAbsoluteFile);
-	    if(!file.exists()){
-	    	return success;
-	    }
-	    
+//	    File file = new File(localAbsoluteFile);
+//	    if(!file.exists()){
+//	    	return success;
+//	    }
+//	    
 	    
 	    try {  
 	    	FileInputStream input =new  FileInputStream(new File(localAbsoluteFile));
@@ -407,7 +407,7 @@ public  boolean getFileFromFold(String remotePath,String[] fileNames){
 	    * param input
 	    * @return
 	    */
-    private  boolean uploadFileToFtp(String path,String fileName,InputStream input){
+    public  boolean uploadFileToFtp(String path,String fileName,InputStream input){
     	
     	    createDir(path);
 	       
@@ -420,6 +420,26 @@ public  boolean getFileFromFold(String remotePath,String[] fileNames){
 				logger.error("输入输出异常:"+e);
 			}
 	        return success;
+    }
+    
+    public boolean uploadFile(String path,String ftpFileName){
+    	boolean success = false;
+    	//getFTPClient();
+    	createDir(path);
+    	File localFile = new File(ftpFileName);      
+    	InputStream in =null;  
+
+        try {
+        	in = new FileInputStream(localFile); 
+			getFTPClient().storeFile(path, in);
+		
+			in.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}  
+         
+         return success;
     }
     
     /** 
