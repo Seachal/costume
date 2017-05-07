@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="costumetrade.order.mapper.SsFinancialMapper">
+  <resultMap id="BaseResultMap" type="costumetrade.order.domain.SsFinancial">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="tradeNo" jdbcType="VARCHAR" property="tradeno" />
+    <result column="orderNo" jdbcType="VARCHAR" property="orderno" />
+    <result column="buyerId" jdbcType="INTEGER" property="buyerid" />
+    <result column="sellerId" jdbcType="INTEGER" property="sellerid" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="income" jdbcType="DECIMAL" property="income" />
+    <result column="pay" jdbcType="DECIMAL" property="pay" />
+    <result column="incomeDate" jdbcType="DECIMAL" property="incomedate" />
+    <result column="pay_type" jdbcType="SMALLINT" property="payType" />
+    <result column="payDate" jdbcType="TIMESTAMP" property="paydate" />
+    <result column="cardno" jdbcType="VARCHAR" property="cardno" />
+    <result column="pay_bank" jdbcType="SMALLINT" property="payBank" />
+    <result column="bussi_type" jdbcType="SMALLINT" property="bussiType" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, tradeNo, orderNo, buyerId, sellerId, remark, income, pay, incomeDate, pay_type, 
+    payDate, cardno, pay_bank, bussi_type
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ss_financial
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ss_financial
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="costumetrade.order.domain.SsFinancial">
+    insert into ss_financial (id, tradeNo, orderNo, 
+      buyerId, sellerId, remark, 
+      income, pay, incomeDate, 
+      pay_type, payDate, cardno, 
+      pay_bank, bussi_type)
+    values (#{id,jdbcType=INTEGER}, #{tradeno,jdbcType=VARCHAR}, #{orderno,jdbcType=VARCHAR}, 
+      #{buyerid,jdbcType=INTEGER}, #{sellerid,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{income,jdbcType=DECIMAL}, #{pay,jdbcType=DECIMAL}, #{incomedate,jdbcType=DECIMAL}, 
+      #{payType,jdbcType=SMALLINT}, #{paydate,jdbcType=TIMESTAMP}, #{cardno,jdbcType=VARCHAR}, 
+      #{payBank,jdbcType=SMALLINT}, #{bussiType,jdbcType=SMALLINT})
+  </insert>
+  <insert id="insertSelective" parameterType="costumetrade.order.domain.SsFinancial">
+    insert into ss_financial
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="tradeno != null">
+        tradeNo,
+      </if>
+      <if test="orderno != null">
+        orderNo,
+      </if>
+      <if test="buyerid != null">
+        buyerId,
+      </if>
+      <if test="sellerid != null">
+        sellerId,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+      <if test="income != null">
+        income,
+      </if>
+      <if test="pay != null">
+        pay,
+      </if>
+      <if test="incomedate != null">
+        incomeDate,
+      </if>
+      <if test="payType != null">
+        pay_type,
+      </if>
+      <if test="paydate != null">
+        payDate,
+      </if>
+      <if test="cardno != null">
+        cardno,
+      </if>
+      <if test="payBank != null">
+        pay_bank,
+      </if>
+      <if test="bussiType != null">
+        bussi_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="tradeno != null">
+        #{tradeno,jdbcType=VARCHAR},
+      </if>
+      <if test="orderno != null">
+        #{orderno,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerid != null">
+        #{buyerid,jdbcType=INTEGER},
+      </if>
+      <if test="sellerid != null">
+        #{sellerid,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="income != null">
+        #{income,jdbcType=DECIMAL},
+      </if>
+      <if test="pay != null">
+        #{pay,jdbcType=DECIMAL},
+      </if>
+      <if test="incomedate != null">
+        #{incomedate,jdbcType=DECIMAL},
+      </if>
+      <if test="payType != null">
+        #{payType,jdbcType=SMALLINT},
+      </if>
+      <if test="paydate != null">
+        #{paydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cardno != null">
+        #{cardno,jdbcType=VARCHAR},
+      </if>
+      <if test="payBank != null">
+        #{payBank,jdbcType=SMALLINT},
+      </if>
+      <if test="bussiType != null">
+        #{bussiType,jdbcType=SMALLINT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SsFinancial">
+    update ss_financial
+    <set>
+      <if test="tradeno != null">
+        tradeNo = #{tradeno,jdbcType=VARCHAR},
+      </if>
+      <if test="orderno != null">
+        orderNo = #{orderno,jdbcType=VARCHAR},
+      </if>
+      <if test="buyerid != null">
+        buyerId = #{buyerid,jdbcType=INTEGER},
+      </if>
+      <if test="sellerid != null">
+        sellerId = #{sellerid,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="income != null">
+        income = #{income,jdbcType=DECIMAL},
+      </if>
+      <if test="pay != null">
+        pay = #{pay,jdbcType=DECIMAL},
+      </if>
+      <if test="incomedate != null">
+        incomeDate = #{incomedate,jdbcType=DECIMAL},
+      </if>
+      <if test="payType != null">
+        pay_type = #{payType,jdbcType=SMALLINT},
+      </if>
+      <if test="paydate != null">
+        payDate = #{paydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="cardno != null">
+        cardno = #{cardno,jdbcType=VARCHAR},
+      </if>
+      <if test="payBank != null">
+        pay_bank = #{payBank,jdbcType=SMALLINT},
+      </if>
+      <if test="bussiType != null">
+        bussi_type = #{bussiType,jdbcType=SMALLINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsFinancial">
+    update ss_financial
+    set tradeNo = #{tradeno,jdbcType=VARCHAR},
+      orderNo = #{orderno,jdbcType=VARCHAR},
+      buyerId = #{buyerid,jdbcType=INTEGER},
+      sellerId = #{sellerid,jdbcType=INTEGER},
+      remark = #{remark,jdbcType=VARCHAR},
+      income = #{income,jdbcType=DECIMAL},
+      pay = #{pay,jdbcType=DECIMAL},
+      incomeDate = #{incomedate,jdbcType=DECIMAL},
+      pay_type = #{payType,jdbcType=SMALLINT},
+      payDate = #{paydate,jdbcType=TIMESTAMP},
+      cardno = #{cardno,jdbcType=VARCHAR},
+      pay_bank = #{payBank,jdbcType=SMALLINT},
+      bussi_type = #{bussiType,jdbcType=SMALLINT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
