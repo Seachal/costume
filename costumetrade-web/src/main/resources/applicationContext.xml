@@ -57,7 +57,15 @@
 	</bean>
 	 -->
 	<alias name="aliyunFileService" alias="fileService"/>
-	
+		<bean id="wxService" class="me.chanjar.weixin.cp.api.WxCpServiceImpl">
+		<property name="wxCpConfigStorage">
+			<bean class="me.chanjar.weixin.cp.api.WxCpInMemoryConfigStorage">
+				<property name="corpId" value="${wx.corpId}" />
+				<property name="corpSecret" value="${wx.corpSecret}" />
+				<property name="agentId" value="${wx.agentId}" />
+			</bean>
+		</property>
+	</bean>
 	<!-- 数据库配置 -->
 	<import resource="costumetrade-datasource.xml" />
 </beans>
