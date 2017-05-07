@@ -27,7 +27,8 @@ import costumetrade.order.domain.SpProduct;
 import costumetrade.order.query.KeyParam;
 import costumetrade.order.query.ProductDetailQuery;
 import costumetrade.order.query.ProductInitQuery;
-import costumetrade.order.query.ProductsQuery;
+import costumetrade.order.query.ProductParam;
+import costumetrade.order.query.ProductQuery;
 import costumetrade.order.service.SpProductService;
 
 /**
@@ -45,13 +46,13 @@ public class SpProductController {
 
 	@RequestMapping("/getProducts")
 	@ResponseBody
-	public ApiResponse getAllroducts(ProductsQuery productQuery) {
+	public ApiResponse getAllroducts(ProductParam productQuery) {
 		
-		List<SpProduct> roductLists = new ArrayList<SpProduct>();
+		List<ProductQuery> productLists = new ArrayList<ProductQuery>();
 	
-		roductLists = spProductService.selectProducts(productQuery);
+		productLists = spProductService.selectProducts(productQuery);
 
-		return  ApiResponse.getInstance(roductLists);
+		return  ApiResponse.getInstance(productLists);
 	}
 	
 	@RequestMapping("/getProductDetail")

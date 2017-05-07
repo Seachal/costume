@@ -11,8 +11,8 @@ import costumetrade.order.domain.SpPBrand;
 import costumetrade.order.domain.SpPCate;
 import costumetrade.order.domain.SpPColorCustom;
 import costumetrade.order.domain.SpPSizeCustom;
-import costumetrade.order.domain.SpPrice;
 import costumetrade.order.domain.SpProduct;
+import costumetrade.order.domain.SsPrice;
 import costumetrade.order.enums.GradeTypeEnum;
 import costumetrade.order.enums.SeasonTypeEnum;
 import costumetrade.order.enums.UnitTypeEnum;
@@ -20,12 +20,13 @@ import costumetrade.order.mapper.SpPBrandMapper;
 import costumetrade.order.mapper.SpPCateMapper;
 import costumetrade.order.mapper.SpPColorCustomMapper;
 import costumetrade.order.mapper.SpPSizeCustomMapper;
-import costumetrade.order.mapper.SpPriceMapper;
 import costumetrade.order.mapper.SpProductMapper;
+import costumetrade.order.mapper.SsPriceMapper;
 import costumetrade.order.query.KeyParam;
 import costumetrade.order.query.ProductDetailQuery;
 import costumetrade.order.query.ProductInitQuery;
-import costumetrade.order.query.ProductsQuery;
+import costumetrade.order.query.ProductParam;
+import costumetrade.order.query.ProductQuery;
 import costumetrade.order.service.SpProductService;
 
 @Transactional
@@ -42,10 +43,10 @@ public class SpProductServiceImpl implements SpProductService{
 	@Autowired
 	private SpPCateMapper spPCateMapper;
 	@Autowired
-	private SpPriceMapper spPriceMapper;
+	private SsPriceMapper ssPriceMapper;
 	
 	@Override
-	public List<SpProduct> selectProducts(ProductsQuery productQuery) {
+	public List<ProductQuery> selectProducts(ProductParam productQuery) {
 		// TODO Auto-generated method stub
 		return spProductMapper.selectProducts(productQuery);
 	}
@@ -80,8 +81,7 @@ public class SpProductServiceImpl implements SpProductService{
 	public int saveProduct(SpProduct product) {
 		// TODO Auto-generated method stub
 		// 查询货号是否存在
-		SpProduct productExist = spProductMapper.selectByCode(product);
-		if(productExist != null){
+		if(product.getId() != null){
 			return 0;
 		}else{
 			if(product.getSizes() != null){
@@ -102,23 +102,20 @@ public class SpProductServiceImpl implements SpProductService{
 			}
 			//保存商品
 			product.setStatus(0);
-			int save = spProductMapper.insertSelective(product);
-			if(save > 0 ){
-				SpProduct productNew = spProductMapper.selectByCode(product);
-				SpPrice price = new SpPrice();
-				price.setSale0(product.getSale0());
-				price.setSale1(product.getSale1());
-				price.setSale2(product.getSale2());
-				price.setSale3(product.getSale3());
-				price.setStock(product.getStock());
-				price.setSubid(productNew.getCorpid());
-				price.setProdId(productNew.getId());
+			int id = spProductMapper.insertSelective(product);
+			if(id >0 ){
+				SsPrice price = new SsPrice();
+				price.setPackprice(product.getPackprice());
+				price.setPurchaseprice(product.getPurchaseprice());
+				price.setRetailprice(product.getRetailprice());
+				price.setTagprice(product.getTagprice());
+				price.setProductid(id+"");
 				price.setCreateTime(new Date());
 				price.setModifyTime(new Date());
-				price.setCreateBy(productNew.getCreateBy());
-				price.setModifyBy(productNew.getModifyBy());
+				price.setCreateBy(product.getCreateBy());
+				price.setModifyBy(product.getModifyBy());
 				//价格保存到价格表，颜色组保存到颜色表
-				spPriceMapper.insertSelective(price);
+				ssPriceMapper.insertSelective(price);
 			}else{
 				return 0;
 			}

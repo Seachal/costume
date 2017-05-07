@@ -13,7 +13,7 @@ public class KeyParam extends Entity{
      */
     private Integer corpId;
     
-    private Integer subId;
+    private Integer clientId;
 
 	public Integer getId() {
 		return id;
@@ -30,13 +30,15 @@ public class KeyParam extends Entity{
 		this.corpId = corpId;
 	}
 
-	public Integer getSubId() {
-		return subId;
+	public Integer getClientId() {
+		return clientId;
 	}
 
-	public void setSubId(Integer subId) {
-		this.subId = subId;
+	public void setClientId(Integer clientId) {
+		this.clientId = clientId;
 	}
+
+	
     
     
     

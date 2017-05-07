@@ -2,27 +2,28 @@ package costumetrade.order.query;
 
 import java.util.List;
 
-public class ProductsQuery {
+public class ProductParam {
 	
-	private Integer corpId;   
-	private Integer subId;   
+	private Integer clientId;
+	private Integer storeId;   
 	private String code;   //货号
 	private  String TimeUpOp;   //升序为asc，降序为desc
 	private String priceOp;    //升序为asc，降序为desc
 	private List<String> productType;  //x商品类别
 	private List<String> productBrand;  //x商品品牌
 	private List<String> productSeason;  //x商品季节
-	public Integer getCorpId() {
-		return corpId;
+	
+	public Integer getClientId() {
+		return clientId;
 	}
-	public void setCorpId(Integer corpId) {
-		this.corpId = corpId;
+	public void setClientId(Integer clientId) {
+		this.clientId = clientId;
 	}
-	public Integer getSubId() {
-		return subId;
+	public Integer getStoreId() {
+		return storeId;
 	}
-	public void setSubId(Integer subId) {
-		this.subId = subId;
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
 	}
 	public String getCode() {
 		return code;

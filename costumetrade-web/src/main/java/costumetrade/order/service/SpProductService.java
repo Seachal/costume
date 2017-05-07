@@ -6,7 +6,8 @@ import costumetrade.order.domain.SpProduct;
 import costumetrade.order.query.KeyParam;
 import costumetrade.order.query.ProductDetailQuery;
 import costumetrade.order.query.ProductInitQuery;
-import costumetrade.order.query.ProductsQuery;
+import costumetrade.order.query.ProductParam;
+import costumetrade.order.query.ProductQuery;
 
 
 public interface SpProductService {
@@ -14,7 +15,7 @@ public interface SpProductService {
 	 * 获取所有商品
 	 * 
 	 * */
-	public List<SpProduct> selectProducts(ProductsQuery productQuery);
+	public List<ProductQuery> selectProducts(ProductParam productQuery);
 	/**
 	 * 获取商品詳情
 	 * 

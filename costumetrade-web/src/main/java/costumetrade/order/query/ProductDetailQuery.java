@@ -16,11 +16,6 @@ public class ProductDetailQuery extends Entity {
     private Integer corpid;
 
     /**
-     *  实体状态 0:正常 1：作废
-     */
-    private Integer status;
-
-    /**
      *  商品货号
      */
     private String code;
@@ -40,31 +35,7 @@ public class ProductDetailQuery extends Entity {
      */
     private String name;
 
-    /**
-     *  助记简码
-     */
-    private String fastcode;
-
-    /**
-     *  商品条码
-     */
-    private String barcode;
-
-    /**
-     *  
-     */
-    private String barcodes;
-
-    /**
-     *  商品级别
-     */
-    private String grade;
-
-    /**
-     *  商品单位
-     */
-    private String unit;
-
+  
     /**
      *  商品颜色
      */
@@ -91,16 +62,6 @@ public class ProductDetailQuery extends Entity {
     private String season;
 
     /**
-     *  月销标记
-     */
-    private String saltag;
-
-    /**
-     *  月销总量
-     */
-    private BigDecimal salmonth;
-
-    /**
      *  商品图片
      */
     private String image;
@@ -119,7 +80,6 @@ public class ProductDetailQuery extends Entity {
      *  商品图片
      */
     private String image3;
-
     /**
      *  商品图片
      */
@@ -129,17 +89,6 @@ public class ProductDetailQuery extends Entity {
      *  商品描述
      */
     private String description;
-
-    /**
-     *  预警下线
-     */
-    private Double warnLow;
-
-    /**
-     *  预警上线
-     */
-    private Double warnHigh;
-
     /**
      *  上架时间
      */
@@ -149,73 +98,51 @@ public class ProductDetailQuery extends Entity {
      *  下架时间
      */
     private Date timeDown;
-
-    /**
-     *  创建时间
-     */
-    private Date createTime;
-
-    /**
-     *  创建人
-     */
-    private String createBy;
-
-    /**
-     *  修改时间
-     */
-    private Date modifyTime;
-
-    /**
-     *  修改人
-     */
-    private String modifyBy;
-
     /**
      *  分店
      */
     private Integer subid;
-
+    
+    private String storeName;
+    
+    private String storeImage;
+    
+    private BigDecimal salePrice;
+    
+    private BigDecimal originalPrice;
+    
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
-        return id;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
-    public Integer getCorpid() {
-        return corpid;
-    }
+	public Integer getCorpid() {
+		return corpid;
+	}
 
-    public void setCorpid(Integer corpid) {
-        this.corpid = corpid;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public String getCode() {
-        return code;
-    }
-
-    public void setCode(String code) {
-        this.code = code == null ? null : code.trim();
-    }
+	public void setCorpid(Integer corpid) {
+		this.corpid = corpid;
+	}
 
 
+	public String getCode() {
+		return code;
+	}
 
-    public String getBrand() {
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getBrand() {
 		return brand;
 	}
 
-	public void setBrandid(String brand) {
+	public void setBrand(String brand) {
 		this.brand = brand;
 	}
 
@@ -228,226 +155,159 @@ public class ProductDetailQuery extends Entity {
 	}
 
 	public String getName() {
-        return name;
-    }
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name == null ? null : name.trim();
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getFastcode() {
-        return fastcode;
-    }
+	public String getColors() {
+		return colors;
+	}
 
-    public void setFastcode(String fastcode) {
-        this.fastcode = fastcode == null ? null : fastcode.trim();
-    }
+	public void setColors(String colors) {
+		this.colors = colors;
+	}
 
-    public String getBarcode() {
-        return barcode;
-    }
+	public String getSizes() {
+		return sizes;
+	}
 
-    public void setBarcode(String barcode) {
-        this.barcode = barcode == null ? null : barcode.trim();
-    }
+	public void setSizes(String sizes) {
+		this.sizes = sizes;
+	}
 
-    public String getBarcodes() {
-        return barcodes;
-    }
+	public Integer getHandcount() {
+		return handcount;
+	}
 
-    public void setBarcodes(String barcodes) {
-        this.barcodes = barcodes == null ? null : barcodes.trim();
-    }
+	public void setHandcount(Integer handcount) {
+		this.handcount = handcount;
+	}
 
-    public String getGrade() {
-        return grade;
-    }
+	public String getYear() {
+		return year;
+	}
 
-    public void setGrade(String grade) {
-        this.grade = grade == null ? null : grade.trim();
-    }
+	public void setYear(String year) {
+		this.year = year;
+	}
 
-    public String getUnit() {
-        return unit;
-    }
+	public String getSeason() {
+		return season;
+	}
 
-    public void setUnit(String unit) {
-        this.unit = unit == null ? null : unit.trim();
-    }
+	public void setSeason(String season) {
+		this.season = season;
+	}
 
-    public String getColors() {
-        return colors;
-    }
+	public String getImage() {
+		return image;
+	}
 
-    public void setColors(String colors) {
-        this.colors = colors == null ? null : colors.trim();
-    }
+	public void setImage(String image) {
+		this.image = image;
+	}
 
-    public String getSizes() {
-        return sizes;
-    }
+	public String getImage1() {
+		return image1;
+	}
 
-    public void setSizes(String sizes) {
-        this.sizes = sizes == null ? null : sizes.trim();
-    }
+	public void setImage1(String image1) {
+		this.image1 = image1;
+	}
 
-    public Integer getHandcount() {
-        return handcount;
-    }
+	public String getImage2() {
+		return image2;
+	}
 
-    public void setHandcount(Integer handcount) {
-        this.handcount = handcount;
-    }
+	public void setImage2(String image2) {
+		this.image2 = image2;
+	}
 
-    public String getYear() {
-        return year;
-    }
+	public String getImage3() {
+		return image3;
+	}
 
-    public void setYear(String year) {
-        this.year = year == null ? null : year.trim();
-    }
+	public void setImage3(String image3) {
+		this.image3 = image3;
+	}
 
-    public String getSeason() {
-        return season;
-    }
+	public String getImage4() {
+		return image4;
+	}
 
-    public void setSeason(String season) {
-        this.season = season == null ? null : season.trim();
-    }
+	public void setImage4(String image4) {
+		this.image4 = image4;
+	}
 
-    public String getSaltag() {
-        return saltag;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setSaltag(String saltag) {
-        this.saltag = saltag == null ? null : saltag.trim();
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public BigDecimal getSalmonth() {
-        return salmonth;
-    }
+	public Date getTimeUp() {
+		return timeUp;
+	}
 
-    public void setSalmonth(BigDecimal salmonth) {
-        this.salmonth = salmonth;
-    }
+	public void setTimeUp(Date timeUp) {
+		this.timeUp = timeUp;
+	}
 
-    public String getImage() {
-        return image;
-    }
+	public Date getTimeDown() {
+		return timeDown;
+	}
 
-    public void setImage(String image) {
-        this.image = image == null ? null : image.trim();
-    }
+	public void setTimeDown(Date timeDown) {
+		this.timeDown = timeDown;
+	}
 
-    public String getImage1() {
-        return image1;
-    }
+	public Integer getSubid() {
+		return subid;
+	}
 
-    public void setImage1(String image1) {
-        this.image1 = image1 == null ? null : image1.trim();
-    }
+	public void setSubid(Integer subid) {
+		this.subid = subid;
+	}
 
-    public String getImage2() {
-        return image2;
-    }
+	public String getStoreName() {
+		return storeName;
+	}
 
-    public void setImage2(String image2) {
-        this.image2 = image2 == null ? null : image2.trim();
-    }
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
 
-    public String getImage3() {
-        return image3;
-    }
+	public String getStoreImage() {
+		return storeImage;
+	}
 
-    public void setImage3(String image3) {
-        this.image3 = image3 == null ? null : image3.trim();
-    }
+	public void setStoreImage(String storeImage) {
+		this.storeImage = storeImage;
+	}
 
-    public String getImage4() {
-        return image4;
-    }
+	public BigDecimal getSalePrice() {
+		return salePrice;
+	}
 
-    public void setImage4(String image4) {
-        this.image4 = image4 == null ? null : image4.trim();
-    }
+	public void setSalePrice(BigDecimal salePrice) {
+		this.salePrice = salePrice;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public BigDecimal getOriginalPrice() {
+		return originalPrice;
+	}
 
-    public void setDescription(String description) {
-        this.description = description == null ? null : description.trim();
-    }
-
-    public Double getWarnLow() {
-        return warnLow;
-    }
-
-    public void setWarnLow(Double warnLow) {
-        this.warnLow = warnLow;
-    }
-
-    public Double getWarnHigh() {
-        return warnHigh;
-    }
-
-    public void setWarnHigh(Double warnHigh) {
-        this.warnHigh = warnHigh;
-    }
-
-    public Date getTimeUp() {
-        return timeUp;
-    }
-
-    public void setTimeUp(Date timeUp) {
-        this.timeUp = timeUp;
-    }
-
-    public Date getTimeDown() {
-        return timeDown;
-    }
-
-    public void setTimeDown(Date timeDown) {
-        this.timeDown = timeDown;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
-    }
-
-    public String getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy == null ? null : createBy.trim();
-    }
-
-    public Date getModifyTime() {
-        return modifyTime;
-    }
-
-    public void setModifyTime(Date modifyTime) {
-        this.modifyTime = modifyTime;
-    }
-
-    public String getModifyBy() {
-        return modifyBy;
-    }
-
-    public void setModifyBy(String modifyBy) {
-        this.modifyBy = modifyBy == null ? null : modifyBy.trim();
-    }
-
-    public Integer getSubid() {
-        return subid;
-    }
-
-    public void setSubid(Integer subid) {
-        this.subid = subid;
-    }
+	public void setOriginalPrice(BigDecimal originalPrice) {
+		this.originalPrice = originalPrice;
+	}
+    
+    
+    
+    
+    
 }

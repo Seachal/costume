@@ -1,33 +1,31 @@
 package costumetrade.order.query;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 import costumetrade.common.Entity;
-import costumetrade.order.domain.SpStoDetail;
-import costumetrade.order.domain.SpStoOrder;
+import costumetrade.order.domain.SsStoDetail;
+import costumetrade.order.domain.SsStoOrder;
 
 public class OrderDetailQuery extends Entity {
-	private SpStoOrder order ;
+	private SsStoOrder order ;
     
-    private List<SpStoDetail> detail;
+    private List<SsStoDetail> detail;
 
     private static final long serialVersionUID = 1L;
 
-	public SpStoOrder getOrder() {
+	public SsStoOrder getOrder() {
 		return order;
 	}
 
-	public void setOrder(SpStoOrder order) {
+	public void setOrder(SsStoOrder order) {
 		this.order = order;
 	}
 
-	public List<SpStoDetail> getDetail() {
+	public List<SsStoDetail> getDetail() {
 		return detail;
 	}
 
-	public void setDetail(List<SpStoDetail> detail) {
+	public void setDetail(List<SsStoDetail> detail) {
 		this.detail = detail;
 	}
     
