@@ -29,14 +29,19 @@ public class FTPClientUtils {
 
     public static Logger logger = Logger.getLogger(FTPClientUtils.class);
 	
-	private ThreadLocal<FTPClient> ftpClientThreadLocal = new ThreadLocal<FTPClient>();  
+	private ThreadLocal<FTPClient> ftpClientThreadLocal = new ThreadLocal<FTPClient>(); 
+
 	private String url;
 	private Integer port  = 21;
+
 	private String username;
+
 	private String password;
 	private Integer clientTimeout = 20000;
 	private boolean passiveMode = false;
 	private String encoding = "gbk";
+	
+	private static FTPClientUtils ftpClientUtils = null;
 
 	 //---------------------------------------------------------------------  
     // private method  
@@ -74,7 +79,12 @@ public class FTPClientUtils {
             return ftpClient;  
         }  
     }  
-    
+    public static FTPClientUtils getInstance(){
+    	if(null==ftpClientUtils){
+    		ftpClientUtils = new FTPClientUtils();
+    	}
+    	return ftpClientUtils;
+    }
 	  /**
 	    * 上传文件至FTP
 	    * @param path
@@ -128,7 +138,6 @@ public class FTPClientUtils {
             }
         	getFTPClient().makeDirectory(remote);
     	}catch (IOException e) {
-			// TODO Auto-generated catch block
         	logger.error("创建FTP目录输入输出异常:"+e);
         	return false;
 	    }
@@ -174,6 +183,10 @@ public class FTPClientUtils {
 	    * @return
 	    */
 	 public  boolean connect(FTPClient ftpClient) throws Exception{
+		 
+		this.url=ConfigProperties.getProperty("ftp.ip");
+		this.username=ConfigProperties.getProperty("ftp.username");
+		this.password=ConfigProperties.getProperty("ftp.password");
 		
 		if(null == ftpClient)
 			return false;
@@ -644,36 +657,6 @@ public  boolean getFileFromFold(String remotePath,String[] fileNames){
 	}
 
 
-	/**
-	 * @return the username
-	 */
-	public String getUsername() {
-		return username;
-	}
-
-
-	/**
-	 * @param username the username to set
-	 */
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
-
-
-	/**
-	 * @param password the password to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
 
 	/**
 	 * @return the clientTimeout
