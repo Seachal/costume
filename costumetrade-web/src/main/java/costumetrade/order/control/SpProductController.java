@@ -44,6 +44,7 @@ public class SpProductController {
 	private SpProductService spProductService;
 
 
+
 	@RequestMapping("/getProducts")
 	@ResponseBody
 	public ApiResponse getAllroducts(ProductParam productQuery) {
@@ -108,16 +109,12 @@ public class SpProductController {
 		fileName =str+fileName.substring(fileName.lastIndexOf("."), fileName.length());
 		
 		String path = "/touchart/"+d+"/";
-		
-		FTPClientUtils utils = new FTPClientUtils();
-		utils.setUsername("administrator");
-		utils.setPassword("touchart@82606523");
-		utils.setUrl("117.149.24.42");
+
 		
 		InputStream input;
 		try {
 			input = file.getInputStream();
-			boolean upload = utils.uploadFileToFtp(path, fileName, input);
+			boolean upload = FTPClientUtils.getInstance().uploadFileToFtp(path, fileName, input);
 			if(upload){
 				result.setData(path+fileName);
 			}else{
