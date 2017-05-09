@@ -17,7 +17,7 @@ public class SpPCate extends Entity {
     /**
      *  企业ID
      */
-    private Integer corpid;
+    private Integer storeId;
 
     /**
      *  助记简码
@@ -62,15 +62,16 @@ public class SpPCate extends Entity {
         this.catename = catename == null ? null : catename.trim();
     }
 
-    public Integer getCorpid() {
-        return corpid;
-    }
 
-    public void setCorpid(Integer corpid) {
-        this.corpid = corpid;
-    }
+    public Integer getStoreId() {
+		return storeId;
+	}
 
-    public String getFastcode() {
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
+	}
+
+	public String getFastcode() {
         return fastcode;
     }
 

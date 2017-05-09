@@ -13,12 +13,12 @@ public class SsPrice extends Entity {
     /**
      *  店铺编号
      */
-    private String storeid;
+    private Integer storeid;
 
     /**
      *  商品编号
      */
-    private String productid;
+    private Integer productid;
 
     /**
      *  进货价
@@ -75,20 +75,20 @@ public class SsPrice extends Entity {
         this.id = id;
     }
 
-    public String getStoreid() {
+    public Integer getStoreid() {
         return storeid;
     }
 
-    public void setStoreid(String storeid) {
-        this.storeid = storeid == null ? null : storeid.trim();
+    public void setStoreid(Integer storeid) {
+        this.storeid = storeid;
     }
 
-    public String getProductid() {
+    public Integer getProductid() {
         return productid;
     }
 
-    public void setProductid(String productid) {
-        this.productid = productid == null ? null : productid.trim();
+    public void setProductid(Integer productid) {
+        this.productid = productid;
     }
 
     public BigDecimal getPurchaseprice() {

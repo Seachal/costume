@@ -12,7 +12,7 @@ public class SpPColorCustom extends Entity {
     /**
      *  企业ID
      */
-    private Integer corpid;
+    private Integer storeId;
 
     /**
      *  自定义名称
@@ -54,15 +54,17 @@ public class SpPColorCustom extends Entity {
         this.id = id;
     }
 
-    public Integer getCorpid() {
-        return corpid;
-    }
 
-    public void setCorpid(Integer corpid) {
-        this.corpid = corpid;
-    }
 
-    public String getCustomname() {
+    public Integer getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
+	}
+
+	public String getCustomname() {
         return customname;
     }
 

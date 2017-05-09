@@ -13,12 +13,17 @@ public class SpProduct extends Entity {
     /**
      *  企业ID
      */
-    private Integer corpid;
+    private Integer storeId;
 
     /**
      *  实体状态 0:正常 1：作废
      */
     private Integer status;
+    
+    /** 
+     * 货品级别
+     * */
+    private Integer levelType;
 
     /**
      *  商品货号
@@ -170,10 +175,6 @@ public class SpProduct extends Entity {
      */
     private String modifyBy;
 
-    /**
-     *  分店
-     */
-    private Integer subid;
     
     /**
      *  进货价
@@ -199,6 +200,31 @@ public class SpProduct extends Entity {
      *  零售价
      */
     private BigDecimal retailprice;
+    
+    /**
+     *  商品图片名称
+     */
+    private String imageName;
+
+    /**
+     *  商品图片图片名称
+     */
+    private String imageName1;
+
+    /**
+     *  商品图片名称
+     */
+    private String imageName2;
+
+    /**
+     *  商品图片名称
+     */
+    private String imageName3;
+
+    /**
+     *  商品图片名称
+     */
+    private String imageName4;
 
     private static final long serialVersionUID = 1L;
     
@@ -211,15 +237,17 @@ public class SpProduct extends Entity {
         this.id = id;
     }
 
-    public Integer getCorpid() {
-        return corpid;
-    }
+  
 
-    public void setCorpid(Integer corpid) {
-        this.corpid = corpid;
-    }
+    public Integer getStoreId() {
+		return storeId;
+	}
 
-    public Integer getStatus() {
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
+	}
+
+	public Integer getStatus() {
         return status;
     }
 
@@ -467,13 +495,7 @@ public class SpProduct extends Entity {
         this.modifyBy = modifyBy == null ? null : modifyBy.trim();
     }
 
-    public Integer getSubid() {
-        return subid;
-    }
 
-    public void setSubid(Integer subid) {
-        this.subid = subid;
-    }
 
 	public BigDecimal getPurchaseprice() {
 		return purchaseprice;
@@ -514,6 +536,55 @@ public class SpProduct extends Entity {
 	public void setRetailprice(BigDecimal retailprice) {
 		this.retailprice = retailprice;
 	}
+
+	public Integer getLevelType() {
+		return levelType;
+	}
+
+	public void setLevelType(Integer levelType) {
+		this.levelType = levelType;
+	}
+
+	public String getImageName() {
+		return imageName;
+	}
+
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+
+	public String getImageName1() {
+		return imageName1;
+	}
+
+	public void setImageName1(String imageName1) {
+		this.imageName1 = imageName1;
+	}
+
+	public String getImageName2() {
+		return imageName2;
+	}
+
+	public void setImageName2(String imageName2) {
+		this.imageName2 = imageName2;
+	}
+
+	public String getImageName3() {
+		return imageName3;
+	}
+
+	public void setImageName3(String imageName3) {
+		this.imageName3 = imageName3;
+	}
+
+	public String getImageName4() {
+		return imageName4;
+	}
+
+	public void setImageName4(String imageName4) {
+		this.imageName4 = imageName4;
+	}
     
+	
     
 }
