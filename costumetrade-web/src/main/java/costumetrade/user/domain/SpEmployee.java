@@ -85,22 +85,23 @@ public class SpEmployee extends Entity implements Serializable{
     /**
      *  
      */
-    private Integer corpid;
+    private Integer storeId;
 
     /**
      *  员工编号:
      */
     private String id;
 
-    public Integer getCorpid() {
-        return corpid;
-    }
+   
+    public Integer getStoreId() {
+		return storeId;
+	}
 
-    public void setCorpid(Integer corpid) {
-        this.corpid = corpid;
-    }
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
+	}
 
-    public String getId() {
+	public String getId() {
         return id;
     }
 

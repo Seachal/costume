@@ -12,8 +12,7 @@ import costumetrade.order.enums.UnitTypeEnum;
 
 public class ProductInitQuery extends Entity{
 	
-	private Integer corpId;   
-	private Integer subId;   
+	private Integer storeId;   
 
 	private List<SpPCate> productType;  //x商品类别
 	private List<SpPBrand> productBrand;  //x商品品牌
@@ -23,17 +22,12 @@ public class ProductInitQuery extends Entity{
 	private List<String> season;
 	private List<String> grade;
 	
-	public Integer getCorpId() {
-		return corpId;
+
+	public Integer getStoreId() {
+		return storeId;
 	}
-	public void setCorpId(Integer corpId) {
-		this.corpId = corpId;
-	}
-	public Integer getSubId() {
-		return subId;
-	}
-	public void setSubId(Integer subId) {
-		this.subId = subId;
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
 	}
 	public List<SpPCate> getProductType() {
 		return productType;

@@ -1,5 +1,6 @@
 package costumetrade.order.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import costumetrade.order.domain.SpPBrand;
 import costumetrade.order.domain.SpPCate;
-import costumetrade.order.domain.SpPColorCustom;
 import costumetrade.order.domain.SpPSizeCustom;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SsPrice;
+import costumetrade.order.domain.SsProductFile;
 import costumetrade.order.enums.GradeTypeEnum;
 import costumetrade.order.enums.SeasonTypeEnum;
 import costumetrade.order.enums.UnitTypeEnum;
@@ -22,10 +23,10 @@ import costumetrade.order.mapper.SpPColorCustomMapper;
 import costumetrade.order.mapper.SpPSizeCustomMapper;
 import costumetrade.order.mapper.SpProductMapper;
 import costumetrade.order.mapper.SsPriceMapper;
-import costumetrade.order.query.KeyParam;
+import costumetrade.order.mapper.SsProductFileMapper;
 import costumetrade.order.query.ProductDetailQuery;
 import costumetrade.order.query.ProductInitQuery;
-import costumetrade.order.query.ProductParam;
+import costumetrade.order.query.Param;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.service.SpProductService;
 
@@ -44,25 +45,27 @@ public class SpProductServiceImpl implements SpProductService{
 	private SpPCateMapper spPCateMapper;
 	@Autowired
 	private SsPriceMapper ssPriceMapper;
+	@Autowired
+	private SsProductFileMapper ssProductFileMapper;
 	
 	@Override
-	public List<ProductQuery> selectProducts(ProductParam productQuery) {
+	public List<ProductQuery> selectProducts(Param productQuery) {
 		return spProductMapper.selectProducts(productQuery);
 	}
 
 	@Override
-	public ProductDetailQuery selectProduct(KeyParam keyParam) {
+	public ProductDetailQuery selectProduct(Param keyParam) {
 		return spProductMapper.selectProduct(keyParam);
 	}
 
 	@Override
-	public ProductInitQuery productInit(int corpId) {
-		List<SpPBrand> brands = spPBrandMapper.getSpPBrands(corpId);
-		List<SpPCate> productTypes = spPCateMapper.getSpPCates(corpId);
-		List<SpPSizeCustom> sizes = spPSizeCustomMapper.getSpPSizeCustoms(corpId);
+	public ProductInitQuery productInit(int storeId) {
+		List<SpPBrand> brands = spPBrandMapper.getSpPBrands(storeId);
+		List<SpPCate> productTypes = spPCateMapper.getSpPCates(storeId);
+		List<SpPSizeCustom> sizes = spPSizeCustomMapper.getSpPSizeCustoms(storeId);
 		ProductInitQuery query = new ProductInitQuery();
 		
-		query.setCorpId(corpId);
+		query.setStoreId(storeId);
 		query.setProductBrand(brands);
 		query.setProductSize(sizes);
 		query.setProductType(productTypes);
@@ -81,40 +84,83 @@ public class SpProductServiceImpl implements SpProductService{
 		if(product.getId() != null){
 			return 0;
 		}else{
-			if(product.getSizes() != null){
-				//保存颜色组到颜色表，获取颜色组ID
-				SpPColorCustom custom = new SpPColorCustom();
-				custom.setCorpid(product.getCorpid());
-				custom.setValue(product.getSizes());
-				custom = spPColorCustomMapper.selectByCustomValue(custom);
-				if(custom == null){
-					custom = new SpPColorCustom();
-					custom.setCustomname("自定义");
-					custom.setCorpid(product.getCorpid());
-					custom.setValue(product.getSizes());
-					spPColorCustomMapper.insertSelective(custom);
-					custom = spPColorCustomMapper.selectByCustomValue(custom);
-				}
-				product.setColors(custom.getId()+"");
-			}
 			//保存商品
 			product.setStatus(0);
 			int id = spProductMapper.insertSelective(product);
 			if(id >0 ){
 				SsPrice price = new SsPrice();
+				price.setStoreid(product.getStoreId());
 				price.setPackprice(product.getPackprice());
 				price.setPurchaseprice(product.getPurchaseprice());
 				price.setRetailprice(product.getRetailprice());
 				price.setTagprice(product.getTagprice());
-				price.setProductid(id+"");
+				price.setProductid(id);
 				price.setCreateTime(new Date());
 				price.setModifyTime(new Date());
 				price.setCreateBy(product.getCreateBy());
 				price.setModifyBy(product.getModifyBy());
 				//价格保存到价格表，颜色组保存到颜色表
 				ssPriceMapper.insertSelective(price);
+				
 			}else{
 				return 0;
+			}
+			List<SsProductFile> files = new ArrayList<SsProductFile>();
+			if(product.getImage() != null && product.getImageName() != null ){
+				SsProductFile file = new SsProductFile();
+				file.setProductid(id);
+				file.setStoreid(product.getStoreId());
+				file.setFilename(product.getImageName());
+				file.setUrl(product.getImage());
+				file.setCreatetime(new Date());
+				file.setCreateby(product.getCreateBy());
+				files.add(file);
+			}
+			if(product.getImage1() != null && product.getImageName1() != null ){
+				SsProductFile file = new SsProductFile();
+				file.setProductid(id);
+				file.setStoreid(product.getStoreId());
+				file.setFilename(product.getImageName1());
+				file.setUrl(product.getImage1());
+				file.setCreatetime(new Date());
+				file.setCreateby(product.getCreateBy());
+				files.add(file);
+			}
+			if(product.getImage2() != null && product.getImageName2() != null ){
+				SsProductFile file = new SsProductFile();
+				file.setProductid(id);
+				file.setStoreid(product.getStoreId());
+				file.setFilename(product.getImageName2());
+				file.setUrl(product.getImage2());
+				file.setCreatetime(new Date());
+				file.setCreateby(product.getCreateBy());
+				files.add(file);
+			}
+			if(product.getImage3() != null && product.getImageName3() != null ){
+				SsProductFile file = new SsProductFile();
+				file.setProductid(id);
+				file.setStoreid(product.getStoreId());
+				file.setFilename(product.getImageName3());
+				file.setUrl(product.getImage3());
+				file.setCreatetime(new Date());
+				file.setCreateby(product.getCreateBy());
+				files.add(file);
+			}
+			if(product.getImage4() != null && product.getImageName4() != null ){
+				SsProductFile file = new SsProductFile();
+				file.setProductid(id);
+				file.setStoreid(product.getStoreId());
+				file.setFilename(product.getImageName4());
+				file.setUrl(product.getImage4());
+				file.setCreatetime(new Date());
+				file.setCreateby(product.getCreateBy());
+				files.add(file);
+			}
+			if(files.size()>0){
+				int op = ssProductFileMapper.insertFiles(files,product.getStoreId());
+				if(op <= 0){
+					return 0;
+				}
 			}
 			return 1;	
 		}

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import costumetrade.user.domain.SpEmployee;
-import costumetrade.user.domain.SpEmployeeKey;
 import costumetrade.user.mapper.SpEmployeeMapper;
 import costumetrade.user.service.SpEmployeeService;
 
@@ -24,12 +23,9 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 	@Override
 	public int saveEmployee(SpEmployee spEmployee) {
 		int save = 0;
-		SpEmployeeKey spEmployeeKey = new SpEmployeeKey();
-		if(spEmployee.getId() != null && spEmployee.getCorpid() != null){
-			spEmployeeKey.setId(spEmployee.getId());
-			spEmployeeKey.setCorpid(spEmployee.getCorpid());
+		if(spEmployee.getId() != null){
 
-			SpEmployee getEmployee = spEmployeeMapper.selectByPrimaryKey(spEmployeeKey);
+			SpEmployee getEmployee = spEmployeeMapper.selectByPrimaryKey(spEmployee);
 			if(getEmployee != null){
 				save = spEmployeeMapper.updateByPrimaryKeySelective(spEmployee);
 			}
@@ -44,14 +40,12 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 	}
 	@Override
 	public int deleteEmployee(SpEmployee spEmployee) {
-		if(spEmployee.getCorpid() == null){
+		if(spEmployee.getId() == null){
 			return 0;
 		}
 		
-		SpEmployeeKey spEmployeeKey = new SpEmployeeKey();
-		spEmployeeKey.setCorpid(spEmployee.getCorpid());
 		
-		return spEmployeeMapper.deleteByPrimaryKey(spEmployeeKey);
+		return spEmployeeMapper.deleteByPrimaryKey(spEmployee);
 	}
 	
 	

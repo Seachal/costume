@@ -13,7 +13,7 @@ public class ProductDetailQuery extends Entity {
     /**
      *  企业ID
      */
-    private Integer corpid;
+    private Integer storeId;
 
     /**
      *  商品货号
@@ -98,10 +98,7 @@ public class ProductDetailQuery extends Entity {
      *  下架时间
      */
     private Date timeDown;
-    /**
-     *  分店
-     */
-    private Integer subid;
+
     
     private String storeName;
     
@@ -121,13 +118,7 @@ public class ProductDetailQuery extends Entity {
 		this.id = id;
 	}
 
-	public Integer getCorpid() {
-		return corpid;
-	}
-
-	public void setCorpid(Integer corpid) {
-		this.corpid = corpid;
-	}
+	
 
 
 	public String getCode() {
@@ -266,12 +257,13 @@ public class ProductDetailQuery extends Entity {
 		this.timeDown = timeDown;
 	}
 
-	public Integer getSubid() {
-		return subid;
+
+	public Integer getStoreId() {
+		return storeId;
 	}
 
-	public void setSubid(Integer subid) {
-		this.subid = subid;
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
 	}
 
 	public String getStoreName() {

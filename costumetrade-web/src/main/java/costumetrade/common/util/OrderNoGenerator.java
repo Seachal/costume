@@ -23,7 +23,7 @@ public class OrderNoGenerator {
 	 * @return
 	 */
 	public static String generate(String prefix) {
-		return generate(prefix, 3);
+		return generate(prefix, 7);
 	}
 	
 	/**

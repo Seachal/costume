@@ -8,9 +8,11 @@ import costumetrade.order.query.OrderDetailKeyParam;
 public interface SsStoOrderMapper {
     int deleteByPrimaryKey(Integer id);
 
-    int insert(SsStoOrder record);
-
     int insertSelective(SsStoOrder record);
+
+    int insert(SsStoOrder record,Integer sellerStoreId);
+    
+    int insertStore(SsStoOrder record,Integer buyStoreId,Integer sellerStoreId);
 
     SsStoOrder selectByPrimaryKey(Integer id);
 

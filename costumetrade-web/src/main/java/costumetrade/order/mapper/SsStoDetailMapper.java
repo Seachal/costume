@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import costumetrade.order.domain.SsStoDetail;
 import costumetrade.order.query.OrderDetailKeyParam;
-import costumetrade.order.query.OrderDetailParam;
+
 @Mapper
 public interface SsStoDetailMapper {
     int deleteByPrimaryKey(Integer id);
@@ -21,7 +21,9 @@ public interface SsStoDetailMapper {
 
     int updateByPrimaryKey(SsStoDetail record);
     
-    int saveDetail(OrderDetailParam param);
+    int saveDetail(List<SsStoDetail> detail , Integer sellerStoreId);
+    
+    int saveDetailStore(List<SsStoDetail> detail , Integer buyStoreId,Integer sellerStoreId);
     
     List<SsStoDetail> selectByOrderId(OrderDetailKeyParam param);
     

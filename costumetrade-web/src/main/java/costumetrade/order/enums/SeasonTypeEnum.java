@@ -10,7 +10,7 @@ public enum SeasonTypeEnum {
 	SEASON_SPRING("spring","春"),
 	SEASON_SUMMER("summer","夏"),
     SEASON_AUTUMN("autumn","秋"),
-    SEASON_WINTER("winter","东");
+    SEASON_WINTER("winter","冬");
     
     
     private String code;

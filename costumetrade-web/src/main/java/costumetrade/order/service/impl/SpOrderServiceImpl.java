@@ -1,6 +1,7 @@
 package costumetrade.order.service.impl;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,17 +10,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import costumetrade.common.util.OrderNoGenerator;
+import costumetrade.order.domain.ScStoreAddr;
+import costumetrade.order.domain.SpClient;
 import costumetrade.order.domain.SsFinancial;
 import costumetrade.order.domain.SsStoDetail;
 import costumetrade.order.domain.SsStoOrder;
+import costumetrade.order.mapper.ScStoreAddrMapper;
 import costumetrade.order.mapper.SpCartMapper;
+import costumetrade.order.mapper.SpClientMapper;
 import costumetrade.order.mapper.SsFinancialMapper;
 import costumetrade.order.mapper.SsStoDetailMapper;
 import costumetrade.order.mapper.SsStoOrderMapper;
 import costumetrade.order.query.OrderDetailKeyParam;
-import costumetrade.order.query.OrderDetailParam;
 import costumetrade.order.query.OrderDetailQuery;
-import costumetrade.order.query.OrderQuery;
+
 import costumetrade.order.query.PayParam;
 import costumetrade.order.service.SpOrderService;
 
@@ -34,54 +39,49 @@ public class SpOrderServiceImpl implements SpOrderService{
 	private SpCartMapper spCartMapper;
 	@Autowired
 	private SsFinancialMapper ssFinancialMapper;
+	@Autowired
+	private SpClientMapper spClientMapper;
+	@Autowired 
+	private ScStoreAddrMapper scStoreAddrMapper;
+	
 	@Override
-	public int saveOrders(OrderQuery query) {
-		long orderNo=new Date().getTime();
-		SsStoOrder order = query.getOrder();
+	public int saveOrders(List<SsStoDetail> details,SsStoOrder order ,Integer memberTag) {
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+		String date = format.format(new Date());
+		String orderNo = OrderNoGenerator.generate(date);
 		List<SsStoDetail> detail = new ArrayList<SsStoDetail>();
-		SsStoDetail[] detailSto = query.getDetail();
-		
-		int[] cartIds = query.getCartId();
 		List<Integer> list = new ArrayList<Integer>();
-		
 		int save = 0;
 		BigDecimal count = new BigDecimal(0.0);
 		BigDecimal cost =   new BigDecimal(0.0);
 		
 		//订单状态 1：新增  2、已付款 3、审核 4、发货 5、收货 6、已取消
-		if(detailSto != null && detailSto.length>0){
-			for(int i=0 ; i<detailSto.length-1 ; i++){
-				SsStoDetail d = detailSto[i];
-				d.setOrderid(orderNo+"");
+		if(details.size() > 0){
+			for(SsStoDetail d : details){
+				SsStoDetail d1 = d;
+				d1.setOrderid(orderNo);
 				cost = cost.add((d.getCount()).multiply(d.getPrice()))  ;
 				count = count.add(d.getCount());
 				detail.add(d);
 			}
-			if(detail.size() > 0){
-				OrderDetailParam param = new OrderDetailParam();
-				param.setDetail(detail);
-				ssStoDetailMapper.saveDetail(param);
-			}else{
-				return save;
-			}
 			order.setPayorderno(orderNo+"");
 			order.setTotalamt(cost);
 			order.setTotalnum(count);
+			order.setRealcost(cost);
 			order.setOrderstatus(1);
 			order.setOrdertime(new Date());
 			order.setOrdertype(1+"");
-			save = ssStoOrderMapper.insertSelective(order);
-			
-			//下单成功，则删除购物车
-			if(cartIds !=null && cartIds.length>0){
-				for(int j=0;j<cartIds.length-1;j++){
-					list.add(cartIds[j]);
-				}
-				if(list.size() > 0 && save > 0){
-					save = spCartMapper.deleteByIds(list);
-				}
-			}
 		}
+		
+		if(memberTag == 1){ //普通会员
+			ssStoDetailMapper.saveDetail(detail,order.getSellerstoreid());
+			save = ssStoOrderMapper.insert(order,order.getSellerstoreid());
+		}
+		if(memberTag == 2){ //店家
+			ssStoDetailMapper.saveDetailStore(detail,order.getBuyerstoreid(),order.getSellerstoreid());
+			save = ssStoOrderMapper.insertStore(order,order.getBuyerstoreid(),order.getSellerstoreid());
+		}
+	
 		return save;
 	}
 	@Override
@@ -149,6 +149,29 @@ public class SpOrderServiceImpl implements SpOrderService{
 			operate = ssFinancialMapper.insertSelective(ssFinancial);
 		}	
 		return operate;
+	}
+	@Override
+	public ScStoreAddr orderInit(Integer clientId) {
+		/*
+		 * 调转下单界面，自动初始化收货地址
+		 * 如果是会员则获取client中的地址，
+		 * 如果是店家则获取store中的收货地址
+		 * 返回地址信息ScStoreAddr
+		 * */
+		ScStoreAddr addr = new ScStoreAddr();
+		SpClient client = spClientMapper.selectByPrimaryKey(clientId);
+		if(client != null){
+			if(client.getStoreid() == null){
+				addr.setAddress(client.getAddress());
+				addr.setContact(client.getContact());
+				addr.setPhone(client.getPhone());
+			}else{
+				addr = scStoreAddrMapper.selectAddr(client.getStoreid());
+			}
+		}else{
+			return addr;
+		}
+		return addr;
 	}
 	
 	

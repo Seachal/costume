@@ -5,17 +5,16 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import costumetrade.user.domain.SpEmployee;
-import costumetrade.user.domain.SpEmployeeKey;
 
 @Mapper
 public interface SpEmployeeMapper {
-    int deleteByPrimaryKey(SpEmployeeKey key);
+    int deleteByPrimaryKey(SpEmployee key);
 
     int insert(SpEmployee record);
 
     int insertSelective(SpEmployee record);
 
-    SpEmployee selectByPrimaryKey(SpEmployeeKey key);
+    SpEmployee selectByPrimaryKey(SpEmployee key);
 
     int updateByPrimaryKeySelective(SpEmployee record);
 

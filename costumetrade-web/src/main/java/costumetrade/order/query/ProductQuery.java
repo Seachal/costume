@@ -6,7 +6,7 @@ import java.util.Date;
 import costumetrade.common.Entity;
 
 public class ProductQuery extends Entity{
-	private String priceIdEncrypt;
+
 	
 	private Integer storeId; 
 	
@@ -78,14 +78,7 @@ public class ProductQuery extends Entity{
 		this.image = image;
 	}
 
-	public String getPriceIdEncrypt() {
-		return priceIdEncrypt;
-	}
 
-	public void setPriceIdEncrypt(String priceIdEncrypt) {
-		this.priceIdEncrypt = priceIdEncrypt;
-	}
-	
 	
 	
 	
