@@ -7,6 +7,10 @@ import costumetrade.order.domain.SsStoDetail;
 import costumetrade.order.domain.SsStoOrder;
 
 public class OrderDetailQuery extends Entity {
+	
+	private Integer corpId;
+	private Integer orderId;
+	private Integer operate;
 	private SsStoOrder order ;
     
     private List<SsStoDetail> detail;
@@ -27,6 +31,30 @@ public class OrderDetailQuery extends Entity {
 
 	public void setDetail(List<SsStoDetail> detail) {
 		this.detail = detail;
+	}
+
+	public Integer getCorpId() {
+		return corpId;
+	}
+
+	public void setCorpId(Integer corpId) {
+		this.corpId = corpId;
+	}
+
+	public Integer getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(Integer orderId) {
+		this.orderId = orderId;
+	}
+
+	public Integer getOperate() {
+		return operate;
+	}
+
+	public void setOperate(Integer operate) {
+		this.operate = operate;
 	}
     
     

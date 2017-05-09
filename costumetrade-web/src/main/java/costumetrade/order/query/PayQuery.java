@@ -6,7 +6,7 @@ import java.util.Date;
 import costumetrade.common.Entity;
 import costumetrade.order.domain.SsFinancial;
 
-public class PayParam extends Entity{
+public class PayQuery extends Entity{
 
     
     private Integer operate;//订单状态  1：新增   2、已付款  3、审核  4、发货  5、收货  6、已取消

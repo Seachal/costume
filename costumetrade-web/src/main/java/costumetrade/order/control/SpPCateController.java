@@ -3,6 +3,8 @@ package costumetrade.order.control;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.chanjar.weixin.common.util.StringUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,10 +31,18 @@ public class SpPCateController {
 
 	@RequestMapping("/getAllCates")
 	@ResponseBody
-	public ApiResponse getAllCates(int corpId) {
+	public ApiResponse getAllCates(String storeId) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
 		
+		if(StringUtils.isBlank(storeId)){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
 		List<SpPCate> CateLists = new ArrayList<SpPCate>();
-		CateLists = spPCateService.getSpPCates(corpId);
+		CateLists = spPCateService.getSpPCates(Integer.valueOf(storeId));
 
 		return  ApiResponse.getInstance(CateLists);
 	}

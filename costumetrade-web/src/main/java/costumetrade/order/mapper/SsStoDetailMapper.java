@@ -1,11 +1,9 @@
 package costumetrade.order.mapper;
 
 import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
-
 import costumetrade.order.domain.SsStoDetail;
-import costumetrade.order.query.OrderDetailKeyParam;
+
 
 @Mapper
 public interface SsStoDetailMapper {
@@ -25,6 +23,6 @@ public interface SsStoDetailMapper {
     
     int saveDetailStore(List<SsStoDetail> detail , Integer buyStoreId,Integer sellerStoreId);
     
-    List<SsStoDetail> selectByOrderId(OrderDetailKeyParam param);
+    List<SsStoDetail> selectByOrderId(Integer orderId);
     
 }

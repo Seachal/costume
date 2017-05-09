@@ -50,7 +50,7 @@
     from ss_stoorder
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="selectByOrderId" parameterType="costumetrade.order.query.OrderDetailKeyParam" resultMap="BaseResultMap">
+  <select id="selectByOrderId" parameterType="costumetrade.order.query.OrderDetailQuery" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from ss_stoorder_#{corpId,jdbcType=INTEGER}

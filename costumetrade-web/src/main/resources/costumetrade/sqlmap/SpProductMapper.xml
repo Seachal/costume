@@ -48,7 +48,7 @@
     <result column="price" jdbcType="DECIMAL" property="price" />
   </resultMap>
   
-  <resultMap id="ProductResultMap" type="costumetrade.order.query.ProductDetailQuery">
+  <resultMap id="ProductResultMap" type="costumetrade.order.query.ProductQuery">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="code" jdbcType="VARCHAR" property="code" />
     <result column="name" jdbcType="VARCHAR" property="name" />
@@ -92,7 +92,7 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
   
-  <select id="selectProducts" parameterType="costumetrade.order.query.ProductParam" resultMap="ProductsResultMap">
+  <select id="selectProducts" parameterType="costumetrade.order.query.ProductQuery" resultMap="ProductsResultMap">
     select 
   	product.id,product.storeId,product.code,product.name,product.image,product.time_up,
   	(case 
@@ -137,7 +137,7 @@
         order by price desc
       </if>
   </select>
-  <select id="selectProduct" parameterType="costumetrade.order.query.ProductParam" resultMap="ProductResultMap">
+  <select id="selectProduct" parameterType="costumetrade.order.query.ProductQuery" resultMap="ProductResultMap">
     select 
   	product.id,product.code,product.name,product.image,product.time_up,
   	(case 

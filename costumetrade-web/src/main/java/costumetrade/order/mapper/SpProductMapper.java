@@ -5,9 +5,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import costumetrade.order.domain.SpProduct;
-
-import costumetrade.order.query.ProductDetailQuery;
-import costumetrade.order.query.Param;
 import costumetrade.order.query.ProductQuery;
 @Mapper
 public interface SpProductMapper {
@@ -23,7 +20,7 @@ public interface SpProductMapper {
 
     int updateByPrimaryKey(SpProduct record);
     
-    List<ProductQuery> selectProducts(Param param);
+    List<SpProduct> selectProducts(ProductQuery param);
     
-    ProductDetailQuery selectProduct(Param param);
+    SpProduct selectProduct(ProductQuery param);
 }

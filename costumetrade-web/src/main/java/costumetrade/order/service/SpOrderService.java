@@ -5,11 +5,9 @@ import java.util.List;
 import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.domain.SsStoDetail;
 import costumetrade.order.domain.SsStoOrder;
-import costumetrade.order.query.OrderDetailKeyParam;
 import costumetrade.order.query.OrderDetailQuery;
 import costumetrade.order.query.OrderQuery;
-import costumetrade.order.query.Param;
-import costumetrade.order.query.PayParam;
+import costumetrade.order.query.PayQuery;
 
 
 public interface SpOrderService {
@@ -23,19 +21,19 @@ public interface SpOrderService {
 	/*
 	 * 查询订单详情
 	 * */
-	public OrderDetailQuery getOrder(OrderDetailKeyParam param);
+	public OrderDetailQuery getOrder(Integer orderId);
 	/*
 	 * 订单审核
 	 * */
-	public int orderAudit(OrderDetailKeyParam param);
+	public int orderAudit(OrderQuery param);
 	/*
 	 * 订单取消
 	 * */
-	public int orderCancel(OrderDetailKeyParam param);
+	public int orderCancel(OrderQuery param);
 	/*
 	 * 订单支付
 	 * */
-	public int orderPay(PayParam param);
+	public int orderPay(PayQuery param);
 	/*
 	 * 跳转订单页面查询地址
 	 * */

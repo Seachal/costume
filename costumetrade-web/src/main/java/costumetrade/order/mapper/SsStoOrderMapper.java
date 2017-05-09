@@ -3,7 +3,7 @@ package costumetrade.order.mapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import costumetrade.order.domain.SsStoOrder;
-import costumetrade.order.query.OrderDetailKeyParam;
+
 @Mapper
 public interface SsStoOrderMapper {
     int deleteByPrimaryKey(Integer id);
@@ -20,5 +20,5 @@ public interface SsStoOrderMapper {
 
     int updateByPrimaryKey(SsStoOrder record);
     
-    SsStoOrder selectByOrderId(OrderDetailKeyParam param);
+    SsStoOrder selectByOrderId(Integer orderId);
 }

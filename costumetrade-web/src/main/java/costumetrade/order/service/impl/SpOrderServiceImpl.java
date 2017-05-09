@@ -22,10 +22,9 @@ import costumetrade.order.mapper.SpClientMapper;
 import costumetrade.order.mapper.SsFinancialMapper;
 import costumetrade.order.mapper.SsStoDetailMapper;
 import costumetrade.order.mapper.SsStoOrderMapper;
-import costumetrade.order.query.OrderDetailKeyParam;
 import costumetrade.order.query.OrderDetailQuery;
-
-import costumetrade.order.query.PayParam;
+import costumetrade.order.query.OrderQuery;
+import costumetrade.order.query.PayQuery;
 import costumetrade.order.service.SpOrderService;
 
 @Transactional
@@ -85,16 +84,16 @@ public class SpOrderServiceImpl implements SpOrderService{
 		return save;
 	}
 	@Override
-	public OrderDetailQuery getOrder(OrderDetailKeyParam param) {
+	public OrderDetailQuery getOrder(Integer orderId) {
 		OrderDetailQuery	query = new OrderDetailQuery();	
-		query.setDetail(ssStoDetailMapper.selectByOrderId(param));
-		query.setOrder(ssStoOrderMapper.selectByOrderId(param));
+		query.setDetail(ssStoDetailMapper.selectByOrderId(orderId));
+		query.setOrder(ssStoOrderMapper.selectByOrderId(orderId));
 		return query;
 	}
 	@Override
-	public int orderAudit(OrderDetailKeyParam param) {
+	public int orderAudit(OrderQuery param) {
 		int operate = 0;
-		SsStoOrder spStoOrder = ssStoOrderMapper.selectByOrderId(param);
+		SsStoOrder spStoOrder = ssStoOrderMapper.selectByOrderId(Integer.valueOf(param.getOrderId()));
 		if(spStoOrder.getOrderstatus() == 2){ //订单状态  1：新增   2、已付款  3、审核  4、发货  5、收货  6、已取消
 			spStoOrder = new SsStoOrder();
 			spStoOrder.setSellerstoreid(param.getCorpId());
@@ -112,10 +111,10 @@ public class SpOrderServiceImpl implements SpOrderService{
 		
 	}
 	@Override
-	public int orderCancel(OrderDetailKeyParam param) {
-		// TODO Auto-generated method stub
+	public int orderCancel(OrderQuery param) {
+
 		int operate = 0;
-		SsStoOrder spStoOrder = ssStoOrderMapper.selectByOrderId(param);
+		SsStoOrder spStoOrder = ssStoOrderMapper.selectByOrderId(Integer.valueOf(param.getOrderId()));
 		if(spStoOrder.getOrderstatus() == 1){ //订单状态  1：新增   2、已付款  3、审核  4、发货  5、收货  6、已取消
 			spStoOrder = new SsStoOrder();
 			spStoOrder.setSellerstoreid(param.getCorpId());
@@ -132,7 +131,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 		}
 	}
 	@Override
-	public int orderPay(PayParam param) {
+	public int orderPay(PayQuery param) {
 		SsFinancial ssFinancial = new SsFinancial();
 		ssFinancial = param.getSsFinancial();
 		

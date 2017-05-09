@@ -14,10 +14,9 @@ import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.domain.SsStoDetail;
 import costumetrade.order.domain.SsStoOrder;
-import costumetrade.order.query.OrderDetailKeyParam;
 import costumetrade.order.query.OrderDetailQuery;
-import costumetrade.order.query.Param;
-import costumetrade.order.query.PayParam;
+import costumetrade.order.query.OrderQuery;
+import costumetrade.order.query.PayQuery;
 import costumetrade.order.service.SpOrderService;
 
 /**
@@ -34,7 +33,7 @@ public class SpOrderController {
 	
 	@RequestMapping("/saveOrders")
 	@ResponseBody
-	public ApiResponse saveOrders(Param param,SsStoOrder order) {
+	public ApiResponse saveOrders(OrderQuery param,SsStoOrder order) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
@@ -82,7 +81,7 @@ public class SpOrderController {
 	}
 	@RequestMapping("/getOrder")
 	@ResponseBody
-	public ApiResponse getOrder(OrderDetailKeyParam param) {
+	public ApiResponse getOrder(OrderDetailQuery param) {
 		ApiResponse result = new ApiResponse();
 		
 		result.setCode(ResponseInfo.SUCCESS.code);
@@ -92,7 +91,7 @@ public class SpOrderController {
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		OrderDetailQuery query = spOrderService.getOrder(param);
+		OrderDetailQuery query = spOrderService.getOrder(param.getOrderId());
 		
 		if(query == null){
 			result.setCode(ResponseInfo.EXCEPTION.code);
@@ -106,7 +105,7 @@ public class SpOrderController {
 	}
 	@RequestMapping("/orderAudit")
 	@ResponseBody
-	public ApiResponse orderAudit(OrderDetailKeyParam param) {
+	public ApiResponse orderAudit(OrderQuery param) {
 		ApiResponse result = new ApiResponse();
 		
 		result.setCode(ResponseInfo.SUCCESS.code);
@@ -130,7 +129,7 @@ public class SpOrderController {
 	}
 	@RequestMapping("/orderCancel")
 	@ResponseBody
-	public ApiResponse orderCancel(OrderDetailKeyParam param) {
+	public ApiResponse orderCancel(OrderQuery param) {
 		ApiResponse result = new ApiResponse();
 		
 		result.setCode(ResponseInfo.SUCCESS.code);
@@ -153,7 +152,7 @@ public class SpOrderController {
 	}
 	@RequestMapping("/orderPay")
 	@ResponseBody
-	public ApiResponse orderPay(PayParam param) {
+	public ApiResponse orderPay(PayQuery param) {
 		ApiResponse result = new ApiResponse();
 		
 		result.setCode(ResponseInfo.SUCCESS.code);

@@ -2,15 +2,13 @@ package costumetrade.order.control;
 
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-
+import me.chanjar.weixin.common.util.StringUtils;
 
 import org.jboss.logging.Logger;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,9 +21,6 @@ import costumetrade.common.param.ResponseInfo;
 import costumetrade.common.util.FTPClientUtils;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SsProductFile;
-import costumetrade.order.query.ProductDetailQuery;
-import costumetrade.order.query.ProductInitQuery;
-import costumetrade.order.query.Param;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.service.SpProductService;
 
@@ -45,29 +40,38 @@ public class SpProductController {
 
 	@RequestMapping("/getProducts")
 	@ResponseBody
-	public ApiResponse getAllroducts(Param productQuery) {
+	public ApiResponse getAllroducts(ProductQuery paramProduct) {
 		
-		List<ProductQuery> productLists = spProductService.selectProducts(productQuery);
+		List<SpProduct> productLists = spProductService.selectProducts(paramProduct);
 
 		return  ApiResponse.getInstance(productLists);
 	}
 	
 	@RequestMapping("/getProductDetail")
 	@ResponseBody
-	public ApiResponse getProduct(Param param) {
+	public ApiResponse getProduct(ProductQuery paramProduct) {
 		
 		
-		ProductDetailQuery query = spProductService.selectProduct(param);
+		SpProduct product = spProductService.selectProduct(paramProduct);
 		
-		return  ApiResponse.getInstance(query);
+		return  ApiResponse.getInstance(product);
 	}
 	
 	@RequestMapping("/getProductInit")
 	@ResponseBody
-	public ApiResponse getProductInit(int storeId ) {
+	public ApiResponse getProductInit(String storeId ) {
 		
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
 		
-		ProductInitQuery query = spProductService.productInit(storeId);
+		if(StringUtils.isBlank(storeId)){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		
+		ProductQuery query = spProductService.productInit(Integer.valueOf(storeId));
 		
 		return  ApiResponse.getInstance(query);
 	}

@@ -1,6 +1,7 @@
 package costumetrade.order.domain;
 
 import costumetrade.common.Entity;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -225,6 +226,13 @@ public class SpProduct extends Entity {
      *  商品图片名称
      */
     private String imageName4;
+    
+	private String productCode;
+	
+	private String productName;
+	
+	private BigDecimal price;
+	
 
     private static final long serialVersionUID = 1L;
     
@@ -583,6 +591,30 @@ public class SpProduct extends Entity {
 
 	public void setImageName4(String imageName4) {
 		this.imageName4 = imageName4;
+	}
+
+	public String getProductCode() {
+		return productCode;
+	}
+
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
+	}
+
+	public String getProductName() {
+		return productName;
+	}
+
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
 	}
     
 	

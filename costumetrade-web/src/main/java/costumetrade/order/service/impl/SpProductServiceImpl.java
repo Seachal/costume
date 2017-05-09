@@ -24,9 +24,6 @@ import costumetrade.order.mapper.SpPSizeCustomMapper;
 import costumetrade.order.mapper.SpProductMapper;
 import costumetrade.order.mapper.SsPriceMapper;
 import costumetrade.order.mapper.SsProductFileMapper;
-import costumetrade.order.query.ProductDetailQuery;
-import costumetrade.order.query.ProductInitQuery;
-import costumetrade.order.query.Param;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.service.SpProductService;
 
@@ -49,30 +46,30 @@ public class SpProductServiceImpl implements SpProductService{
 	private SsProductFileMapper ssProductFileMapper;
 	
 	@Override
-	public List<ProductQuery> selectProducts(Param productQuery) {
+	public List<SpProduct> selectProducts(ProductQuery productQuery) {
 		return spProductMapper.selectProducts(productQuery);
 	}
 
 	@Override
-	public ProductDetailQuery selectProduct(Param keyParam) {
-		return spProductMapper.selectProduct(keyParam);
+	public SpProduct selectProduct(ProductQuery queryDetail) {
+		return spProductMapper.selectProduct(queryDetail);
 	}
 
 	@Override
-	public ProductInitQuery productInit(int storeId) {
+	public ProductQuery productInit(int storeId) {
 		List<SpPBrand> brands = spPBrandMapper.getSpPBrands(storeId);
 		List<SpPCate> productTypes = spPCateMapper.getSpPCates(storeId);
 		List<SpPSizeCustom> sizes = spPSizeCustomMapper.getSpPSizeCustoms(storeId);
-		ProductInitQuery query = new ProductInitQuery();
+		ProductQuery query = new ProductQuery();
 		
 		query.setStoreId(storeId);
-		query.setProductBrand(brands);
+		query.setBrandList(brands);
 		query.setProductSize(sizes);
-		query.setProductType(productTypes);
+		query.setProductTypeList(productTypes);
 		
-		query.setGrade(GradeTypeEnum.getGradeTypeEnum());
-		query.setSeason(SeasonTypeEnum.getSeasonTypeEnum());
-		query.setUnit(UnitTypeEnum.getUnitTypeEnum());
+		query.setGradeList(GradeTypeEnum.getGradeTypeEnum());
+		query.setSeasonList(SeasonTypeEnum.getSeasonTypeEnum());
+		query.setUnitList(UnitTypeEnum.getUnitTypeEnum());
 		
 		return query;
 	}
@@ -106,6 +103,7 @@ public class SpProductServiceImpl implements SpProductService{
 				return 0;
 			}
 			List<SsProductFile> files = new ArrayList<SsProductFile>();
+		
 			if(product.getImage() != null && product.getImageName() != null ){
 				SsProductFile file = new SsProductFile();
 				file.setProductid(id);
