@@ -47,19 +47,16 @@ public class SpProductServiceImpl implements SpProductService{
 	
 	@Override
 	public List<ProductQuery> selectProducts(ProductParam productQuery) {
-		// TODO Auto-generated method stub
 		return spProductMapper.selectProducts(productQuery);
 	}
 
 	@Override
 	public ProductDetailQuery selectProduct(KeyParam keyParam) {
-		// TODO Auto-generated method stub
 		return spProductMapper.selectProduct(keyParam);
 	}
 
 	@Override
 	public ProductInitQuery productInit(int corpId) {
-		// TODO Auto-generated method stub
 		List<SpPBrand> brands = spPBrandMapper.getSpPBrands(corpId);
 		List<SpPCate> productTypes = spPCateMapper.getSpPCates(corpId);
 		List<SpPSizeCustom> sizes = spPSizeCustomMapper.getSpPSizeCustoms(corpId);
