@@ -12,6 +12,11 @@ import costumetrade.order.domain.SpPSizeCustom;
 public class ProductQuery extends Entity{
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	/**
      *  商品编号
      */
     private Integer id;
