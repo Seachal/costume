@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,8 @@ import costumetrade.order.service.SpProductService;
 @RequestMapping("/product")
 @Controller
 public class SpProductController {
+    public static Logger logger = Logger.getLogger(SpProductController.class);
+    
 	@Autowired
 	private SpProductService spProductService;
 
@@ -114,8 +117,7 @@ public class SpProductController {
 				result.setMsg(ResponseInfo.EXCEPTION.msg);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error("FTP 文件上传错误："+e.getMessage());
 		} 
 		return  result;
 	}
