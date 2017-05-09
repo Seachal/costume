@@ -1,6 +1,8 @@
 package costumetrade.order.control;
 
-import net.sf.json.JSONObject;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,9 +11,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
+import costumetrade.order.domain.ScStoreAddr;
+import costumetrade.order.domain.SsStoDetail;
+import costumetrade.order.domain.SsStoOrder;
 import costumetrade.order.query.OrderDetailKeyParam;
 import costumetrade.order.query.OrderDetailQuery;
-import costumetrade.order.query.OrderQuery;
+import costumetrade.order.query.Param;
 import costumetrade.order.query.PayParam;
 import costumetrade.order.service.SpOrderService;
 
@@ -29,21 +34,35 @@ public class SpOrderController {
 	
 	@RequestMapping("/saveOrders")
 	@ResponseBody
-	public ApiResponse saveOrders(String query) {
+	public ApiResponse saveOrders(Param param,SsStoOrder order) {
 		ApiResponse result = new ApiResponse();
-		OrderQuery query1 = new OrderQuery();
-		JSONObject json = JSONObject.fromObject(query);
-		query1 = (OrderQuery) json.toBean(json, OrderQuery.class);
-
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		if(query == null ){
+		
+		List<SsStoDetail> details = new ArrayList<SsStoDetail>();
+		if(param.getProductId().size()>0){
+			for(int i=0 ;i<param.getProductId().size();i++){
+				SsStoDetail detail = new SsStoDetail();
+				detail.setCount(param.getCount().get(i));
+				detail.setProductsize(param.getSize().get(i));
+				detail.setProductcolor(param.getColor().get(i));
+				detail.setPrice(param.getPrice().get(i));
+				detail.setProductname(param.getProductName().get(i));
+				detail.setCreateby(order.getCreateby());
+				detail.setCreatetime(new Date());
+				detail.setModifyby(order.getModifyby());
+				detail.setModifytime(new Date());
+				detail.setStoreid(order.getSellerstoreid()+"");
+				details.add(detail);
+			}
+		}
+	
+		if(order == null || param == null){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		int save = spOrderService.saveOrders(query1);
-		
+		int save = spOrderService.saveOrders(details,order,param.getMemberTag());
 		if(save <= 0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
@@ -51,6 +70,14 @@ public class SpOrderController {
 		}else{
 			return result;
 		}
+		
+	}
+	@RequestMapping("/orderInit")
+	@ResponseBody
+	public ApiResponse orderInit(Integer clientId) {
+		ApiResponse result = new ApiResponse();
+		ScStoreAddr addr = spOrderService.orderInit(clientId);
+		return result.getInstance(addr);
 		
 	}
 	@RequestMapping("/getOrder")

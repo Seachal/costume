@@ -7,7 +7,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+
+
 import org.jboss.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,10 +22,10 @@ import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.common.util.FTPClientUtils;
 import costumetrade.order.domain.SpProduct;
-import costumetrade.order.query.KeyParam;
+import costumetrade.order.domain.SsProductFile;
 import costumetrade.order.query.ProductDetailQuery;
 import costumetrade.order.query.ProductInitQuery;
-import costumetrade.order.query.ProductParam;
+import costumetrade.order.query.Param;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.service.SpProductService;
 
@@ -40,11 +43,9 @@ public class SpProductController {
 	@Autowired
 	private SpProductService spProductService;
 
-
-
 	@RequestMapping("/getProducts")
 	@ResponseBody
-	public ApiResponse getAllroducts(ProductParam productQuery) {
+	public ApiResponse getAllroducts(Param productQuery) {
 		
 		List<ProductQuery> productLists = spProductService.selectProducts(productQuery);
 
@@ -53,20 +54,20 @@ public class SpProductController {
 	
 	@RequestMapping("/getProductDetail")
 	@ResponseBody
-	public ApiResponse getProduct(KeyParam keyParam) {
+	public ApiResponse getProduct(Param param) {
 		
 		
-		ProductDetailQuery query = spProductService.selectProduct(keyParam);
+		ProductDetailQuery query = spProductService.selectProduct(param);
 		
 		return  ApiResponse.getInstance(query);
 	}
 	
 	@RequestMapping("/getProductInit")
 	@ResponseBody
-	public ApiResponse getProductInit(int corpId) {
+	public ApiResponse getProductInit(int storeId ) {
 		
 		
-		ProductInitQuery query = spProductService.productInit(corpId);
+		ProductInitQuery query = spProductService.productInit(storeId);
 		
 		return  ApiResponse.getInstance(query);
 	}
@@ -111,13 +112,18 @@ public class SpProductController {
 			input = file.getInputStream();
 			boolean upload = FTPClientUtils.getInstance().uploadFileToFtp(path, fileName, input);
 			if(upload){
-				result.setData(path+fileName);
+				SsProductFile image = new SsProductFile();
+				image.setFilename(file.getOriginalFilename());
+				image.setUrl(path+fileName);
+				result.setData(image);
 			}else{
 				result.setCode(ResponseInfo.EXCEPTION.code);
 				result.setMsg(ResponseInfo.EXCEPTION.msg);
 			}
 		} catch (Exception e) {
+
 			logger.error("FTP 文件上传错误："+e.getMessage());
+
 		} 
 		return  result;
 	}
