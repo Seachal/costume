@@ -43,9 +43,7 @@ public class SpProductController {
 	@ResponseBody
 	public ApiResponse getAllroducts(ProductParam productQuery) {
 		
-		List<ProductQuery> productLists = new ArrayList<ProductQuery>();
-	
-		productLists = spProductService.selectProducts(productQuery);
+		List<ProductQuery> productLists = spProductService.selectProducts(productQuery);
 
 		return  ApiResponse.getInstance(productLists);
 	}
