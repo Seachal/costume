@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="costumetrade.user.mapper.SpEmployeeMapper">
   <resultMap id="BaseResultMap" type="costumetrade.user.domain.SpEmployee">
-    <id column="corpId" jdbcType="INTEGER" property="corpid" />
+    <id column="storeId" jdbcType="INTEGER" property="storeId" />
     <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="subbelong" jdbcType="VARCHAR" property="subbelong" />
@@ -20,16 +20,16 @@
     <result column="card_id" jdbcType="VARCHAR" property="cardId" />
   </resultMap>
   <sql id="Base_Column_List">
-    corpId, id, status, subbelong, create_time, create_by, modify_time, modify_by, 
+    storeId, id, status, subbelong, create_time, create_by, modify_time, modify_by, 
     name, password, phone, cphone, address, email, birthdate, card_id
   </sql>
-  <select id="selectByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployeeKey" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployee" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from sp_employee
     where 1=1
      <if test="corpid != null">
-       and corpId = #{corpid,jdbcType=INTEGER}
+       and storeId = #{storeId,jdbcType=INTEGER}
       </if>
      <if test="id != null">
       and id = #{id,jdbcType=VARCHAR}
@@ -44,21 +44,21 @@
  	subbelong = #{subbelong,jdbcType=VARCHAR}
   </select>
   
-  <delete id="deleteByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployeeKey">
+  <delete id="deleteByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployee">
     delete from sp_employee
-    where corpId = #{corpid,jdbcType=INTEGER}
+    where storeId = #{storeId,jdbcType=INTEGER}
       <if test="id != null">
       and id = #{id,jdbcType=VARCHAR}
       </if>
   </delete>
   <insert id="insert" parameterType="costumetrade.user.domain.SpEmployee">
-    insert into sp_employee (corpId, id, status, 
+    insert into sp_employee (storeId, id, status, 
       subbelong, create_time, create_by, 
       modify_time, modify_by, 
       name, password, phone, 
       cphone, address, email, 
       birthdate, card_id)
-    values (#{corpid,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+    values (#{storeId,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
       #{subbelong,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR}, 
       #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
@@ -68,8 +68,8 @@
   <insert id="insertSelective" parameterType="costumetrade.user.domain.SpEmployee">
     insert into sp_employee
     <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="corpid != null">
-        corpId,
+      <if test="storeId != null">
+        storeId,
       </if>
       <if test="id != null">
         id,
@@ -118,8 +118,8 @@
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="corpid != null">
-        #{corpid,jdbcType=INTEGER},
+      <if test="storeId != null">
+        #{storeId,jdbcType=INTEGER},
       </if>
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
@@ -214,7 +214,7 @@
         card_id = #{cardId,jdbcType=VARCHAR},
       </if>
     </set>
-    where corpId = #{corpid,jdbcType=INTEGER}
+    where storeId = #{storeId,jdbcType=INTEGER}
       and id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployee">
@@ -233,7 +233,7 @@
       email = #{email,jdbcType=VARCHAR},
       birthdate = #{birthdate,jdbcType=TIMESTAMP},
       card_id = #{cardId,jdbcType=VARCHAR}
-    where corpId = #{corpid,jdbcType=INTEGER}
+    where storeId = #{storeId,jdbcType=INTEGER}
       and id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

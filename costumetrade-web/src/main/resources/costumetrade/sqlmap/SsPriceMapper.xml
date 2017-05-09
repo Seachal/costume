@@ -42,7 +42,7 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.SsPrice">
-    insert into ss_pprice
+    insert into ss_pprice_#{storeid,jdbcType=VARCHAR}
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,

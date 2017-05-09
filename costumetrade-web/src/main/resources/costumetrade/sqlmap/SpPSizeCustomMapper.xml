@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.order.mapper.SpPSizeCustomMapper">
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.SpPSizeCustom">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="corpId" jdbcType="INTEGER" property="corpid" />
+    <result column="storeId" jdbcType="INTEGER" property="storeId" />
     <result column="customName" jdbcType="VARCHAR" property="customname" />
     <result column="value" jdbcType="VARCHAR" property="value" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -12,7 +12,7 @@
     <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, corpId, customName, value, create_time, create_by, modify_time, modify_by
+    id, storeId, customName, value, create_time, create_by, modify_time, modify_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -24,24 +24,24 @@
     select 
     <include refid="Base_Column_List" />
     from sp_psize_custom
-    where corpId = #{corpid,jdbcType=INTEGER}
+    where storeId = #{storeId,jdbcType=INTEGER}
   </select>
   <select id="selectByCustomValue" parameterType="costumetrade.order.domain.SpPSizeCustom" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from sp_psize_custom
     where value = #{value,jdbcType=VARCHAR}
-    and corpId = #{corpid,jdbcType=INTEGER}
+    and storeId = #{storeId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sp_psize_custom
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SpPSizeCustom">
-    insert into sp_psize_custom (id, corpId, customName, 
+    insert into sp_psize_custom (id, storeId, customName, 
       value, create_time, create_by, 
       modify_time, modify_by)
-    values (#{id,jdbcType=INTEGER}, #{corpid,jdbcType=INTEGER}, #{customname,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER}, #{customname,jdbcType=VARCHAR}, 
       #{value,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
   </insert>
@@ -51,8 +51,8 @@
       <if test="id != null">
         id,
       </if>
-      <if test="corpid != null">
-        corpId,
+      <if test="storeId != null">
+        storeId,
       </if>
       <if test="customname != null">
         customName,
@@ -77,8 +77,8 @@
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="corpid != null">
-        #{corpid,jdbcType=INTEGER},
+      <if test="storeId != null">
+        #{storeId,jdbcType=INTEGER},
       </if>
       <if test="customname != null">
         #{customname,jdbcType=VARCHAR},
@@ -103,8 +103,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SpPSizeCustom">
     update sp_psize_custom
     <set>
-      <if test="corpid != null">
-        corpId = #{corpid,jdbcType=INTEGER},
+      <if test="storeId != null">
+        storeId = #{storeId,jdbcType=INTEGER},
       </if>
       <if test="customname != null">
         customName = #{customname,jdbcType=VARCHAR},
@@ -129,7 +129,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SpPSizeCustom">
     update sp_psize_custom
-    set corpId = #{corpid,jdbcType=INTEGER},
+    set storeId = #{storeId,jdbcType=INTEGER},
       customName = #{customname,jdbcType=VARCHAR},
       value = #{value,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},

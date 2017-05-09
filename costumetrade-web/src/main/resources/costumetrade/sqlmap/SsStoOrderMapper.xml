@@ -60,8 +60,8 @@
     delete from ss_stoorder
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="costumetrade.order.domain.SsStoOrder">
-    insert into ss_stoorder (id, sellerStoreId, buyerStoreId, 
+  <insert id="insert" >
+    insert into ss_stoorder_#{sellerStoreId,jdbcType=INTEGER} (sellerStoreId, buyerStoreId, 
       operator, payOrderNo, refundDate, 
       relatedOutTradeNo, refundStatus, orderType, 
       orderStatus, shipType, shipStatus, 
@@ -73,7 +73,85 @@
       payCost2, debetAmt, orderTime, 
       createTime, createBy, modifyTime, 
       modifyBy)
-    values (#{id,jdbcType=INTEGER}, #{sellerstoreid,jdbcType=INTEGER}, #{buyerstoreid,jdbcType=INTEGER}, 
+    values (#{sellerstoreid,jdbcType=INTEGER}, #{buyerstoreid,jdbcType=INTEGER}, 
+      #{operator,jdbcType=VARCHAR}, #{payorderno,jdbcType=VARCHAR}, #{refunddate,jdbcType=TIMESTAMP}, 
+      #{relatedouttradeno,jdbcType=VARCHAR}, #{refundstatus,jdbcType=VARCHAR}, #{ordertype,jdbcType=VARCHAR}, 
+      #{orderstatus,jdbcType=INTEGER}, #{shiptype,jdbcType=INTEGER}, #{shipstatus,jdbcType=INTEGER}, 
+      #{shipcontact,jdbcType=VARCHAR}, #{shipphone,jdbcType=VARCHAR}, #{shipaddress,jdbcType=VARCHAR}, 
+      #{contactstoreid,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{totalnum,jdbcType=DECIMAL}, 
+      #{totalamt,jdbcType=DECIMAL}, #{discountratio,jdbcType=INTEGER}, #{discount,jdbcType=DECIMAL}, 
+      #{mchange,jdbcType=DECIMAL}, #{tax,jdbcType=DECIMAL}, #{realcost,jdbcType=DECIMAL}, 
+      #{paycate1,jdbcType=VARCHAR}, #{paycost1,jdbcType=DECIMAL}, #{paycate2,jdbcType=VARCHAR}, 
+      #{paycost2,jdbcType=DECIMAL}, #{debetamt,jdbcType=DECIMAL}, #{ordertime,jdbcType=TIMESTAMP}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP}, 
+      #{modifyby,jdbcType=VARCHAR})
+      
+      
+    insert into ss_member_stoorder (sellerStoreId, buyerStoreId, 
+      operator, payOrderNo, refundDate, 
+      relatedOutTradeNo, refundStatus, orderType, 
+      orderStatus, shipType, shipStatus, 
+      shipContact, shipPhone, shipAddress, 
+      contactStoreId, remarks, totalNum, 
+      totalAmt, discountRatio, discount, 
+      mchange, tax, realcost, 
+      payCate1, payCost1, payCate2, 
+      payCost2, debetAmt, orderTime, 
+      createTime, createBy, modifyTime, 
+      modifyBy)
+    values (#{sellerstoreid,jdbcType=INTEGER}, #{buyerstoreid,jdbcType=INTEGER}, 
+      #{operator,jdbcType=VARCHAR}, #{payorderno,jdbcType=VARCHAR}, #{refunddate,jdbcType=TIMESTAMP}, 
+      #{relatedouttradeno,jdbcType=VARCHAR}, #{refundstatus,jdbcType=VARCHAR}, #{ordertype,jdbcType=VARCHAR}, 
+      #{orderstatus,jdbcType=INTEGER}, #{shiptype,jdbcType=INTEGER}, #{shipstatus,jdbcType=INTEGER}, 
+      #{shipcontact,jdbcType=VARCHAR}, #{shipphone,jdbcType=VARCHAR}, #{shipaddress,jdbcType=VARCHAR}, 
+      #{contactstoreid,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{totalnum,jdbcType=DECIMAL}, 
+      #{totalamt,jdbcType=DECIMAL}, #{discountratio,jdbcType=INTEGER}, #{discount,jdbcType=DECIMAL}, 
+      #{mchange,jdbcType=DECIMAL}, #{tax,jdbcType=DECIMAL}, #{realcost,jdbcType=DECIMAL}, 
+      #{paycate1,jdbcType=VARCHAR}, #{paycost1,jdbcType=DECIMAL}, #{paycate2,jdbcType=VARCHAR}, 
+      #{paycost2,jdbcType=DECIMAL}, #{debetamt,jdbcType=DECIMAL}, #{ordertime,jdbcType=TIMESTAMP}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP}, 
+      #{modifyby,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertStore" >
+    insert into ss_stoorder_#{sellerStoreId,jdbcType=INTEGER} (sellerStoreId, buyerStoreId, 
+      operator, payOrderNo, refundDate, 
+      relatedOutTradeNo, refundStatus, orderType, 
+      orderStatus, shipType, shipStatus, 
+      shipContact, shipPhone, shipAddress, 
+      contactStoreId, remarks, totalNum, 
+      totalAmt, discountRatio, discount, 
+      mchange, tax, realcost, 
+      payCate1, payCost1, payCate2, 
+      payCost2, debetAmt, orderTime, 
+      createTime, createBy, modifyTime, 
+      modifyBy)
+    values (#{sellerstoreid,jdbcType=INTEGER}, #{buyerstoreid,jdbcType=INTEGER}, 
+      #{operator,jdbcType=VARCHAR}, #{payorderno,jdbcType=VARCHAR}, #{refunddate,jdbcType=TIMESTAMP}, 
+      #{relatedouttradeno,jdbcType=VARCHAR}, #{refundstatus,jdbcType=VARCHAR}, #{ordertype,jdbcType=VARCHAR}, 
+      #{orderstatus,jdbcType=INTEGER}, #{shiptype,jdbcType=INTEGER}, #{shipstatus,jdbcType=INTEGER}, 
+      #{shipcontact,jdbcType=VARCHAR}, #{shipphone,jdbcType=VARCHAR}, #{shipaddress,jdbcType=VARCHAR}, 
+      #{contactstoreid,jdbcType=VARCHAR}, #{remarks,jdbcType=VARCHAR}, #{totalnum,jdbcType=DECIMAL}, 
+      #{totalamt,jdbcType=DECIMAL}, #{discountratio,jdbcType=INTEGER}, #{discount,jdbcType=DECIMAL}, 
+      #{mchange,jdbcType=DECIMAL}, #{tax,jdbcType=DECIMAL}, #{realcost,jdbcType=DECIMAL}, 
+      #{paycate1,jdbcType=VARCHAR}, #{paycost1,jdbcType=DECIMAL}, #{paycate2,jdbcType=VARCHAR}, 
+      #{paycost2,jdbcType=DECIMAL}, #{debetamt,jdbcType=DECIMAL}, #{ordertime,jdbcType=TIMESTAMP}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP}, 
+      #{modifyby,jdbcType=VARCHAR})
+      
+      
+    insert into ss_stoorder_#{buyStoreId,jdbcType=INTEGER} (sellerStoreId, buyerStoreId, 
+      operator, payOrderNo, refundDate, 
+      relatedOutTradeNo, refundStatus, orderType, 
+      orderStatus, shipType, shipStatus, 
+      shipContact, shipPhone, shipAddress, 
+      contactStoreId, remarks, totalNum, 
+      totalAmt, discountRatio, discount, 
+      mchange, tax, realcost, 
+      payCate1, payCost1, payCate2, 
+      payCost2, debetAmt, orderTime, 
+      createTime, createBy, modifyTime, 
+      modifyBy)
+    values (#{sellerstoreid,jdbcType=INTEGER}, #{buyerstoreid,jdbcType=INTEGER}, 
       #{operator,jdbcType=VARCHAR}, #{payorderno,jdbcType=VARCHAR}, #{refunddate,jdbcType=TIMESTAMP}, 
       #{relatedouttradeno,jdbcType=VARCHAR}, #{refundstatus,jdbcType=VARCHAR}, #{ordertype,jdbcType=VARCHAR}, 
       #{orderstatus,jdbcType=INTEGER}, #{shiptype,jdbcType=INTEGER}, #{shipstatus,jdbcType=INTEGER}, 

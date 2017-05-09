@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.SpPCate">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="cateName" jdbcType="VARCHAR" property="catename" />
-    <result column="corpId" jdbcType="INTEGER" property="corpid" />
+    <result column="storeId" jdbcType="INTEGER" property="storeId" />
     <result column="fastcode" jdbcType="VARCHAR" property="fastcode" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
@@ -12,7 +12,7 @@
     <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, cateName, corpId, fastcode, create_time, create_by, modify_time, modify_by
+    id, cateName, storeId, fastcode, create_time, create_by, modify_time, modify_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -24,17 +24,17 @@
     select 
     <include refid="Base_Column_List" />
     from sp_product_type
-    where corpId = #{corpid,jdbcType=INTEGER}
+    where storeId = #{storeId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sp_product_type
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SpPCate">
-    insert into sp_product_type (id, cateName, corpId, 
+    insert into sp_product_type (id, cateName, storeId, 
       fastcode, create_time, create_by, 
       modify_time, modify_by)
-    values (#{id,jdbcType=INTEGER}, #{catename,jdbcType=VARCHAR}, #{corpid,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{catename,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER}, 
       #{fastcode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
   </insert>
@@ -47,8 +47,8 @@
       <if test="catename != null">
         cateName,
       </if>
-      <if test="corpid != null">
-        corpId,
+      <if test="storeId != null">
+        storeId,
       </if>
       <if test="fastcode != null">
         fastcode,
@@ -73,8 +73,8 @@
       <if test="catename != null">
         #{catename,jdbcType=VARCHAR},
       </if>
-      <if test="corpid != null">
-        #{corpid,jdbcType=INTEGER},
+      <if test="storeId != null">
+        #{storeId,jdbcType=INTEGER},
       </if>
       <if test="fastcode != null">
         #{fastcode,jdbcType=VARCHAR},
@@ -99,8 +99,8 @@
       <if test="catename != null">
         cateName = #{catename,jdbcType=VARCHAR},
       </if>
-      <if test="corpid != null">
-        corpId = #{corpid,jdbcType=INTEGER},
+      <if test="storeId != null">
+        storeId = #{storeId,jdbcType=INTEGER},
       </if>
       <if test="fastcode != null">
         fastcode = #{fastcode,jdbcType=VARCHAR},
@@ -123,7 +123,7 @@
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SpPCate">
     update sp_product_type
     set cateName = #{catename,jdbcType=VARCHAR},
-      corpId = #{corpid,jdbcType=INTEGER},
+      storeId = #{storeId,jdbcType=INTEGER},
       fastcode = #{fastcode,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},

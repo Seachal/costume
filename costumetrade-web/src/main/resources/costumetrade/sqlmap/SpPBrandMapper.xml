@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.order.mapper.SpPBrandMapper">
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.SpPBrand">
     <result column="id" jdbcType="INTEGER" property="id" />
-    <result column="corpId" jdbcType="INTEGER" property="corpid" />
+    <result column="storeId" jdbcType="INTEGER" property="storeId" />
     <result column="brandName" jdbcType="VARCHAR" property="brandname" />
     <result column="fastcode" jdbcType="VARCHAR" property="fastcode" />
     <result column="profit_d0" jdbcType="DECIMAL" property="profitD0" />
@@ -19,7 +19,7 @@
     <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
   </resultMap>
    <sql id="Base_Column_List">
-    id, brandName, corpId, fastcode,profit_d0,profit_d1,profit_d2,profit_d3,profit_d4,profit_d5,profit_precise, create_time, create_by, modify_time, modify_by
+    id, brandName, storeId, fastcode,profit_d0,profit_d1,profit_d2,profit_d3,profit_d4,profit_d5,profit_precise, create_time, create_by, modify_time, modify_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -31,7 +31,7 @@
     select 
     <include refid="Base_Column_List" />
     from sp_pbrand
-    where corpId = #{corpid,jdbcType=INTEGER}
+    where storeId = #{storeId,jdbcType=INTEGER}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sp_pbrand
@@ -40,13 +40,13 @@
   
   
   <insert id="insert" parameterType="costumetrade.order.domain.SpPBrand">
-    insert into sp_pbrand (id, corpId, brandName, 
+    insert into sp_pbrand (id, storeId, brandName, 
       fastcode, profit_d0, profit_d1, 
       profit_d2, profit_d3, profit_d4, 
       profit_d5, profit_precise, create_time, 
       create_by, modify_time, modify_by
       )
-    values (#{id,jdbcType=INTEGER}, #{corpid,jdbcType=INTEGER}, #{brandname,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER}, #{brandname,jdbcType=VARCHAR}, 
       #{fastcode,jdbcType=VARCHAR}, #{profitD0,jdbcType=DECIMAL}, #{profitD1,jdbcType=DECIMAL}, 
       #{profitD2,jdbcType=DECIMAL}, #{profitD3,jdbcType=DECIMAL}, #{profitD4,jdbcType=DECIMAL}, 
       #{profitD5,jdbcType=DECIMAL}, #{profitPrecise,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, 
@@ -59,8 +59,8 @@
       <if test="id != null">
         id,
       </if>
-      <if test="corpid != null">
-        corpId,
+      <if test="storeId != null">
+        storeId,
       </if>
       <if test="brandname != null">
         brandName,
@@ -106,8 +106,8 @@
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="corpid != null">
-        #{corpid,jdbcType=INTEGER},
+      <if test="storeId != null">
+        #{storeId,jdbcType=INTEGER},
       </if>
       <if test="brandname != null">
         #{brandname,jdbcType=VARCHAR},
@@ -154,8 +154,8 @@
     <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SpPBrand">
     update sp_pbrand
     <set>
-      <if test="corpid != null">
-        #{corpid,jdbcType=INTEGER},
+      <if test="storeId != null">
+        #{storeId,jdbcType=INTEGER},
       </if>
       <if test="brandname != null">
         #{brandname,jdbcType=VARCHAR},
