@@ -52,7 +52,7 @@ public class SsFinancial extends Entity {
     private BigDecimal incomedate;
 
     /**
-     *  支付类型
+     *  支付类型  1:现金支付，2：支付宝支付，3：银行卡支付，4：微信支付，5：票据支付
      */
     private Short payType;
 
