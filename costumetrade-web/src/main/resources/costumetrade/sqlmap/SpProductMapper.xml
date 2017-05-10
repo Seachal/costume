@@ -78,7 +78,7 @@
     id, storeId, status, code, brandId, prductType, name, fastcode, barcode, barcodes, levelType,
     grade, unit, colors, sizes, handcount, year, season, salTag, salMonth, image, image1, 
     image2, image3, image4, description, warn_low, warn_high, time_up, time_down, create_time, 
-    create_by, modify_time, modify_by, subId
+    create_by, modify_time, modify_by
   </sql>
   <sql id="Products_Column_List">
     id,subId,code,name,image,time_up,price
@@ -90,6 +90,12 @@
     <include refid="Base_Column_List" />
     from sp_product
     where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectById"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sp_product_#{storeId,jdbcType=INTEGER}
+    where id in <foreach collection="id" item="item" index="index" open="(" separator="," close=")">#{item,jdbcType=INTEGER}</foreach>
   </select>
   
   <select id="selectProducts" parameterType="costumetrade.order.query.ProductQuery" resultMap="ProductsResultMap">
@@ -104,13 +110,14 @@
     left join sp_pcolor_custom color on color.storeId = product.storeId and color.value = product.colors
     left join sp_psize_custom size on size.storeId = product.storeId and size.value = product.sizes
     left join ss_pprice_#{storeId,jdbcType=INTEGER} price1 on price1.productId = product.id and price1.storeId = product.storeId
-    left join (select customType.saleType,client.storeId ,client.id from sp_client_#{storeId,jdbcType=INTEGER} client 
+    left join (select customType.saleType,client.storeId ,client.id from sp_client client 
     							left join sp_customer_type customType on customType.id = client.cate
     							where client.id = #{clientId,jdbcType=INTEGER} ) c on c.storeId = product.storeId and c.id = product.create_by
     left join sp_pbrand brand on brand.id = product.brandId
     left join sp_product_type productType on productType.id = product.prductType
     where 1=1
     and product.time_down &gt;= CURDATE() 
+    and product.time_up   &lt;= CURDATE() 
     and product.status = 0
      <if test="code != null">
       and  product.code like  CONCAT('%',#{code},'%')
@@ -155,7 +162,7 @@
   	product.year , product.season, product.image1, product.image2, product.image3, product.image4
     from sp_product_#{storeId,jdbcType=INTEGER} product
     left join ss_pprice_#{storeId,jdbcType=INTEGER} price1 on price1.productId = product.id and price1.storeId = product.storeId
-    left join (select customType.saleType,client.storeId from sp_client_#{storeId,jdbcType=INTEGER} client 
+    left join (select customType.saleType,client.storeId from sp_client client 
     							left join sp_customer_type customType on customType.id = client.cate
     							where  client.id = #{clientId,jdbcType=INTEGER} ) c on c.storeId = product.storeId 
     left join sp_pbrand brand on brand.id = product.brandId
@@ -163,6 +170,7 @@
     left join sp_store store on store.id = product.storeId
     where 1=1
     and product.time_down &gt;= CURDATE() 
+    and product.time_up   &lt;= CURDATE() 
     and product.status = 0
     and product.storeId = #{storeId,jdbcType=INTEGER}
     and product.id = #{id,jdbcType=INTEGER}

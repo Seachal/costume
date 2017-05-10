@@ -28,11 +28,17 @@
     from ss_stodetail
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="selectByOrderId" parameterType="costumetrade.order.query.OrderDetailKeyParam" resultMap="BaseResultMap">
+  <select id="selectByOrderId" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from ss_stodetail_#{corpId,jdbcType=INTEGER}
-    where orderId = #{orderId,jdbcType=VARCHAR}
+    from ss_stodetail_#{storeId,jdbcType=INTEGER}
+    where orderId = #{orderNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByOrderIdMember" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ss_member_stodetail
+    where orderId = #{orderNo,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ss_stodetail
@@ -64,7 +70,7 @@
       #{item.productunit,jdbcType=VARCHAR}, #{item.productcolor,jdbcType=VARCHAR}, #{item.productsize,jdbcType=VARCHAR}, 
       #{item.count,jdbcType=DECIMAL}, #{item.price,jdbcType=DECIMAL}, #{item.createtime,jdbcType=TIMESTAMP}, 
       #{item.createby,jdbcType=VARCHAR}, #{item.modifytime,jdbcType=TIMESTAMP}, #{item.modifyby,jdbcType=VARCHAR}
-      )</foreach>
+      )</foreach>;
       
     insert into ss_member_stodetail (orderId, storeId, 
       handtag, productId, productName, 
@@ -72,41 +78,30 @@
       count, price, createTime, 
       createBy, modifyTime, modifyBy
       )
-    values <foreach collection="detail" item="item" index="index" separator=",">( #{item.orderid,jdbcType=VARCHAR}, #{item.storeid,jdbcType=VARCHAR}, 
+    values <foreach collection="detail" item="item" index="index" separator=",">( #{item.orderid,jdbcType=VARCHAR}, #{sellerStoreId,jdbcType=INTEGER}, 
       #{item.handtag,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR}, #{item.productname,jdbcType=VARCHAR}, 
       #{item.productunit,jdbcType=VARCHAR}, #{item.productcolor,jdbcType=VARCHAR}, #{item.productsize,jdbcType=VARCHAR}, 
       #{item.count,jdbcType=DECIMAL}, #{item.price,jdbcType=DECIMAL}, #{item.createtime,jdbcType=TIMESTAMP}, 
       #{item.createby,jdbcType=VARCHAR}, #{item.modifytime,jdbcType=TIMESTAMP}, #{item.modifyby,jdbcType=VARCHAR}
-      )</foreach>
+      )</foreach>; 
+   
   </insert>
-  
+
   <insert id="saveDetailStore" >
-    <!-- 买家采购单 -->
-    insert into ss_stodetail_#{buyStoreId,jdbcType=INTEGER} (orderId, storeId, 
+  
+    insert into ss_stodetail_#{storeId,jdbcType=INTEGER} (orderId, storeId, 
       handtag, productId, productName, 
       productUnit, productColor, productSize, 
       count, price, createTime, 
       createBy, modifyTime, modifyBy
       )
-    values <foreach collection="detail" item="item" index="index" separator=",">( #{item.orderid,jdbcType=VARCHAR}, #{item.storeid,jdbcType=VARCHAR}, 
+    values <foreach collection="detail" item="item" index="index" separator=",">( #{item.orderid,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER}, 
       #{item.handtag,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR}, #{item.productname,jdbcType=VARCHAR}, 
       #{item.productunit,jdbcType=VARCHAR}, #{item.productcolor,jdbcType=VARCHAR}, #{item.productsize,jdbcType=VARCHAR}, 
       #{item.count,jdbcType=DECIMAL}, #{item.price,jdbcType=DECIMAL}, #{item.createtime,jdbcType=TIMESTAMP}, 
       #{item.createby,jdbcType=VARCHAR}, #{item.modifytime,jdbcType=TIMESTAMP}, #{item.modifyby,jdbcType=VARCHAR}
       )</foreach>
-      <!-- 卖家销售单 -->
-    insert into ss_stodetail_#{sellerStoreId,jdbcType=INTEGER}  (orderId, storeId, 
-      handtag, productId, productName, 
-      productUnit, productColor, productSize, 
-      count, price, createTime, 
-      createBy, modifyTime, modifyBy
-      )
-    values <foreach collection="detail" item="item" index="index" separator=",">( #{item.orderid,jdbcType=VARCHAR}, #{item.storeid,jdbcType=VARCHAR}, 
-      #{item.handtag,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR}, #{item.productname,jdbcType=VARCHAR}, 
-      #{item.productunit,jdbcType=VARCHAR}, #{item.productcolor,jdbcType=VARCHAR}, #{item.productsize,jdbcType=VARCHAR}, 
-      #{item.count,jdbcType=DECIMAL}, #{item.price,jdbcType=DECIMAL}, #{item.createtime,jdbcType=TIMESTAMP}, 
-      #{item.createby,jdbcType=VARCHAR}, #{item.modifytime,jdbcType=TIMESTAMP}, #{item.modifyby,jdbcType=VARCHAR}
-      )</foreach>
+
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.SsStoDetail">
     insert into ss_stodetail
