@@ -27,5 +27,10 @@ public interface SpProductService {
 	 * 
 	 * */
 	public ProductQuery productInit(int corpId);
+	/**
+	 * 查询货品
+	 * 
+	 * */
+	public List<SpProduct> selectProductById(List<Integer> id,Integer storeId);
 
 }

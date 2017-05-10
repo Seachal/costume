@@ -163,4 +163,9 @@ public class SpProductServiceImpl implements SpProductService{
 			return 1;	
 		}
 	}
+
+	@Override
+	public List<SpProduct> selectProductById(List<Integer> ids,Integer storeId) {
+		return spProductMapper.selectById(ids,storeId);
+	}
 }

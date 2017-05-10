@@ -1,6 +1,7 @@
 package costumetrade.order.domain;
 
 import costumetrade.common.Entity;
+
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -74,10 +75,24 @@ public class SsFinancial extends Entity {
      *  业务类型:使用标准表，0 初始数据
      */
     private Short bussiType;
+    
+    private Integer operate;//订单状态  1：新增   2、已付款  3、审核  4、发货  5、收货  6、已取消
+    
+    private Integer clientId;
 
     private static final long serialVersionUID = 1L;
+    
+    
 
-    public Integer getId() {
+    public Integer getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(Integer clientId) {
+		this.clientId = clientId;
+	}
+
+	public Integer getId() {
         return id;
     }
 
@@ -188,4 +203,14 @@ public class SsFinancial extends Entity {
     public void setBussiType(Short bussiType) {
         this.bussiType = bussiType;
     }
+
+	public Integer getOperate() {
+		return operate;
+	}
+
+	public void setOperate(Integer operate) {
+		this.operate = operate;
+	}
+    
+    
 }

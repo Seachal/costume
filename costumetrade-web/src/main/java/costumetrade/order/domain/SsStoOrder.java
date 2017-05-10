@@ -1,8 +1,10 @@
 package costumetrade.order.domain;
 
-import costumetrade.common.Entity;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
+import costumetrade.common.Entity;
 
 public class SsStoOrder extends Entity {
     /**
@@ -174,10 +176,27 @@ public class SsStoOrder extends Entity {
      *  修改人
      */
     private String modifyby;
-
+    
+    private List<Integer>  status;
+    
+    private Integer storeId ;
+    
+    private Integer clientId ;
+  
+ 
     private static final long serialVersionUID = 1L;
+    
+    
 
-    public Integer getId() {
+    public Integer getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(Integer clientId) {
+		this.clientId = clientId;
+	}
+
+	public Integer getId() {
         return id;
     }
 
@@ -448,4 +467,22 @@ public class SsStoOrder extends Entity {
     public void setModifyby(String modifyby) {
         this.modifyby = modifyby == null ? null : modifyby.trim();
     }
+
+	public List<Integer> getStatus() {
+		return status;
+	}
+
+	public void setStatus(List<Integer> status) {
+		this.status = status;
+	}
+
+	public Integer getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
+	}
+    
+    
 }

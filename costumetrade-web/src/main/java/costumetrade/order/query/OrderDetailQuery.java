@@ -6,57 +6,26 @@ import costumetrade.common.Entity;
 import costumetrade.order.domain.SsStoDetail;
 import costumetrade.order.domain.SsStoOrder;
 
+
+
 public class OrderDetailQuery extends Entity {
 	
-	private Integer corpId;
-	private Integer orderId;
-	private Integer operate;
-	private SsStoOrder order ;
-    
-    private List<SsStoDetail> detail;
-
-    private static final long serialVersionUID = 1L;
-
-	public SsStoOrder getOrder() {
-		return order;
+	private SsStoOrder ssStoOrder;
+	private List<SsStoDetail> ssStoDetail;
+	
+	public SsStoOrder getSsStoOrder() {
+		return ssStoOrder;
 	}
-
-	public void setOrder(SsStoOrder order) {
-		this.order = order;
+	public void setSsStoOrder(SsStoOrder ssStoOrder) {
+		this.ssStoOrder = ssStoOrder;
 	}
-
-	public List<SsStoDetail> getDetail() {
-		return detail;
+	public List<SsStoDetail> getSsStoDetail() {
+		return ssStoDetail;
 	}
-
-	public void setDetail(List<SsStoDetail> detail) {
-		this.detail = detail;
+	public void setSsStoDetail(List<SsStoDetail> ssStoDetail) {
+		this.ssStoDetail = ssStoDetail;
 	}
-
-	public Integer getCorpId() {
-		return corpId;
-	}
-
-	public void setCorpId(Integer corpId) {
-		this.corpId = corpId;
-	}
-
-	public Integer getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(Integer orderId) {
-		this.orderId = orderId;
-	}
-
-	public Integer getOperate() {
-		return operate;
-	}
-
-	public void setOperate(Integer operate) {
-		this.operate = operate;
-	}
-    
-    
+	
+	
    
 }

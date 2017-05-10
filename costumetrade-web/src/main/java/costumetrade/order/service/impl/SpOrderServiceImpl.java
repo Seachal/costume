@@ -1,7 +1,6 @@
 package costumetrade.order.service.impl;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,7 +23,6 @@ import costumetrade.order.mapper.SsStoDetailMapper;
 import costumetrade.order.mapper.SsStoOrderMapper;
 import costumetrade.order.query.OrderDetailQuery;
 import costumetrade.order.query.OrderQuery;
-import costumetrade.order.query.PayQuery;
 import costumetrade.order.service.SpOrderService;
 
 @Transactional
@@ -44,12 +42,10 @@ public class SpOrderServiceImpl implements SpOrderService{
 	private ScStoreAddrMapper scStoreAddrMapper;
 	
 	@Override
-	public int saveOrders(List<SsStoDetail> details,SsStoOrder order ,Integer memberTag) {
-		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
-		String date = format.format(new Date());
-		String orderNo = OrderNoGenerator.generate(date);
+	public SsStoOrder saveOrders(List<SsStoDetail> details,SsStoOrder order,Integer clientId) {
+		
+		String orderNo = OrderNoGenerator.generate("");
 		List<SsStoDetail> detail = new ArrayList<SsStoDetail>();
-		List<Integer> list = new ArrayList<Integer>();
 		int save = 0;
 		BigDecimal count = new BigDecimal(0.0);
 		BigDecimal cost =   new BigDecimal(0.0);
@@ -72,32 +68,54 @@ public class SpOrderServiceImpl implements SpOrderService{
 			order.setOrdertype(1+"");
 		}
 		
-		if(memberTag == 1){ //普通会员
+		SpClient client = spClientMapper.selectByPrimaryKey(clientId);
+		
+		if(client.getStoreid() == null){ //普通会员
 			ssStoDetailMapper.saveDetail(detail,order.getSellerstoreid());
 			save = ssStoOrderMapper.insert(order,order.getSellerstoreid());
+		}else{
+			//买家保存采购单
+			ssStoDetailMapper.saveDetailStore(detail,order.getBuyerstoreid());
+			save = ssStoOrderMapper.insertStore(order,order.getBuyerstoreid());
+			//卖家保存销售单
+			ssStoDetailMapper.saveDetailStore(detail,order.getSellerstoreid());
+			save = ssStoOrderMapper.insertStore(order,order.getSellerstoreid());
 		}
-		if(memberTag == 2){ //店家
-			ssStoDetailMapper.saveDetailStore(detail,order.getBuyerstoreid(),order.getSellerstoreid());
-			save = ssStoOrderMapper.insertStore(order,order.getBuyerstoreid(),order.getSellerstoreid());
+		SsStoOrder o = null ;
+		if(save >0){
+			o = order(orderNo, order.getSellerstoreid());
 		}
-	
-		return save;
+		return o;
 	}
 	@Override
-	public OrderDetailQuery getOrder(Integer orderId) {
+	public OrderDetailQuery getOrder(String orderNo ,Integer orderType, Integer clientId) {
 		OrderDetailQuery	query = new OrderDetailQuery();	
-		query.setDetail(ssStoDetailMapper.selectByOrderId(orderId));
-		query.setOrder(ssStoOrderMapper.selectByOrderId(orderId));
+		SpClient client = spClientMapper.selectByPrimaryKey(clientId);
+		
+		SsStoOrder spStoOrder = new SsStoOrder();
+		List<SsStoOrder> spStoOrders = new ArrayList<SsStoOrder>();
+		List<SsStoDetail> ssStoDetails = new ArrayList<SsStoDetail>();
+		if(client.getStoreid() == null){
+			spStoOrder.setPayorderno(orderNo);
+			spStoOrders = ssStoOrderMapper.selectByOrderMember(spStoOrder);
+			ssStoDetails = ssStoDetailMapper.selectByOrderIdMember(orderNo);
+		}else{
+			spStoOrder.setStoreId(client.getStoreid());
+			spStoOrders = ssStoOrderMapper.selectByOrderStore(spStoOrder);
+			ssStoDetails = ssStoDetailMapper.selectByOrderId(orderNo,client.getStoreid());
+		}
+		query.setSsStoDetail(ssStoDetails);
+		query.setSsStoOrder(spStoOrders.get(0));
 		return query;
 	}
 	@Override
 	public int orderAudit(OrderQuery param) {
 		int operate = 0;
-		SsStoOrder spStoOrder = ssStoOrderMapper.selectByOrderId(Integer.valueOf(param.getOrderId()));
+		SsStoOrder spStoOrder = ssStoOrderMapper.selectByOrderId(Integer.valueOf(param.getOrderNo()));
 		if(spStoOrder.getOrderstatus() == 2){ //订单状态  1：新增   2、已付款  3、审核  4、发货  5、收货  6、已取消
 			spStoOrder = new SsStoOrder();
-			spStoOrder.setSellerstoreid(param.getCorpId());
-			spStoOrder.setPayorderno(param.getOrderId());
+			//spStoOrder.setSellerstoreid(param.getCorpId());
+			spStoOrder.setPayorderno(param.getOrderNo());
 			spStoOrder.setOrderstatus(param.getOperate());
 			operate = ssStoOrderMapper.updateByPrimaryKeySelective(spStoOrder);
 			if( operate > 0){
@@ -111,36 +129,42 @@ public class SpOrderServiceImpl implements SpOrderService{
 		
 	}
 	@Override
-	public int orderCancel(OrderQuery param) {
+	public int orderOperate(OrderQuery param) {
 
 		int operate = 0;
-		SsStoOrder spStoOrder = ssStoOrderMapper.selectByOrderId(Integer.valueOf(param.getOrderId()));
-		if(spStoOrder.getOrderstatus() == 1){ //订单状态  1：新增   2、已付款  3、审核  4、发货  5、收货  6、已取消
-			spStoOrder = new SsStoOrder();
-			spStoOrder.setSellerstoreid(param.getCorpId());
-			spStoOrder.setPayorderno(param.getOrderId());
-			spStoOrder.setOrderstatus(param.getOperate());
+		SsStoOrder spStoOrder = new SsStoOrder();
+		SpClient client = spClientMapper.selectByPrimaryKey(param.getClientId());
+		spStoOrder.setSellerstoreid(param.getSellerstoreid());
+		spStoOrder.setBuyerstoreid(param.getBuyerstoreid());
+		spStoOrder.setPayorderno(param.getOrderNo());
+		spStoOrder.setOrderstatus(param.getOperate());
+		if(client.getStoreid() == null){
 			operate = ssStoOrderMapper.updateByPrimaryKeySelective(spStoOrder);
-			if(operate > 0){
-				return 1;
-			}else{
-				return 0;
-			}
+		}else{
+			
+			operate = ssStoOrderMapper.updateByPrimaryKeySelectiveStore(spStoOrder);
+		}
+		if(operate > 0){
+			return 1;
 		}else{
 			return 0;
 		}
+		
 	}
 	@Override
-	public int orderPay(PayQuery param) {
-		SsFinancial ssFinancial = new SsFinancial();
-		ssFinancial = param.getSsFinancial();
-		
+	public int orderPay(SsFinancial ssFinancial) {
+		int operate = 0 ;
 		SsStoOrder spStoOrder = new SsStoOrder();
-		spStoOrder.setSellerstoreid(param.getCorpId());
+		spStoOrder.setSellerstoreid(ssFinancial.getSellerid());
 		spStoOrder.setPayorderno(ssFinancial.getOrderno());
-		spStoOrder.setOrderstatus(param.getOperate());
-		int operate = ssStoOrderMapper.updateByPrimaryKeySelective(spStoOrder);
-		
+		spStoOrder.setBuyerstoreid(ssFinancial.getBuyerid());
+		spStoOrder.setOrderstatus(ssFinancial.getOperate());
+		SpClient client = spClientMapper.selectByPrimaryKey(ssFinancial.getClientId());
+		if(client.getStoreid() == null){
+			operate = ssStoOrderMapper.updateByPrimaryKeySelective(spStoOrder);
+		}else{
+			operate = ssStoOrderMapper.updateByPrimaryKeySelectiveStore(spStoOrder);
+		}
 		if(operate <= 0){
 			return 0;
 		}
@@ -171,6 +195,81 @@ public class SpOrderServiceImpl implements SpOrderService{
 			return addr;
 		}
 		return addr;
+	}
+	@Override
+	public SsStoOrder order(String orderNo, Integer storeId) {
+		// TODO Auto-generated method stub
+		return ssStoOrderMapper.selectByOrderNo(orderNo,storeId);
+	}
+	@Override
+	public List<SsStoOrder> getOrders(Integer orderType, Integer orderStatus,
+			Integer clientId) {
+		SpClient client = spClientMapper.selectByPrimaryKey(clientId);
+		SsStoOrder spStoOrder = new SsStoOrder();
+		List<SsStoOrder> spStoOrders = new ArrayList<SsStoOrder>();
+		/*
+		 * 1、待付款  2、待发货   3、待收货  4、待审核 5、全部
+			采购单列签：1
+			orderStatus   值                    备注
+			待付款                                   1                       新增
+			待发货                                2，3                  付款和审核
+			待收货                                  4                       已发货
+			全部                                 所有状态                线上单据+线下单据
+		 * 
+		 * 销售单列签：2
+			orderStatus   值                    备注
+			待付款                                    1                    新增
+			待审核                                    2                    付款
+			待发货                        	  3                    已审核
+			全部                         所有状态              线上单据+线下单据
+		 * */
+		List<Integer> status = new ArrayList<Integer>();
+		if(orderType == 1){  //采购单列签
+			if(orderStatus == 2){
+				status.add(3);
+				status.add(2);
+				spStoOrder.setOrdertype(1+"");//线上订单
+			}else if(orderStatus == 3){
+				status.add(4);
+				spStoOrder.setOrdertype(1+"");//线上订单
+			}
+		}else if(orderType == 2){ //销售单列签
+			if(orderStatus == 4){
+				status.add(2);
+				spStoOrder.setOrdertype(1+"");//线上订单
+			}else if(orderStatus == 2){
+				status.add(3);
+				spStoOrder.setOrdertype(1+"");//线上订单
+			}
+		}
+		if(orderStatus == 5){
+			status.add(1);
+			status.add(2);
+			status.add(3);
+			status.add(4);
+			status.add(5);
+			status.add(6);
+		}else if(orderStatus == 1){
+			status.add(1);
+			spStoOrder.setOrdertype(1+"");//线上订单
+		}
+		spStoOrder.setStatus(status);
+		if(orderType == 1){  //采购单列签
+			if(client.getStoreid() == null){
+				spStoOrders = ssStoOrderMapper.selectByOrderMember(spStoOrder);
+			}else{
+				spStoOrder.setStoreId(client.getStoreid());
+				spStoOrder.setBuyerstoreid(client.getStoreid());
+				spStoOrders = ssStoOrderMapper.selectByOrderStore(spStoOrder);
+			}
+		}else if(orderType == 2){//销售单列签
+			if(client.getStoreid() != null){
+				spStoOrder.setStoreId(client.getStoreid());
+				spStoOrder.setSellerstoreid(client.getStoreid());
+				spStoOrders = ssStoOrderMapper.selectByOrderStore(spStoOrder);
+			}
+		}
+		return spStoOrders;
 	}
 	
 	

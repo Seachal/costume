@@ -182,7 +182,7 @@ public class ProductQuery extends Entity{
 	}
 
 	public void setCode(String code) {
-		this.code = "%" + code + "%";
+		this.code =code ;
 	}
 
 	public String getTimeUpOp() {

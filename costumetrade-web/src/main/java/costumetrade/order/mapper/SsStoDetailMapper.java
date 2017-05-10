@@ -1,7 +1,10 @@
 package costumetrade.order.mapper;
 
 import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+
 import costumetrade.order.domain.SsStoDetail;
 
 
@@ -19,10 +22,12 @@ public interface SsStoDetailMapper {
 
     int updateByPrimaryKey(SsStoDetail record);
     
-    int saveDetail(List<SsStoDetail> detail , Integer sellerStoreId);
+    int saveDetail(@Param("detail")List<SsStoDetail> detail , @Param("sellerStoreId")Integer sellerStoreId);
     
-    int saveDetailStore(List<SsStoDetail> detail , Integer buyStoreId,Integer sellerStoreId);
+    int saveDetailStore(@Param("detail")List<SsStoDetail> detail , @Param("storeId")Integer storeId);
     
-    List<SsStoDetail> selectByOrderId(Integer orderId);
+    List<SsStoDetail> selectByOrderId(@Param("orderNo")String orderNo,@Param("storeId")Integer storeId);
+    
+    List<SsStoDetail> selectByOrderIdMember(@Param("orderNo")String orderNo);
     
 }

@@ -12,20 +12,29 @@ public class OrderQuery extends Entity {
      *  编号
      */
     private Integer id;
+    /**
+     *  卖家客户编号
+     */
+    private Integer sellerstoreid;
+
+    /**
+     *  买家分店编号
+     */
+    private Integer buyerstoreid;
 
     /**
      *  企业ID
      */
-    private Integer corpId;
+    private Integer storeId;
     
-    private String orderId;
+    private String orderNo;
     
     private Integer operate;//订单状态  1：新增   2、已付款  3、审核  4、发货  5、收货  6、已取消
 
 	/*
 	 * 下单参数  开始
 	 * */
-	private Integer memberTag; //1、普通会员   2、店家
+	private Integer clientId; //1、普通会员   2、店家
 	
 	private List<Integer> productId;
 
@@ -45,13 +54,7 @@ public class OrderQuery extends Entity {
     
     private static final long serialVersionUID = 1L;
 
-	public Integer getMemberTag() {
-		return memberTag;
-	}
 
-	public void setMemberTag(Integer memberTag) {
-		this.memberTag = memberTag;
-	}
 
 	public List<Integer> getProductId() {
 		return productId;
@@ -110,20 +113,14 @@ public class OrderQuery extends Entity {
 		this.id = id;
 	}
 
-	public Integer getCorpId() {
-		return corpId;
+
+
+	public String getOrderNo() {
+		return orderNo;
 	}
 
-	public void setCorpId(Integer corpId) {
-		this.corpId = corpId;
-	}
-
-	public String getOrderId() {
-		return orderId;
-	}
-
-	public void setOrderId(String orderId) {
-		this.orderId = orderId;
+	public void setOrderNo(String orderNo) {
+		this.orderNo = orderNo;
 	}
 
 	public Integer getOperate() {
@@ -132,6 +129,38 @@ public class OrderQuery extends Entity {
 
 	public void setOperate(Integer operate) {
 		this.operate = operate;
+	}
+
+	public Integer getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
+	}
+
+	public Integer getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(Integer clientId) {
+		this.clientId = clientId;
+	}
+
+	public Integer getSellerstoreid() {
+		return sellerstoreid;
+	}
+
+	public void setSellerstoreid(Integer sellerstoreid) {
+		this.sellerstoreid = sellerstoreid;
+	}
+
+	public Integer getBuyerstoreid() {
+		return buyerstoreid;
+	}
+
+	public void setBuyerstoreid(Integer buyerstoreid) {
+		this.buyerstoreid = buyerstoreid;
 	}
  
    

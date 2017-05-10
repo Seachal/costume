@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.domain.ScStoreAddr;
+import costumetrade.order.domain.SpProduct;
+import costumetrade.order.domain.SsFinancial;
 import costumetrade.order.domain.SsStoDetail;
 import costumetrade.order.domain.SsStoOrder;
 import costumetrade.order.query.OrderDetailQuery;
 import costumetrade.order.query.OrderQuery;
-import costumetrade.order.query.PayQuery;
 import costumetrade.order.service.SpOrderService;
+import costumetrade.order.service.SpProductService;
 
 /**
  *
@@ -30,6 +32,8 @@ import costumetrade.order.service.SpOrderService;
 public class SpOrderController {
 	@Autowired
 	private SpOrderService spOrderService;
+	@Autowired
+	private SpProductService spProductService;
 	
 	@RequestMapping("/saveOrders")
 	@ResponseBody
@@ -37,6 +41,8 @@ public class SpOrderController {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
+		//获取货品单位
+		List<SpProduct> products = spProductService.selectProductById(param.getProductId(),order.getSellerstoreid());
 		
 		List<SsStoDetail> details = new ArrayList<SsStoDetail>();
 		if(param.getProductId().size()>0){
@@ -46,7 +52,12 @@ public class SpOrderController {
 				detail.setProductsize(param.getSize().get(i));
 				detail.setProductcolor(param.getColor().get(i));
 				detail.setPrice(param.getPrice().get(i));
+				detail.setProductid(param.getProductId().get(i)+"");
 				detail.setProductname(param.getProductName().get(i));
+				
+				if(param.getProductId().get(i) == products.get(i).getId()){
+					detail.setProductunit(products.get(i).getUnit());
+				}
 				detail.setCreateby(order.getCreateby());
 				detail.setCreatetime(new Date());
 				detail.setModifyby(order.getModifyby());
@@ -55,18 +66,20 @@ public class SpOrderController {
 				details.add(detail);
 			}
 		}
-	
+		
 		if(order == null || param == null){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		int save = spOrderService.saveOrders(details,order,param.getMemberTag());
-		if(save <= 0){
+	
+		SsStoOrder o = spOrderService.saveOrders(details,order,param.getClientId());
+		if(o == null){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
 			return result;
 		}else{
+			result.setData(o);
 			return result;
 		}
 		
@@ -81,19 +94,41 @@ public class SpOrderController {
 	}
 	@RequestMapping("/getOrder")
 	@ResponseBody
-	public ApiResponse getOrder(OrderDetailQuery param) {
+	public ApiResponse getOrder(SsStoOrder order) {
 		ApiResponse result = new ApiResponse();
 		
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		if(param == null ){
-			result.setCode(ResponseInfo.LACK_PARAM.code);
-			result.setMsg(ResponseInfo.LACK_PARAM.msg);
-			return result;
-		}
-		OrderDetailQuery query = spOrderService.getOrder(param.getOrderId());
+		String orderNo  = order.getPayorderno() ;
+		Integer orderType =  Integer.parseInt(order.getOrdertype());
+		Integer clientId = order.getClientId();
+		OrderDetailQuery query = spOrderService.getOrder(orderNo,orderType,clientId);
 		
 		if(query == null){
+			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			return result;
+		}else{
+			result.setData(query);
+			return result;
+		}
+		
+	}
+	@RequestMapping("/getOrders")
+	@ResponseBody   
+	public ApiResponse getOrders(SsStoOrder order) {
+		ApiResponse result = new ApiResponse();
+		
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		Integer orderType  = Integer.parseInt(order.getOrdertype()) ;
+		Integer orderStatus =  order.getOrderstatus();
+		Integer clientId = order.getClientId();
+		
+		List<SsStoOrder> query = spOrderService.getOrders(orderType,orderStatus,clientId);
+		
+		if(query.size() < 0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
 			return result;
@@ -127,9 +162,9 @@ public class SpOrderController {
 		}
 		
 	}
-	@RequestMapping("/orderCancel")
+	@RequestMapping("/orderOperate")
 	@ResponseBody
-	public ApiResponse orderCancel(OrderQuery param) {
+	public ApiResponse orderOperate(OrderQuery param) {
 		ApiResponse result = new ApiResponse();
 		
 		result.setCode(ResponseInfo.SUCCESS.code);
@@ -139,7 +174,7 @@ public class SpOrderController {
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		int operate = spOrderService.orderAudit(param);
+		int operate = spOrderService.orderOperate(param);
 		
 		if(operate <= 0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
@@ -152,17 +187,17 @@ public class SpOrderController {
 	}
 	@RequestMapping("/orderPay")
 	@ResponseBody
-	public ApiResponse orderPay(PayQuery param) {
+	public ApiResponse orderPay(SsFinancial ssFinancial) {
 		ApiResponse result = new ApiResponse();
 		
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		if(param == null ){
+		if(ssFinancial == null ){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		int operate = spOrderService.orderPay(param);
+		int operate = spOrderService.orderPay(ssFinancial);
 		
 		if(operate <= 0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
