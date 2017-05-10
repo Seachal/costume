@@ -113,7 +113,7 @@
     and product.time_down &gt;= CURDATE() 
     and product.status = 0
      <if test="code != null">
-      and  product.code like #{code}
+      and  product.code like  CONCAT('%',#{code},'%')
       </if>
      <if test="productType != null">
        and productType.cateName in <foreach collection="productType" item="item" index="index" open="(" separator="," close=")"> #{item}</foreach>
