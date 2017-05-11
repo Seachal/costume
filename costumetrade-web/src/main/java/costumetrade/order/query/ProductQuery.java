@@ -8,6 +8,9 @@ import costumetrade.common.Entity;
 import costumetrade.order.domain.SpPBrand;
 import costumetrade.order.domain.SpPCate;
 import costumetrade.order.domain.SpPSizeCustom;
+import costumetrade.order.enums.GradeTypeEnum;
+import costumetrade.order.enums.SeasonTypeEnum;
+import costumetrade.order.enums.UnitTypeEnum;
 
 public class ProductQuery extends Entity{
 
@@ -75,11 +78,11 @@ public class ProductQuery extends Entity{
     /**
      *  商品季节
      */
-    private List<String> seasonList;
+    private List<SeasonTypeEnum> seasonList;
     
-    private  List<String> gradeList;
+    private  List<GradeTypeEnum> gradeList;
     
-    private  List<String> unitList;
+    private  List<UnitTypeEnum> unitList;
     
     /**
      *  商品图片
@@ -149,10 +152,19 @@ public class ProductQuery extends Entity{
 	private List<SpPSizeCustom> productSize;  //x商品尺碼組
 	
 
-	List<SpPBrand> brandList ;
-	List<SpPCate> productTypeList;
-	List<SpPSizeCustom> sizeList;
+	private List<SpPBrand> brandList ;
+	private List<SpPCate> productTypeList;
+	private List<SpPSizeCustom> sizeList;
+	private BigDecimal price ;
 	
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -419,27 +431,27 @@ public class ProductQuery extends Entity{
 		this.sizeList = sizeList;
 	}
 
-	public List<String> getSeasonList() {
+	public List<SeasonTypeEnum> getSeasonList() {
 		return seasonList;
 	}
 
-	public void setSeasonList(List<String> seasonList) {
+	public void setSeasonList(List<SeasonTypeEnum> seasonList) {
 		this.seasonList = seasonList;
 	}
 
-	public List<String> getGradeList() {
+	public List<GradeTypeEnum> getGradeList() {
 		return gradeList;
 	}
 
-	public void setGradeList(List<String> gradeList) {
+	public void setGradeList(List<GradeTypeEnum> gradeList) {
 		this.gradeList = gradeList;
 	}
 
-	public List<String> getUnitList() {
+	public List<UnitTypeEnum> getUnitList() {
 		return unitList;
 	}
 
-	public void setUnitList(List<String> unitList) {
+	public void setUnitList(List<UnitTypeEnum> unitList) {
 		this.unitList = unitList;
 	}
 

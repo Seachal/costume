@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
+import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SsFinancial;
@@ -206,6 +207,26 @@ public class SpOrderController {
 		}else{
 			return result;
 		}
+		
+	}
+	
+	@RequestMapping("/confirmLogistic")
+	@ResponseBody
+	public ApiResponse confirmLogistic(ScLogistics scLogistics) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		int  confirm = spOrderService.confirmLogistic(scLogistics);
+		
+		if(confirm <= 0){
+			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			return result;
+		}else{
+			return result;
+		}
+		
 		
 	}
 

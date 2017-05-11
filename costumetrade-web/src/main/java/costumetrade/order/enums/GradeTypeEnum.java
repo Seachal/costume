@@ -47,14 +47,12 @@ public enum GradeTypeEnum {
 	   return null;
    }
    
-   public static List<String> getGradeTypeEnum(){
-	   List<String> list = new ArrayList<String>();
-	   list.add(GradeTypeEnum.GRADE_ONE.getValue());
-	   list.add(GradeTypeEnum.GRADE_TWO.getValue());
-	   list.add(GradeTypeEnum.GRADE_THREE.getValue());
-	   list.add(GradeTypeEnum.GRADE_FOUR.getValue());
-	   list.add(GradeTypeEnum.GRADE_FIVE.getValue());
-	   list.add(GradeTypeEnum.GRADE_SIX.getValue());
+   public static List<GradeTypeEnum> getGradeTypeEnum(){
+	   List<GradeTypeEnum> list = new ArrayList<GradeTypeEnum>();
+	   for (GradeTypeEnum gradeTypeEnum : values()) {
+		   list.add(gradeTypeEnum);
+	   }
 	   return list;
    }
+
 }

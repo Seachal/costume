@@ -2,6 +2,7 @@ package costumetrade.order.service;
 
 import java.util.List;
 
+import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.domain.SsFinancial;
 import costumetrade.order.domain.SsStoDetail;
@@ -46,4 +47,9 @@ public interface SpOrderService {
 	 * 根据订单号 查询订单
 	 * */
 	public SsStoOrder order(String orderNo , Integer storeId);
+	/**
+	 * 确定物流  绑定订单号到物流
+	 * */
+	
+	public int confirmLogistic(ScLogistics scLogistics);
 }

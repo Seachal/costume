@@ -10,17 +10,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import costumetrade.common.util.OrderNoGenerator;
+import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.domain.SpClient;
 import costumetrade.order.domain.SsFinancial;
 import costumetrade.order.domain.SsStoDetail;
 import costumetrade.order.domain.SsStoOrder;
+import costumetrade.order.domain.SsStock;
+import costumetrade.order.domain.SsStockTransfer;
+import costumetrade.order.mapper.ScLogisticsMapper;
 import costumetrade.order.mapper.ScStoreAddrMapper;
 import costumetrade.order.mapper.SpCartMapper;
 import costumetrade.order.mapper.SpClientMapper;
 import costumetrade.order.mapper.SsFinancialMapper;
 import costumetrade.order.mapper.SsStoDetailMapper;
 import costumetrade.order.mapper.SsStoOrderMapper;
+import costumetrade.order.mapper.SsStockMapper;
+import costumetrade.order.mapper.SsStockTransferMapper;
 import costumetrade.order.query.OrderDetailQuery;
 import costumetrade.order.query.OrderQuery;
 import costumetrade.order.service.SpOrderService;
@@ -40,11 +46,17 @@ public class SpOrderServiceImpl implements SpOrderService{
 	private SpClientMapper spClientMapper;
 	@Autowired 
 	private ScStoreAddrMapper scStoreAddrMapper;
+	@Autowired
+	private ScLogisticsMapper scLogisticsMapper;
+	@Autowired
+	private SsStockMapper ssStockMapper;
+	@Autowired
+	private SsStockTransferMapper ssStockTransferMapper;
 	
 	@Override
 	public SsStoOrder saveOrders(List<SsStoDetail> details,SsStoOrder order,Integer clientId) {
 		
-		String orderNo = OrderNoGenerator.generate("");
+		String orderNo = OrderNoGenerator.generate("O");
 		List<SsStoDetail> detail = new ArrayList<SsStoDetail>();
 		int save = 0;
 		BigDecimal count = new BigDecimal(0.0);
@@ -62,14 +74,12 @@ public class SpOrderServiceImpl implements SpOrderService{
 			order.setPayorderno(orderNo+"");
 			order.setTotalamt(cost);
 			order.setTotalnum(count);
-			order.setRealcost(cost);
+			
 			order.setOrderstatus(1);
 			order.setOrdertime(new Date());
 			order.setOrdertype(1+"");
 		}
-		
 		SpClient client = spClientMapper.selectByPrimaryKey(clientId);
-		
 		if(client.getStoreid() == null){ //普通会员
 			ssStoDetailMapper.saveDetail(detail,order.getSellerstoreid());
 			save = ssStoOrderMapper.insert(order,order.getSellerstoreid());
@@ -138,11 +148,109 @@ public class SpOrderServiceImpl implements SpOrderService{
 		spStoOrder.setBuyerstoreid(param.getBuyerstoreid());
 		spStoOrder.setPayorderno(param.getOrderNo());
 		spStoOrder.setOrderstatus(param.getOperate());
-		if(client.getStoreid() == null){
-			operate = ssStoOrderMapper.updateByPrimaryKeySelective(spStoOrder);
-		}else{
+		
+		/**审核配货逻辑整理：
+		1、确定有没有库存
+		2、修改库存记录ss_stock
+		3、新增对库存的交易记录
+		 * 
+		 * */
+		List<SsStoDetail> ssStoDetails = new ArrayList<SsStoDetail>();
+		List<SsStock> ssStocks = new ArrayList<SsStock>();
+		List<SsStock> ssStock = new ArrayList<SsStock>(); //对应店家查询的现有库存
+		
+		List<SsStockTransfer> transfers = new ArrayList<SsStockTransfer>();
+		List<SsStockTransfer> ssStockTransferBuyyer = new ArrayList<SsStockTransfer>();//买家交易记录
+		List<SsStockTransfer> ssStockTransferSeller = new ArrayList<SsStockTransfer>(); //卖家交易记录
+		
+		boolean stockTag = true;
+		if(param.getOperate() == 3){ //审核  配货
+			ssStoDetails = ssStoDetailMapper.selectByOrderId(param.getOrderNo(),param.getSellerstoreid());
+			for(SsStoDetail detail : ssStoDetails){
+				
+				SsStock stock = new SsStock();
+				stock.setProductid(detail.getProductid());
+				stock.setProductcolor(detail.getProductcolor());
+				stock.setProductsize(detail.getProductsize());
+				stock.setStocknum(Double.parseDouble(detail.getCount().toString()));
+				stock.setStockamt(detail.getCount().multiply(detail.getPrice()));
+				stock.setStoreid(param.getSellerstoreid());
+				ssStocks.add(stock);
+				
+				stock = ssStockMapper.select(stock);
+				
+				if(stock == null){
+					stockTag = false ; //不存在库存
+					break;
+				}else{
+					ssStock.add(stock);
+					
+				}
+				
+				SsStockTransfer transfer = new SsStockTransfer();
+				transfer.setProductid(detail.getProductid());
+				transfer.setProductcolor(detail.getProductcolor());
+				transfer.setProductsize(detail.getProductsize());
+				transfer.setCount(detail.getCount());
+				transfer.setTransfertoid(param.getSellerstoreid());
+				transfer.setAmount(detail.getCount().multiply(detail.getPrice()));
+				transfers.add(transfer);
+			}
+			int updateSellerStock = 0;
+			if(stockTag){
+				if(client.getStoreid() == null){
+					operate = ssStoOrderMapper.updateByPrimaryKeySelective(spStoOrder);
+					for(SsStockTransfer transfer : transfers){
+						transfer.setTransferfromid(param.getClientId());
+						transfer.setStockType(2);//调出
+						ssStockTransferSeller.add(transfer);
+					}
+					ssStockTransferMapper.insert(null,0, ssStockTransferSeller,param.getSellerstoreid());//新增卖家交易记录
+				}else{
+					for(SsStockTransfer transfer : transfers){
+						transfer.setTransferfromid(param.getBuyerstoreid());
+						transfer.setStockType(2);//调出
+						ssStockTransferSeller.add(transfer);
+						
+						transfer.setStockType(1);//调ru
+						ssStockTransferBuyyer.add(transfer);
+					}
+					ssStockTransferMapper.insert(ssStockTransferBuyyer,param.getBuyerstoreid(), ssStockTransferSeller,param.getSellerstoreid());//新增卖家交易记录   新增买家交易记录
+					
+					for(int i=0 ; i< ssStocks.size(); i++){
+						
+						SsStock stock = new SsStock();
+						stock = ssStocks.get(i);
+						stock.setStoreid(param.getBuyerstoreid());
+						
+						SsStock stockBuyyer = ssStockMapper.select(stock);//买家库存，存在更新，不存在新增库存
+						if(stockBuyyer == null){
+							ssStockMapper.insertSelective(stock);
+						}else{
+							stock.setStocknum(stockBuyyer.getStocknum()+ssStocks.get(i).getStocknum());
+							updateSellerStock = ssStockMapper.updateByPrimaryKey(stock); //更新买家库存
+						}
+					}
+					operate = ssStoOrderMapper.updateByPrimaryKeySelectiveStore(spStoOrder);
+				}
+				for(int i=0 ; i< ssStocks.size(); i++){
+					if(ssStocks.get(i).getProductid().equals(ssStock.get(i).getProductid())
+							&& ssStocks.get(i).getProductcolor().equals(ssStock.get(i).getProductcolor())
+							&& ssStocks.get(i).getProductsize().equals(ssStock.get(i).getProductsize())){
+						SsStock stock = new SsStock();
+						stock = ssStocks.get(i);
+						stock.setStocknum(ssStock.get(i).getStocknum()-ssStocks.get(i).getStocknum());
+						updateSellerStock = ssStockMapper.updateByPrimaryKey(stock); //更新卖家库存
+					}
+				}
+			}
 			
-			operate = ssStoOrderMapper.updateByPrimaryKeySelectiveStore(spStoOrder);
+		}else{
+			if(client.getStoreid() == null){
+				operate = ssStoOrderMapper.updateByPrimaryKeySelective(spStoOrder);
+			}else{
+				operate = ssStoOrderMapper.updateByPrimaryKeySelectiveStore(spStoOrder);
+			}
 		}
 		if(operate > 0){
 			return 1;
@@ -154,6 +262,9 @@ public class SpOrderServiceImpl implements SpOrderService{
 	@Override
 	public int orderPay(SsFinancial ssFinancial) {
 		int operate = 0 ;
+		ssFinancial.setTradeno(OrderNoGenerator.generate("P"));
+		ssFinancial.setPaydate(new Date());
+		
 		SsStoOrder spStoOrder = new SsStoOrder();
 		spStoOrder.setSellerstoreid(ssFinancial.getSellerid());
 		spStoOrder.setPayorderno(ssFinancial.getOrderno());
@@ -168,9 +279,9 @@ public class SpOrderServiceImpl implements SpOrderService{
 		if(operate <= 0){
 			return 0;
 		}
-		if(ssFinancial.getPayType() == 1){ //1、线下支付  2、微信支付
-			operate = ssFinancialMapper.insertSelective(ssFinancial);
-		}	
+		//if(ssFinancial.getPayType() == 1){ //1:现金支付，2：支付宝支付，3：银行卡支付，4：微信支付，5：票据支付
+		operate = ssFinancialMapper.insertSelective(ssFinancial);
+		//}	
 		return operate;
 	}
 	@Override
@@ -270,6 +381,11 @@ public class SpOrderServiceImpl implements SpOrderService{
 			}
 		}
 		return spStoOrders;
+	}
+	@Override
+	public int confirmLogistic(ScLogistics scLogistics) {
+		scLogistics.setCreatetime(new Date());
+		return scLogisticsMapper.insertSelective(scLogistics);
 	}
 	
 	

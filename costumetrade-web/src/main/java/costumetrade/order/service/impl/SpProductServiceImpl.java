@@ -47,6 +47,16 @@ public class SpProductServiceImpl implements SpProductService{
 	
 	@Override
 	public List<SpProduct> selectProducts(ProductQuery productQuery) {
+		List<String> season = new ArrayList<String>();
+		if(productQuery.getProductSeason().size()>0){
+			for(int i = 0 ; i<productQuery.getProductSeason().size(); i++){
+				season.add(Enum.valueOf(SeasonTypeEnum.class,productQuery.getProductSeason().get(i)).getValue());
+			}
+			
+		}
+		if(season.size()>0){
+			productQuery.setProductSeason(season);
+		}
 		return spProductMapper.selectProducts(productQuery);
 	}
 
@@ -83,6 +93,15 @@ public class SpProductServiceImpl implements SpProductService{
 		}else{
 			//保存商品
 			product.setStatus(0);
+			if(product.getSeason() != null){
+				product.setSeason(Enum.valueOf(SeasonTypeEnum.class,product.getSeason()).getValue());
+			}
+			if(product.getGrade() != null){
+				product.setGrade(Enum.valueOf(GradeTypeEnum.class,product.getGrade()).getValue());
+			}
+			if(product.getUnit() != null){
+				product.setUnit(Enum.valueOf(UnitTypeEnum.class,product.getUnit()).getValue());
+			}
 			int id = spProductMapper.insertSelective(product);
 			if(id >0 ){
 				SsPrice price = new SsPrice();

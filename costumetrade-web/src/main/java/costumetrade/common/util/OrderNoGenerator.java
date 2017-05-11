@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class OrderNoGenerator {
 	
-	private static final String GLOBAL_PREFIX="vx";
+	//private static final String GLOBAL_PREFIX="vx";
 	
 	/**
 	 *  @author yh.yu
@@ -36,7 +36,7 @@ public class OrderNoGenerator {
 	 * @return
 	 */
 	public static String generate(String prefix, int length) {
-		prefix=StringUtils.trim(GLOBAL_PREFIX+prefix);
+		prefix=StringUtils.trim(prefix);
 		length=(length<=0)?6:length;		//传输错误时采用6bit随机数
 		return prefix+yyyyMMddHHmmss_FORMAT.format(System.currentTimeMillis())+RandomStringUtils.randomNumeric(length);
 	}

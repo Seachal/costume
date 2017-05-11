@@ -44,12 +44,12 @@ public enum UnitTypeEnum {
 	   return null;
    }
    
-   public static List<String> getUnitTypeEnum(){
-	   List<String> list = new ArrayList<String>();
-	   list.add(UnitTypeEnum.UNIT_ITEM.getValue());
-	   list.add(UnitTypeEnum.UNIT_ITEMS.getValue());
-	   list.add(UnitTypeEnum.UNIT_A.getValue());
-	  
+
+   public static List<UnitTypeEnum> getUnitTypeEnum(){
+	   List<UnitTypeEnum> list = new ArrayList<UnitTypeEnum>();
+	   for (UnitTypeEnum unitTypeEnum : values()) {
+		   list.add(unitTypeEnum);
+	   }
 	   return list;
    }
 }

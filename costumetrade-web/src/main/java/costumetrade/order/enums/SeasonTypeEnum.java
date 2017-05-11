@@ -45,13 +45,13 @@ public enum SeasonTypeEnum {
 	   return null;
    }
    
-   public static List<String> getSeasonTypeEnum(){
-	   List<String> list = new ArrayList<String>();
-	   list.add(SeasonTypeEnum.SEASON_SPRING.getValue());
-	   list.add(SeasonTypeEnum.SEASON_SUMMER.getValue());
-	   list.add(SeasonTypeEnum.SEASON_AUTUMN.getValue());
-	   list.add(SeasonTypeEnum.SEASON_WINTER.getValue());
-	  
+
+   
+   public static List<SeasonTypeEnum> getSeasonTypeEnum(){
+	   List<SeasonTypeEnum> list = new ArrayList<SeasonTypeEnum>();
+	   for (SeasonTypeEnum seasonTypeEnum : values()) {
+		   list.add(seasonTypeEnum);
+	   }
 	   return list;
    }
 }
