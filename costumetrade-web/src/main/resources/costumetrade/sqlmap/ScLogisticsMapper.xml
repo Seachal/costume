@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="costumetrade.order.mapper.ScLogisticsMapper">
+  <resultMap id="BaseResultMap" type="costumetrade.order.domain.ScLogistics">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="storeId" jdbcType="INTEGER" property="storeid" />
+    <result column="orderNo" jdbcType="VARCHAR" property="orderno" />
+    <result column="logisticsType" jdbcType="VARCHAR" property="logisticstype" />
+    <result column="logisticsNo" jdbcType="VARCHAR" property="logisticsno" />
+    <result column="logisticsName" jdbcType="VARCHAR" property="logisticsname" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="createBy" jdbcType="VARCHAR" property="createby" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, storeId, orderNo, logisticsType, logisticsNo, logisticsName, createTime, createBy
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sc_logistics
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sc_logistics
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="costumetrade.order.domain.ScLogistics">
+    insert into sc_logistics (id, storeId, orderNo, 
+      logisticsType, logisticsNo, logisticsName, 
+      createTime, createBy)
+    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{orderno,jdbcType=VARCHAR}, 
+      #{logisticstype,jdbcType=VARCHAR}, #{logisticsno,jdbcType=VARCHAR}, #{logisticsname,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="costumetrade.order.domain.ScLogistics">
+    insert into sc_logistics_#{storeid,jdbcType=INTEGER}
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="storeid != null">
+        storeId,
+      </if>
+      <if test="orderno != null">
+        orderNo,
+      </if>
+      <if test="logisticstype != null">
+        logisticsType,
+      </if>
+      <if test="logisticsno != null">
+        logisticsNo,
+      </if>
+      <if test="logisticsname != null">
+        logisticsName,
+      </if>
+      <if test="createtime != null">
+        createTime,
+      </if>
+      <if test="createby != null">
+        createBy,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="storeid != null">
+        #{storeid,jdbcType=INTEGER},
+      </if>
+      <if test="orderno != null">
+        #{orderno,jdbcType=VARCHAR},
+      </if>
+      <if test="logisticstype != null">
+        #{logisticstype,jdbcType=VARCHAR},
+      </if>
+      <if test="logisticsno != null">
+        #{logisticsno,jdbcType=VARCHAR},
+      </if>
+      <if test="logisticsname != null">
+        #{logisticsname,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createby != null">
+        #{createby,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.ScLogistics">
+    update sc_logistics
+    <set>
+      <if test="storeid != null">
+        storeId = #{storeid,jdbcType=INTEGER},
+      </if>
+      <if test="orderno != null">
+        orderNo = #{orderno,jdbcType=VARCHAR},
+      </if>
+      <if test="logisticstype != null">
+        logisticsType = #{logisticstype,jdbcType=VARCHAR},
+      </if>
+      <if test="logisticsno != null">
+        logisticsNo = #{logisticsno,jdbcType=VARCHAR},
+      </if>
+      <if test="logisticsname != null">
+        logisticsName = #{logisticsname,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createby != null">
+        createBy = #{createby,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.ScLogistics">
+    update sc_logistics
+    set storeId = #{storeid,jdbcType=INTEGER},
+      orderNo = #{orderno,jdbcType=VARCHAR},
+      logisticsType = #{logisticstype,jdbcType=VARCHAR},
+      logisticsNo = #{logisticsno,jdbcType=VARCHAR},
+      logisticsName = #{logisticsname,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      createBy = #{createby,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

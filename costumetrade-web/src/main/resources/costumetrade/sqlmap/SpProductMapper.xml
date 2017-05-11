@@ -40,8 +40,8 @@
   
   <resultMap id="ProductsResultMap" type="costumetrade.order.query.ProductQuery">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="code" jdbcType="VARCHAR" property="productCode" />
-    <result column="name" jdbcType="VARCHAR" property="productName" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="image" jdbcType="VARCHAR" property="image" />
     <result column="time_up" jdbcType="TIMESTAMP" property="timeUp" />
     <result column="storeId" jdbcType="INTEGER" property="storeId" />
@@ -117,7 +117,7 @@
     left join sp_product_type productType on productType.id = product.prductType
     where 1=1
     and product.time_down &gt;= CURDATE() 
-    and product.time_up   &lt;= CURDATE() 
+    and product.time_up &lt;= CURDATE() 
     and product.status = 0
      <if test="code != null">
       and  product.code like  CONCAT('%',#{code},'%')
@@ -170,7 +170,7 @@
     left join sp_store store on store.id = product.storeId
     where 1=1
     and product.time_down &gt;= CURDATE() 
-    and product.time_up   &lt;= CURDATE() 
+    and product.time_up &lt;= CURDATE() 
     and product.status = 0
     and product.storeId = #{storeId,jdbcType=INTEGER}
     and product.id = #{id,jdbcType=INTEGER}
