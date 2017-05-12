@@ -212,8 +212,17 @@ public class SpOrderServiceImpl implements SpOrderService{
 						transfer.setStockType(2);//调出
 						ssStockTransferSeller.add(transfer);
 						
-						transfer.setStockType(1);//调ru
-						ssStockTransferBuyyer.add(transfer);
+						SsStockTransfer t = new SsStockTransfer();
+						t.setAmount(transfer.getAmount());
+						t.setCount(transfer.getCount());
+						t.setStockType(1);//调ru
+						t.setProductcolor(transfer.getProductcolor());
+						t.setProductid(transfer.getProductid());
+						t.setProductsize(transfer.getProductsize());
+						t.setTransferfromid(transfer.getTransferfromid());
+						t.setTransfertoid(transfer.getTransfertoid());
+						
+						ssStockTransferBuyyer.add(t);
 					}
 					ssStockTransferMapper.insert(ssStockTransferBuyyer,param.getBuyerstoreid(), ssStockTransferSeller,param.getSellerstoreid());//新增卖家交易记录   新增买家交易记录
 					
@@ -228,7 +237,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 							ssStockMapper.insertSelective(stock);
 						}else{
 							stock.setStocknum(stockBuyyer.getStocknum()+ssStocks.get(i).getStocknum());
-							updateSellerStock = ssStockMapper.updateByPrimaryKey(stock); //更新买家库存
+							updateSellerStock = ssStockMapper.updateByPrimaryKeySelective(stock); //更新买家库存
 						}
 					}
 					operate = ssStoOrderMapper.updateByPrimaryKeySelectiveStore(spStoOrder);
@@ -239,8 +248,9 @@ public class SpOrderServiceImpl implements SpOrderService{
 							&& ssStocks.get(i).getProductsize().equals(ssStock.get(i).getProductsize())){
 						SsStock stock = new SsStock();
 						stock = ssStocks.get(i);
+						stock.setStoreid(param.getSellerstoreid());
 						stock.setStocknum(ssStock.get(i).getStocknum()-ssStocks.get(i).getStocknum());
-						updateSellerStock = ssStockMapper.updateByPrimaryKey(stock); //更新卖家库存
+						updateSellerStock = ssStockMapper.updateByPrimaryKeySelective(stock); //更新卖家库存
 					}
 				}
 			}

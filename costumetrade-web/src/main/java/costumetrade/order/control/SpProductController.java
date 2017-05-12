@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,26 +35,25 @@ import costumetrade.order.service.SpProductService;
 @Controller
 public class SpProductController {
     public static Logger logger = Logger.getLogger(SpProductController.class);
-    
+  
+    @Autowired
+    private HttpSession httpSession;
 	@Autowired
 	private SpProductService spProductService;
 
 	@RequestMapping("/getProducts")
 	@ResponseBody
 	public ApiResponse getAllroducts(ProductQuery paramProduct) {
-		
+		paramProduct.setClientId((Integer) httpSession.getAttribute("clientId"));
 		List<SpProduct> productLists = spProductService.selectProducts(paramProduct);
-
 		return  ApiResponse.getInstance(productLists);
 	}
 	
 	@RequestMapping("/getProductDetail")
 	@ResponseBody
 	public ApiResponse getProduct(ProductQuery paramProduct) {
-		
-		
+		paramProduct.setClientId((Integer) httpSession.getAttribute("clientId"));
 		SpProduct product = spProductService.selectProduct(paramProduct);
-		
 		return  ApiResponse.getInstance(product);
 	}
 	
@@ -81,7 +82,9 @@ public class SpProductController {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		
+		product.setCreateBy((String) httpSession.getAttribute("clientId"));
+		product.setModifyBy((String) httpSession.getAttribute("clientId"));
+
 		int save = spProductService.saveProduct(product);
 		if(save<=0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
