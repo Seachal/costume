@@ -24,19 +24,19 @@
     from ss_stock_#{storeid,jdbcType=INTEGER}
     where 1=1
        <if test="storeid != null">
-       and storeId = #{storeid,jdbcType=INTEGER},
+       and storeId = #{storeid,jdbcType=INTEGER}
       </if>
       <if test="productid != null">
-       and productId = #{productid,jdbcType=VARCHAR},
+       and productId = #{productid,jdbcType=VARCHAR}
       </if>
       <if test="productcolor != null">
-       and productColor =  #{productcolor,jdbcType=VARCHAR},
+       and productColor =  #{productcolor,jdbcType=VARCHAR}
       </if>
       <if test="productsize != null">
-       and productSize = #{productsize,jdbcType=VARCHAR},
+       and productSize = #{productsize,jdbcType=VARCHAR}
       </if>
       <if test="stocknum != null">
-       and stockNum &gt;= #{stocknum,jdbcType=DOUBLE},
+       and stockNum &gt;= #{stocknum,jdbcType=DOUBLE}
       </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -150,16 +150,16 @@
     </set>
     where 1=1
        <if test="storeid != null">
-       and storeId = #{storeid,jdbcType=INTEGER},
+       and storeId = #{storeid,jdbcType=INTEGER}
       </if>
       <if test="productid != null">
-       and productId = #{productid,jdbcType=VARCHAR},
+       and productId = #{productid,jdbcType=VARCHAR}
       </if>
       <if test="productcolor != null">
-       and productColor =  #{productcolor,jdbcType=VARCHAR},
+       and productColor =  #{productcolor,jdbcType=VARCHAR}
       </if>
       <if test="productsize != null">
-       and productSize = #{productsize,jdbcType=VARCHAR},
+       and productSize = #{productsize,jdbcType=VARCHAR}
       </if>
       
   </update>

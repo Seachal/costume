@@ -203,7 +203,7 @@
 		</trim>
 	</insert>
 	
-	<update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SpCart">
+	<update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SpClient">
 		update sc_ecart
 		<set>
 			<if test="corpid != null">
