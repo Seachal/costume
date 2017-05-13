@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.SsStock">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="storeId" jdbcType="INTEGER" property="storeid" />
-    <result column="productId" jdbcType="INTEGER" property="productid" />
+    <result column="productId" jdbcType="VARCHAR" property="productid" />
     <result column="productColor" jdbcType="VARCHAR" property="productcolor" />
     <result column="productSize" jdbcType="VARCHAR" property="productsize" />
     <result column="stockNum" jdbcType="DOUBLE" property="stocknum" />
@@ -48,7 +48,7 @@
       productColor, productSize, stockNum, 
       stockAmt, modifyTime, modifyBy, 
       createTime, createBy)
-    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{productid,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{productid,jdbcType=VARCHAR}, 
       #{productcolor,jdbcType=VARCHAR}, #{productsize,jdbcType=VARCHAR}, #{stocknum,jdbcType=DOUBLE}, 
       #{stockamt,jdbcType=DECIMAL}, #{modifytime,jdbcType=TIMESTAMP}, #{modifyby,jdbcType=VARCHAR}, 
       #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR})
@@ -98,7 +98,7 @@
         #{storeid,jdbcType=INTEGER},
       </if>
       <if test="productid != null">
-        #{productid,jdbcType=INTEGER},
+        #{productid,jdbcType=VARCHAR},
       </if>
       <if test="productcolor != null">
         #{productcolor,jdbcType=VARCHAR},
@@ -166,7 +166,7 @@
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsStock">
     update ss_stock
     set storeId = #{storeid,jdbcType=INTEGER},
-      productId = #{productid,jdbcType=INTEGER},
+      productId = #{productid,jdbcType=VARCHAR},
       productColor = #{productcolor,jdbcType=VARCHAR},
       productSize = #{productsize,jdbcType=VARCHAR},
       stockNum = #{stocknum,jdbcType=DOUBLE},

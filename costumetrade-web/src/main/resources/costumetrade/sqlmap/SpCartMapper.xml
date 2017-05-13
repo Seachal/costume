@@ -4,7 +4,7 @@
 	<resultMap id="BaseResultMap" type="costumetrade.order.domain.SpCart">
 		<id column="id" jdbcType="INTEGER" property="id" />
 		<result column="corpId" jdbcType="INTEGER" property="corpid" />
-		<result column="productId" jdbcType="INTEGER" property="productid" />
+		<result column="productId" jdbcType="VARCHAR" property="productid" />
 		<result column="productName" jdbcType="VARCHAR" property="productname" />
 		<result column="image" jdbcType="VARCHAR" property="image" />
 		<result column="color" jdbcType="VARCHAR" property="color" />
@@ -65,7 +65,7 @@
 		realCost, create_time, create_by,
 		modify_time, modify_by)
 		values (#{id,jdbcType=INTEGER}, #{corpid,jdbcType=INTEGER},
-		#{productid,jdbcType=INTEGER},
+		#{productid,jdbcType=VARCHAR},
 		#{productname,jdbcType=VARCHAR}, #{image,jdbcType=VARCHAR}, #{color,jdbcType=VARCHAR},
 		#{size,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL},
 		#{indexed,jdbcType=INTEGER},
@@ -147,7 +147,7 @@
 				#{corpid,jdbcType=INTEGER},
 			</if>
 			<if test="productid != null">
-				#{productid,jdbcType=INTEGER},
+				#{productid,jdbcType=VARCHAR},
 			</if>
 			<if test="productname != null">
 				#{productname,jdbcType=VARCHAR},
@@ -210,7 +210,7 @@
 				corpId = #{corpid,jdbcType=INTEGER},
 			</if>
 			<if test="productid != null">
-				productId = #{productid,jdbcType=INTEGER},
+				productId = #{productid,jdbcType=VARCHAR},
 			</if>
 			<if test="productname != null">
 				productName = #{productname,jdbcType=VARCHAR},
@@ -269,7 +269,7 @@
 	<update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SpCart">
 		update sc_ecart
 		set corpId = #{corpid,jdbcType=INTEGER},
-		productId = #{productid,jdbcType=INTEGER},
+		productId = #{productid,jdbcType=VARCHAR},
 		productName = #{productname,jdbcType=VARCHAR},
 		image = #{image,jdbcType=VARCHAR},
 		color = #{color,jdbcType=VARCHAR},

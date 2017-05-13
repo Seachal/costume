@@ -27,7 +27,7 @@
     insert into ss_product_file (id, storeId, productId, 
       fileName, url, createTime, 
       createBy)
-    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{productid,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{productid,jdbcType=VARCHAR}, 
       #{filename,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
       #{createby,jdbcType=VARCHAR})
   </insert>
@@ -72,7 +72,7 @@
         #{storeid,jdbcType=INTEGER},
       </if>
       <if test="productid != null">
-        #{productid,jdbcType=INTEGER},
+        #{productid,jdbcType=VARCHAR},
       </if>
       <if test="filename != null">
         #{filename,jdbcType=VARCHAR},
@@ -95,7 +95,7 @@
         storeId = #{storeid,jdbcType=INTEGER},
       </if>
       <if test="productid != null">
-        productId = #{productid,jdbcType=INTEGER},
+        productId = #{productid,jdbcType=VARCHAR},
       </if>
       <if test="filename != null">
         fileName = #{filename,jdbcType=VARCHAR},
@@ -115,7 +115,7 @@
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsProductFile">
     update ss_product_file
     set storeId = #{storeid,jdbcType=INTEGER},
-      productId = #{productid,jdbcType=INTEGER},
+      productId = #{productid,jdbcType=VARCHAR},
       fileName = #{filename,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},
       createTime = #{createtime,jdbcType=TIMESTAMP},
