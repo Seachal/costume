@@ -84,7 +84,8 @@ public class SpProductController {
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		product.setCreateBy((String) httpSession.getAttribute("clientId"));
 		product.setModifyBy((String) httpSession.getAttribute("clientId"));
-
+		
+		product.setId(UUID.randomUUID().toString());
 		int save = spProductService.saveProduct(product);
 		if(save<=0){
 			result.setCode(ResponseInfo.EXCEPTION.code);

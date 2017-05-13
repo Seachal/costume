@@ -64,7 +64,7 @@ public class SpOrderController {
 				detail.setProductid(param.getProductId().get(i)+"");
 				detail.setProductname(param.getProductName().get(i));
 				
-				if(param.getProductId().get(i) == products.get(i).getId()){
+				if(param.getProductId().get(i).equals(products.get(i).getId())){
 					detail.setProductunit(products.get(i).getUnit());
 				}
 				detail.setCreateby(order.getCreateby());
