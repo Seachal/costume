@@ -416,7 +416,7 @@ SELECT LAST_INSERT_ID() AS id
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SpProduct">
-    update sp_product
+    update sp_product_#{storeId,jdbcType=INTEGER}
     <set>
       <if test="storeId != null">
         storeId = #{storeId,jdbcType=INTEGER},

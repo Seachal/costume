@@ -33,6 +33,13 @@
     from sp_pbrand
     where storeId = #{storeId,jdbcType=INTEGER}
   </select>
+  <select id="getSpPBrand"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sp_pbrand
+    where storeId = #{storeId,jdbcType=INTEGER}
+    and id = #{id,jdbcType=INTEGER}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sp_pbrand
     where id = #{id,jdbcType=INTEGER}
