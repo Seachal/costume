@@ -40,6 +40,13 @@
     where storeId = #{storeId,jdbcType=INTEGER}
     and id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="getSpPBrandByName"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sp_pbrand
+    where storeId = #{storeId,jdbcType=INTEGER}
+    and brandName = #{brandname,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sp_pbrand
     where id = #{id,jdbcType=INTEGER}
@@ -61,6 +68,9 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.SpPBrand">
+   <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID() AS id
+	</selectKey>
     insert into sp_pbrand
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

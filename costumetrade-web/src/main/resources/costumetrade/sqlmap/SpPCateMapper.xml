@@ -28,6 +28,13 @@
     where storeId = #{storeId,jdbcType=INTEGER}
     and id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="getSpPCateByName"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sp_product_type
+    where storeId = #{storeId,jdbcType=INTEGER}
+    and cateName = #{catename,jdbcType=VARCHAR}
+  </select>
   
   <select id="getSpPCates" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -48,6 +55,9 @@
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.SpPCate">
+   <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+		SELECT LAST_INSERT_ID() AS id
+	</selectKey>
     insert into sp_product_type
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

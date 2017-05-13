@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.SsProductFile">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="storeId" jdbcType="INTEGER" property="storeid" />
-    <result column="productId" jdbcType="INTEGER" property="productid" />
+    <result column="productId" jdbcType="VARCHAR" property="productid" />
     <result column="fileName" jdbcType="VARCHAR" property="filename" />
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
@@ -35,7 +35,7 @@
     insert into ss_product_file_#{storeId,jdbcType=INTEGER} (storeId, productId, 
       fileName, url, createTime, 
       createBy)
-    values <foreach collection="files" index="index" item ="item" separator=",">( #{item.storeid,jdbcType=INTEGER}, #{item.productid,jdbcType=INTEGER}, 
+    values <foreach collection="files" index="index" item ="item" separator=",">( #{item.storeid,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR}, 
       #{item.filename,jdbcType=VARCHAR}, #{item.url,jdbcType=VARCHAR}, #{item.createtime,jdbcType=TIMESTAMP}, 
       #{item.createby,jdbcType=VARCHAR})</foreach> 
   </insert>
