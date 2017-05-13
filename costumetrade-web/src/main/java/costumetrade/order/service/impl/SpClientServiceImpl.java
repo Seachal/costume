@@ -17,10 +17,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.zxing.BarcodeFormat;
+/*import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.QRCodeWriter;
+import com.google.zxing.qrcode.QRCodeWriter;*/
 
 import costumetrade.order.domain.SpClient;
 import costumetrade.order.mapper.SpClientMapper;
@@ -51,13 +51,13 @@ public class SpClientServiceImpl implements SpClientService{
 		if(url!=null && !"".equals(url)){
 			
 			try {
-				QRCodeWriter writer = new QRCodeWriter();
+				/*QRCodeWriter writer = new QRCodeWriter();
 				
 				BitMatrix m = writer.encode(url, BarcodeFormat.QR_CODE, height, width);
 				//MatrixToImageWriter.writeToStream(m, "png", stream);
 				BufferedImage image = MatrixToImageWriter.toBufferedImage(m);
 				out = new ByteArrayOutputStream();
-				ImageIO.write(image, "png", out);
+				ImageIO.write(image, "png", out);*/
 				
 			} catch (Exception e2) {
 				e2.getStackTrace();			
@@ -73,13 +73,13 @@ public class SpClientServiceImpl implements SpClientService{
 		if(url!=null && !"".equals(url)){
 			
 			try {
-				QRCodeWriter writer = new QRCodeWriter();
+/*				QRCodeWriter writer = new QRCodeWriter();
 				stream = resp.getOutputStream();
 				BitMatrix m = writer.encode(url, BarcodeFormat.QR_CODE, height, width);
 				MatrixToImageWriter.writeToStream(m, "png", stream);
 				BufferedImage image = toBufferedImage(m);
 //				out = new ByteArrayOutputStream();
-				ImageIO.write(image, "png", stream);
+				ImageIO.write(image, "png", stream);*/
 				
 			} catch (Exception e2) {
 				e2.getStackTrace();			
@@ -88,7 +88,7 @@ public class SpClientServiceImpl implements SpClientService{
 		
 	}
 	
-	  private static BufferedImage toBufferedImage(BitMatrix matrix) {
+/*	  private static BufferedImage toBufferedImage(BitMatrix matrix) {
 		  int width = matrix.getWidth();
 		  int height = matrix.getHeight();
 		  BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
@@ -98,7 +98,7 @@ public class SpClientServiceImpl implements SpClientService{
 		      }
 		  }
 		  return image;
-	}
+	}*/
 	@Override
 	public int saveClient(SpClient client) {
 		if(client.getId() == null){

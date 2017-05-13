@@ -9,7 +9,7 @@ public class SpProduct extends Entity {
     /**
      *  商品编号
      */
-    private Integer id;
+    private String id;
 
     /**
      *  企业ID
@@ -237,11 +237,11 @@ public class SpProduct extends Entity {
     private static final long serialVersionUID = 1L;
     
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
