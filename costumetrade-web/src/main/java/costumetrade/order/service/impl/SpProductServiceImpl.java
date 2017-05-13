@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import costumetrade.order.domain.SpCart;
 import costumetrade.order.domain.SpPBrand;
 import costumetrade.order.domain.SpPCate;
 import costumetrade.order.domain.SpPSizeCustom;
@@ -89,7 +90,7 @@ public class SpProductServiceImpl implements SpProductService{
 		// TODO Auto-generated method stub
 		// 查询货号是否存在
 		if(product.getId() != null){
-			return 0;
+			return spProductMapper.updateByPrimaryKeySelective(product);
 		}else{
 			//保存商品
 			product.setStatus(0);
@@ -186,5 +187,27 @@ public class SpProductServiceImpl implements SpProductService{
 	@Override
 	public List<SpProduct> selectProductById(List<Integer> ids,Integer storeId) {
 		return spProductMapper.selectById(ids,storeId);
+	}
+	
+	public void insertSuspendingProduct(SpProduct product){
+		product.setStatus(1);//待处理状态
+		//SpPCate cate = spPCateMapper.getSpPCate(product.get, storeId)
+		int id = spProductMapper.insertSelective(product);
+		if(id >0 ){
+			SsPrice price = new SsPrice();
+			price.setStoreid(product.getStoreId());
+			price.setPackprice(product.getPackprice());
+			price.setPurchaseprice(product.getPurchaseprice());
+			price.setRetailprice(product.getRetailprice());
+			price.setTagprice(product.getTagprice());
+			price.setProductid(id);
+			price.setCreateTime(new Date());
+			price.setModifyTime(new Date());
+			price.setCreateBy(product.getCreateBy());
+			price.setModifyBy(product.getModifyBy());
+			//价格保存到价格表，颜色组保存到颜色表
+			ssPriceMapper.insertSelective(price);
+			
+		}
 	}
 }

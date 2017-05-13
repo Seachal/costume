@@ -3,6 +3,7 @@ package costumetrade.order.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import costumetrade.order.domain.SpPBrand;
 @Mapper
@@ -16,6 +17,8 @@ public interface SpPBrandMapper {
     int deleteByPrimaryKey(Integer id);
     
     SpPBrand selectByPrimaryKey(Integer id);
+    
+    SpPBrand getSpPBrand(@Param("id")Integer id,@Param("storeId")Integer storeId);
     
     int updateByPrimaryKeySelective(SpPBrand record);
 }

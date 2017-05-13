@@ -22,6 +22,7 @@ public class OrderQuery extends Entity {
      */
     private Integer buyerstoreid;
 
+    private Integer orderType;
     /**
      *  企业ID
      */
@@ -161,6 +162,14 @@ public class OrderQuery extends Entity {
 
 	public void setBuyerstoreid(Integer buyerstoreid) {
 		this.buyerstoreid = buyerstoreid;
+	}
+
+	public Integer getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(Integer orderType) {
+		this.orderType = orderType;
 	}
  
    

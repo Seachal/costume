@@ -27,10 +27,7 @@ public interface SpOrderService {
 	 * 查询订单列表
 	 * */
 	public List<SsStoOrder> getOrders(Integer orderType, Integer orderStatus , Integer clientId);
-	/*
-	 * 订单审核
-	 * */
-	public int orderAudit(OrderQuery param);
+	
 	/*
 	 * 订单取消
 	 * */

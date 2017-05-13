@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import costumetrade.order.domain.SsStockTransfer;
 @Mapper
 public interface SsStockTransferMapper {
-    int insert(@Param("buyTranfer")List<SsStockTransfer> buyTranfer ,@Param("buyerId")Integer buyerId,  @Param("sellerTranfer")List<SsStockTransfer> sellerTranfer,@Param("sellerId")Integer sellerId);
+    int insert(@Param("tranfer")List<SsStockTransfer> tranfer ,@Param("storeId")Integer storeId);
 
     int insertSelective(SsStockTransfer record);
 }
