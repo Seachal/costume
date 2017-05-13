@@ -14,7 +14,7 @@ import costumetrade.common.util.PropertiesUtils;
 
 
 /**
- * @author zhouyq
+ * @author chenyj
  * @Date 2017年1月13日
  */
 public class ConfigProperties {
@@ -22,7 +22,7 @@ public class ConfigProperties {
 	private static  Properties properties = null;
 	static {
 		 Map<String, String> map = System.getenv();  
-		 String fileName = "config."+(StringUtils.isBlank(map.get("APP_ENV"))?"TEST":map.get("APP_ENV"))+".properties";
+		 String fileName = "config.properties";
 		properties = PropertiesUtils.getProperties(fileName);
 	}
 	

@@ -18,7 +18,8 @@ import net.sf.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import costumetrade.common.util.MD5Utils;
+import costumetrade.common.util.MD5Util;
+
 
 /**
  * DES模式加密解密类
@@ -32,7 +33,7 @@ public class DESCoder {
     
     public static void main(String[] args) {
         String key = "1234567890";
-        key = MD5Utils.MD5(key);
+        key = MD5Util.MD5(key);
         System.out.println("商户KEY："+key+"    "+key.length());
         
         String data = "";

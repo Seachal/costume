@@ -8,7 +8,7 @@ package costumetrade.common.des;
 
 import com.alibaba.fastjson.JSONObject;
 
-import costumetrade.common.util.MD5Utils;
+import costumetrade.common.util.MD5Util;
 
 /**
  * This is Class Description...
@@ -22,7 +22,7 @@ public class Test {
      */
     public static void main(String[] args) {
         String key = "123456";
-        key = MD5Utils.MD5(key);
+        key = MD5Util.MD5(key);
         System.out.println("商户KEY："+key+"    "+key.length());
         
         JSONObject obj = new JSONObject();

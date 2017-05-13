@@ -19,7 +19,8 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import costumetrade.common.util.MD5Utils;
+import costumetrade.common.util.MD5Util;
+
 
 /**
  * DES+Base64模式对称加密工具类
@@ -79,7 +80,7 @@ public class DESBase64Coder {
     public static String signature(String data,String key){
         String sign="";
         try {
-            sign = MD5Utils.MD5(data+"&"+key);
+            sign = MD5Util.MD5(data+"&"+key);
         } catch (Exception e) {
             sign="";
             logger.error("数据签名异常,", e);
@@ -98,7 +99,7 @@ public class DESBase64Coder {
         boolean bool = true;
         try {
             //1、对解密后的源数据进行签名
-            String signData = MD5Utils.MD5(data+"&"+key);
+            String signData = MD5Util.MD5(data+"&"+key);
             //2、签名校验
             if(!signData.equals(sign)){
                 bool = false;
