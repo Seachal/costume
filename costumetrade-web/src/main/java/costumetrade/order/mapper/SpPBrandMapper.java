@@ -20,5 +20,7 @@ public interface SpPBrandMapper {
     
     SpPBrand getSpPBrand(@Param("id")Integer id,@Param("storeId")Integer storeId);
     
+    SpPBrand getSpPBrandByName(@Param("brandname")String brandname,@Param("storeId")Integer storeId);
+    
     int updateByPrimaryKeySelective(SpPBrand record);
 }

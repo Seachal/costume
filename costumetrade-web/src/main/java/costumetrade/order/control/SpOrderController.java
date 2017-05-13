@@ -47,24 +47,24 @@ public class SpOrderController {
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		//获取货品单位
-		List<SpProduct> products = spProductService.selectProductById(param.getProductId(),order.getSellerstoreid());
+		List<SpProduct> products = spProductService.selectProductById(param.getProductIdArray(),order.getSellerstoreid());
 		param.setClientId((Integer) httpSession.getAttribute("clientId"));
 		order.setClientId(param.getClientId());
 		order.setCreateby(param.getClientId()+"");
 		order.setModifyby(param.getClientId()+"");
 
 		List<SsStoDetail> details = new ArrayList<SsStoDetail>();
-		if(param.getProductId().size()>0){
-			for(int i=0 ;i<param.getProductId().size();i++){
+		if(param.getProductIdArray().size()>0){
+			for(int i=0 ;i<param.getProductIdArray().size();i++){
 				SsStoDetail detail = new SsStoDetail();
-				detail.setCount(param.getCount().get(i));
-				detail.setProductsize(param.getSize().get(i));
-				detail.setProductcolor(param.getColor().get(i));
-				detail.setPrice(param.getPrice().get(i));
-				detail.setProductid(param.getProductId().get(i)+"");
-				detail.setProductname(param.getProductName().get(i));
+				detail.setCount(param.getCountArray().get(i));
+				detail.setProductsize(param.getSizeArray().get(i));
+				detail.setProductcolor(param.getColorArray().get(i));
+				detail.setPrice(param.getPriceArray().get(i));
+				detail.setProductid(param.getProductIdArray().get(i)+"");
+				detail.setProductname(param.getProductNameArray().get(i));
 				
-				if(param.getProductId().get(i).equals(products.get(i).getId())){
+				if(param.getProductIdArray().get(i).equals(products.get(i).getId())){
 					detail.setProductunit(products.get(i).getUnit());
 				}
 				detail.setCreateby(order.getCreateby());

@@ -18,7 +18,7 @@ public class SsPrice extends Entity {
     /**
      *  商品编号
      */
-    private Integer productid;
+    private String productid;
 
     /**
      *  进货价
@@ -83,11 +83,11 @@ public class SsPrice extends Entity {
         this.storeid = storeid;
     }
 
-    public Integer getProductid() {
+    public String getProductid() {
         return productid;
     }
 
-    public void setProductid(Integer productid) {
+    public void setProductid(String productid) {
         this.productid = productid;
     }
 

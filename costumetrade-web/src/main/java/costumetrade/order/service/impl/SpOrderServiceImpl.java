@@ -32,6 +32,7 @@ import costumetrade.order.mapper.SsStockTransferMapper;
 import costumetrade.order.query.OrderDetailQuery;
 import costumetrade.order.query.OrderQuery;
 import costumetrade.order.service.SpOrderService;
+import costumetrade.order.service.SpProductService;
 
 @Transactional
 @Service
@@ -56,6 +57,8 @@ public class SpOrderServiceImpl implements SpOrderService{
 	private SsStockTransferMapper ssStockTransferMapper;
 	@Autowired
 	private SpProductMapper spProductMapper;
+	@Autowired
+	private SpProductService spProductService;
 	
 	@Override
 	public SsStoOrder saveOrders(List<SsStoDetail> details,SsStoOrder order,Integer clientId) {
@@ -174,7 +177,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 		List<SsStockTransfer> ssStockTransferBuyyer = new ArrayList<SsStockTransfer>();//买家交易记录
 		List<SsStockTransfer> ssStockTransferSeller = new ArrayList<SsStockTransfer>(); //卖家交易记录
 		List<SpProduct> product = new ArrayList<SpProduct>(); //商品集合信息
-		List<Integer> ids = new ArrayList<Integer>();//商品ID集合
+		List<String> ids = new ArrayList<String>();//商品ID集合
 		
 		SpClient client = spClientMapper.selectByPrimaryKey(param.getClientId());
 		boolean stockTag = true;
@@ -194,7 +197,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 			stock.setStockamt(detail.getCount().multiply(detail.getPrice()));
 			stock.setStoreid(param.getSellerstoreid());
 			ssStocks.add(stock);
-			ids.add(Integer.parseInt(detail.getProductid()));
+			ids.add(detail.getProductid());
 			stock = ssStockMapper.select(stock);
 			if(stock == null){
 				stockTag = false ; //不存在库存
@@ -235,6 +238,11 @@ public class SpOrderServiceImpl implements SpOrderService{
 						stock.setStoreid(param.getSellerstoreid());
 						stock.setStocknum(ssStock.get(i).getStocknum()-ssStocks.get(i).getStocknum());
 						updateSellerStock = ssStockMapper.updateByPrimaryKeySelective(stock); //更新卖家库存
+						
+						//更新卖家的商品销量
+						SpProduct p = spProductMapper.selectByPrimaryKey(ids.get(i), param.getSellerstoreid());
+						p.setSaleNum(p.getSaleNum().add(BigDecimal.valueOf(ssStocks.get(i).getStocknum())));
+						spProductMapper.updateByPrimaryKeySelective(p);
 					}
 				}
 			}
@@ -260,6 +268,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 						for(SpProduct p : product){
 							if(p.getId().equals(ssStocks.get(i).getProductid())){
 								p.setPurchaseprice(ssStoDetails.get(i).getPrice());
+								spProductService.insertSuspendingProduct(p, param.getBuyerstoreid());
 							}
 						}
 						ssStockMapper.insertSelective(stock);

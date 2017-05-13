@@ -105,7 +105,11 @@ public class SpProduct extends Entity {
      *  月销总量
      */
     private BigDecimal salmonth;
-
+    
+    /*
+     * 总销量
+     * */
+    private BigDecimal saleNum ;
     /**
      *  商品图片
      */
@@ -615,6 +619,14 @@ public class SpProduct extends Entity {
 
 	public void setPrice(BigDecimal price) {
 		this.price = price;
+	}
+
+	public BigDecimal getSaleNum() {
+		return saleNum;
+	}
+
+	public void setSaleNum(BigDecimal saleNum) {
+		this.saleNum = saleNum;
 	}
     
 	

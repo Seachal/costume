@@ -74,7 +74,7 @@ public class ProductQuery extends Entity{
      *  商品季节
      */
     private String season;
-    
+    private BigDecimal saleNum;
     /**
      *  商品季节
      */
@@ -455,7 +455,15 @@ public class ProductQuery extends Entity{
 		this.unitList = unitList;
 	}
 
+	public BigDecimal getSaleNum() {
+		return saleNum;
+	}
 
+	public void setSaleNum(BigDecimal saleNum) {
+		this.saleNum = saleNum;
+	}
+
+	
 
 
 	

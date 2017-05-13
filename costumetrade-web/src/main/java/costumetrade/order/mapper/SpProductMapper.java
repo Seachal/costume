@@ -13,11 +13,11 @@ public interface SpProductMapper {
 
     int insert(SpProduct record);
 
-    int insertSelective(SpProduct record);
+    String insertSelective(SpProduct record);
 
-    SpProduct selectByPrimaryKey(Integer id);
+    SpProduct selectByPrimaryKey(@Param("id")String id,@Param("storeId")Integer storeId);
     
-    List<SpProduct> selectById(@Param("id")List<Integer> id,@Param("storeId")Integer storeId);
+    List<SpProduct> selectById(@Param("id")List<String> id,@Param("storeId")Integer storeId);
 
     int updateByPrimaryKeySelective(SpProduct record);
 

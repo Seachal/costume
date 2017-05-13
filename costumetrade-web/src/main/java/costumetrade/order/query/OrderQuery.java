@@ -37,17 +37,17 @@ public class OrderQuery extends Entity {
 	 * */
 	private Integer clientId; //1、普通会员   2、店家
 	
-	private List<Integer> productId;
+	private List<String> productIdArray;
 
-	private List<String> productName;
+	private List<String> productNameArray;
 
-	private List<BigDecimal> count;
+	private List<BigDecimal> countArray;
 
-	private List<String> color;
+	private List<String> colorArray;
 
-	private List<String> size;
+	private List<String> sizeArray;
 
-	private List<BigDecimal> price;
+	private List<BigDecimal> priceArray;
 	/*
 	 * 下单参数  结束
 	 * */
@@ -57,54 +57,54 @@ public class OrderQuery extends Entity {
 
 
 
-	public List<Integer> getProductId() {
-		return productId;
+	
+	public List<String> getProductIdArray() {
+		return productIdArray;
 	}
 
-	public void setProductId(List<Integer> productId) {
-		this.productId = productId;
+	public void setProductIdArray(List<String> productIdArray) {
+		this.productIdArray = productIdArray;
 	}
 
-	public List<String> getProductName() {
-		return productName;
+	public List<String> getProductNameArray() {
+		return productNameArray;
 	}
 
-	public void setProductName(List<String> productName) {
-		this.productName = productName;
+	public void setProductNameArray(List<String> productNameArray) {
+		this.productNameArray = productNameArray;
 	}
 
-	public List<BigDecimal> getCount() {
-		return count;
+	public List<BigDecimal> getCountArray() {
+		return countArray;
 	}
 
-	public void setCount(List<BigDecimal> count) {
-		this.count = count;
+	public void setCountArray(List<BigDecimal> countArray) {
+		this.countArray = countArray;
 	}
 
-	public List<String> getColor() {
-		return color;
+	public List<String> getColorArray() {
+		return colorArray;
 	}
 
-	public void setColor(List<String> color) {
-		this.color = color;
+	public void setColorArray(List<String> colorArray) {
+		this.colorArray = colorArray;
 	}
 
-	public List<String> getSize() {
-		return size;
+	public List<String> getSizeArray() {
+		return sizeArray;
 	}
 
-	public void setSize(List<String> size) {
-		this.size = size;
+	public void setSizeArray(List<String> sizeArray) {
+		this.sizeArray = sizeArray;
 	}
 
-	public List<BigDecimal> getPrice() {
-		return price;
+	public List<BigDecimal> getPriceArray() {
+		return priceArray;
 	}
 
-	public void setPrice(List<BigDecimal> price) {
-		this.price = price;
+	public void setPriceArray(List<BigDecimal> priceArray) {
+		this.priceArray = priceArray;
 	}
-
 
 	public Integer getId() {
 		return id;

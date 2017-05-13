@@ -31,6 +31,8 @@ public interface SpProductService {
 	 * 查询货品
 	 * 
 	 * */
-	public List<SpProduct> selectProductById(List<Integer> id,Integer storeId);
+	public List<SpProduct> selectProductById(List<String> id,Integer storeId);
+	
+	public void insertSuspendingProduct(SpProduct product,Integer buyerStoreId);
 
 }

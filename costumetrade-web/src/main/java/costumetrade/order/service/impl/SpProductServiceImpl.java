@@ -1,8 +1,10 @@
 package costumetrade.order.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -90,9 +92,11 @@ public class SpProductServiceImpl implements SpProductService{
 		// TODO Auto-generated method stub
 		// 查询货号是否存在
 		if(product.getId() != null){
+			product.setStatus(0);
 			return spProductMapper.updateByPrimaryKeySelective(product);
 		}else{
 			//保存商品
+			product.setId(UUID.randomUUID().toString());
 			product.setStatus(0);
 			if(product.getSeason() != null){
 				product.setSeason(Enum.valueOf(SeasonTypeEnum.class,product.getSeason()).getValue());
@@ -103,8 +107,9 @@ public class SpProductServiceImpl implements SpProductService{
 			if(product.getUnit() != null){
 				product.setUnit(Enum.valueOf(UnitTypeEnum.class,product.getUnit()).getValue());
 			}
-			int id = spProductMapper.insertSelective(product);
-			if(id >0 ){
+			product.setSaleNum(BigDecimal.valueOf(0));
+			String id = spProductMapper.insertSelective(product);
+			if(id != null ){
 				SsPrice price = new SsPrice();
 				price.setStoreid(product.getStoreId());
 				price.setPackprice(product.getPackprice());
@@ -185,15 +190,45 @@ public class SpProductServiceImpl implements SpProductService{
 	}
 
 	@Override
-	public List<SpProduct> selectProductById(List<Integer> ids,Integer storeId) {
+	public List<SpProduct> selectProductById(List<String> ids,Integer storeId) {
 		return spProductMapper.selectById(ids,storeId);
 	}
 	
-	public void insertSuspendingProduct(SpProduct product){
+	public void insertSuspendingProduct(SpProduct product,Integer buyerStoreId){
+		
+		//查询商品类型是否存在买家，不存在，新增
+		SpPCate cate = spPCateMapper.getSpPCate(product.getBrandid(), product.getStoreId());
+		SpPCate cate1 = spPCateMapper.getSpPCateByName(cate.getCatename(), buyerStoreId);
+		int productType  = 0;
+		if(cate1 == null){
+			SpPCate type = new SpPCate();
+			type.setCatename(cate.getCatename());
+			type.setStoreId(buyerStoreId);
+			type.setCreateTime(new Date());
+			type.setFastcode(cate.getFastcode());
+			productType = spPCateMapper.insertSelective(type);
+		}
+		if(productType > 0){
+			product.setPrducttype(productType);
+		}
+		//查询商品品牌是否存在买家，不存在，新增
+		SpPBrand brand = spPBrandMapper.getSpPBrand(product.getBrandid(), product.getStoreId());
+		SpPBrand brand1 = spPBrandMapper.getSpPBrandByName(brand.getBrandname(), buyerStoreId);
+		int brandId  = 0;
+		if(brand1 == null){
+			SpPBrand b = new SpPBrand();
+			b.setBrandname(brand.getBrandname());
+			b.setStoreId(buyerStoreId);
+			b.setCreateTime(new Date());
+			b.setFastcode(brand.getFastcode());
+			brandId = spPBrandMapper.insertSelective(b);
+		}
+		if(brandId > 0){
+			product.setBrandid(brandId);
+		}
 		product.setStatus(1);//待处理状态
-		//SpPCate cate = spPCateMapper.getSpPCate(product.get, storeId)
-		int id = spProductMapper.insertSelective(product);
-		if(id >0 ){
+		String id = spProductMapper.insertSelective(product);
+		if(id != null ){
 			SsPrice price = new SsPrice();
 			price.setStoreid(product.getStoreId());
 			price.setPackprice(product.getPackprice());
@@ -207,7 +242,6 @@ public class SpProductServiceImpl implements SpProductService{
 			price.setModifyBy(product.getModifyBy());
 			//价格保存到价格表，颜色组保存到颜色表
 			ssPriceMapper.insertSelective(price);
-			
 		}
 	}
 }

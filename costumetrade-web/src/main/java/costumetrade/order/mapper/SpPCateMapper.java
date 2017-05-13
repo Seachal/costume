@@ -17,6 +17,8 @@ public interface SpPCateMapper {
     SpPCate selectByPrimaryKey(Integer id);
   
     SpPCate getSpPCate(@Param("id")Integer id,@Param("storeId")Integer storeId);
+    
+    SpPCate getSpPCateByName(@Param("catename")String catename,@Param("storeId")Integer storeId);
 
     int updateByPrimaryKeySelective(SpPCate record);
 

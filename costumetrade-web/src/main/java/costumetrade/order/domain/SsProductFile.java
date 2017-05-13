@@ -17,7 +17,7 @@ public class SsProductFile extends Entity {
     /**
      *  
      */
-    private Integer productid;
+    private String productid;
 
     /**
      *  
@@ -57,11 +57,11 @@ public class SsProductFile extends Entity {
         this.storeid = storeid;
     }
 
-    public Integer getProductid() {
+    public String getProductid() {
         return productid;
     }
 
-    public void setProductid(Integer productid) {
+    public void setProductid(String productid) {
         this.productid = productid;
     }
 
