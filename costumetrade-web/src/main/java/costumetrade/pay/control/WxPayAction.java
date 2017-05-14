@@ -31,6 +31,7 @@ import costumetrade.pay.enums.EnumResultCode;
 import costumetrade.pay.enums.EnumcheckNameType;
 import costumetrade.pay.req.EntTransferReq;
 import costumetrade.pay.req.PayInfoReq;
+import costumetrade.pay.req.PayParam;
 import costumetrade.pay.res.ResCloseOrder;
 import costumetrade.pay.service.impl.TradeInfoService;
 import costumetrade.pay.utils.IpUtils;
@@ -73,7 +74,8 @@ public class WxPayAction  {
 	 * @return
 	 * @throws Exception
 	 */
-	public String pay(PayInfoReq infoReq,HttpServletRequest request,HttpServletResponse response) throws Exception {
+	@RequestMapping("/pay")
+	public ApiResponse pay(PayInfoReq infoReq,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		
 
 		String openid = String.valueOf(request.getSession().getAttribute("openid"));
@@ -97,39 +99,27 @@ public class WxPayAction  {
         // 微信支付签名
         String paySign = MD5Util.createSign(signMap, WxPayConfig.KEY);
         log.error(">>>>>>>>>微信支付签名"+paySign);
-        
+       
+		PayParam param = new PayParam();
 		//微信分配的公众账号ID（企业号corpid即为此appId）
-		request.setAttribute("appId", WxPayConfig.APP_ID);
+		param.setAppId(WxPayConfig.APP_ID);
 		// 时间戳
-		request.setAttribute("timeStamp", timestamp); 
+		param.setTimeStamp(timestamp);
 		// 随机字符串
-		request.setAttribute("nonceStr", infoReq.getNonce_str()); 
+		param.setNonceStr(infoReq.getNonce_str());
 		// 预支付id ,就这样的格式
-		request.setAttribute("package", "prepay_id=" + prepay_id);
+		param.setPackages("prepay_id=" + prepay_id);
 		// 加密格式
-		request.setAttribute("signType", WxPayConfig.SIGN_TYPE); 
+		param.setSignType(WxPayConfig.SIGN_TYPE);
 		// 微信支付签名
-		request.setAttribute("paySign", paySign);
+		param.setPaySign(paySign);
 		
-		return "waitPay";
+		return ApiResponse.getInstance(param);
 	}
 	
-	public String payRedirect(HttpServletRequest request){
-		request.setAttribute("appId", request.getAttribute("appId"));
-		// 时间戳
-		request.setAttribute("timeStamp", request.getAttribute("timeStamp")); 
-		// 随机字符串
-		request.setAttribute("nonceStr", request.getAttribute("nonceStr")); 
-		// 预支付id ,就这样的格式
-		request.setAttribute("package", request.getAttribute("package"));
-		// 加密格式
-		request.setAttribute("signType", request.getAttribute("signType")); 
-		// 微信支付签名
-		request.setAttribute("paySign", request.getAttribute("paySign"));
-		
-		String openId = String.valueOf(request.getSession().getAttribute("openid"));
-
-		return "redirect";
+	@RequestMapping("/payRedirect")
+	public ApiResponse payRedirect(PayParam param){
+		return ApiResponse.getInstance(param);
 	}
 	/**
 	 * 微信关闭订单
