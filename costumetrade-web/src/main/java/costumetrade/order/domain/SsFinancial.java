@@ -20,6 +20,10 @@ public class SsFinancial extends Entity {
      *  订单号
      */
     private String orderno;
+    /**
+     *  关联对象号
+     */
+    private String relaNo;
 
     /**
      *  买家客户号
@@ -210,6 +214,14 @@ public class SsFinancial extends Entity {
 
 	public void setOperate(Integer operate) {
 		this.operate = operate;
+	}
+
+	public String getRelaNo() {
+		return relaNo;
+	}
+
+	public void setRelaNo(String relaNo) {
+		this.relaNo = relaNo;
 	}
     
     

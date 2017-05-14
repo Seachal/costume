@@ -8,6 +8,7 @@
     <result column="buyerId" jdbcType="INTEGER" property="buyerid" />
     <result column="sellerId" jdbcType="INTEGER" property="sellerid" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="relaNo" jdbcType="VARCHAR" property="relaNo" />
     <result column="income" jdbcType="DECIMAL" property="income" />
     <result column="pay" jdbcType="DECIMAL" property="pay" />
     <result column="incomeDate" jdbcType="DECIMAL" property="incomedate" />
@@ -32,12 +33,12 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SsFinancial">
-    insert into ss_financial (id, tradeNo, orderNo, 
+    insert into ss_financial (id, tradeNo, orderNo, relaNo,
       buyerId, sellerId, remark, 
       income, pay, incomeDate, 
       pay_type, payDate, cardno, 
       pay_bank, bussi_type)
-    values (#{id,jdbcType=INTEGER}, #{tradeno,jdbcType=VARCHAR}, #{orderno,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{tradeno,jdbcType=VARCHAR}, #{orderno,jdbcType=VARCHAR}, #{relaNo,jdbcType=VARCHAR}, 
       #{buyerid,jdbcType=INTEGER}, #{sellerid,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
       #{income,jdbcType=DECIMAL}, #{pay,jdbcType=DECIMAL}, #{incomedate,jdbcType=DECIMAL}, 
       #{payType,jdbcType=SMALLINT}, #{paydate,jdbcType=TIMESTAMP}, #{cardno,jdbcType=VARCHAR}, 
@@ -54,6 +55,9 @@
       </if>
       <if test="orderno != null">
         orderNo,
+      </if>
+      <if test="relaNo != null">
+        relaNo,
       </if>
       <if test="buyerid != null">
         buyerId,
@@ -98,6 +102,9 @@
       </if>
       <if test="orderno != null">
         #{orderno,jdbcType=VARCHAR},
+      </if>
+       <if test="relaNo != null">
+         #{relaNo,jdbcType=VARCHAR},
       </if>
       <if test="buyerid != null">
         #{buyerid,jdbcType=INTEGER},
@@ -149,6 +156,9 @@
       <if test="sellerid != null">
         sellerId = #{sellerid,jdbcType=INTEGER},
       </if>
+       <if test="relaNo != null">
+         relaNo = #{relaNo,jdbcType=VARCHAR},
+      </if>
       <if test="remark != null">
         remark = #{remark,jdbcType=VARCHAR},
       </if>
@@ -186,6 +196,7 @@
       buyerId = #{buyerid,jdbcType=INTEGER},
       sellerId = #{sellerid,jdbcType=INTEGER},
       remark = #{remark,jdbcType=VARCHAR},
+      relaNo = #{relaNo,jdbcType=VARCHAR},
       income = #{income,jdbcType=DECIMAL},
       pay = #{pay,jdbcType=DECIMAL},
       incomeDate = #{incomedate,jdbcType=DECIMAL},

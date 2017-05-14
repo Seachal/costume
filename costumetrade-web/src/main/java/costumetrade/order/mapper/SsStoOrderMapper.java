@@ -20,7 +20,9 @@ public interface SsStoOrderMapper {
     SsStoOrder selectByPrimaryKey(Integer id);
     
     SsStoOrder selectByOrderNo(@Param("orderNo")String orderNo,@Param("storeId")Integer storeId);
-
+    
+    SsStoOrder selectByTradeNo(@Param("tradeNo")String tradeNo,@Param("storeId")Integer storeId);
+    
     int updateByPrimaryKeySelective(SsStoOrder record);
     
     int updateByPrimaryKeySelectiveStore(SsStoOrder record);

@@ -91,6 +91,15 @@
   
   <select id="selectByOrderNo" resultMap="BaseResultMap">
     select 
+       a.id, a.sellerStoreId, a.buyerStoreId, a.operator, a.payOrderNo, a.refundDate, a.relatedOutTradeNo, 
+    a.refundStatus, a.orderType, a.orderStatus, a.shipType, a.shipStatus, a.shipContact, a.shipPhone, 
+    a.shipAddress, a.contactStoreId, a.remarks, a.totalNum, a.totalAmt, a.discountRatio, a.discount, 
+    a.mchange, a.tax, a.realcost, a.payCate1, a.payCost1, a.payCate2, a.payCost2
+    from ss_stoorder_#{storeId,jdbcType=INTEGER} a left join sc_trade_info b on a.payOrderNo = b.payOrderNo
+    where b.tradeNo = #{tradeNo,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByTradeNo" resultMap="BaseResultMap">
+    select 
     <include refid="Base_Column_List" />
     from ss_stoorder_#{storeId,jdbcType=INTEGER}
     where payOrderNo = #{orderNo,jdbcType=VARCHAR}
