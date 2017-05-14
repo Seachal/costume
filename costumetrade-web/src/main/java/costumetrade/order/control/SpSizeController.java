@@ -31,10 +31,10 @@ public class SpSizeController {
 
 	@RequestMapping("/getAllSizes")
 	@ResponseBody
-	public ApiResponse getAllSizes(int corpId) {
+	public ApiResponse getAllSizes(int storeId) {
 		
 		List<SpPSize> sizeLists = new ArrayList<SpPSize>();
-		sizeLists = spPSizeService.getSpPSizes(corpId);
+		sizeLists = spPSizeService.getSpPSizes(storeId);
 
 		return  ApiResponse.getInstance(sizeLists);
 	}
@@ -80,10 +80,10 @@ public class SpSizeController {
 	
 	@RequestMapping("/getAllSizeCustom")
 	@ResponseBody
-	public ApiResponse getAllSizeCustom(int corpId) {
+	public ApiResponse getAllSizeCustom(int storeId) {
 		
 		List<SpPSizeCustom> sizeCustomLists = new ArrayList<SpPSizeCustom>();
-		sizeCustomLists = spPSizeCustomService.getSpPSizeCustoms(corpId);
+		sizeCustomLists = spPSizeCustomService.getSpPSizeCustoms(storeId);
 
 		return  ApiResponse.getInstance(sizeCustomLists);
 	}

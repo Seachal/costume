@@ -16,29 +16,23 @@ public class SpPSizeServiceImpl implements SpPSizeService{
 	@Autowired
 	private SpPSizeMapper spPSizeMapper;
 	
-	public List<SpPSize> getSpPSizes(int cropId) {
+	public List<SpPSize> getSpPSizes(int storeId) {
 
-		return spPSizeMapper.getSpPSizes(cropId);
+		return spPSizeMapper.getSpPSizes(storeId);
 	}
 	public int saveSpPSize(SpPSize spPSize) {
 		int save = 0;
-		//查询对应ID的员工是否存在，存在的话进行update 不存在save
-		if(spPSize.getId() != null){
-			SpPSize getSize = spPSizeMapper.selectByPrimaryKey(spPSize.getId());
-			if(getSize != null){
-				save = spPSizeMapper.updateByPrimaryKeySelective(spPSize);
-			}else {
-				save = spPSizeMapper.insert(spPSize) ;
-			}
+		//查询对应yanse是否存在，存在的话进行update 不存在save
+		SpPSize getSize = spPSizeMapper.selectByName(spPSize.getStoreId(),spPSize.getSizename());
+		if(getSize != null){
+			return save;
 		}else {
 			save = spPSizeMapper.insert(spPSize) ;
 		}
-		
 		return save;
 		 
 	}
 	public int deleteSpPSize(int id) {
-	
 		return spPSizeMapper.deleteByPrimaryKey(id);
 	}
 	

@@ -22,6 +22,7 @@ import costumetrade.common.param.ResponseInfo;
 import costumetrade.common.util.FTPClientUtils;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SsProductFile;
+import costumetrade.order.domain.SsStock;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.service.SpProductService;
 
@@ -45,6 +46,9 @@ public class SpProductController {
 	@ResponseBody
 	public ApiResponse getAllroducts(ProductQuery paramProduct) {
 		paramProduct.setClientId((Integer) httpSession.getAttribute("clientId"));
+		if(paramProduct.getStatus() == null){
+			paramProduct.setStatus(0);
+		}
 		List<SpProduct> productLists = spProductService.selectProducts(paramProduct);
 		return  ApiResponse.getInstance(productLists);
 	}
@@ -53,7 +57,7 @@ public class SpProductController {
 	@ResponseBody
 	public ApiResponse getProduct(ProductQuery paramProduct) {
 		paramProduct.setClientId((Integer) httpSession.getAttribute("clientId"));
-		SpProduct product = spProductService.selectProduct(paramProduct);
+		ProductQuery product = spProductService.selectProduct(paramProduct);
 		return  ApiResponse.getInstance(product);
 	}
 	
@@ -75,6 +79,27 @@ public class SpProductController {
 		
 		return  ApiResponse.getInstance(query);
 	}
+	@RequestMapping("/updateProducts")
+	@ResponseBody
+	public ApiResponse updateProducts(@RequestParam("storeId")String storeId ,@RequestParam("idArray")List<String> idArray) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		if(StringUtils.isBlank(storeId) && (idArray==null||idArray.size() <=0)){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		
+		int delete = spProductService.updateProducts(idArray,Integer.valueOf(storeId));
+		if(delete <= 0){
+			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			return result;
+		}
+		return  result;
+	}
 	
 	@RequestMapping("/saveProduct")
 	@ResponseBody
@@ -91,6 +116,44 @@ public class SpProductController {
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
 			return result;
+		}
+		return  result;
+	}
+	@RequestMapping("/takingStock")
+	@ResponseBody
+	public ApiResponse takingStock(SpProduct product) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		product.setCreateBy((String) httpSession.getAttribute("clientId"));
+		product.setModifyBy((String) httpSession.getAttribute("clientId"));
+		
+		List<SsStock> stocks = spProductService.takingStock(product);
+		if(stocks == null){
+			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			return result;
+		}else{
+			result.setData(stocks);
+		}
+		return  result;
+	}
+	@RequestMapping("/getImages")
+	@ResponseBody
+	public ApiResponse getImages(SpProduct product) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		product.setCreateBy((String) httpSession.getAttribute("clientId"));
+		product.setModifyBy((String) httpSession.getAttribute("clientId"));
+		
+		List<SsProductFile> files = spProductService.getImages(product);
+		if(files == null){
+			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			return result;
+		}else{
+			result.setData(files);
 		}
 		return  result;
 	}

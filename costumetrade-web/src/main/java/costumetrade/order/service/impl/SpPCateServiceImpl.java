@@ -16,32 +16,23 @@ public class SpPCateServiceImpl implements SpPCateService{
 	@Autowired
 	private SpPCateMapper spPCateMapper;
 	
-	public List<SpPCate> getSpPCates(int cropId) {
-
-		return spPCateMapper.getSpPCates(cropId);
+	public List<SpPCate> getSpPCates(int storeId) {
+		return spPCateMapper.getSpPCates(storeId);
 	}
 	public int saveSpPCate(SpPCate spPCate) {
 		int save = 0;
 		//查询对应ID的员工是否存在，存在的话进行update 不存在save
-		if(spPCate.getId() != null){
-			
-			SpPCate getCate = spPCateMapper.selectByPrimaryKey(spPCate.getId());
-			if(getCate != null){
-				save = spPCateMapper.updateByPrimaryKeySelective(spPCate);
-			}else {
-				save = spPCateMapper.insert(spPCate) ;
-			}
+		SpPCate getCate = spPCateMapper.getSpPCateByName(spPCate.getCatename(), spPCate.getStoreId());
+		if(getCate != null){
+			return save;
 		}else {
 			save = spPCateMapper.insert(spPCate) ;
 		}
-		 
-		
 		return save;
 		
 		 
 	}
 	public int deleteSpPCate(int id) {
-	
 		return spPCateMapper.deleteByPrimaryKey(id);
 	}
 	

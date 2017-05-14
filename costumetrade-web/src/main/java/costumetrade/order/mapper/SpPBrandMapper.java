@@ -12,7 +12,7 @@ public interface SpPBrandMapper {
 
     int insertSelective(SpPBrand record);
     
-    List<SpPBrand>  getSpPBrands(int corpId);
+    List<SpPBrand>  getSpPBrands(int storeId);
     
     int deleteByPrimaryKey(Integer id);
     

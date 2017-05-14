@@ -38,7 +38,7 @@ public class SsStock extends Entity {
     /**
      *  入库金额
      */
-    private BigDecimal stockamt;
+    private BigDecimal productPrice;
 
     /**
      *  修改时间
@@ -59,6 +59,14 @@ public class SsStock extends Entity {
      *  创建人
      */
     private String createby;
+    /**
+     * 商品编码
+     * */
+    private String code;
+    /**
+     * 商品名称
+     * */
+    private String name;
 
     private static final long serialVersionUID = 1L;
 
@@ -110,15 +118,17 @@ public class SsStock extends Entity {
         this.stocknum = stocknum;
     }
 
-    public BigDecimal getStockamt() {
-        return stockamt;
-    }
 
-    public void setStockamt(BigDecimal stockamt) {
-        this.stockamt = stockamt;
-    }
 
-    public Date getModifytime() {
+    public BigDecimal getProductPrice() {
+		return productPrice;
+	}
+
+	public void setProductPrice(BigDecimal productPrice) {
+		this.productPrice = productPrice;
+	}
+
+	public Date getModifytime() {
         return modifytime;
     }
 
@@ -149,4 +159,22 @@ public class SsStock extends Entity {
     public void setCreateby(String createby) {
         this.createby = createby == null ? null : createby.trim();
     }
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+    
+    
 }

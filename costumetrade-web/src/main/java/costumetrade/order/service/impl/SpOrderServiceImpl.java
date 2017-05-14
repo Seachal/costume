@@ -194,15 +194,17 @@ public class SpOrderServiceImpl implements SpOrderService{
 			stock.setProductcolor(detail.getProductcolor());
 			stock.setProductsize(detail.getProductsize());
 			stock.setStocknum(Double.parseDouble(detail.getCount().toString()));
-			stock.setStockamt(detail.getCount().multiply(detail.getPrice()));
+			stock.setProductPrice(detail.getPrice());
 			stock.setStoreid(param.getSellerstoreid());
 			ssStocks.add(stock);
 			ids.add(detail.getProductid());
-			stock = ssStockMapper.select(stock);
-			if(stock == null){
+		
+			List<SsStock> s = ssStockMapper.select(stock);
+			if(s == null || s.size()<=0){
 				stockTag = false ; //不存在库存
 				break;
 			}else{
+				stock = s.get(0);
 				ssStock.add(stock);
 			}
 			SsStockTransfer transfer = new SsStockTransfer();
@@ -263,7 +265,11 @@ public class SpOrderServiceImpl implements SpOrderService{
 					SsStock stock = new SsStock();
 					stock = ssStocks.get(i);
 					stock.setStoreid(param.getBuyerstoreid());
-					SsStock stockBuyyer = ssStockMapper.select(stock);//买家库存，存在更新，不存在新增库存
+					List<SsStock> stocks = ssStockMapper.select(stock);//买家库存，存在更新，不存在新增库存
+					SsStock stockBuyyer = new SsStock();
+					if(stocks != null ){
+						stockBuyyer = stocks.get(0);
+					}
 					if(stockBuyyer == null ){
 						for(SpProduct p : product){
 							if(p.getId().equals(ssStocks.get(i).getProductid())){
@@ -332,7 +338,6 @@ public class SpOrderServiceImpl implements SpOrderService{
 	}
 	@Override
 	public SsStoOrder order(String orderNo, Integer storeId) {
-		// TODO Auto-generated method stub
 		return ssStoOrderMapper.selectByOrderNo(orderNo,storeId);
 	}
 	@Override

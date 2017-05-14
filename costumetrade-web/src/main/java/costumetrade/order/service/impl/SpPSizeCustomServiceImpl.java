@@ -16,31 +16,24 @@ public class SpPSizeCustomServiceImpl implements SpPSizeCustomService{
 	@Autowired
 	private SpPSizeCustomMapper spPSizeCustomMapper;
 	
-	public List<SpPSizeCustom> getSpPSizeCustoms(int cropId) {
+	public List<SpPSizeCustom> getSpPSizeCustoms(int storeId) {
 
-		return spPSizeCustomMapper.getSpPSizeCustoms(cropId);
+		return spPSizeCustomMapper.getSpPSizeCustoms(storeId);
 	}
 	public int saveSpPSizeCustom(SpPSizeCustom spPSizeCustom) {
 		int save = 0;
 		//查询对应ID的是否存在，存在的话进行update 不存在save
-		if(spPSizeCustom.getId() != null){
-			SpPSizeCustom getSize = spPSizeCustomMapper.selectByPrimaryKey(spPSizeCustom.getId());
-			if(getSize != null){
-				save = spPSizeCustomMapper.updateByPrimaryKeySelective(spPSizeCustom);
-			}else {
-				save = spPSizeCustomMapper.insert(spPSizeCustom) ;
-			}
+		SpPSizeCustom getSize = spPSizeCustomMapper.getSpPSizeCustom(spPSizeCustom.getStoreId(), spPSizeCustom.getCustomname());
+		if(getSize != null){
+			return save ;
 		}else {
 			save = spPSizeCustomMapper.insert(spPSizeCustom) ;
 		}
-		 
-		
 		return save;
 		
 		 
 	}
 	public int deleteSpPSizeCustom(int id) {
-	
 		return spPSizeCustomMapper.deleteByPrimaryKey(id);
 	}
 	

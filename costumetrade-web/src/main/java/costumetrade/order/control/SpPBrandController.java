@@ -25,12 +25,12 @@ public class SpPBrandController {
 	@Autowired
 	private SpPBrandService spPBrandService;
 
-	@RequestMapping("/getAllCates")
+	@RequestMapping("/getAllBrands")
 	@ResponseBody
-	public ApiResponse getAllCates( int corpId) {
+	public ApiResponse getAllBrands(Integer storeId) {
 		
 		List<SpPBrand> CateLists = new ArrayList<SpPBrand>();
-		CateLists = spPBrandService.getSpPBrands(corpId);
+		CateLists = spPBrandService.getSpPBrands(storeId);
 
 		return  ApiResponse.getInstance(CateLists);
 	}

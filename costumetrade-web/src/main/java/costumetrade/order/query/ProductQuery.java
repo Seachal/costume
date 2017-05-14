@@ -22,12 +22,16 @@ public class ProductQuery extends Entity{
 	/**
      *  商品编号
      */
-    private Integer id;
+    private String id;
 
     /**
      *  企业ID
      */
     private Integer storeId;
+    /**
+     *  实体状态 0:正常 1：待处理 2、作废
+     */
+    private Integer status;
 
     /**
      *  商品货号
@@ -74,7 +78,7 @@ public class ProductQuery extends Entity{
      *  商品季节
      */
     private String season;
-    private BigDecimal saleNum;
+   
     /**
      *  商品季节
      */
@@ -141,11 +145,12 @@ public class ProductQuery extends Entity{
 	 */
 	
 
-	private String TimeUpOp; // 升序为asc，降序为desc
+	private String timeUpOp; // 升序为asc，降序为desc
 	private String priceOp; // 升序为asc，降序为desc
-	private List<String> productType; // x商品类别
-	private List<String> productBrand; // x商品品牌
-	private List<String> productSeason; // x商品季节
+	private List<String> productTypeArray; // 商品类别
+	private List<String> productBrandArray; // 商品品牌
+	private List<String> productSeasonArray; // 商品季节
+	private String saleOp;
 	/**
 	 * 货品列表查询  结束
 	 */
@@ -165,11 +170,11 @@ public class ProductQuery extends Entity{
 		this.price = price;
 	}
 
-	public Integer getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -198,11 +203,11 @@ public class ProductQuery extends Entity{
 	}
 
 	public String getTimeUpOp() {
-		return TimeUpOp;
+		return timeUpOp;
 	}
 
 	public void setTimeUpOp(String timeUpOp) {
-		TimeUpOp = timeUpOp;
+		this.timeUpOp = timeUpOp;
 	}
 
 	public String getPriceOp() {
@@ -213,28 +218,34 @@ public class ProductQuery extends Entity{
 		this.priceOp = priceOp;
 	}
 
-	public List<String> getProductType() {
-		return productType;
+	
+
+	public List<String> getProductTypeArray() {
+		return productTypeArray;
 	}
 
-	public void setProductType(List<String> productType) {
-		this.productType = productType;
+	public void setProductTypeArray(List<String> productTypeArray) {
+		this.productTypeArray = productTypeArray;
 	}
 
-	public List<String> getProductBrand() {
-		return productBrand;
+	public List<String> getProductBrandArray() {
+		return productBrandArray;
 	}
 
-	public void setProductBrand(List<String> productBrand) {
-		this.productBrand = productBrand;
+	public void setProductBrandArray(List<String> productBrandArray) {
+		this.productBrandArray = productBrandArray;
 	}
 
-	public List<String> getProductSeason() {
-		return productSeason;
+	public List<String> getProductSeasonArray() {
+		return productSeasonArray;
 	}
 
-	public void setProductSeason(List<String> productSeason) {
-		this.productSeason = productSeason;
+	public void setProductSeasonArray(List<String> productSeasonArray) {
+		this.productSeasonArray = productSeasonArray;
+	}
+
+	public void setSaleOp(String saleOp) {
+		this.saleOp = saleOp;
 	}
 
 	public List<SpPSizeCustom> getProductSize() {
@@ -455,14 +466,22 @@ public class ProductQuery extends Entity{
 		this.unitList = unitList;
 	}
 
-	public BigDecimal getSaleNum() {
-		return saleNum;
+	public String getSaleOp() {
+		return saleOp;
 	}
 
-	public void setSaleNum(BigDecimal saleNum) {
-		this.saleNum = saleNum;
+	public void setSaleNum(String saleOp) {
+		this.saleOp = saleOp;
 	}
 
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+	
 	
 
 

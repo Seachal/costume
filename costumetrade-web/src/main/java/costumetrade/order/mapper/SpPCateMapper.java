@@ -24,5 +24,5 @@ public interface SpPCateMapper {
 
     int updateByPrimaryKey(SpPCate record);
     
-    List<SpPCate>  getSpPCates(int corpId);
+    List<SpPCate>  getSpPCates(int storeId);
 }

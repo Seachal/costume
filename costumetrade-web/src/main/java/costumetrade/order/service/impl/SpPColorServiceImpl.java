@@ -16,31 +16,24 @@ public class SpPColorServiceImpl implements SpPColorService{
 	@Autowired
 	private SpPColorMapper spPColorMapper;
 	
-	public List<SpPColor> getSpPColors(int cropId) {
+	public List<SpPColor> getSpPColors(int storeId) {
 
-		return spPColorMapper.getSpPColors(cropId);
+		return spPColorMapper.getSpPColors(storeId);
 	}
 	public int saveSpPColor(SpPColor spPColor) {
 		int save = 0;
-		//查询对应ID的员工是否存在，存在的话进行update 不存在save
-		if(spPColor.getId() != null){
-
-			SpPColor getColor = spPColorMapper.selectByPrimaryKey(spPColor.getId());
-			if(getColor != null){
-				save = spPColorMapper.updateByPrimaryKeySelective(spPColor);
-			}	
+		//查询对应颜色是否存在，存在的话进行update 不存在save
+		SpPColor getColor = spPColorMapper.selectByName(spPColor.getColorname(), spPColor.getStoreId());
+		if(getColor != null){
+			return save;
 		}else {
 			save = spPColorMapper.insert(spPColor) ;
 		}
-			
-		 
-		
 		return save;
 		
 		 
 	}
 	public int deleteSpPColor(int id) {
-	
 		return spPColorMapper.deleteByPrimaryKey(id);
 	}
 	

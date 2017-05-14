@@ -10,13 +10,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import costumetrade.order.domain.SpCart;
 import costumetrade.order.domain.SpPBrand;
 import costumetrade.order.domain.SpPCate;
 import costumetrade.order.domain.SpPSizeCustom;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SsPrice;
 import costumetrade.order.domain.SsProductFile;
+import costumetrade.order.domain.SsStock;
 import costumetrade.order.enums.GradeTypeEnum;
 import costumetrade.order.enums.SeasonTypeEnum;
 import costumetrade.order.enums.UnitTypeEnum;
@@ -27,6 +27,7 @@ import costumetrade.order.mapper.SpPSizeCustomMapper;
 import costumetrade.order.mapper.SpProductMapper;
 import costumetrade.order.mapper.SsPriceMapper;
 import costumetrade.order.mapper.SsProductFileMapper;
+import costumetrade.order.mapper.SsStockMapper;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.service.SpProductService;
 
@@ -47,24 +48,27 @@ public class SpProductServiceImpl implements SpProductService{
 	private SsPriceMapper ssPriceMapper;
 	@Autowired
 	private SsProductFileMapper ssProductFileMapper;
+	@Autowired
+	private SsStockMapper ssStockMapper;
+
 	
 	@Override
 	public List<SpProduct> selectProducts(ProductQuery productQuery) {
 		List<String> season = new ArrayList<String>();
-		if(productQuery.getProductSeason().size()>0){
-			for(int i = 0 ; i<productQuery.getProductSeason().size(); i++){
-				season.add(Enum.valueOf(SeasonTypeEnum.class,productQuery.getProductSeason().get(i)).getValue());
+		if(productQuery.getProductSeasonArray() !=null && productQuery.getProductSeasonArray().size()>0){
+			for(int i = 0 ; i<productQuery.getProductSeasonArray().size(); i++){
+				season.add(Enum.valueOf(SeasonTypeEnum.class,productQuery.getProductSeasonArray().get(i)).getValue());
 			}
 			
 		}
 		if(season.size()>0){
-			productQuery.setProductSeason(season);
+			productQuery.setProductSeasonArray(season);
 		}
 		return spProductMapper.selectProducts(productQuery);
 	}
 
 	@Override
-	public SpProduct selectProduct(ProductQuery queryDetail) {
+	public ProductQuery selectProduct(ProductQuery queryDetail) {
 		return spProductMapper.selectProduct(queryDetail);
 	}
 
@@ -89,7 +93,6 @@ public class SpProductServiceImpl implements SpProductService{
 
 	@Override
 	public int saveProduct(SpProduct product) {
-		// TODO Auto-generated method stub
 		// 查询货号是否存在
 		if(product.getId() != null){
 			product.setStatus(0);
@@ -243,5 +246,28 @@ public class SpProductServiceImpl implements SpProductService{
 			//价格保存到价格表，颜色组保存到颜色表
 			ssPriceMapper.insertSelective(price);
 		}
+	}
+
+	@Override
+	public int deleteProducts(List<String> id, Integer storeId) {
+		return spProductMapper.deleteByIds(storeId, id);
+	}
+
+	@Override
+	public int updateProducts(List<String> id, Integer storeId) {
+		return spProductMapper.updateByIds(storeId, id);
+	}
+
+	@Override
+	public List<SsStock> takingStock(SpProduct product) {
+		SsStock stock = new SsStock();
+		stock.setProductid(product.getId());
+		stock.setStoreid(product.getStoreId());
+		return ssStockMapper.select(stock);
+	}
+
+	@Override
+	public List<SsProductFile> getImages(SpProduct product) {
+		return ssProductFileMapper.selectByStoreId(product.getStoreId(),product.getImageName());
 	}
 }

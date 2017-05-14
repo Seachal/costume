@@ -9,7 +9,9 @@ import costumetrade.order.domain.SpProduct;
 import costumetrade.order.query.ProductQuery;
 @Mapper
 public interface SpProductMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByIds(@Param("storeId")Integer storeId,@Param("ids")List<String> ids);
+    
+    int updateByIds(@Param("storeId")Integer storeId,@Param("ids")List<String> ids);
 
     int insert(SpProduct record);
 
@@ -25,5 +27,5 @@ public interface SpProductMapper {
     
     List<SpProduct> selectProducts(ProductQuery param);
     
-    SpProduct selectProduct(ProductQuery param);
+    ProductQuery selectProduct(ProductQuery param);
 }

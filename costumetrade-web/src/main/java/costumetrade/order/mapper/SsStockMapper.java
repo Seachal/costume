@@ -13,7 +13,7 @@ public interface SsStockMapper {
 
     int insertSelective(SsStock record);
 
-    SsStock select(SsStock record);
+    List<SsStock> select(SsStock record);
 
     int updateByPrimaryKeySelective(SsStock record);
 

@@ -15,6 +15,8 @@ public interface SsProductFileMapper {
     int insertSelective(SsProductFile record);
 
     SsProductFile selectByPrimaryKey(Integer id);
+    
+    List<SsProductFile> selectByStoreId(@Param("storeId")Integer storeId,@Param("imageName")String imageName);
 
     int updateByPrimaryKeySelective(SsProductFile record);
 

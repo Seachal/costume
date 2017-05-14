@@ -16,27 +16,19 @@ public class SpPBrandServiceImpl implements SpPBrandService{
 	@Autowired
 	private SpPBrandMapper spPBrandMapper;
 	
-	public List<SpPBrand> getSpPBrands(int corpId) {
+	public List<SpPBrand> getSpPBrands(int storeId) {
 
-		return spPBrandMapper.getSpPBrands(corpId);
+		return spPBrandMapper.getSpPBrands(storeId);
 	}
 	public int saveSpPBrand(SpPBrand spPBrand) {
 		int save = 0;
-		//查询对应ID的员工是否存在，存在的话进行update 不存在save
-	
-		if(spPBrand.getId() != null){
-			
-			SpPBrand getBrand = spPBrandMapper.selectByPrimaryKey(spPBrand.getId());
-			if(getBrand != null){
-				save = spPBrandMapper.updateByPrimaryKeySelective(spPBrand);
-			}else {
-				save = spPBrandMapper.insert(spPBrand) ;
-			}
+		//查询对应品牌是否存在，存在的话进行update 不存在save
+		SpPBrand getBrand = spPBrandMapper.getSpPBrandByName(spPBrand.getBrandname(), spPBrand.getStoreId());
+		if(getBrand != null){
+			return save;
 		}else {
 			save = spPBrandMapper.insert(spPBrand) ;
 		}
-		 
-		
 		return save;
 		
 		 

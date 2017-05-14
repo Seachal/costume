@@ -17,7 +17,7 @@ public class SpProduct extends Entity {
     private Integer storeId;
 
     /**
-     *  实体状态 0:正常 1：作废
+     *  实体状态 0:正常 1：待处理 2、作废
      */
     private Integer status;
     
