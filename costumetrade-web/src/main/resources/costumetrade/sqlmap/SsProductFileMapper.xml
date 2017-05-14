@@ -19,6 +19,16 @@
     from ss_product_file
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectByStoreId" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ss_product_file_#{storeId}
+    where storeId = #{storeId,jdbcType=INTEGER}
+    <if test="imageName !=null">
+    and fileName like CONCAT('%',#{imageName},'%')
+    </if>
+    
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ss_product_file
     where id = #{id,jdbcType=INTEGER}

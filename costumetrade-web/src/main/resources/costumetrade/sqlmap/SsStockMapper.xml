@@ -7,36 +7,39 @@
     <result column="productId" jdbcType="VARCHAR" property="productid" />
     <result column="productColor" jdbcType="VARCHAR" property="productcolor" />
     <result column="productSize" jdbcType="VARCHAR" property="productsize" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="stockNum" jdbcType="DOUBLE" property="stocknum" />
-    <result column="stockAmt" jdbcType="DECIMAL" property="stockamt" />
+    <result column="productPrice" jdbcType="DECIMAL" property="productPrice" />
     <result column="modifyTime" jdbcType="TIMESTAMP" property="modifytime" />
     <result column="modifyBy" jdbcType="VARCHAR" property="modifyby" />
     <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
     <result column="createBy" jdbcType="VARCHAR" property="createby" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, storeId, productId, productColor, productSize, stockNum, stockAmt, modifyTime, 
+    id, storeId, productId, productColor, productSize, stockNum, productPrice, modifyTime, 
     modifyBy, createTime, createBy
   </sql>
   <select id="select" parameterType="costumetrade.order.domain.SsStock" resultMap="BaseResultMap">
     select 
-    <include refid="Base_Column_List" />
-    from ss_stock_#{storeid,jdbcType=INTEGER}
+   stock.storeId,stock.productId,product.code,product.name,stock.productColor, stock.productSize, stock.stockNum, stock.productPrice
+    from ss_stock_#{storeid,jdbcType=INTEGER} stock
+    left join sp_product_#{storeid,jdbcType=INTEGER} product on product.id = stock.productid
     where 1=1
        <if test="storeid != null">
-       and storeId = #{storeid,jdbcType=INTEGER}
+       and stock.storeId = #{storeid,jdbcType=INTEGER}
       </if>
       <if test="productid != null">
-       and productId = #{productid,jdbcType=VARCHAR}
+       and stock.productId = #{productid,jdbcType=VARCHAR}
       </if>
       <if test="productcolor != null">
-       and productColor =  #{productcolor,jdbcType=VARCHAR}
+       and stock.productColor =  #{productcolor,jdbcType=VARCHAR}
       </if>
       <if test="productsize != null">
-       and productSize = #{productsize,jdbcType=VARCHAR}
+       and stock.productSize = #{productsize,jdbcType=VARCHAR}
       </if>
       <if test="stocknum != null">
-       and stockNum &gt;= #{stocknum,jdbcType=DOUBLE}
+       and stock.stockNum &gt;= #{stocknum,jdbcType=DOUBLE}
       </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -46,11 +49,11 @@
   <insert id="insert" parameterType="costumetrade.order.domain.SsStock">
     insert into ss_stock (id, storeId, productId, 
       productColor, productSize, stockNum, 
-      stockAmt, modifyTime, modifyBy, 
+      productPrice, modifyTime, modifyBy, 
       createTime, createBy)
     values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{productid,jdbcType=VARCHAR}, 
       #{productcolor,jdbcType=VARCHAR}, #{productsize,jdbcType=VARCHAR}, #{stocknum,jdbcType=DOUBLE}, 
-      #{stockamt,jdbcType=DECIMAL}, #{modifytime,jdbcType=TIMESTAMP}, #{modifyby,jdbcType=VARCHAR}, 
+      #{productPrice,jdbcType=DECIMAL}, #{modifytime,jdbcType=TIMESTAMP}, #{modifyby,jdbcType=VARCHAR}, 
       #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.SsStock">
@@ -74,8 +77,8 @@
       <if test="stocknum != null">
         stockNum,
       </if>
-      <if test="stockamt != null">
-        stockAmt,
+      <if test="productPrice != null">
+        productPrice,
       </if>
       <if test="modifytime != null">
         modifyTime,
@@ -109,8 +112,8 @@
       <if test="stocknum != null">
         #{stocknum,jdbcType=DOUBLE},
       </if>
-      <if test="stockamt != null">
-        #{stockamt,jdbcType=DECIMAL},
+      <if test="productPrice != null">
+        #{productPrice,jdbcType=DECIMAL},
       </if>
       <if test="modifytime != null">
         #{modifytime,jdbcType=TIMESTAMP},
@@ -132,8 +135,8 @@
       <if test="stocknum != null">
         stockNum = #{stocknum,jdbcType=DOUBLE},
       </if>
-      <if test="stockamt != null">
-        stockAmt = #{stockamt,jdbcType=DECIMAL},
+      <if test="productPrice != null">
+        productPrice = #{productPrice,jdbcType=DECIMAL},
       </if>
       <if test="modifytime != null">
         modifyTime = #{modifytime,jdbcType=TIMESTAMP},
@@ -170,7 +173,7 @@
       productColor = #{productcolor,jdbcType=VARCHAR},
       productSize = #{productsize,jdbcType=VARCHAR},
       stockNum = #{stocknum,jdbcType=DOUBLE},
-      stockAmt = #{stockamt,jdbcType=DECIMAL},
+      productPrice = #{productPrice,jdbcType=DECIMAL},
       modifyTime = #{modifytime,jdbcType=TIMESTAMP},
       modifyBy = #{modifyby,jdbcType=VARCHAR},
       createTime = #{createtime,jdbcType=TIMESTAMP},

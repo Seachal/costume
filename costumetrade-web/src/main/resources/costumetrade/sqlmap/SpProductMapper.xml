@@ -118,23 +118,23 @@
     WHERE 1=1
     and product.time_down &gt;= CURDATE() 
     and product.time_up &lt;= CURDATE() 
-    and product.status = 0
+    and product.status =#{status}
      <if test="code != null">
       and  product.code like  CONCAT('%',#{code},'%')
       </if>
-     <if test="productType != null">
-       and productType.cateName in <foreach collection="productType" item="item" index="index" open="(" separator="," close=")"> #{item}</foreach>
+     <if test="productTypeArray != null">
+       and productType.cateName in <foreach collection="productTypeArray" item="item" index="index" open="(" separator="," close=")"> #{item}</foreach>
       </if>
-     <if test="productBrand != null">
-       and brand.brandName in <foreach collection="productBrand" item="item" index="index" open="(" separator="," close=")"> #{item}</foreach>
+     <if test="productBrandArray != null">
+       and brand.brandName in <foreach collection="productBrandArray" item="item" index="index" open="(" separator="," close=")"> #{item}</foreach>
       </if>
-      <if test="productSeason != null">
-       and product.season in <foreach collection="productSeason" item="item" index="index" open="(" separator="," close=")"> #{item}</foreach>
+      <if test="productSeasonArray != null">
+       and product.season in <foreach collection="productSeasonArray" item="item" index="index" open="(" separator="," close=")"> #{item}</foreach>
       </if>
-      <if test="TimeUpOp == 'asc'">
+      <if test="timeUpOp == 'asc'">
         order by product.time_up asc
       </if>
-      <if test="TimeUpOp == 'desc'">
+      <if test="timeUpOp == 'desc'">
         order by product.time_up desc
       </if>
       <if test="priceOp == 'asc'">
@@ -143,10 +143,10 @@
       <if test="priceOp == 'desc'">
         order by price desc
       </if>
-      <if test="saleNum == 'asc'">
+      <if test="saleOp == 'asc'">
         order by product.saleNum asc
       </if>
-      <if test="saleNum == 'desc'">
+      <if test="saleOp == 'desc'">
         order by product.saleNum desc
       </if>
   </select>
@@ -175,14 +175,17 @@
     left join sp_product_type productType on productType.id = product.prductType
     left join sp_store store on store.id = product.storeId
     where 1=1
-    and product.status = 0
     and product.storeId = #{storeId,jdbcType=INTEGER}
     and product.id = #{id,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from sp_product
-    where id = #{id,jdbcType=INTEGER}
+  <delete id="deleteByIds" >
+    delete from sp_product_#{storeId,jdbcType=INTEGER}
+    where id in<foreach collection="ids" item="item" index="index" open="(" separator="," close=")">#{item,jdbcType=VARCHAR}</foreach> 
   </delete>
+  <update id="updateByIds" >
+    update sp_product_#{storeId,jdbcType=INTEGER} set status = 2
+    where id in<foreach collection="ids" item="item" index="index" open="(" separator="," close=")">#{item,jdbcType=VARCHAR}</foreach> 
+  </update>
   <insert id="insert" parameterType="costumetrade.order.domain.SpProduct">
     insert into sp_product (id, storeId, status,levelType, 
       code, brandId, prductType, 

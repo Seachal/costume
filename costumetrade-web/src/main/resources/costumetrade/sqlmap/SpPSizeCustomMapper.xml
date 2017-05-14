@@ -26,6 +26,13 @@
     from sp_psize_custom
     where storeId = #{storeId,jdbcType=INTEGER}
   </select>
+  <select id="getSpPSizeCustom" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sp_psize_custom
+    where storeId = #{storeId,jdbcType=INTEGER}
+    and customName = #{customName}
+  </select>
   <select id="selectByCustomValue" parameterType="costumetrade.order.domain.SpPSizeCustom" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
