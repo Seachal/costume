@@ -1,9 +1,6 @@
 package costumetrade.pay.service.impl;
 
-import java.math.BigDecimal;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import costumetrade.common.enums.PayTypeEnum;
 import costumetrade.order.domain.SsFinancial;
 import costumetrade.order.domain.SsStoOrder;
