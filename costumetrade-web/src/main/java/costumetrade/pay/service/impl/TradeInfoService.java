@@ -1,6 +1,9 @@
 package costumetrade.pay.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import costumetrade.common.enums.PayTypeEnum;
 import costumetrade.order.domain.SsFinancial;
 import costumetrade.order.domain.SsStoOrder;
@@ -9,7 +12,8 @@ import costumetrade.order.mapper.SsStoOrderMapper;
 import costumetrade.pay.domain.TradeInfo;
 import costumetrade.pay.mapper.TradeInfoMapper;
 import costumetrade.pay.service.ITradeInfoService;
-
+@Service
+@Transactional
 public class TradeInfoService implements ITradeInfoService {
 	
      @Autowired

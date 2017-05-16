@@ -125,5 +125,10 @@ public class SpClientServiceImpl implements SpClientService{
 		// TODO Auto-generated method stub
 		return spClientMapper.selectByPrimaryKey(clientId);
 	}
+	@Override
+	public int deleteClient(Integer clientId) {
+		// TODO Auto-generated method stub
+		return spClientMapper.deleteById(clientId);
+	}
 	
 }

@@ -28,7 +28,8 @@ public class SsProductFile extends Entity {
      *  
      */
     private String url;
-
+    
+    private String resizeFixUrl;
     /**
      *  
      */
@@ -96,4 +97,14 @@ public class SsProductFile extends Entity {
     public void setCreateby(String createby) {
         this.createby = createby == null ? null : createby.trim();
     }
+
+	public String getResizeFixUrl() {
+		return resizeFixUrl;
+	}
+
+	public void setResizeFixUrl(String resizeFixUrl) {
+		this.resizeFixUrl = resizeFixUrl;
+	}
+    
+    
 }

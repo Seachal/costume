@@ -10,6 +10,8 @@ public interface SpClientMapper {
     int insert(SpClient record);
 
     int insertSelective(SpClient record);
+   
+    int deleteById(Integer clientId);
     
     SpClient selectByPrimaryKey(Integer clientId);
     

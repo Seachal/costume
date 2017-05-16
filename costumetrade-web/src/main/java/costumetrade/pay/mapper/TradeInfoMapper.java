@@ -1,7 +1,9 @@
 package costumetrade.pay.mapper;
 
-import costumetrade.pay.domain.TradeInfo;
+import org.apache.ibatis.annotations.Mapper;
 
+import costumetrade.pay.domain.TradeInfo;
+@Mapper
 public interface TradeInfoMapper {
     int deleteByPrimaryKey(Integer id);
 

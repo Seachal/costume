@@ -89,5 +89,23 @@ public class SpClientController {
 		}
 		return result;
 	}
+	@RequestMapping("/deleteClient")
+	@ResponseBody
+	public ApiResponse deleteClient(SpClient client) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		//Integer clientId=(Integer) httpSession.getAttribute("clientId");
+		Integer clientId = client.getId();
+		int delete = spClientService.deleteClient(clientId);
+		if(delete <= 0){
+			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			return result;
+		}
+		//Integer type = Integer.parseInt(client.getType());
+		return result;
+	}
+
 	
 }

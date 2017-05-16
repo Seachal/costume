@@ -1,13 +1,19 @@
 package costumetrade.order.control;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.lang.StringUtils;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +26,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.common.util.FTPClientUtils;
+import costumetrade.common.word.ImageUtils;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SsProductFile;
 import costumetrade.order.domain.SsStock;
@@ -174,17 +181,29 @@ public class SpProductController {
         String str = uuid.toString(); 
 		fileName =str+fileName.substring(fileName.lastIndexOf("."), fileName.length());
 		
-		String path = "/touchart/"+d+"/";
+		String pathOriginal = "/touchart/original/"+d+"/"; //原图路径
 
-		
+		String pathReduce  = "/touchart/reduce/"+d+"/"; //缩略图路径
 		InputStream input;
 		try {
 			input = file.getInputStream();
-			boolean upload = FTPClientUtils.getInstance().uploadFileToFtp(path, fileName, input);
+			boolean upload = FTPClientUtils.getInstance().uploadFileToFtp(pathOriginal, fileName, input);
+//			int r[] ={0,0};
+//			BufferedImage buffer = ImageIO.read(input);
+//			r[0] = (int) (buffer.getHeight()*0.5);
+//			r[1] = (int) (buffer.getWidth()*0.5);
+//			
+//			Image i = ImageIO.read(input);
+//			BufferedImage b = new BufferedImage(r[1], r[0], BufferedImage.TYPE_INT_RGB);
+//			  b.getGraphics().drawImage(i.getScaledInstance(r[1], r[0], Image.SCALE_SMOOTH),0,0,null);
+			  DiskFileItem fileItem = (DiskFileItem) file.getFileItem();
+			  File f = ImageUtils.compressionFile(fileItem.getStoreLocation(),fileName);
+			  boolean upload1 = FTPClientUtils.getInstance().uploadFileToFtp(pathReduce, fileName,new FileInputStream(f));
 			if(upload){
 				SsProductFile image = new SsProductFile();
 				image.setFilename(file.getOriginalFilename());
-				image.setUrl(path+fileName);
+				image.setUrl(pathOriginal+fileName);
+				image.setResizeFixUrl(pathReduce+fileName);
 				result.setData(image);
 			}else{
 				result.setCode(ResponseInfo.EXCEPTION.code);

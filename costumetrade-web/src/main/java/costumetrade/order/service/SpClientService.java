@@ -26,4 +26,6 @@ public interface SpClientService {
 	public List<SpClient> getClients(Integer clientId,Integer type);
 	
 	public SpClient getClient(Integer clientId);
+	
+	public int deleteClient(Integer clientId);
 }
