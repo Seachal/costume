@@ -46,6 +46,10 @@
     from sp_client
     where id = #{clientId,jdbcType=INTEGER}
   </select>
+  <select id="deleteById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    delete from sp_client
+    where id = #{clientId,jdbcType=INTEGER}
+  </select>
   <select id="select" parameterType="costumetrade.order.domain.SpClient" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />

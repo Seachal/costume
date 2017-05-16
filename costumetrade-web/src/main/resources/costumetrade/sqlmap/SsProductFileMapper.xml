@@ -7,11 +7,12 @@
     <result column="productId" jdbcType="VARCHAR" property="productid" />
     <result column="fileName" jdbcType="VARCHAR" property="filename" />
     <result column="url" jdbcType="VARCHAR" property="url" />
+    <result column="resizeFixUrl" jdbcType="VARCHAR" property="resizeFixUrl" />
     <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
     <result column="createBy" jdbcType="VARCHAR" property="createby" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, storeId, productId, fileName, url, createTime, createBy
+    id, storeId, productId, fileName, url,resizeFixUrl, createTime, createBy
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -35,18 +36,18 @@
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SsProductFile">
     insert into ss_product_file (id, storeId, productId, 
-      fileName, url, createTime, 
+      fileName, url,resizeFixUrl, createTime, 
       createBy)
     values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{productid,jdbcType=VARCHAR}, 
-      #{filename,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{filename,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{resizeFixUrl,jdbcType=VARCHAR},#{createtime,jdbcType=TIMESTAMP}, 
       #{createby,jdbcType=VARCHAR})
   </insert>
   <insert id="insertFiles">
     insert into ss_product_file_#{storeId,jdbcType=INTEGER} (storeId, productId, 
-      fileName, url, createTime, 
+      fileName, url,resizeFixUrl, createTime, 
       createBy)
     values <foreach collection="files" index="index" item ="item" separator=",">( #{item.storeid,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR}, 
-      #{item.filename,jdbcType=VARCHAR}, #{item.url,jdbcType=VARCHAR}, #{item.createtime,jdbcType=TIMESTAMP}, 
+      #{item.filename,jdbcType=VARCHAR}, #{item.url,jdbcType=VARCHAR},#{resizeFixUrl,jdbcType=VARCHAR}, #{item.createtime,jdbcType=TIMESTAMP}, 
       #{item.createby,jdbcType=VARCHAR})</foreach> 
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.SsProductFile">
@@ -66,6 +67,9 @@
       </if>
       <if test="url != null">
         url,
+      </if>
+      <if test="resizeFixUrl != null">
+        resizeFixUrl,
       </if>
       <if test="createtime != null">
         createTime,
@@ -90,6 +94,9 @@
       <if test="url != null">
         #{url,jdbcType=VARCHAR},
       </if>
+      <if test="resizeFixUrl != null">
+        #{resizeFixUrl,jdbcType=VARCHAR},
+      </if>
       <if test="createtime != null">
         #{createtime,jdbcType=TIMESTAMP},
       </if>
@@ -113,6 +120,9 @@
       <if test="url != null">
         url = #{url,jdbcType=VARCHAR},
       </if>
+      <if test="resizeFixUrl != null">
+        resizeFixUrl = #{resizeFixUrl,jdbcType=VARCHAR},
+      </if>
       <if test="createtime != null">
         createTime = #{createtime,jdbcType=TIMESTAMP},
       </if>
@@ -128,6 +138,7 @@
       productId = #{productid,jdbcType=VARCHAR},
       fileName = #{filename,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},
+      resizeFixUrl = #{resizeFixUrl,jdbcType=VARCHAR},
       createTime = #{createtime,jdbcType=TIMESTAMP},
       createBy = #{createby,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
