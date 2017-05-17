@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="costumetrade.user.mapper.SsDataDictionaryMapper">
+  <resultMap id="BaseResultMap" type="costumetrade.user.domain.SsDataDictionary">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="storeId" jdbcType="INTEGER" property="storeId" />
+    <result column="dict_group_name" jdbcType="VARCHAR" property="dictGroupName" />
+    <result column="dict_group" jdbcType="VARCHAR" property="dictGroup" />
+    <result column="dict_value" jdbcType="VARCHAR" property="dictValue" />
+    <result column="dict_text" jdbcType="VARCHAR" property="dictText" />
+    <result column="sort_num" jdbcType="INTEGER" property="sortNum" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id,storeId, dict_group_name, dict_group, dict_value, dict_text, sort_num, status, create_time, 
+    create_by
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ss_data_dictionary
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="select" parameterType="costumetrade.user.domain.SsDataDictionary" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ss_data_dictionary
+    where 1=1
+    <if test="id != null">
+      and id =  #{id,jdbcType=INTEGER},
+      </if>
+      <if test="storeId != null">
+       and storeId = #{storeId,jdbcType=INTEGER},
+      </if>
+      <if test="dictGroupName != null">
+       and dict_group_name = #{dictGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictGroup != null">
+       and dict_group = #{dictGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="dictValue != null">
+       and dict_value = #{dictValue,jdbcType=VARCHAR},
+      </if>
+      <if test="dictText != null">
+       and dict_text = #{dictText,jdbcType=VARCHAR},
+      </if>
+      <if test="sortNum != null">
+       and sort_num = #{sortNum,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+       and status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+       and create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+       and create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+  </select>
+  <select id="selectDictionarys" parameterType="List" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ss_data_dictionary
+    where 1=1
+    and dict_group in <foreach collection="list" item="item" index="index" separator=",">#{item,jdbcType=VARCHAR}</foreach>
+    and status =0
+     
+  </select>
+  <select id="getDataDictionarys" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ss_data_dictionary
+    where storeId = #{storeId,jdbcType=INTEGER}
+    and status = 0
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ss_data_dictionary
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="costumetrade.user.domain.SsDataDictionary">
+    insert into ss_data_dictionary (id,storeId, dict_group_name, dict_group, 
+      dict_value, dict_text, sort_num, 
+      status, create_time, create_by
+      )
+    values (#{id,jdbcType=INTEGER},#{storeId,jdbcType=INTEGER}, #{dictGroupName,jdbcType=VARCHAR}, #{dictGroup,jdbcType=VARCHAR}, 
+      #{dictValue,jdbcType=VARCHAR}, #{dictText,jdbcType=VARCHAR}, #{sortNum,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="costumetrade.user.domain.SsDataDictionary">
+    insert into ss_data_dictionary
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="storeId != null">
+        storeId,
+      </if>
+      <if test="dictGroupName != null">
+        dict_group_name,
+      </if>
+      <if test="dictGroup != null">
+        dict_group,
+      </if>
+      <if test="dictValue != null">
+        dict_value,
+      </if>
+      <if test="dictText != null">
+        dict_text,
+      </if>
+      <if test="sortNum != null">
+        sort_num,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="storeId != null">
+        #{storeId,jdbcType=INTEGER},
+      </if>
+      <if test="dictGroupName != null">
+        #{dictGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictGroup != null">
+        #{dictGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="dictValue != null">
+        #{dictValue,jdbcType=VARCHAR},
+      </if>
+      <if test="dictText != null">
+        #{dictText,jdbcType=VARCHAR},
+      </if>
+      <if test="sortNum != null">
+        #{sortNum,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.user.domain.SsDataDictionary">
+    update ss_data_dictionary
+    <set>
+      <if test="storeId != null">
+        storeId = #{storeId,jdbcType=INTEGER},
+      </if>
+      <if test="dictGroupName != null">
+        dict_group_name = #{dictGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="dictGroup != null">
+        dict_group = #{dictGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="dictValue != null">
+        dict_value = #{dictValue,jdbcType=VARCHAR},
+      </if>
+      <if test="dictText != null">
+        dict_text = #{dictText,jdbcType=VARCHAR},
+      </if>
+      <if test="sortNum != null">
+        sort_num = #{sortNum,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SsDataDictionary">
+    update ss_data_dictionary
+    set dict_group_name = #{dictGroupName,jdbcType=VARCHAR},
+      storeId = #{storeId,jdbcType=INTEGER},
+      dict_group = #{dictGroup,jdbcType=VARCHAR},
+      dict_value = #{dictValue,jdbcType=VARCHAR},
+      dict_text = #{dictText,jdbcType=VARCHAR},
+      sort_num = #{sortNum,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

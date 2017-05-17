@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="costumetrade.user.mapper.ScPrinterInfoMapper">
+  <resultMap id="BaseResultMap" type="costumetrade.user.domain.ScPrinterInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="storeId" jdbcType="INTEGER" property="storeid" />
+    <result column="printId" jdbcType="VARCHAR" property="printid" />
+    <result column="image_logo" jdbcType="VARCHAR" property="imageLogo" />
+    <result column="image_code" jdbcType="VARCHAR" property="imageCode" />
+    <result column="isPrintCode" jdbcType="INTEGER" property="isprintcode" />
+    <result column="isPrintLogo" jdbcType="INTEGER" property="isprintlogo" />
+    <result column="image_wechat" jdbcType="VARCHAR" property="imageWechat" />
+    <result column="image_alipay" jdbcType="VARCHAR" property="imageAlipay" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="createBy" jdbcType="VARCHAR" property="createby" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="costumetrade.user.domain.ScPrinterInfo">
+    <result column="bankMessage" jdbcType="LONGVARCHAR" property="bankmessage" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, storeId, printId, image_logo, image_code, isPrintCode, isPrintLogo, image_wechat, 
+    image_alipay, create_time, createBy
+  </sql>
+  <sql id="Blob_Column_List">
+    bankMessage
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sc_printer_info
+    where storeId = #{storeId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sc_printer_info
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="costumetrade.user.domain.ScPrinterInfo">
+    insert into sc_printer_info (id, storeId, printId, 
+      image_logo, image_code, isPrintCode, 
+      isPrintLogo, image_wechat, image_alipay, 
+      create_time, createBy, bankMessage
+      )
+    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{printid,jdbcType=VARCHAR}, 
+      #{imageLogo,jdbcType=VARCHAR}, #{imageCode,jdbcType=VARCHAR}, #{isprintcode,jdbcType=INTEGER}, 
+      #{isprintlogo,jdbcType=INTEGER}, #{imageWechat,jdbcType=VARCHAR}, #{imageAlipay,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR}, #{bankmessage,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="costumetrade.user.domain.ScPrinterInfo">
+    insert into sc_printer_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="storeid != null">
+        storeId,
+      </if>
+      <if test="printid != null">
+        printId,
+      </if>
+      <if test="imageLogo != null">
+        image_logo,
+      </if>
+      <if test="imageCode != null">
+        image_code,
+      </if>
+      <if test="isprintcode != null">
+        isPrintCode,
+      </if>
+      <if test="isprintlogo != null">
+        isPrintLogo,
+      </if>
+      <if test="imageWechat != null">
+        image_wechat,
+      </if>
+      <if test="imageAlipay != null">
+        image_alipay,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createby != null">
+        createBy,
+      </if>
+      <if test="bankmessage != null">
+        bankMessage,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="storeid != null">
+        #{storeid,jdbcType=INTEGER},
+      </if>
+      <if test="printid != null">
+        #{printid,jdbcType=VARCHAR},
+      </if>
+      <if test="imageLogo != null">
+        #{imageLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="imageCode != null">
+        #{imageCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isprintcode != null">
+        #{isprintcode,jdbcType=INTEGER},
+      </if>
+      <if test="isprintlogo != null">
+        #{isprintlogo,jdbcType=INTEGER},
+      </if>
+      <if test="imageWechat != null">
+        #{imageWechat,jdbcType=VARCHAR},
+      </if>
+      <if test="imageAlipay != null">
+        #{imageAlipay,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createby != null">
+        #{createby,jdbcType=VARCHAR},
+      </if>
+      <if test="bankmessage != null">
+        #{bankmessage,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.user.domain.ScPrinterInfo">
+    update sc_printer_info
+    <set>
+      <if test="storeid != null">
+        storeId = #{storeid,jdbcType=INTEGER},
+      </if>
+      <if test="printid != null">
+        printId = #{printid,jdbcType=VARCHAR},
+      </if>
+      <if test="imageLogo != null">
+        image_logo = #{imageLogo,jdbcType=VARCHAR},
+      </if>
+      <if test="imageCode != null">
+        image_code = #{imageCode,jdbcType=VARCHAR},
+      </if>
+      <if test="isprintcode != null">
+        isPrintCode = #{isprintcode,jdbcType=INTEGER},
+      </if>
+      <if test="isprintlogo != null">
+        isPrintLogo = #{isprintlogo,jdbcType=INTEGER},
+      </if>
+      <if test="imageWechat != null">
+        image_wechat = #{imageWechat,jdbcType=VARCHAR},
+      </if>
+      <if test="imageAlipay != null">
+        image_alipay = #{imageAlipay,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createby != null">
+        createBy = #{createby,jdbcType=VARCHAR},
+      </if>
+      <if test="bankmessage != null">
+        bankMessage = #{bankmessage,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="costumetrade.user.domain.ScPrinterInfo">
+    update sc_printer_info
+    set storeId = #{storeid,jdbcType=INTEGER},
+      printId = #{printid,jdbcType=VARCHAR},
+      image_logo = #{imageLogo,jdbcType=VARCHAR},
+      image_code = #{imageCode,jdbcType=VARCHAR},
+      isPrintCode = #{isprintcode,jdbcType=INTEGER},
+      isPrintLogo = #{isprintlogo,jdbcType=INTEGER},
+      image_wechat = #{imageWechat,jdbcType=VARCHAR},
+      image_alipay = #{imageAlipay,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      createBy = #{createby,jdbcType=VARCHAR},
+      bankMessage = #{bankmessage,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.ScPrinterInfo">
+    update sc_printer_info
+    set storeId = #{storeid,jdbcType=INTEGER},
+      printId = #{printid,jdbcType=VARCHAR},
+      image_logo = #{imageLogo,jdbcType=VARCHAR},
+      image_code = #{imageCode,jdbcType=VARCHAR},
+      isPrintCode = #{isprintcode,jdbcType=INTEGER},
+      isPrintLogo = #{isprintlogo,jdbcType=INTEGER},
+      image_wechat = #{imageWechat,jdbcType=VARCHAR},
+      image_alipay = #{imageAlipay,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      createBy = #{createby,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
