@@ -30,6 +30,8 @@ import costumetrade.order.mapper.SsProductFileMapper;
 import costumetrade.order.mapper.SsStockMapper;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.service.SpProductService;
+import costumetrade.user.domain.SsDataDictionary;
+import costumetrade.user.mapper.SsDataDictionaryMapper;
 
 @Transactional
 @Service
@@ -50,7 +52,8 @@ public class SpProductServiceImpl implements SpProductService{
 	private SsProductFileMapper ssProductFileMapper;
 	@Autowired
 	private SsStockMapper ssStockMapper;
-
+	@Autowired
+	private SsDataDictionaryMapper ssDataDictionaryMapper;
 	
 	@Override
 	public List<SpProduct> selectProducts(ProductQuery productQuery) {
@@ -77,17 +80,34 @@ public class SpProductServiceImpl implements SpProductService{
 		List<SpPBrand> brands = spPBrandMapper.getSpPBrands(storeId);
 		List<SpPCate> productTypes = spPCateMapper.getSpPCates(storeId);
 		List<SpPSizeCustom> sizes = spPSizeCustomMapper.getSpPSizeCustoms(storeId);
+		
+		List<String> list = new ArrayList<String>();
+		list.add("SALE_PRICE");//价格名称
+		list.add("PRODUCT_LEVEL");//货品级别
+		List<SsDataDictionary> dict = ssDataDictionaryMapper.selectDictionarys(list);
+		
 		ProductQuery query = new ProductQuery();
 		
 		query.setStoreId(storeId);
 		query.setBrandList(brands);
 		query.setProductSize(sizes);
 		query.setProductTypeList(productTypes);
-		
-		query.setGradeList(GradeTypeEnum.getGradeTypeEnum());
 		query.setSeasonList(SeasonTypeEnum.getSeasonTypeEnum());
 		query.setUnitList(UnitTypeEnum.getUnitTypeEnum());
 		
+		List<String> gradeList = new ArrayList<String>();
+		List<String> priceNameList = new ArrayList<String>();
+		if(dict !=null && dict.size()>0){
+			for(SsDataDictionary dictionary : dict){
+				if("SALE_PRICE".equals(dictionary.getDictGroup())){
+					priceNameList.add(dictionary.getDictValue());
+				}else if("PRODUCT_LEVEL".equals(dictionary.getDictGroup())){
+					gradeList.add(dictionary.getDictValue());
+				}
+			}
+		}
+		query.setPriceNameList(priceNameList);
+		query.setGradeList(gradeList);
 		return query;
 	}
 
@@ -104,9 +124,9 @@ public class SpProductServiceImpl implements SpProductService{
 			if(product.getSeason() != null){
 				product.setSeason(Enum.valueOf(SeasonTypeEnum.class,product.getSeason()).getValue());
 			}
-			if(product.getGrade() != null){
-				product.setGrade(Enum.valueOf(GradeTypeEnum.class,product.getGrade()).getValue());
-			}
+//			if(product.getGrade() != null){
+//				product.setGrade(Enum.valueOf(GradeTypeEnum.class,product.getGrade()).getValue());
+//			}
 			if(product.getUnit() != null){
 				product.setUnit(Enum.valueOf(UnitTypeEnum.class,product.getUnit()).getValue());
 			}
@@ -132,17 +152,18 @@ public class SpProductServiceImpl implements SpProductService{
 			}
 			List<SsProductFile> files = new ArrayList<SsProductFile>();
 		
-			if(product.getImage() != null && product.getImageName() != null ){
+			if(product.getImage() != null && product.getImageName() != null && product.getReduceImage() !=null){
 				SsProductFile file = new SsProductFile();
 				file.setProductid(id);
 				file.setStoreid(product.getStoreId());
 				file.setFilename(product.getImageName());
 				file.setUrl(product.getImage());
 				file.setCreatetime(new Date());
+				file.setResizeFixUrl(product.getReduceImage());
 				file.setCreateby(product.getCreateBy());
 				files.add(file);
 			}
-			if(product.getImage1() != null && product.getImageName1() != null ){
+			if(product.getImage1() != null && product.getImageName1() != null && product.getReduceImage1() !=null ){
 				SsProductFile file = new SsProductFile();
 				file.setProductid(id);
 				file.setStoreid(product.getStoreId());
@@ -150,9 +171,10 @@ public class SpProductServiceImpl implements SpProductService{
 				file.setUrl(product.getImage1());
 				file.setCreatetime(new Date());
 				file.setCreateby(product.getCreateBy());
+				file.setResizeFixUrl(product.getReduceImage1());
 				files.add(file);
 			}
-			if(product.getImage2() != null && product.getImageName2() != null ){
+			if(product.getImage2() != null && product.getImageName2() != null && product.getReduceImage2() !=null){
 				SsProductFile file = new SsProductFile();
 				file.setProductid(id);
 				file.setStoreid(product.getStoreId());
@@ -160,9 +182,10 @@ public class SpProductServiceImpl implements SpProductService{
 				file.setUrl(product.getImage2());
 				file.setCreatetime(new Date());
 				file.setCreateby(product.getCreateBy());
+				file.setResizeFixUrl(product.getReduceImage2());
 				files.add(file);
 			}
-			if(product.getImage3() != null && product.getImageName3() != null ){
+			if(product.getImage3() != null && product.getImageName3() != null && product.getReduceImage3() !=null){
 				SsProductFile file = new SsProductFile();
 				file.setProductid(id);
 				file.setStoreid(product.getStoreId());
@@ -170,9 +193,10 @@ public class SpProductServiceImpl implements SpProductService{
 				file.setUrl(product.getImage3());
 				file.setCreatetime(new Date());
 				file.setCreateby(product.getCreateBy());
+				file.setResizeFixUrl(product.getReduceImage3());
 				files.add(file);
 			}
-			if(product.getImage4() != null && product.getImageName4() != null ){
+			if(product.getImage4() != null && product.getImageName4() != null && product.getReduceImage4() !=null){
 				SsProductFile file = new SsProductFile();
 				file.setProductid(id);
 				file.setStoreid(product.getStoreId());
@@ -180,6 +204,7 @@ public class SpProductServiceImpl implements SpProductService{
 				file.setUrl(product.getImage4());
 				file.setCreatetime(new Date());
 				file.setCreateby(product.getCreateBy());
+				file.setResizeFixUrl(product.getReduceImage4());
 				files.add(file);
 			}
 			if(files.size()>0){

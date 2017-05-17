@@ -15,6 +15,8 @@ import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.domain.SpClient;
 import costumetrade.order.service.SpClientService;
+import costumetrade.user.domain.SsDataDictionary;
+import costumetrade.user.service.SsDataDictionaryService;
 
 /**
  *
@@ -29,7 +31,8 @@ public class SpClientController {
 	private SpClientService spClientService;
 	@Autowired
 	private HttpSession httpSession;
-	
+	@Autowired
+	private SsDataDictionaryService  ssDataDictionaryService;
 	
 	@RequestMapping("/getTwoDimension")
 	@ResponseBody
@@ -86,6 +89,27 @@ public class SpClientController {
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
 			return result;
+		}
+		return result;
+	}
+	@RequestMapping("/initCustomer")
+	@ResponseBody
+	public ApiResponse initCustomer(Integer storeId) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		//Integer clientId=(Integer) httpSession.getAttribute("clientId");
+		SsDataDictionary dict = new SsDataDictionary();
+		dict.setStoreId(storeId);
+		dict.setDictGroup("CUSTOMER_TYPE");
+		dict.setDictGroupName("客户类型");
+		List<SsDataDictionary> data = ssDataDictionaryService.getDataDicts(dict);
+		if(data == null){
+			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			return result;
+		}else{
+			result.setData(data);
 		}
 		return result;
 	}

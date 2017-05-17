@@ -11,6 +11,7 @@ import costumetrade.order.domain.SpPSizeCustom;
 import costumetrade.order.enums.GradeTypeEnum;
 import costumetrade.order.enums.SeasonTypeEnum;
 import costumetrade.order.enums.UnitTypeEnum;
+import costumetrade.user.domain.SsDataDictionary;
 
 public class ProductQuery extends Entity{
 
@@ -84,9 +85,12 @@ public class ProductQuery extends Entity{
      */
     private List<SeasonTypeEnum> seasonList;
     
-    private  List<GradeTypeEnum> gradeList;
+    private  List<String> gradeList;
     
     private  List<UnitTypeEnum> unitList;
+    
+    private List<String> priceNameList ;
+
     
     /**
      *  商品图片
@@ -450,13 +454,7 @@ public class ProductQuery extends Entity{
 		this.seasonList = seasonList;
 	}
 
-	public List<GradeTypeEnum> getGradeList() {
-		return gradeList;
-	}
 
-	public void setGradeList(List<GradeTypeEnum> gradeList) {
-		this.gradeList = gradeList;
-	}
 
 	public List<UnitTypeEnum> getUnitList() {
 		return unitList;
@@ -481,7 +479,20 @@ public class ProductQuery extends Entity{
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	
+
+	public List<String> getPriceNameList() {
+		return priceNameList;
+	}
+
+	public void setPriceNameList(List<String> priceNameList) {
+		this.priceNameList = priceNameList;
+	}
+
+	public void setGradeList(List<String> gradeList) {
+		this.gradeList = gradeList;
+	}
+
+
 	
 
 

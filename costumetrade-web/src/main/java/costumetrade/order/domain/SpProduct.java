@@ -230,6 +230,30 @@ public class SpProduct extends Entity {
      *  商品图片名称
      */
     private String imageName4;
+    /**
+     *  商品图片名称
+     */
+    private String reduceImage;
+    
+    /**
+     *  商品图片图片名称
+     */
+    private String reduceImage1;
+    
+    /**
+     *  商品图片名称
+     */
+    private String reduceImage2;
+    
+    /**
+     *  商品图片名称
+     */
+    private String reduceImage3;
+    
+    /**
+     *  商品图片名称
+     */
+    private String reduceImage4;
     
 	private String productCode;
 	
@@ -627,6 +651,46 @@ public class SpProduct extends Entity {
 
 	public void setSaleNum(BigDecimal saleNum) {
 		this.saleNum = saleNum;
+	}
+
+	public String getReduceImage() {
+		return reduceImage;
+	}
+
+	public void setReduceImage(String reduceImage) {
+		this.reduceImage = reduceImage;
+	}
+
+	public String getReduceImage1() {
+		return reduceImage1;
+	}
+
+	public void setReduceImage1(String reduceImage1) {
+		this.reduceImage1 = reduceImage1;
+	}
+
+	public String getReduceImage2() {
+		return reduceImage2;
+	}
+
+	public void setReduceImage2(String reduceImage2) {
+		this.reduceImage2 = reduceImage2;
+	}
+
+	public String getReduceImage3() {
+		return reduceImage3;
+	}
+
+	public void setReduceImage3(String reduceImage3) {
+		this.reduceImage3 = reduceImage3;
+	}
+
+	public String getReduceImage4() {
+		return reduceImage4;
+	}
+
+	public void setReduceImage4(String reduceImage4) {
+		this.reduceImage4 = reduceImage4;
 	}
     
 	

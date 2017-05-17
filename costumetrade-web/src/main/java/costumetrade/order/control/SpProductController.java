@@ -1,7 +1,5 @@
 package costumetrade.order.control;
 
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -10,7 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.disk.DiskFileItem;
@@ -32,6 +29,8 @@ import costumetrade.order.domain.SsProductFile;
 import costumetrade.order.domain.SsStock;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.service.SpProductService;
+import costumetrade.user.domain.SsDataDictionary;
+import costumetrade.user.service.SsDataDictionaryService;
 
 /**
  *
@@ -43,7 +42,8 @@ import costumetrade.order.service.SpProductService;
 @Controller
 public class SpProductController {
     public static Logger logger = Logger.getLogger(SpProductController.class);
-  
+    @Autowired
+    private SsDataDictionaryService ssDataDictionaryService;
     @Autowired
     private HttpSession httpSession;
 	@Autowired
@@ -83,6 +83,7 @@ public class SpProductController {
 		}
 		
 		ProductQuery query = spProductService.productInit(Integer.valueOf(storeId));
+		
 		
 		return  ApiResponse.getInstance(query);
 	}
@@ -188,14 +189,6 @@ public class SpProductController {
 		try {
 			input = file.getInputStream();
 			boolean upload = FTPClientUtils.getInstance().uploadFileToFtp(pathOriginal, fileName, input);
-//			int r[] ={0,0};
-//			BufferedImage buffer = ImageIO.read(input);
-//			r[0] = (int) (buffer.getHeight()*0.5);
-//			r[1] = (int) (buffer.getWidth()*0.5);
-//			
-//			Image i = ImageIO.read(input);
-//			BufferedImage b = new BufferedImage(r[1], r[0], BufferedImage.TYPE_INT_RGB);
-//			  b.getGraphics().drawImage(i.getScaledInstance(r[1], r[0], Image.SCALE_SMOOTH),0,0,null);
 			  DiskFileItem fileItem = (DiskFileItem) file.getFileItem();
 			  File f = ImageUtils.compressionFile(fileItem.getStoreLocation(),fileName);
 			  boolean upload1 = FTPClientUtils.getInstance().uploadFileToFtp(pathReduce, fileName,new FileInputStream(f));
