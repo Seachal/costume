@@ -24,7 +24,6 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 	public int saveEmployee(SpEmployee spEmployee) {
 		int save = 0;
 		if(spEmployee.getId() != null){
-
 			SpEmployee getEmployee = spEmployeeMapper.selectByPrimaryKey(spEmployee);
 			if(getEmployee != null){
 				save = spEmployeeMapper.updateByPrimaryKeySelective(spEmployee);
@@ -32,8 +31,7 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 		}else {
 			save = spEmployeeMapper.insert(spEmployee) ;
 		}
-		 
-		//查询对应ID的员工是否存在，存在的话进行update 不存在save
+		
 		return save;
 		
 		 

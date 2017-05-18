@@ -2,8 +2,9 @@ package costumetrade.user.service;
 
 import java.util.List;
 
-import costumetrade.user.domain.SpEmployee;
+import costumetrade.user.domain.SpCustomerType;
 import costumetrade.user.domain.SsDataDictionary;
+import costumetrade.user.query.DataDictionaryQuery;
 
 
 public interface SsDataDictionaryService {
@@ -17,7 +18,7 @@ public interface SsDataDictionaryService {
 	 * 
 	 * 新增设置内容
 	 * */
-	public List<SsDataDictionary> saveDataDictionary(SsDataDictionary dictionary);
+	public List<SsDataDictionary> saveDataDictionary(List<SsDataDictionary> dictionarys);
 	
 	/**
 	 * 删除设置
@@ -29,4 +30,12 @@ public interface SsDataDictionaryService {
 	 * 查询设置
 	 * */
 	public List<SsDataDictionary> getDataDicts(SsDataDictionary dictionary);
+	
+	/**
+	 * 新增客户 修改客户类型初始化
+	 * */
+	
+	public DataDictionaryQuery initCustomType(DataDictionaryQuery query);
+	
+	public SpCustomerType saveCustomType(SpCustomerType customerType);
 }

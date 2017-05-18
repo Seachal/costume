@@ -14,6 +14,7 @@ import costumetrade.cache.Cache;
 import costumetrade.cache.CacheableLong;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
+import costumetrade.user.domain.SpCustomerType;
 import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.domain.SsDataDictionary;
 import costumetrade.user.service.SpEmployeeService;
@@ -41,27 +42,49 @@ public class SsDataDictionaryController {
 
 	@RequestMapping("/saveDataDictionary")
 	@ResponseBody
-	public ApiResponse saveDataDictionary(SsDataDictionary dictionary) {
+	public ApiResponse saveDataDictionary(@RequestBody List<SsDataDictionary> dictionarys) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		if(dictionary == null ){
+		if(dictionarys == null ){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.name());
 			return result;
 		}
-		dictionary.setStatus(0);
-		List<SsDataDictionary> dict = ssDataDictionaryService.saveDataDictionary(dictionary);
+		List<SsDataDictionary> dict = ssDataDictionaryService.saveDataDictionary(dictionarys);
 		if(dict == null){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
 			return result;
 		}else{
-			//result.setData(dict);
+			result.setData(dict);
 		}
 		return result;
 
+	}
+	@RequestMapping("/saveCustomerType")
+	@ResponseBody
+	public ApiResponse saveCustomerType(@RequestBody SpCustomerType customerType) {
+		
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(customerType == null ){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.name());
+			return result;
+		}
+		SpCustomerType type = ssDataDictionaryService.saveCustomType(customerType);
+		if(type == null){
+			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			return result;
+		}else{
+			result.setData(type);
+		}
+		return result;
+		
 	}
 
 	@RequestMapping("/deleteDataDictionary")
@@ -85,6 +108,16 @@ public class SsDataDictionaryController {
 		}else{
 			//result.setData(dict);
 		}
+		return result;
+	}
+	
+	@RequestMapping("/initCustomType")
+	@ResponseBody
+	public ApiResponse initCustomType(SsDataDictionary dictionary){
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
 		return result;
 	}
 	

@@ -28,7 +28,7 @@ public interface SpProductService {
 	 * 获取图片
 	 * 
 	 * */
-	public List<SsProductFile> getImages(SpProduct product);
+	public List<SsProductFile> getImages(SsProductFile productFile);
 	/**
 	 * 获取商品库存
 	 * 
@@ -38,7 +38,7 @@ public interface SpProductService {
 	 * 新增商品初始化查询
 	 * 
 	 * */
-	public ProductQuery productInit(int corpId);
+	public ProductQuery productInit(ProductQuery query);
 	/**
 	 * 查询货品
 	 * 

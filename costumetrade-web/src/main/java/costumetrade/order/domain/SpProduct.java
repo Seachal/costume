@@ -1,9 +1,10 @@
 package costumetrade.order.domain;
 
-import costumetrade.common.Entity;
-
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
+import costumetrade.common.Entity;
 
 public class SpProduct extends Entity {
     /**
@@ -206,62 +207,17 @@ public class SpProduct extends Entity {
      */
     private BigDecimal retailprice;
     
-    /**
-     *  商品图片名称
-     */
-    private String imageName;
-
-    /**
-     *  商品图片图片名称
-     */
-    private String imageName1;
-
-    /**
-     *  商品图片名称
-     */
-    private String imageName2;
-
-    /**
-     *  商品图片名称
-     */
-    private String imageName3;
-
-    /**
-     *  商品图片名称
-     */
-    private String imageName4;
-    /**
-     *  商品图片名称
-     */
-    private String reduceImage;
     
-    /**
-     *  商品图片图片名称
-     */
-    private String reduceImage1;
-    
-    /**
-     *  商品图片名称
-     */
-    private String reduceImage2;
-    
-    /**
-     *  商品图片名称
-     */
-    private String reduceImage3;
-    
-    /**
-     *  商品图片名称
-     */
-    private String reduceImage4;
     
 	private String productCode;
 	
 	private String productName;
 	
 	private BigDecimal price;
-	
-
+	/**
+	 * 图片文件集合
+	 * */
+	private List<SsProductFile> fileList;
     private static final long serialVersionUID = 1L;
     
 
@@ -531,8 +487,6 @@ public class SpProduct extends Entity {
         this.modifyBy = modifyBy == null ? null : modifyBy.trim();
     }
 
-
-
 	public BigDecimal getPurchaseprice() {
 		return purchaseprice;
 	}
@@ -581,45 +535,6 @@ public class SpProduct extends Entity {
 		this.levelType = levelType;
 	}
 
-	public String getImageName() {
-		return imageName;
-	}
-
-	public void setImageName(String imageName) {
-		this.imageName = imageName;
-	}
-
-	public String getImageName1() {
-		return imageName1;
-	}
-
-	public void setImageName1(String imageName1) {
-		this.imageName1 = imageName1;
-	}
-
-	public String getImageName2() {
-		return imageName2;
-	}
-
-	public void setImageName2(String imageName2) {
-		this.imageName2 = imageName2;
-	}
-
-	public String getImageName3() {
-		return imageName3;
-	}
-
-	public void setImageName3(String imageName3) {
-		this.imageName3 = imageName3;
-	}
-
-	public String getImageName4() {
-		return imageName4;
-	}
-
-	public void setImageName4(String imageName4) {
-		this.imageName4 = imageName4;
-	}
 
 	public String getProductCode() {
 		return productCode;
@@ -653,46 +568,14 @@ public class SpProduct extends Entity {
 		this.saleNum = saleNum;
 	}
 
-	public String getReduceImage() {
-		return reduceImage;
+	public List<SsProductFile> getFileList() {
+		return fileList;
 	}
 
-	public void setReduceImage(String reduceImage) {
-		this.reduceImage = reduceImage;
+	public void setFileList(List<SsProductFile> fileList) {
+		this.fileList = fileList;
 	}
 
-	public String getReduceImage1() {
-		return reduceImage1;
-	}
-
-	public void setReduceImage1(String reduceImage1) {
-		this.reduceImage1 = reduceImage1;
-	}
-
-	public String getReduceImage2() {
-		return reduceImage2;
-	}
-
-	public void setReduceImage2(String reduceImage2) {
-		this.reduceImage2 = reduceImage2;
-	}
-
-	public String getReduceImage3() {
-		return reduceImage3;
-	}
-
-	public void setReduceImage3(String reduceImage3) {
-		this.reduceImage3 = reduceImage3;
-	}
-
-	public String getReduceImage4() {
-		return reduceImage4;
-	}
-
-	public void setReduceImage4(String reduceImage4) {
-		this.reduceImage4 = reduceImage4;
-	}
-    
 	
     
 }

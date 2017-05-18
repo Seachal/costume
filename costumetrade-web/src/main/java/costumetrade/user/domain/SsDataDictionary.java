@@ -1,6 +1,7 @@
 package costumetrade.user.domain;
 
 import costumetrade.common.Entity;
+
 import java.util.Date;
 
 public class SsDataDictionary extends Entity {
@@ -50,7 +51,20 @@ public class SsDataDictionary extends Entity {
      *  
      */
     private String createBy;
+    /**
+     *  积分需求
+     */
+    private Integer integration;
 
+    /**
+     *  销售价类型：1、吊牌价；2、批发价；3、打包价；4、零售价
+     */
+    private String saletype;
+    
+    /**
+     * 商品可见级别
+     * */
+    private String visibleGrade;
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -133,5 +147,28 @@ public class SsDataDictionary extends Entity {
 		this.storeId = storeId;
 	}
     
+    public Integer getIntegration() {
+        return integration;
+    }
+
+    public void setIntegration(Integer integration) {
+        this.integration = integration;
+    }
+
+    public String getSaletype() {
+        return saletype;
+    }
+
+    public void setSaletype(String saletype) {
+        this.saletype = saletype == null ? null : saletype.trim();
+    }
+    
+	public String getVisibleGrade() {
+		return visibleGrade;
+	}
+
+	public void setVisibleGrade(String visibleGrade) {
+		this.visibleGrade = visibleGrade  == null ? null : visibleGrade.trim();;
+	}
     
 }

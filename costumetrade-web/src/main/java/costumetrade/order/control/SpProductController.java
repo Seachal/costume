@@ -15,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -70,22 +71,17 @@ public class SpProductController {
 	
 	@RequestMapping("/getProductInit")
 	@ResponseBody
-	public ApiResponse getProductInit(String storeId ) {
-		
+	public ApiResponse getProductInit(ProductQuery query) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		
-		if(StringUtils.isBlank(storeId)){
+		if(StringUtils.isBlank(query.getStoreId()+"")){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		
-		ProductQuery query = spProductService.productInit(Integer.valueOf(storeId));
-		
-		
-		return  ApiResponse.getInstance(query);
+		ProductQuery q = spProductService.productInit(query);
+		return  ApiResponse.getInstance(q);
 	}
 	@RequestMapping("/updateProducts")
 	@ResponseBody
@@ -99,7 +95,6 @@ public class SpProductController {
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		
 		int delete = spProductService.updateProducts(idArray,Integer.valueOf(storeId));
 		if(delete <= 0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
@@ -111,7 +106,7 @@ public class SpProductController {
 	
 	@RequestMapping("/saveProduct")
 	@ResponseBody
-	public ApiResponse saveProduct(SpProduct product) {
+	public ApiResponse saveProduct(@RequestBody SpProduct product) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
@@ -127,6 +122,7 @@ public class SpProductController {
 		}
 		return  result;
 	}
+	
 	@RequestMapping("/takingStock")
 	@ResponseBody
 	public ApiResponse takingStock(SpProduct product) {
@@ -148,14 +144,12 @@ public class SpProductController {
 	}
 	@RequestMapping("/getImages")
 	@ResponseBody
-	public ApiResponse getImages(SpProduct product) {
+	public ApiResponse getImages(SsProductFile productFile) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		product.setCreateBy((String) httpSession.getAttribute("clientId"));
-		product.setModifyBy((String) httpSession.getAttribute("clientId"));
 		
-		List<SsProductFile> files = spProductService.getImages(product);
+		List<SsProductFile> files = spProductService.getImages(productFile);
 		if(files == null){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);

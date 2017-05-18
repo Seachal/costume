@@ -142,7 +142,62 @@ public class ProductQuery extends Entity{
 
 	private Integer clientId;
 	
+    
+    /**
+     *  进货价
+     */
+    private BigDecimal purchaseprice;
+
+    /**
+     *  吊牌价
+     */
+    private BigDecimal tagprice;
+
+    /**
+     *  批发价
+     */
+    private BigDecimal wholeprice;
+
+    /**
+     *  打包价
+     */
+    private BigDecimal packprice;
+
+    /**
+     *  零售价
+     */
+    private BigDecimal retailprice;
 	
+    /**
+     *  预警下线
+     */
+    private Double warnLow;
+
+    /**
+     *  预警上线
+     */
+    private Double warnHigh;
+    
+    /**
+     *  商品条码
+     */
+    private String barcode;
+
+    /**
+     *  
+     */
+    private String barcodes;
+    
+    /**
+     *  商品级别
+     */
+    private String grade;
+
+    /**
+     *  商品单位
+     */
+    private String unit;
+
 
 	/**
 	 * 货品列表查询  开始
@@ -492,9 +547,101 @@ public class ProductQuery extends Entity{
 		this.gradeList = gradeList;
 	}
 
+	public BigDecimal getPurchaseprice() {
+		return purchaseprice;
+	}
+
+	public void setPurchaseprice(BigDecimal purchaseprice) {
+		this.purchaseprice = purchaseprice;
+	}
+
+	public BigDecimal getTagprice() {
+		return tagprice;
+	}
+
+	public void setTagprice(BigDecimal tagprice) {
+		this.tagprice = tagprice;
+	}
+
+	public BigDecimal getWholeprice() {
+		return wholeprice;
+	}
+
+	public void setWholeprice(BigDecimal wholeprice) {
+		this.wholeprice = wholeprice;
+	}
+
+	public BigDecimal getPackprice() {
+		return packprice;
+	}
+
+	public void setPackprice(BigDecimal packprice) {
+		this.packprice = packprice;
+	}
+
+	public BigDecimal getRetailprice() {
+		return retailprice;
+	}
+
+	public void setRetailprice(BigDecimal retailprice) {
+		this.retailprice = retailprice;
+	}
+
+	public Double getWarnLow() {
+		return warnLow;
+	}
+
+	public void setWarnLow(Double warnLow) {
+		this.warnLow = warnLow;
+	}
+
+	public Double getWarnHigh() {
+		return warnHigh;
+	}
+
+	public void setWarnHigh(Double warnHigh) {
+		this.warnHigh = warnHigh;
+	}
+
+	public String getBarcode() {
+		return barcode;
+	}
+
+	public void setBarcode(String barcode) {
+		this.barcode = barcode;
+	}
+
+	public String getBarcodes() {
+		return barcodes;
+	}
+
+	public void setBarcodes(String barcodes) {
+		this.barcodes = barcodes;
+	}
+
+	public List<String> getGradeList() {
+		return gradeList;
+	}
+
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
+	}
 
 	
-
+	
+	
 
 	
 

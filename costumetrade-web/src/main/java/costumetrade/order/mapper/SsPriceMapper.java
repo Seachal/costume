@@ -1,6 +1,7 @@
 package costumetrade.order.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import costumetrade.order.domain.SsPrice;
 @Mapper
@@ -12,6 +13,8 @@ public interface SsPriceMapper {
     int insertSelective(SsPrice record);
 
     SsPrice selectByPrimaryKey(Integer id);
+    
+    SsPrice select(@Param("storeid")Integer storeid ,@Param("productid")String productid);
 
     int updateByPrimaryKeySelective(SsPrice record);
 
