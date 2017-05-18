@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="costumetrade.user.mapper.SpCustomerTypeMapper">
+  <resultMap id="BaseResultMap" type="costumetrade.user.domain.SpCustomerType">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="storeId" jdbcType="INTEGER" property="storeid" />
+    <result column="typeName" jdbcType="VARCHAR" property="typename" />
+    <result column="integration" jdbcType="INTEGER" property="integration" />
+    <result column="saleType" jdbcType="VARCHAR" property="saletype" />
+    <result column="visible_grade" jdbcType="VARCHAR" property="visibleGrade" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+    <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, storeId, typeName, integration, saleType,visible_grade, create_time, create_by, modify_time, 
+    modify_by
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sp_customer_type
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByName" parameterType="costumetrade.user.domain.SpCustomerType" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sp_customer_type
+    where storeId = #{storeid,jdbcType=INTEGER}
+    and typeName = #{typename,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sp_customer_type
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="costumetrade.user.domain.SpCustomerType">
+    insert into sp_customer_type (id, storeId, typeName, 
+      integration, saleType,visible_grade, create_time, 
+      create_by, modify_time, modify_by
+      )
+    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{typename,jdbcType=VARCHAR}, 
+      #{integration,jdbcType=INTEGER}, #{saletype,jdbcType=VARCHAR}, #{visibleGrade,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}, 
+      #{createBy,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="costumetrade.user.domain.SpCustomerType">
+    insert into sp_customer_type
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="storeid != null">
+        storeId,
+      </if>
+      <if test="typename != null">
+        typeName,
+      </if>
+      <if test="integration != null">
+        integration,
+      </if>
+      <if test="saletype != null">
+        saleType,
+      </if>
+      <if test="visibleGrade != null">
+        visible_grade,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="modifyTime != null">
+        modify_time,
+      </if>
+      <if test="modifyBy != null">
+        modify_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="storeid != null">
+        #{storeid,jdbcType=INTEGER},
+      </if>
+      <if test="typename != null">
+        #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="integration != null">
+        #{integration,jdbcType=INTEGER},
+      </if>
+      <if test="saletype != null">
+        #{saletype,jdbcType=VARCHAR},
+      </if>
+      <if test="visibleGrade != null">
+        #{visibleGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null">
+        #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyBy != null">
+        #{modifyBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.user.domain.SpCustomerType">
+    update sp_customer_type
+    <set>
+      <if test="storeid != null">
+        storeId = #{storeid,jdbcType=INTEGER},
+      </if>
+      <if test="typename != null">
+        typeName = #{typename,jdbcType=VARCHAR},
+      </if>
+      <if test="integration != null">
+        integration = #{integration,jdbcType=INTEGER},
+      </if>
+      <if test="saletype != null">
+        saleType = #{saletype,jdbcType=VARCHAR},
+      </if>
+      <if test="visibleGrade != null">
+        visible_grade = #{visibleGrade,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyTime != null">
+        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyBy != null">
+        modify_by = #{modifyBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SpCustomerType">
+    update sp_customer_type
+    set storeId = #{storeid,jdbcType=INTEGER},
+      typeName = #{typename,jdbcType=VARCHAR},
+      integration = #{integration,jdbcType=INTEGER},
+      saleType = #{saletype,jdbcType=VARCHAR},
+      visible_grade = #{visibleGrade,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      modify_by = #{modifyBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

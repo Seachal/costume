@@ -25,6 +25,12 @@
     from ss_pprice
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="select"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ss_pprice_#{storeid,jdbcType=INTEGER}
+    where productId = #{productid,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ss_pprice
     where id = #{id,jdbcType=INTEGER}
