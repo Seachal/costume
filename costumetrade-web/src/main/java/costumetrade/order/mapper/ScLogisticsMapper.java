@@ -12,6 +12,8 @@ public interface ScLogisticsMapper {
     int insertSelective(ScLogistics record);
 
     ScLogistics selectByPrimaryKey(Integer id);
+    
+    ScLogistics selectByLogistic(ScLogistics record);
 
     int updateByPrimaryKeySelective(ScLogistics record);
 

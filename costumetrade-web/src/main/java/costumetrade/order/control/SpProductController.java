@@ -30,7 +30,6 @@ import costumetrade.order.domain.SsProductFile;
 import costumetrade.order.domain.SsStock;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.service.SpProductService;
-import costumetrade.user.domain.SsDataDictionary;
 import costumetrade.user.service.SsDataDictionaryService;
 
 /**

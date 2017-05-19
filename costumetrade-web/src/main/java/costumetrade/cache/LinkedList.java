@@ -11,7 +11,6 @@
 
 package costumetrade.cache;
 
-import java.util.*;
 
 /**
  * Simple LinkedList implementation. The main feature is that list nodes

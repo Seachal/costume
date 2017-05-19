@@ -2,6 +2,9 @@ package costumetrade.order.service;
 
 import java.util.List;
 
+import com.sf.openapi.common.entity.MessageResp;
+import com.sf.openapi.express.sample.route.dto.RouteRespDto;
+
 import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.domain.SsFinancial;
@@ -49,4 +52,9 @@ public interface SpOrderService {
 	 * */
 	
 	public int confirmLogistic(ScLogistics scLogistics);
+	/**
+	 * 查询物流
+	 * */
+	
+	public MessageResp<List<RouteRespDto>> queryLogistic(SsStoOrder ssStoOrder);
 }

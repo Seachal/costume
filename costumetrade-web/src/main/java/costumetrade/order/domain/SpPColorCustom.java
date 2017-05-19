@@ -1,7 +1,8 @@
 package costumetrade.order.domain;
 
-import costumetrade.common.Entity;
 import java.util.Date;
+
+import costumetrade.common.Entity;
 
 public class SpPColorCustom extends Entity {
     /**

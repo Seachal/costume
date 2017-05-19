@@ -1,12 +1,13 @@
 package costumetrade.common.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Random;
-import java.io.ByteArrayOutputStream;   
-import java.io.FileOutputStream;  
-import java.io.InputStream;  
-import java.net.HttpURLConnection;  
-import java.net.URL; 
+
 import org.apache.commons.lang.SystemUtils;
 
 /**

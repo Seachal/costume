@@ -11,7 +11,6 @@ import org.apache.commons.logging.LogFactory;
 
 import costumetrade.common.util.ConfigProperties;
 import costumetrade.common.util.HttpClientUtil;
-import costumetrade.common.util.IPUtils;
 import costumetrade.common.util.ServiceUtil;
 import costumetrade.common.util.Sha1Util;
 import costumetrade.common.util.XMLUtil;

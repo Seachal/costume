@@ -8,10 +8,8 @@ import costumetrade.common.Entity;
 import costumetrade.order.domain.SpPBrand;
 import costumetrade.order.domain.SpPCate;
 import costumetrade.order.domain.SpPSizeCustom;
-import costumetrade.order.enums.GradeTypeEnum;
 import costumetrade.order.enums.SeasonTypeEnum;
 import costumetrade.order.enums.UnitTypeEnum;
-import costumetrade.user.domain.SsDataDictionary;
 
 public class ProductQuery extends Entity{
 

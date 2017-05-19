@@ -131,6 +131,9 @@ public class SpProductServiceImpl implements SpProductService{
 				queryResult.setColors(product.getColors());
 				queryResult.setSizes(product.getSizes());
 				queryResult.setUnit(product.getUnit());
+				queryResult.setId(product.getId());
+				queryResult.setBrand(product.getBrandid()+"");
+				queryResult.setPrducttype(product.getPrducttype()+"");
 			}
 			SsPrice price = ssPriceMapper.select(storeId, productId);
 			queryResult.setRetailprice(price.getRetailprice());
@@ -140,7 +143,7 @@ public class SpProductServiceImpl implements SpProductService{
 			queryResult.setTagprice(price.getTagprice());
 			
 		}
-		return query;
+		return queryResult;
 	}
 
 	@Override

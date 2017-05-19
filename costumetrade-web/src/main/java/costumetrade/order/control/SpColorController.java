@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -13,7 +12,6 @@ import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.domain.SpPColor;
 import costumetrade.order.domain.SpPColorCustom;
-
 import costumetrade.order.service.SpPColorCustomService;
 import costumetrade.order.service.SpPColorService;
 

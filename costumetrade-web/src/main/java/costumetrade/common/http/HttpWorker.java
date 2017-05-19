@@ -16,13 +16,13 @@ import org.apache.http.conn.ConnectTimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import scala.concurrent.ExecutionContextExecutor;
+import scala.concurrent.duration.Duration;
 import akka.actor.ActorRef;
 import akka.actor.DeadLetterActorRef;
 import akka.actor.Scheduler;
 import akka.actor.UntypedActor;
 import costumetrade.common.akka.ActorSystemContext;
-import scala.concurrent.ExecutionContextExecutor;
-import scala.concurrent.duration.Duration;
 
 /**
  * @author dante

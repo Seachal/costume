@@ -1,8 +1,9 @@
 package costumetrade.pay.domain;
 
-import costumetrade.common.Entity;
 import java.math.BigDecimal;
 import java.util.Date;
+
+import costumetrade.common.Entity;
 
 public class TradeInfo extends Entity {
     /**

@@ -22,7 +22,6 @@ import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.SystemUtils;
 
-import costumetrade.common.util.FileUtil;
 import costumetrade.common.util.InternetResourceDownloadUtil;
 import costumetrade.common.util.StringUtil;
 import freemarker.template.Configuration;

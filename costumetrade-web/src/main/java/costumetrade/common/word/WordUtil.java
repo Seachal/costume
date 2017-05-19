@@ -13,14 +13,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.SystemUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

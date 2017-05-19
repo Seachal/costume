@@ -11,6 +11,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.sf.openapi.common.entity.MessageResp;
+import com.sf.openapi.express.sample.route.dto.RouteRespDto;
+
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.domain.ScLogistics;
@@ -219,5 +222,27 @@ public class SpOrderController {
 		
 		
 	}
+	
+	@RequestMapping("/queryLogistic")
+	@ResponseBody
+	public ApiResponse queryLogistic(SsStoOrder ssStoOrder) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		//scLogistics.setCreateby((String) httpSession.getAttribute("clientId"));
+		MessageResp<List<RouteRespDto>> response = spOrderService.queryLogistic(ssStoOrder);
+		
+		if(response == null){
+			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			return result;
+		}else{
+			result.setData(response);
+			return result;
+		}
+		
+		
+	}
+	
 
 }

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import com.fasterxml.jackson.annotation.JsonView;
 
 @ControllerAdvice
 public class ApiResponseBodyAdvice implements ResponseBodyAdvice<Object> {  

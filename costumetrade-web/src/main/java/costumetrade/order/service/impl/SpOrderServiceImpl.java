@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.sf.openapi.common.entity.MessageResp;
+import com.sf.openapi.express.sample.route.dto.RouteReqDto;
+import com.sf.openapi.express.sample.route.dto.RouteRespDto;
+
 import costumetrade.common.util.OrderNoGenerator;
 import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.domain.ScStoreAddr;
@@ -31,6 +35,7 @@ import costumetrade.order.mapper.SsStockMapper;
 import costumetrade.order.mapper.SsStockTransferMapper;
 import costumetrade.order.query.OrderDetailQuery;
 import costumetrade.order.query.OrderQuery;
+import costumetrade.order.service.SFLogisticsService;
 import costumetrade.order.service.SpOrderService;
 import costumetrade.order.service.SpProductService;
 
@@ -59,7 +64,8 @@ public class SpOrderServiceImpl implements SpOrderService{
 	private SpProductMapper spProductMapper;
 	@Autowired
 	private SpProductService spProductService;
-	
+	@Autowired
+	private SFLogisticsService sFLogisticsService;
 	@Override
 	public SsStoOrder saveOrders(List<SsStoDetail> details,SsStoOrder order,Integer clientId) {
 		
@@ -413,7 +419,32 @@ public class SpOrderServiceImpl implements SpOrderService{
 	@Override
 	public int confirmLogistic(ScLogistics scLogistics) {
 		scLogistics.setCreatetime(new Date());
-		return scLogisticsMapper.insertSelective(scLogistics);
+		ScLogistics Logistics =scLogisticsMapper.selectByLogistic(scLogistics);
+		int save = 0;
+		if(Logistics !=null){
+			scLogistics.setId(Logistics.getId());
+			save =scLogisticsMapper.updateByPrimaryKeySelective(scLogistics);
+		}else {
+			save =scLogisticsMapper.insertSelective(scLogistics);
+		}
+		return save ;
+	}
+	@Override
+	public MessageResp<List<RouteRespDto>> queryLogistic(SsStoOrder ssStoOrder) {
+		ScLogistics Logistics = new ScLogistics();
+		Logistics.setOrderno(ssStoOrder.getPayorderno());
+		Logistics.setStoreid(ssStoOrder.getSellerstoreid());
+		Logistics = scLogisticsMapper.selectByLogistic(Logistics);
+		if(Logistics != null && "顺丰".equals(Logistics.getLogisticsname())){
+			RouteReqDto routeReqDto = new RouteReqDto();
+			routeReqDto.setMethodType(1);
+			routeReqDto.setTrackingNumber(Logistics.getLogisticsno());
+			routeReqDto.setTrackingType(1);
+			return sFLogisticsService.queryRouteSF(routeReqDto);
+		}else{
+			return null;
+		}
+		
 	}
 	
 	

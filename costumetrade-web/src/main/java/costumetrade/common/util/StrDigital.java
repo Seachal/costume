@@ -1,7 +1,6 @@
 package costumetrade.common.util;
 
 import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 /**
  * 判断字符串与数字关系

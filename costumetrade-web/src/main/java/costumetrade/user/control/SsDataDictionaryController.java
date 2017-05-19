@@ -1,23 +1,18 @@
 package costumetrade.user.control;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import costumetrade.cache.Cache;
-import costumetrade.cache.CacheableLong;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.user.domain.SpCustomerType;
-import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.domain.SsDataDictionary;
-import costumetrade.user.service.SpEmployeeService;
 import costumetrade.user.service.SsDataDictionaryService;
 
 /**

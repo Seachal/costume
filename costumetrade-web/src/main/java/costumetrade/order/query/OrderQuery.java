@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import costumetrade.common.Entity;
-import costumetrade.order.domain.SsStoDetail;
-import costumetrade.order.domain.SsStoOrder;
 
 public class OrderQuery extends Entity {
 	  /**

@@ -1,30 +1,24 @@
 package costumetrade.order.service.impl;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.http.HttpHeaders;
-import org.apache.http.util.ByteArrayBuffer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import costumetrade.order.mapper.SpClientMapper;
+import costumetrade.order.service.SpClientService;
 /*import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;*/
-
 import costumetrade.order.domain.SpClient;
-import costumetrade.order.mapper.SpClientMapper;
-import costumetrade.order.service.SpClientService;
 
 @Transactional
 @Service

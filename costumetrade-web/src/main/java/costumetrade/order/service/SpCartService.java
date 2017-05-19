@@ -3,7 +3,6 @@ package costumetrade.order.service;
 import java.util.List;
 
 import costumetrade.order.domain.SpCart;
-import costumetrade.order.domain.SpCart;
 
 
 public interface SpCartService {

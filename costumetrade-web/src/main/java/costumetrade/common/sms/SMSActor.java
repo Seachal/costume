@@ -20,13 +20,13 @@ import org.dom4j.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import scala.concurrent.ExecutionContextExecutor;
+import scala.concurrent.duration.Duration;
 import akka.actor.ActorRef;
 import akka.actor.Scheduler;
 import akka.actor.UntypedActor;
 import costumetrade.common.akka.ActorSystemContext;
 import costumetrade.common.conf.ConfigProperties;
-import scala.concurrent.ExecutionContextExecutor;
-import scala.concurrent.duration.Duration;
 
 /**
  * 短信Actor

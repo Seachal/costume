@@ -11,11 +11,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.stereotype.Component;
 
+import scala.concurrent.duration.Duration;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.event.EventStream;
-import scala.concurrent.duration.Duration;
 
 /**
  * ActorSystem 一个系统只需要一个

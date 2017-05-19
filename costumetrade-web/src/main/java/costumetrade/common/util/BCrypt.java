@@ -3,7 +3,6 @@ package costumetrade.common.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
-
 import java.security.SecureRandom;
 
 /**

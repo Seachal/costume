@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import akka.japi.Pair;
 import costumetrade.common.login.EscapeLogin;
-import costumetrade.common.login.LoginContext;
-import costumetrade.common.login.SupportTempLogin;
 
 /**
  * @author zhouyq

@@ -1,13 +1,15 @@
 package costumetrade.common;
 
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+
 import java.util.List;
+
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.dom.java.Field;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.JavaVisibility;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
-import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
 
 /**
  * MyBatis Generator plugin to give query Example classes a common root class.

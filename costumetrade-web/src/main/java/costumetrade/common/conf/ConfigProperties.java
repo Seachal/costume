@@ -8,8 +8,6 @@ package costumetrade.common.conf;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.lang3.StringUtils;
-
 import costumetrade.common.util.PropertiesUtils;
 
 

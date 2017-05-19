@@ -6,7 +6,6 @@
 package costumetrade.common.login;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.codec.digest.Md5Crypt;
 
 /**
  * @author zhouyq
