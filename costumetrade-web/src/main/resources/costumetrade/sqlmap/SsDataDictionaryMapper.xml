@@ -47,7 +47,7 @@
     <include refid="Base_Column_List" />
     from ss_data_dictionary
     where 1=1
-    and dict_group in <foreach collection="list" item="item" index="index" separator=",">#{item,jdbcType=VARCHAR}</foreach>
+    and dict_group in <foreach collection="list" item="item" index="index" separator="," open="(" close=")">#{item,jdbcType=VARCHAR}</foreach>
     and status =0
     and storeId = #{storeId}
      
