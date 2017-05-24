@@ -45,10 +45,17 @@ public enum UnitTypeEnum {
    }
    
 
-   public static List<UnitTypeEnum> getUnitTypeEnum(){
-	   List<UnitTypeEnum> list = new ArrayList<UnitTypeEnum>();
+//   public static List<UnitTypeEnum> getUnitTypeEnum(){
+//	   List<UnitTypeEnum> list = new ArrayList<UnitTypeEnum>();
+//	   for (UnitTypeEnum unitTypeEnum : values()) {
+//		   list.add(unitTypeEnum);
+//	   }
+//	   return list;
+//   }
+   public static List<String> getUnitTypeEnum(){
+	   List<String> list = new ArrayList<String>();
 	   for (UnitTypeEnum unitTypeEnum : values()) {
-		   list.add(unitTypeEnum);
+		   list.add(unitTypeEnum.getValue());
 	   }
 	   return list;
    }

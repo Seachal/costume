@@ -51,8 +51,8 @@ public class SpProductController {
 
 	@RequestMapping("/getProducts")
 	@ResponseBody
-	public ApiResponse getAllroducts(ProductQuery paramProduct) {
-		paramProduct.setClientId((Integer) httpSession.getAttribute("clientId"));
+	public ApiResponse getAllroducts(@RequestBody ProductQuery paramProduct) {
+		paramProduct.setClientId((Integer) httpSession.getAttribute("userId"));
 		if(paramProduct.getStatus() == null){
 			paramProduct.setStatus(0);
 		}
@@ -64,6 +64,15 @@ public class SpProductController {
 	@ResponseBody
 	public ApiResponse getProduct(ProductQuery paramProduct) {
 		paramProduct.setClientId((Integer) httpSession.getAttribute("clientId"));
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		if(StringUtils.isBlank(paramProduct.getStoreId()+"")||StringUtils.isBlank(paramProduct.getId()+"")){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
 		ProductQuery product = spProductService.selectProduct(paramProduct);
 		return  ApiResponse.getInstance(product);
 	}

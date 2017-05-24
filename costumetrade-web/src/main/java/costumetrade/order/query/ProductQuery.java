@@ -81,11 +81,11 @@ public class ProductQuery extends Entity{
     /**
      *  商品季节
      */
-    private List<SeasonTypeEnum> seasonList;
+    private List<String> seasonList;
     
     private  List<String> gradeList;
     
-    private  List<UnitTypeEnum> unitList;
+    private  List<String> unitList;
     
     private List<String> priceNameList ;
 
@@ -200,8 +200,8 @@ public class ProductQuery extends Entity{
 	/**
 	 * 货品列表查询  开始
 	 */
-	
-
+	private Sort sort;
+    private List<Rules>  rules;
 	private String timeUpOp; // 升序为asc，降序为desc
 	private String priceOp; // 升序为asc，降序为desc
 	private List<String> productTypeArray; // 商品类别
@@ -499,21 +499,21 @@ public class ProductQuery extends Entity{
 		this.sizeList = sizeList;
 	}
 
-	public List<SeasonTypeEnum> getSeasonList() {
+	public List<String> getSeasonList() {
 		return seasonList;
 	}
 
-	public void setSeasonList(List<SeasonTypeEnum> seasonList) {
+	public void setSeasonList(List<String> seasonList) {
 		this.seasonList = seasonList;
 	}
 
 
 
-	public List<UnitTypeEnum> getUnitList() {
+	public List<String> getUnitList() {
 		return unitList;
 	}
 
-	public void setUnitList(List<UnitTypeEnum> unitList) {
+	public void setUnitList(List<String> unitList) {
 		this.unitList = unitList;
 	}
 
@@ -635,6 +635,22 @@ public class ProductQuery extends Entity{
 
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+
+	public Sort getSort() {
+		return sort;
+	}
+
+	public void setSort(Sort sort) {
+		this.sort = sort;
+	}
+
+	public List<Rules> getRules() {
+		return rules;
+	}
+
+	public void setRules(List<Rules> rules) {
+		this.rules = rules;
 	}
 
 	

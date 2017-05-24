@@ -14,31 +14,32 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
+import java.net.URL;
 import java.net.URLDecoder;
-import java.net.URLEncoder;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SecureRandom;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 import javax.servlet.http.HttpServletRequest;
 
-import net.sf.json.JSONException;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 
-import costumetrade.common.param.ResponseInfo;
+import com.sf.openapi.common.utils.MyX509TrustManager;
 
 /**
  * 通过HttpURLConnection模拟post表单提交
@@ -56,47 +57,92 @@ public class HttpPostUtil implements Serializable {
      * @param requestUrl 接口请求地址
      * @param json json格式数据
      * @return
+     * @throws NoSuchProviderException 
+     * @throws NoSuchAlgorithmException 
      */
     @SuppressWarnings({ "deprecation", "resource" })
-    public static JSONObject sendPostRequestJSON(String requestUrl, JSONObject json) {
-        HttpClient client = new DefaultHttpClient();
-        HttpPost post = new HttpPost(requestUrl);
-        JSONObject response = null;
-        try {
-            // 将JSON进行UTF-8编码,以便传输中文
-            String encoderJson = URLEncoder.encode(json.toString(), HTTP.UTF_8);
-            StringEntity string = new StringEntity(encoderJson);
-            string.setContentEncoding(CHAR_SET);
-            string.setContentType(CONTENT_TYPE);
-            post.setEntity(string);
-            HttpResponse res = client.execute(post);
-            if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-                HttpEntity entity = res.getEntity();
-                String result = EntityUtils.toString(entity);
-                response = JSONObject.fromObject(result);
-            }else{
-                response = new JSONObject();
-                try {
-                    response.put("code", ResponseInfo.EXCEPTION.code);
-                    response.put("msg", ResponseInfo.EXCEPTION.msg);
-                } catch (JSONException e1) {}
-            }
-        } catch (IOException e) {
-            response = new JSONObject();
-            try {
-                response.put("code", ResponseInfo.EXCEPTION.code);
-                response.put("msg", ResponseInfo.EXCEPTION.msg);
-            } catch (JSONException e1) {}
-            e.printStackTrace();
-        } catch (JSONException e) {
-            response = new JSONObject();
-            try {
-                response.put("code", ResponseInfo.EXCEPTION.code);
-                response.put("msg", ResponseInfo.EXCEPTION.msg);
-            } catch (JSONException e1) {}
-            e.printStackTrace();
+    public static JSONObject sendPostRequestJSON(String requestUrl, JSONObject json) throws Exception {
+//        HttpClient client = new DefaultHttpClient();
+//       
+//        HttpPost post = new HttpPost(requestUrl);
+//        JSONObject response = null;
+//        try {
+//            // 将JSON进行UTF-8编码,以便传输中文
+//            String encoderJson = URLEncoder.encode(json.toString(), HTTP.UTF_8);
+//            StringEntity string = new StringEntity(encoderJson);
+//            string.setContentEncoding(CHAR_SET);
+//            string.setContentType(CONTENT_TYPE);
+//            post.setEntity(string);
+//            HttpResponse res = client.execute(post);
+//            if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+//                HttpEntity entity = res.getEntity();
+//                String result = EntityUtils.toString(entity);
+//                response = JSONObject.fromObject(result);
+//            }else{
+//                response = new JSONObject();
+//                try {
+//                    response.put("code", ResponseInfo.EXCEPTION.code);
+//                    response.put("msg", ResponseInfo.EXCEPTION.msg);
+//                } catch (JSONException e1) {}
+//            }
+//        } catch (IOException e) {
+//            response = new JSONObject();
+//            try {
+//                response.put("code", ResponseInfo.EXCEPTION.code);
+//                response.put("msg", ResponseInfo.EXCEPTION.msg);
+//            } catch (JSONException e1) {}
+//            e.printStackTrace();
+//        } catch (JSONException e) {
+//            response = new JSONObject();
+//            try {
+//                response.put("code", ResponseInfo.EXCEPTION.code);
+//                response.put("msg", ResponseInfo.EXCEPTION.msg);
+//            } catch (JSONException e1) {}
+//            e.printStackTrace();
+//        }
+//        return response;
+    	 JSONObject jsonObject = new JSONObject();
+    	 TrustManager[] manager = {new MyX509TrustManager()};
+         SSLContext sSLContext= SSLContext.getInstance("SSL","SunJSSE");
+         sSLContext.init(null,manager,new SecureRandom());
+         javax.net.ssl.SSLSocketFactory f = sSLContext.getSocketFactory();
+         URL url= new URL(requestUrl);
+         HttpsURLConnection conn= (HttpsURLConnection)url.openConnection();
+         conn.setSSLSocketFactory(f);
+         
+         
+         conn.setDoOutput(true);
+         conn.setDoInput(true);
+         conn.setUseCaches(false);
+         
+         conn.setRequestMethod("POST");
+         conn.connect();
+         
+         if(json.toString() != null){
+        	OutputStream outputStream =conn.getOutputStream();
+        	outputStream.write(json.toString().getBytes("UTF-8"));
+        	outputStream.close();
+         }
+       //从输入流读取返回内容  
+        InputStream inputStream =conn.getInputStream();
+        InputStreamReader inputStreamReader =new InputStreamReader(inputStream,"utf-8");
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        String str = null;
+        StringBuffer buffer= new StringBuffer();
+        while((str = bufferedReader.readLine())!=null){
+        	buffer.append(str);
         }
-        return response;
+      
+        //释放资源  
+         bufferedReader.close();
+         inputStreamReader.close();
+         inputStream.close();
+         inputStream=null;
+         conn.disconnect();
+         jsonObject = JSONObject.fromObject(buffer.toString());
+         
+         return jsonObject;
+         
     }
     
     /**

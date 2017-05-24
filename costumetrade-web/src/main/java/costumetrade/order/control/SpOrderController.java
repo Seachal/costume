@@ -20,6 +20,7 @@ import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SsFinancial;
+import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStoDetail;
 import costumetrade.order.domain.SsStoOrder;
 import costumetrade.order.query.OrderDetailQuery;
@@ -40,6 +41,7 @@ public class SpOrderController {
 	private SpOrderService spOrderService;
 	@Autowired
 	private SpProductService spProductService;
+
 	@Autowired
     private HttpSession httpSession;
 	
@@ -225,13 +227,33 @@ public class SpOrderController {
 	
 	@RequestMapping("/queryLogistic")
 	@ResponseBody
-	public ApiResponse queryLogistic(SsStoOrder ssStoOrder) {
+	public ApiResponse queryLogistic(SsStoOrder ssStoOrder) throws Exception {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		//scLogistics.setCreateby((String) httpSession.getAttribute("clientId"));
 		MessageResp<List<RouteRespDto>> response = spOrderService.queryLogistic(ssStoOrder);
+		if(response == null){
+			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			return result;
+		}else{
+			result.setData(response);
+			return result;
+		}
 		
+		
+	}
+	
+	@SuppressWarnings("unused")
+	@RequestMapping("/saveReview")
+	@ResponseBody
+	public ApiResponse saveReview(SsProductReview ssProductReview) throws Exception {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+
+		String response =null;
 		if(response == null){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);

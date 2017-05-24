@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
 import com.sf.openapi.common.entity.MessageResp;
 import com.sf.openapi.express.sample.order.dto.OrderQueryReqDto;
 import com.sf.openapi.express.sample.order.dto.OrderQueryRespDto;
@@ -16,9 +17,9 @@ import com.sf.openapi.express.sample.order.dto.OrderReqDto;
 import com.sf.openapi.express.sample.order.dto.OrderRespDto;
 import com.sf.openapi.express.sample.route.dto.RouteReqDto;
 import com.sf.openapi.express.sample.route.dto.RouteRespDto;
-
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
+
 import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.service.SFLogisticsService;
 import costumetrade.order.service.SpOrderService;
@@ -37,6 +38,7 @@ public class SFLogisticController {
 	@Autowired
 	private SpOrderService spOrderService;
 
+
 	@RequestMapping("/orderSF")
 	@ResponseBody
 	public ApiResponse orderSF(@RequestBody OrderReqDto orderReqDto) {
@@ -50,6 +52,7 @@ public class SFLogisticController {
 			ScLogistics logistics = new ScLogistics();
 			logistics.setStoreid(1);//storeId createBy  获取session中的值
 			logistics.setLogisticsname("顺丰");
+			logistics.setLogisticsCode("SF");
 			logistics.setCreatetime(new Date());
 			logistics.setCreateby(1+"");
 			logistics.setLogisticsno(response1.getBody().getMailNo());
@@ -102,5 +105,7 @@ public class SFLogisticController {
 		return result;
 	}
 	
+
+
 	
 }

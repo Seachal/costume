@@ -28,6 +28,7 @@ import costumetrade.order.mapper.SsPriceMapper;
 import costumetrade.order.mapper.SsProductFileMapper;
 import costumetrade.order.mapper.SsStockMapper;
 import costumetrade.order.query.ProductQuery;
+import costumetrade.order.query.Rules;
 import costumetrade.order.service.SpProductService;
 import costumetrade.user.domain.SsDataDictionary;
 import costumetrade.user.mapper.SsDataDictionaryMapper;
@@ -56,16 +57,30 @@ public class SpProductServiceImpl implements SpProductService{
 	
 	@Override
 	public List<SpProduct> selectProducts(ProductQuery productQuery) {
-		List<String> season = new ArrayList<String>();
-		if(productQuery.getProductSeasonArray() !=null && productQuery.getProductSeasonArray().size()>0){
-			for(int i = 0 ; i<productQuery.getProductSeasonArray().size(); i++){
-				season.add(Enum.valueOf(SeasonTypeEnum.class,productQuery.getProductSeasonArray().get(i)).getValue());
+		if(productQuery.getSort() != null){
+			if("timeUpOp".equals(productQuery.getSort().getValue())){
+				productQuery.setTimeUpOp(productQuery.getSort().getOp());
+			}else if("priceOp".equals(productQuery.getSort().getValue())){
+				productQuery.setPriceOp(productQuery.getSort().getOp());
+			}else if("saleOp".equals(productQuery.getSort().getValue())){
+				productQuery.setSaleOp(productQuery.getSort().getOp());
 			}
-			
 		}
-		if(season.size()>0){
-			productQuery.setProductSeasonArray(season);
+		
+		
+		List<Rules> rules = productQuery.getRules();
+		if(rules != null && rules.size()>0){
+			for(int i=0 ; i< rules.size() ;i++){
+				if("productTypeArray".equals(rules.get(i).getFiled())&&(rules.get(i).getValue() !=null&&rules.get(i).getValue().size()>0)){
+					productQuery.setProductTypeArray(rules.get(i).getValue());
+				}else if("productBrandArray".equals(rules.get(i).getFiled())&&(rules.get(i).getValue() !=null&&rules.get(i).getValue().size()>0)){
+					productQuery.setProductBrandArray(rules.get(i).getValue());
+				}if("productSeasonArray".equals(rules.get(i).getFiled())&&(rules.get(i).getValue() !=null&&rules.get(i).getValue().size()>0)){
+					productQuery.setProductSeasonArray(rules.get(i).getValue());
+				}
+			}
 		}
+		
 		return spProductMapper.selectProducts(productQuery);
 	}
 
@@ -93,8 +108,8 @@ public class SpProductServiceImpl implements SpProductService{
 		queryResult.setBrandList(brands);
 		queryResult.setProductSize(sizes);
 		queryResult.setProductTypeList(productTypes);
-		queryResult.setSeasonList(SeasonTypeEnum.getSeasonTypeEnum());
-		queryResult.setUnitList(UnitTypeEnum.getUnitTypeEnum());
+//		queryResult.setSeasonList(SeasonTypeEnum.getSeasonTypeEnum());
+//		queryResult.setUnitList(UnitTypeEnum.getUnitTypeEnum());
 		
 		List<String> gradeList = new ArrayList<String>();
 		List<String> priceNameList = new ArrayList<String>();
@@ -185,7 +200,7 @@ public class SpProductServiceImpl implements SpProductService{
 			}
 			List<SsProductFile> files = product.getFileList();
 			if(files !=null && files.size()>0){
-				int op = ssProductFileMapper.insertFiles(files,product.getStoreId());
+				int op = ssProductFileMapper.insertFiles(files,null);
 				if(op <= 0){
 					return 0;
 				}
@@ -271,6 +286,6 @@ public class SpProductServiceImpl implements SpProductService{
 
 	@Override
 	public List<SsProductFile> getImages(SsProductFile productFile) {
-		return ssProductFileMapper.selectByStoreId(productFile.getStoreid(),productFile.getFilename());
+		return ssProductFileMapper.selectByStoreId(null,productFile.getFilename());
 	}
 }

@@ -34,7 +34,10 @@ public class ScLogistics extends Entity {
      *  物流名称
      */
     private String logisticsname;
-
+    /**
+     *物流编码 
+     * */
+    private String logisticsCode;
     /**
      *  
      */
@@ -110,4 +113,13 @@ public class ScLogistics extends Entity {
     public void setCreateby(String createby) {
         this.createby = createby == null ? null : createby.trim();
     }
+
+	public String getLogisticsCode() {
+		return logisticsCode;
+	}
+
+	public void setLogisticsCode(String logisticsCode) {
+		this.logisticsCode = logisticsCode == null ? null : logisticsCode.trim();
+	}
+    
 }
