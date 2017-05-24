@@ -8,11 +8,12 @@
     <result column="logisticsType" jdbcType="VARCHAR" property="logisticstype" />
     <result column="logisticsNo" jdbcType="VARCHAR" property="logisticsno" />
     <result column="logisticsName" jdbcType="VARCHAR" property="logisticsname" />
+    <result column="logisticsCode" jdbcType="VARCHAR" property="logisticsCode" />
     <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
     <result column="createBy" jdbcType="VARCHAR" property="createby" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, storeId, orderNo, logisticsType, logisticsNo, logisticsName, createTime, createBy
+    id, storeId, orderNo, logisticsType, logisticsNo, logisticsCode,logisticsName, createTime, createBy
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -31,6 +32,9 @@
     <if test="logisticsname != null">
     and logisticsName = #{logisticsname,jdbcType=VARCHAR}
     </if>
+    <if test="logisticsCode != null">
+    and logisticsCode = #{logisticsCode,jdbcType=VARCHAR}
+    </if>
     <if test="orderno != null">
     and orderNo = #{orderno,jdbcType=VARCHAR}
     </if>
@@ -44,10 +48,10 @@
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.ScLogistics">
     insert into sc_logistics (id, storeId, orderNo, 
-      logisticsType, logisticsNo, logisticsName, 
+      logisticsType, logisticsNo, logisticsName,logisticsCode, 
       createTime, createBy)
     values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{orderno,jdbcType=VARCHAR}, 
-      #{logisticstype,jdbcType=VARCHAR}, #{logisticsno,jdbcType=VARCHAR}, #{logisticsname,jdbcType=VARCHAR}, 
+      #{logisticstype,jdbcType=VARCHAR}, #{logisticsno,jdbcType=VARCHAR}, #{logisticsname,jdbcType=VARCHAR}, #{logisticsCode,jdbcType=VARCHAR},
       #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.ScLogistics">
@@ -70,6 +74,9 @@
       </if>
       <if test="logisticsname != null">
         logisticsName,
+      </if>
+      <if test="logisticsCode != null">
+        logisticsCode,
       </if>
       <if test="createtime != null">
         createTime,
@@ -97,6 +104,9 @@
       <if test="logisticsname != null">
         #{logisticsname,jdbcType=VARCHAR},
       </if>
+      <if test="logisticsCode != null">
+        #{logisticsCode,jdbcType=VARCHAR},
+      </if>
       <if test="createtime != null">
         #{createtime,jdbcType=TIMESTAMP},
       </if>
@@ -123,6 +133,9 @@
       <if test="logisticsname != null">
         logisticsName = #{logisticsname,jdbcType=VARCHAR},
       </if>
+      <if test="logisticsCode != null">
+        logisticsCode = #{logisticsCode,jdbcType=VARCHAR},
+      </if>
       <if test="createtime != null">
         createTime = #{createtime,jdbcType=TIMESTAMP},
       </if>
@@ -139,6 +152,7 @@
       logisticsType = #{logisticstype,jdbcType=VARCHAR},
       logisticsNo = #{logisticsno,jdbcType=VARCHAR},
       logisticsName = #{logisticsname,jdbcType=VARCHAR},
+      logisticsCode = #{logisticsCode,jdbcType=VARCHAR},
       createTime = #{createtime,jdbcType=TIMESTAMP},
       createBy = #{createby,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

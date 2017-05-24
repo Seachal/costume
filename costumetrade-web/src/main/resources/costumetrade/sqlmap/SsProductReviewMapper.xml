@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="costumetrade.order.mapper.SsProductReviewMapper">
+  <resultMap id="BaseResultMap" type="costumetrade.order.domain.SsProductReview">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="storeId" jdbcType="INTEGER" property="storeid" />
+    <result column="productId" jdbcType="INTEGER" property="productid" />
+    <result column="headPhoto" jdbcType="VARCHAR" property="headphoto" />
+    <result column="clientName" jdbcType="VARCHAR" property="clientname" />
+    <result column="msg" jdbcType="VARCHAR" property="msg" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="createBy" jdbcType="VARCHAR" property="createby" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, storeId, productId, headPhoto, clientName, msg, createTime, createBy
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ss_product_review
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ss_product_review
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="costumetrade.order.domain.SsProductReview">
+    insert into ss_product_review (id, storeId, productId, 
+      headPhoto, clientName, msg, 
+      createTime, createBy)
+    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{productid,jdbcType=INTEGER}, 
+      #{headphoto,jdbcType=VARCHAR}, #{clientname,jdbcType=VARCHAR}, #{msg,jdbcType=VARCHAR}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="costumetrade.order.domain.SsProductReview">
+    insert into ss_product_review
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="storeid != null">
+        storeId,
+      </if>
+      <if test="productid != null">
+        productId,
+      </if>
+      <if test="headphoto != null">
+        headPhoto,
+      </if>
+      <if test="clientname != null">
+        clientName,
+      </if>
+      <if test="msg != null">
+        msg,
+      </if>
+      <if test="createtime != null">
+        createTime,
+      </if>
+      <if test="createby != null">
+        createBy,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="storeid != null">
+        #{storeid,jdbcType=INTEGER},
+      </if>
+      <if test="productid != null">
+        #{productid,jdbcType=INTEGER},
+      </if>
+      <if test="headphoto != null">
+        #{headphoto,jdbcType=VARCHAR},
+      </if>
+      <if test="clientname != null">
+        #{clientname,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null">
+        #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createby != null">
+        #{createby,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SsProductReview">
+    update ss_product_review
+    <set>
+      <if test="storeid != null">
+        storeId = #{storeid,jdbcType=INTEGER},
+      </if>
+      <if test="productid != null">
+        productId = #{productid,jdbcType=INTEGER},
+      </if>
+      <if test="headphoto != null">
+        headPhoto = #{headphoto,jdbcType=VARCHAR},
+      </if>
+      <if test="clientname != null">
+        clientName = #{clientname,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null">
+        msg = #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createby != null">
+        createBy = #{createby,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsProductReview">
+    update ss_product_review
+    set storeId = #{storeid,jdbcType=INTEGER},
+      productId = #{productid,jdbcType=INTEGER},
+      headPhoto = #{headphoto,jdbcType=VARCHAR},
+      clientName = #{clientname,jdbcType=VARCHAR},
+      msg = #{msg,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      createBy = #{createby,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

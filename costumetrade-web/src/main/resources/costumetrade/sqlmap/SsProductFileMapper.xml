@@ -23,8 +23,8 @@
   <select id="selectByStoreId" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from ss_product_file_#{storeId}
-    where storeId = #{storeId,jdbcType=INTEGER}
+    from ss_product_file
+    where 1=1
     <if test="imageName !=null">
     and fileName like CONCAT('%',#{imageName},'%')
     </if>
@@ -43,7 +43,7 @@
       #{createby,jdbcType=VARCHAR})
   </insert>
   <insert id="insertFiles">
-    insert into ss_product_file_#{storeId,jdbcType=INTEGER} (storeId, productId, 
+    insert into ss_product_file (storeId, productId, 
       fileName, url,resizeFixUrl, createTime, 
       createBy)
     values <foreach collection="files" index="index" item ="item" separator=",">( #{item.storeid,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR}, 
