@@ -10,7 +10,7 @@ public interface SpPBrandService {
 	 * 获取所有品牌
 	 * 
 	 * */
-	public List<SpPBrand> getSpPBrands(int cropId);
+	public List<SpPBrand> getSpPBrands(SpPBrand spPBrand);
 	/**
 	 * 保存品牌信息
 	 * 
@@ -21,5 +21,5 @@ public interface SpPBrandService {
 	 * 删除品牌信息
 	 * 
 	 * */
-	public int deleteSpPBrand(int id);
+	public int deleteSpPBrand(List<Integer> ids);
 }

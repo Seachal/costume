@@ -63,13 +63,13 @@ public class SpSizeController {
 
 	@RequestMapping("/deleteSize")
 	@ResponseBody
-	public ApiResponse deleteSize(int id) {
+	public ApiResponse deleteSize(List<Integer> ids) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 	
-		int delete = spPSizeService.deleteSpPSize(id);
+		int delete = spPSizeService.deleteSpPSize(ids);
 		if(delete<=0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
@@ -112,13 +112,13 @@ public class SpSizeController {
 
 	@RequestMapping("/deleteSizeCustom")
 	@ResponseBody
-	public ApiResponse deleteSizeCustom(int id) {
+	public ApiResponse deleteSizeCustom(List<Integer> ids) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 	
-		int delete = spPSizeCustomService.deleteSpPSizeCustom(id);
+		int delete = spPSizeCustomService.deleteSpPSizeCustom(ids);
 		if(delete<=0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);

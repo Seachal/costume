@@ -18,4 +18,6 @@ public interface SsStockMapper {
     int updateByPrimaryKeySelective(SsStock record);
 
     int updateByPrimaryKey(SsStock record);
+    
+    int batchUpdate(List<SsStock> stocks);
 }

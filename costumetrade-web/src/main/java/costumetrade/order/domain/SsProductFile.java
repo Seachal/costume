@@ -3,6 +3,7 @@ package costumetrade.order.domain;
 import java.util.Date;
 
 import costumetrade.common.Entity;
+import costumetrade.common.page.Page;
 
 public class SsProductFile extends Entity {
     /**
@@ -40,6 +41,8 @@ public class SsProductFile extends Entity {
      *  
      */
     private String createby;
+    
+    private Page page;
 
     private static final long serialVersionUID = 1L;
 
@@ -105,6 +108,14 @@ public class SsProductFile extends Entity {
 
 	public void setResizeFixUrl(String resizeFixUrl) {
 		this.resizeFixUrl = resizeFixUrl;
+	}
+
+	public Page getPage() {
+		return page;
+	}
+
+	public void setPage(Page page) {
+		this.page = page;
 	}
     
     

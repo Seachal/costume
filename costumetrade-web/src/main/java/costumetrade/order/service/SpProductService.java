@@ -4,6 +4,7 @@ import java.util.List;
 
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SsProductFile;
+import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStock;
 import costumetrade.order.query.ProductQuery;
 
@@ -35,6 +36,11 @@ public interface SpProductService {
 	 * */
 	public List<SsStock> takingStock(SpProduct product);
 	/**
+	 * 保存商品库存
+	 * 
+	 * */
+	public List<SsStock> updateStock(List<SsStock> stocks);
+	/**
 	 * 新增商品初始化查询
 	 * 
 	 * */
@@ -56,5 +62,10 @@ public interface SpProductService {
 	public int updateProducts(List<String> id,Integer storeId);
 	
 	public void insertSuspendingProduct(SpProduct product,Integer buyerStoreId);
+	
+	/**
+	 * 查询商品评价
+	 * */
+	public List<SsProductReview> getReviews(ProductQuery query);
 
 }

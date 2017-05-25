@@ -5,10 +5,11 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpPCate;
 @Mapper
 public interface SpPCateMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(List<Integer> ids);
 
     int insert(SpPCate record);
 
@@ -24,5 +25,5 @@ public interface SpPCateMapper {
 
     int updateByPrimaryKey(SpPCate record);
     
-    List<SpPCate>  getSpPCates(int storeId);
+    List<SpPCate> getSpPCates(@Param("storeId")Integer storeId,@Param("page")Page page);
 }

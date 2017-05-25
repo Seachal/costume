@@ -32,8 +32,8 @@ public class SpPSizeServiceImpl implements SpPSizeService{
 		return save;
 		 
 	}
-	public int deleteSpPSize(int id) {
-		return spPSizeMapper.deleteByPrimaryKey(id);
+	public int deleteSpPSize(List<Integer> ids) {
+		return spPSizeMapper.deleteByPrimaryKey(ids);
 	}
 	
 	

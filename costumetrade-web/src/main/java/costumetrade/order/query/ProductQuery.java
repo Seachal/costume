@@ -5,11 +5,11 @@ import java.util.Date;
 import java.util.List;
 
 import costumetrade.common.Entity;
+import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpPBrand;
 import costumetrade.order.domain.SpPCate;
 import costumetrade.order.domain.SpPSizeCustom;
-import costumetrade.order.enums.SeasonTypeEnum;
-import costumetrade.order.enums.UnitTypeEnum;
+import costumetrade.order.domain.SpUnit;
 
 public class ProductQuery extends Entity{
 
@@ -85,7 +85,7 @@ public class ProductQuery extends Entity{
     
     private  List<String> gradeList;
     
-    private  List<String> unitList;
+
     
     private List<String> priceNameList ;
 
@@ -152,19 +152,28 @@ public class ProductQuery extends Entity{
     private BigDecimal tagprice;
 
     /**
-     *  批发价
+     * 第三销售价
      */
-    private BigDecimal wholeprice;
+    private BigDecimal thirdPrice;
 
     /**
-     *  打包价
+     * 第二销售价 
      */
-    private BigDecimal packprice;
+    private BigDecimal secondPrice;
 
     /**
-     *  零售价
+     * 第一销售价
      */
-    private BigDecimal retailprice;
+    private BigDecimal firsthPrice;
+    /**
+     *  第五销售价
+     */
+    private BigDecimal fifthPrice;
+    
+    /**
+     *  第四销售价
+     */
+    private BigDecimal fourthPrice;
 	
     /**
      *  预警下线
@@ -217,6 +226,8 @@ public class ProductQuery extends Entity{
 	private List<SpPBrand> brandList ;
 	private List<SpPCate> productTypeList;
 	private List<SpPSizeCustom> sizeList;
+	private List<SpUnit> unitList;
+	private Page page;
 	private BigDecimal price ;
 	
 	public BigDecimal getPrice() {
@@ -509,13 +520,7 @@ public class ProductQuery extends Entity{
 
 
 
-	public List<String> getUnitList() {
-		return unitList;
-	}
 
-	public void setUnitList(List<String> unitList) {
-		this.unitList = unitList;
-	}
 
 	public String getSaleOp() {
 		return saleOp;
@@ -561,29 +566,8 @@ public class ProductQuery extends Entity{
 		this.tagprice = tagprice;
 	}
 
-	public BigDecimal getWholeprice() {
-		return wholeprice;
-	}
 
-	public void setWholeprice(BigDecimal wholeprice) {
-		this.wholeprice = wholeprice;
-	}
 
-	public BigDecimal getPackprice() {
-		return packprice;
-	}
-
-	public void setPackprice(BigDecimal packprice) {
-		this.packprice = packprice;
-	}
-
-	public BigDecimal getRetailprice() {
-		return retailprice;
-	}
-
-	public void setRetailprice(BigDecimal retailprice) {
-		this.retailprice = retailprice;
-	}
 
 	public Double getWarnLow() {
 		return warnLow;
@@ -651,6 +635,62 @@ public class ProductQuery extends Entity{
 
 	public void setRules(List<Rules> rules) {
 		this.rules = rules;
+	}
+
+	public List<SpUnit> getUnitList() {
+		return unitList;
+	}
+
+	public void setUnitList(List<SpUnit> unitList) {
+		this.unitList = unitList;
+	}
+
+	public BigDecimal getThirdPrice() {
+		return thirdPrice;
+	}
+
+	public void setThirdPrice(BigDecimal thirdPrice) {
+		this.thirdPrice = thirdPrice;
+	}
+
+	public BigDecimal getSecondPrice() {
+		return secondPrice;
+	}
+
+	public void setSecondPrice(BigDecimal secondPrice) {
+		this.secondPrice = secondPrice;
+	}
+
+	public BigDecimal getFirsthPrice() {
+		return firsthPrice;
+	}
+
+	public void setFirsthPrice(BigDecimal firsthPrice) {
+		this.firsthPrice = firsthPrice;
+	}
+
+	public BigDecimal getFifthPrice() {
+		return fifthPrice;
+	}
+
+	public void setFifthPrice(BigDecimal fifthPrice) {
+		this.fifthPrice = fifthPrice;
+	}
+
+	public BigDecimal getFourthPrice() {
+		return fourthPrice;
+	}
+
+	public void setFourthPrice(BigDecimal fourthPrice) {
+		this.fourthPrice = fourthPrice;
+	}
+
+	public Page getPage() {
+		return page;
+	}
+
+	public void setPage(Page page) {
+		this.page = page;
 	}
 
 	

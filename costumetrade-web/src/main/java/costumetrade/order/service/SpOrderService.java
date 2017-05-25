@@ -8,6 +8,7 @@ import com.sf.openapi.express.sample.route.dto.RouteRespDto;
 import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.domain.SsFinancial;
+import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStoDetail;
 import costumetrade.order.domain.SsStoOrder;
 import costumetrade.order.query.OrderDetailQuery;
@@ -57,4 +58,10 @@ public interface SpOrderService {
 	 * */
 	
 	public MessageResp<List<RouteRespDto>> queryLogistic(SsStoOrder ssStoOrder);
+	
+	/**
+	 * 评价
+	 * */
+	
+	public int saveReview(SsProductReview ssProductReview);
 }

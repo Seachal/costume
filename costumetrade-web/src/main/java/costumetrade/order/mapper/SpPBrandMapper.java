@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpPBrand;
 @Mapper
 public interface SpPBrandMapper {
@@ -12,9 +13,9 @@ public interface SpPBrandMapper {
 
     int insertSelective(SpPBrand record);
     
-    List<SpPBrand>  getSpPBrands(int storeId);
+    List<SpPBrand>  getSpPBrands(@Param("storeId")int storeId,@Param("page")Page page);
     
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(List<Integer> ids);
     
     SpPBrand selectByPrimaryKey(Integer id);
     

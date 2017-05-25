@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -27,10 +28,10 @@ public class SpPBrandController {
 
 	@RequestMapping("/getAllBrands")
 	@ResponseBody
-	public ApiResponse getAllBrands(Integer storeId) {
+	public ApiResponse getAllBrands(@RequestBody SpPBrand brand) {
 		
 		List<SpPBrand> CateLists = new ArrayList<SpPBrand>();
-		CateLists = spPBrandService.getSpPBrands(storeId);
+		CateLists = spPBrandService.getSpPBrands(brand);
 
 		return  ApiResponse.getInstance(CateLists);
 	}
@@ -59,13 +60,13 @@ public class SpPBrandController {
 
 	@RequestMapping("/deleteBrand")
 	@ResponseBody
-	public ApiResponse deleteBrand(int id) {
+	public ApiResponse deleteBrand(@RequestBody List<Integer> ids) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 	
-		int delete = spPBrandService.deleteSpPBrand(id);
+		int delete = spPBrandService.deleteSpPBrand(ids);
 		if(delete<=0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);

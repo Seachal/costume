@@ -19,6 +19,7 @@ import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.domain.SpClient;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SsFinancial;
+import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStoDetail;
 import costumetrade.order.domain.SsStoOrder;
 import costumetrade.order.domain.SsStock;
@@ -29,6 +30,7 @@ import costumetrade.order.mapper.SpCartMapper;
 import costumetrade.order.mapper.SpClientMapper;
 import costumetrade.order.mapper.SpProductMapper;
 import costumetrade.order.mapper.SsFinancialMapper;
+import costumetrade.order.mapper.SsProductReviewMapper;
 import costumetrade.order.mapper.SsStoDetailMapper;
 import costumetrade.order.mapper.SsStoOrderMapper;
 import costumetrade.order.mapper.SsStockMapper;
@@ -66,6 +68,9 @@ public class SpOrderServiceImpl implements SpOrderService{
 	private SpProductService spProductService;
 	@Autowired
 	private SFLogisticsService sFLogisticsService;
+	@Autowired 
+	private SsProductReviewMapper ssProductReviewMapper;
+	
 	@Override
 	public SsStoOrder saveOrders(List<SsStoDetail> details,SsStoOrder order,Integer clientId) {
 		
@@ -445,6 +450,10 @@ public class SpOrderServiceImpl implements SpOrderService{
 			return null;
 		}
 		
+	}
+	@Override
+	public int saveReview(SsProductReview ssProductReview) {
+		return ssProductReviewMapper.insertSelective(ssProductReview);
 	}
 	
 	

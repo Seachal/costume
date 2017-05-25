@@ -10,12 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpPBrand;
 import costumetrade.order.domain.SpPCate;
 import costumetrade.order.domain.SpPSizeCustom;
 import costumetrade.order.domain.SpProduct;
+import costumetrade.order.domain.SpUnit;
 import costumetrade.order.domain.SsPrice;
 import costumetrade.order.domain.SsProductFile;
+import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStock;
 import costumetrade.order.enums.SeasonTypeEnum;
 import costumetrade.order.enums.UnitTypeEnum;
@@ -24,8 +27,10 @@ import costumetrade.order.mapper.SpPCateMapper;
 import costumetrade.order.mapper.SpPColorCustomMapper;
 import costumetrade.order.mapper.SpPSizeCustomMapper;
 import costumetrade.order.mapper.SpProductMapper;
+import costumetrade.order.mapper.SpUnitMapper;
 import costumetrade.order.mapper.SsPriceMapper;
 import costumetrade.order.mapper.SsProductFileMapper;
+import costumetrade.order.mapper.SsProductReviewMapper;
 import costumetrade.order.mapper.SsStockMapper;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.query.Rules;
@@ -54,6 +59,10 @@ public class SpProductServiceImpl implements SpProductService{
 	private SsStockMapper ssStockMapper;
 	@Autowired
 	private SsDataDictionaryMapper ssDataDictionaryMapper;
+	@Autowired
+	private SpUnitMapper spUnitMapper;
+	@Autowired
+	private SsProductReviewMapper  ssProductReviewMapper;
 	
 	@Override
 	public List<SpProduct> selectProducts(ProductQuery productQuery) {
@@ -67,7 +76,6 @@ public class SpProductServiceImpl implements SpProductService{
 			}
 		}
 		
-		
 		List<Rules> rules = productQuery.getRules();
 		if(rules != null && rules.size()>0){
 			for(int i=0 ; i< rules.size() ;i++){
@@ -80,7 +88,7 @@ public class SpProductServiceImpl implements SpProductService{
 				}
 			}
 		}
-		
+	
 		return spProductMapper.selectProducts(productQuery);
 	}
 
@@ -93,9 +101,10 @@ public class SpProductServiceImpl implements SpProductService{
 	public ProductQuery productInit(ProductQuery query) {
 		Integer storeId = query.getStoreId();
 		String productId = query.getId();
-		List<SpPBrand> brands = spPBrandMapper.getSpPBrands(storeId);
-		List<SpPCate> productTypes = spPCateMapper.getSpPCates(storeId);
-		List<SpPSizeCustom> sizes = spPSizeCustomMapper.getSpPSizeCustoms(storeId);
+		List<SpPBrand> brands = spPBrandMapper.getSpPBrands(storeId,null);
+		List<SpPCate> productTypes = spPCateMapper.getSpPCates(storeId,null);
+		List<SpPSizeCustom> sizes = spPSizeCustomMapper.getSpPSizeCustoms(storeId,null);
+		List<SpUnit> units = spUnitMapper.getUnits(storeId,null) ;
 		
 		List<String> list = new ArrayList<String>();
 		list.add("SALE_PRICE");//价格名称
@@ -108,9 +117,8 @@ public class SpProductServiceImpl implements SpProductService{
 		queryResult.setBrandList(brands);
 		queryResult.setProductSize(sizes);
 		queryResult.setProductTypeList(productTypes);
-//		queryResult.setSeasonList(SeasonTypeEnum.getSeasonTypeEnum());
-//		queryResult.setUnitList(UnitTypeEnum.getUnitTypeEnum());
-		
+		queryResult.setUnitList(units);
+	
 		List<String> gradeList = new ArrayList<String>();
 		List<String> priceNameList = new ArrayList<String>();
 		if(dict !=null && dict.size()>0){
@@ -151,12 +159,13 @@ public class SpProductServiceImpl implements SpProductService{
 				queryResult.setPrducttype(product.getPrducttype()+"");
 			}
 			SsPrice price = ssPriceMapper.select(storeId, productId);
-			queryResult.setRetailprice(price.getRetailprice());
-			queryResult.setPackprice(price.getPackprice());
 			queryResult.setPurchaseprice(price.getPurchaseprice());
-			queryResult.setWholeprice(price.getWholeprice());
 			queryResult.setTagprice(price.getTagprice());
-			
+			queryResult.setFirsthPrice(price.getFirsthPrice());
+			queryResult.setFifthPrice(price.getFifthPrice());
+			queryResult.setSecondPrice(price.getSecondPrice());
+			queryResult.setThirdPrice(price.getThirdPrice());
+			queryResult.setFourthPrice(price.getFourthPrice());
 		}
 		return queryResult;
 	}
@@ -183,9 +192,12 @@ public class SpProductServiceImpl implements SpProductService{
 			if(id != null ){
 				SsPrice price = new SsPrice();
 				price.setStoreid(product.getStoreId());
-				price.setPackprice(product.getPackprice());
 				price.setPurchaseprice(product.getPurchaseprice());
-				price.setRetailprice(product.getRetailprice());
+				price.setFirsthPrice(product.getFirsthPrice());
+				price.setFifthPrice(product.getFifthPrice());
+				price.setSecondPrice(product.getSecondPrice());
+				price.setThirdPrice(product.getThirdPrice());
+				price.setFourthPrice(product.getFourthPrice());
 				price.setTagprice(product.getTagprice());
 				price.setProductid(id);
 				price.setCreateTime(new Date());
@@ -252,9 +264,7 @@ public class SpProductServiceImpl implements SpProductService{
 		if(id != null ){
 			SsPrice price = new SsPrice();
 			price.setStoreid(product.getStoreId());
-			price.setPackprice(product.getPackprice());
 			price.setPurchaseprice(product.getPurchaseprice());
-			price.setRetailprice(product.getRetailprice());
 			price.setTagprice(product.getTagprice());
 			price.setProductid(id);
 			price.setCreateTime(new Date());
@@ -287,5 +297,23 @@ public class SpProductServiceImpl implements SpProductService{
 	@Override
 	public List<SsProductFile> getImages(SsProductFile productFile) {
 		return ssProductFileMapper.selectByStoreId(null,productFile.getFilename());
+	}
+
+	@Override
+	public List<SsStock> updateStock(List<SsStock> stocks) {
+		int update =  ssStockMapper.batchUpdate(stocks);
+		List<SsStock> list = new ArrayList<SsStock>();
+		if(update > 0){
+			SsStock stock = new SsStock();
+			stock.setProductid(stocks.get(0).getProductid());
+			stock.setStoreid(stocks.get(0).getStoreid());
+			list = ssStockMapper.select(stock);
+		}
+		return list;
+	}
+
+	@Override
+	public List<SsProductReview> getReviews(ProductQuery query) {
+		return ssProductReviewMapper.selectReviews(query);
 	}
 }

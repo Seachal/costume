@@ -16,9 +16,9 @@ public class SpPBrandServiceImpl implements SpPBrandService{
 	@Autowired
 	private SpPBrandMapper spPBrandMapper;
 	
-	public List<SpPBrand> getSpPBrands(int storeId) {
+	public List<SpPBrand> getSpPBrands(SpPBrand spPBrand) {
 
-		return spPBrandMapper.getSpPBrands(storeId);
+		return spPBrandMapper.getSpPBrands(spPBrand.getStoreId(),spPBrand.getPage());
 	}
 	public int saveSpPBrand(SpPBrand spPBrand) {
 		int save = 0;
@@ -33,9 +33,9 @@ public class SpPBrandServiceImpl implements SpPBrandService{
 		
 		 
 	}
-	public int deleteSpPBrand(int  id) {
+	public int deleteSpPBrand(List<Integer>  ids) {
 	
-		return spPBrandMapper.deleteByPrimaryKey(id);
+		return spPBrandMapper.deleteByPrimaryKey(ids);
 	}
 	
 	

@@ -21,5 +21,5 @@ public interface SpPSizeCustomService {
 	 * 删除尺码组信息
 	 * 
 	 * */
-	public int deleteSpPSizeCustom(int id);
+	public int deleteSpPSizeCustom(List<Integer> ids);
 }

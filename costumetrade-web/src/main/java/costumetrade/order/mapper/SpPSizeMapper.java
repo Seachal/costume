@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import costumetrade.order.domain.SpPSize;
 @Mapper
 public interface SpPSizeMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(List<Integer> ids);
 
     int insert(SpPSize record);
 

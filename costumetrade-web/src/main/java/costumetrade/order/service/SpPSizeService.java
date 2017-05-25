@@ -10,7 +10,7 @@ public interface SpPSizeService {
 	 * 获取所有尺码
 	 * 
 	 * */
-	public List<SpPSize> getSpPSizes(int cropId);
+	public List<SpPSize> getSpPSizes(int storeId);
 	/**
 	 * 保存尺码信息
 	 * 
@@ -21,5 +21,5 @@ public interface SpPSizeService {
 	 * 删除尺码信息
 	 * 
 	 * */
-	public int deleteSpPSize(int id);
+	public int deleteSpPSize(List<Integer> ids);
 }

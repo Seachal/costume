@@ -16,8 +16,8 @@ public class SpPCateServiceImpl implements SpPCateService{
 	@Autowired
 	private SpPCateMapper spPCateMapper;
 	
-	public List<SpPCate> getSpPCates(int storeId) {
-		return spPCateMapper.getSpPCates(storeId);
+	public List<SpPCate> getSpPCates(SpPCate spPCate) {
+		return spPCateMapper.getSpPCates(spPCate.getStoreId(),spPCate.getPage());
 	}
 	public int saveSpPCate(SpPCate spPCate) {
 		int save = 0;
@@ -32,8 +32,8 @@ public class SpPCateServiceImpl implements SpPCateService{
 		
 		 
 	}
-	public int deleteSpPCate(int id) {
-		return spPCateMapper.deleteByPrimaryKey(id);
+	public int deleteSpPCate(List<Integer> ids) {
+		return spPCateMapper.deleteByPrimaryKey( ids);
 	}
 	
 	

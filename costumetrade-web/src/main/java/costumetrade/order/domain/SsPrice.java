@@ -32,19 +32,28 @@ public class SsPrice extends Entity {
     private BigDecimal tagprice;
 
     /**
-     *  批发价
+     * 第三销售价
      */
-    private BigDecimal wholeprice;
+    private BigDecimal thirdPrice;
 
     /**
-     *  打包价
+     * 第二销售价 
      */
-    private BigDecimal packprice;
+    private BigDecimal secondPrice;
 
     /**
-     *  零售价
+     * 第一销售价
      */
-    private BigDecimal retailprice;
+    private BigDecimal firsthPrice;
+    /**
+     *  第五销售价
+     */
+    private BigDecimal fifthPrice;
+    
+    /**
+     *  第四销售价
+     */
+    private BigDecimal fourthPrice;
 
     /**
      *  修改时间
@@ -108,29 +117,7 @@ public class SsPrice extends Entity {
         this.tagprice = tagprice;
     }
 
-    public BigDecimal getWholeprice() {
-        return wholeprice;
-    }
-
-    public void setWholeprice(BigDecimal wholeprice) {
-        this.wholeprice = wholeprice;
-    }
-
-    public BigDecimal getPackprice() {
-        return packprice;
-    }
-
-    public void setPackprice(BigDecimal packprice) {
-        this.packprice = packprice;
-    }
-
-    public BigDecimal getRetailprice() {
-        return retailprice;
-    }
-
-    public void setRetailprice(BigDecimal retailprice) {
-        this.retailprice = retailprice;
-    }
+  
 
     public Date getModifyTime() {
         return modifyTime;
@@ -163,4 +150,46 @@ public class SsPrice extends Entity {
     public void setCreateBy(String createBy) {
         this.createBy = createBy == null ? null : createBy.trim();
     }
+
+	public BigDecimal getThirdPrice() {
+		return thirdPrice;
+	}
+
+	public void setThirdPrice(BigDecimal thirdPrice) {
+		this.thirdPrice = thirdPrice;
+	}
+
+	public BigDecimal getSecondPrice() {
+		return secondPrice;
+	}
+
+	public void setSecondPrice(BigDecimal secondPrice) {
+		this.secondPrice = secondPrice;
+	}
+
+	public BigDecimal getFirsthPrice() {
+		return firsthPrice;
+	}
+
+	public void setFirsthPrice(BigDecimal firsthPrice) {
+		this.firsthPrice = firsthPrice;
+	}
+
+	public BigDecimal getFifthPrice() {
+		return fifthPrice;
+	}
+
+	public void setFifthPrice(BigDecimal fifthPrice) {
+		this.fifthPrice = fifthPrice;
+	}
+
+	public BigDecimal getFourthPrice() {
+		return fourthPrice;
+	}
+
+	public void setFourthPrice(BigDecimal fourthPrice) {
+		this.fourthPrice = fourthPrice;
+	}
+    
+    
 }

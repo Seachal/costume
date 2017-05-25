@@ -245,24 +245,21 @@ public class SpOrderController {
 		
 	}
 	
-	@SuppressWarnings("unused")
+
 	@RequestMapping("/saveReview")
 	@ResponseBody
-	public ApiResponse saveReview(SsProductReview ssProductReview) throws Exception {
+	public ApiResponse saveReview(SsProductReview ssProductReview) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 
-		String response =null;
-		if(response == null){
+		int response =spOrderService.saveReview(ssProductReview);
+		if(response <= 0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
 			return result;
-		}else{
-			result.setData(response);
-			return result;
 		}
-		
+		return result;
 		
 	}
 	

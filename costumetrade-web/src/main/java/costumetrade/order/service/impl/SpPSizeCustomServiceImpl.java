@@ -18,7 +18,7 @@ public class SpPSizeCustomServiceImpl implements SpPSizeCustomService{
 	
 	public List<SpPSizeCustom> getSpPSizeCustoms(int storeId) {
 
-		return spPSizeCustomMapper.getSpPSizeCustoms(storeId);
+		return spPSizeCustomMapper.getSpPSizeCustoms(storeId,null);
 	}
 	public int saveSpPSizeCustom(SpPSizeCustom spPSizeCustom) {
 		int save = 0;
@@ -33,8 +33,8 @@ public class SpPSizeCustomServiceImpl implements SpPSizeCustomService{
 		
 		 
 	}
-	public int deleteSpPSizeCustom(int id) {
-		return spPSizeCustomMapper.deleteByPrimaryKey(id);
+	public int deleteSpPSizeCustom(List<Integer> ids) {
+		return spPSizeCustomMapper.deleteByPrimaryKey(ids);
 	}
 	
 	

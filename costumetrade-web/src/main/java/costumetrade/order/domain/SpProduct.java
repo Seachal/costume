@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import costumetrade.common.Entity;
+import costumetrade.common.page.Page;
 
 public class SpProduct extends Entity {
     /**
@@ -193,19 +194,28 @@ public class SpProduct extends Entity {
     private BigDecimal tagprice;
 
     /**
-     *  批发价
+     * 第三销售价
      */
-    private BigDecimal wholeprice;
+    private BigDecimal thirdPrice;
 
     /**
-     *  打包价
+     * 第二销售价 
      */
-    private BigDecimal packprice;
+    private BigDecimal secondPrice;
 
     /**
-     *  零售价
+     * 第一销售价
      */
-    private BigDecimal retailprice;
+    private BigDecimal firsthPrice;
+    /**
+     *  第五销售价
+     */
+    private BigDecimal fifthPrice;
+    
+    /**
+     *  第四销售价
+     */
+    private BigDecimal fourthPrice;
     
     
     
@@ -218,6 +228,7 @@ public class SpProduct extends Entity {
 	 * 图片文件集合
 	 * */
 	private List<SsProductFile> fileList;
+	private Page page;
     private static final long serialVersionUID = 1L;
     
 
@@ -503,28 +514,46 @@ public class SpProduct extends Entity {
 		this.tagprice = tagprice;
 	}
 
-	public BigDecimal getWholeprice() {
-		return wholeprice;
+	
+
+	public BigDecimal getThirdPrice() {
+		return thirdPrice;
 	}
 
-	public void setWholeprice(BigDecimal wholeprice) {
-		this.wholeprice = wholeprice;
+	public void setThirdPrice(BigDecimal thirdPrice) {
+		this.thirdPrice = thirdPrice;
 	}
 
-	public BigDecimal getPackprice() {
-		return packprice;
+	public BigDecimal getSecondPrice() {
+		return secondPrice;
 	}
 
-	public void setPackprice(BigDecimal packprice) {
-		this.packprice = packprice;
+	public void setSecondPrice(BigDecimal secondPrice) {
+		this.secondPrice = secondPrice;
 	}
 
-	public BigDecimal getRetailprice() {
-		return retailprice;
+	public BigDecimal getFirsthPrice() {
+		return firsthPrice;
 	}
 
-	public void setRetailprice(BigDecimal retailprice) {
-		this.retailprice = retailprice;
+	public void setFirsthPrice(BigDecimal firsthPrice) {
+		this.firsthPrice = firsthPrice;
+	}
+
+	public BigDecimal getFifthPrice() {
+		return fifthPrice;
+	}
+
+	public void setFifthPrice(BigDecimal fifthPrice) {
+		this.fifthPrice = fifthPrice;
+	}
+
+	public BigDecimal getFourthPrice() {
+		return fourthPrice;
+	}
+
+	public void setFourthPrice(BigDecimal fourthPrice) {
+		this.fourthPrice = fourthPrice;
 	}
 
 	public Integer getLevelType() {
@@ -576,6 +605,14 @@ public class SpProduct extends Entity {
 		this.fileList = fileList;
 	}
 
+	public Page getPage() {
+		return page;
+	}
+
+	public void setPage(Page page) {
+		this.page = page;
+	}
+	
 	
     
 }

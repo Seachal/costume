@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import costumetrade.common.Entity;
+import costumetrade.common.page.Page;
 
 public class SpPBrand extends Entity {
     /**
@@ -80,6 +81,8 @@ public class SpPBrand extends Entity {
      *  修改人
      */
     private String modifyBy;
+    
+    private Page page;
 
     private static final long serialVersionUID = 1L;
 
@@ -204,4 +207,13 @@ public class SpPBrand extends Entity {
     public void setModifyBy(String modifyBy) {
         this.modifyBy = modifyBy == null ? null : modifyBy.trim();
     }
+
+	public Page getPage() {
+		return page;
+	}
+
+	public void setPage(Page page) {
+		this.page = page;
+	}
+    
 }

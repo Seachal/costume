@@ -15,11 +15,11 @@ public class Page implements Serializable {
 	/**
 	 * 总共页数
 	 */
-	private int pages;
+	private Integer pages;
 	/**
 	 * 行数
 	 */
-	private int pageSize = 20;
+	private Integer pageSize = 10;
 	
 	/**
 	 * 总行数
@@ -28,13 +28,15 @@ public class Page implements Serializable {
 	/**
 	 * 当前页码
 	 */
-	private int pageNum = 1;
+	private Integer pageNum = 1;
+	
 
-	public int getPageSize() {
+	
+	public Integer getPageSize() {
 		return pageSize;
 	}
 
-	public void setPageSize(int pageSize) {
+	public void setPageSize(Integer pageSize) {
 		this.pageSize = pageSize;
 	}
 
@@ -58,33 +60,37 @@ public class Page implements Serializable {
 		}
 	}
 
-	public int getPageNum() {
+	public Integer getPageNum() {
 		return pageNum;
 	}
 	
-	public void setPageNum(int pageNum) {
+	public void setPageNum(Integer pageNum) {
 		this.pageNum = pageNum;
 	}
 	
-	/**
-	 * 起始行
-	 * @return int 起始行
-	 */
-	public int getStartRow() {
-		return (this.pageNum - 1) * this.pageSize;
-	}
+
 
 	/**
 	 * @return the pages
 	 */
-	public int getPages() {
+	public Integer getPages() {
 		return pages;
 	}
 
 	/**
 	 * @param pages the pages to set
 	 */
-	public void setPages(int pages) {
+	public void setPages(Integer pages) {
 		this.pages = pages;
 	}
+
+	/**
+	 * 起始行
+	 * @return int 起始行
+	 */
+	public Integer getStartRow() {
+		return (this.pageNum - 1) * this.pageSize;
+	}
+	
+	
 }

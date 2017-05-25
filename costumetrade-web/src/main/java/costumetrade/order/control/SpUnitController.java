@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
-import costumetrade.order.domain.SpPCate;
-import costumetrade.order.service.SpPCateService;
+import costumetrade.order.domain.SpUnit;
+import costumetrade.order.service.SpUnitService;
 
 /**
  *
@@ -21,43 +21,43 @@ import costumetrade.order.service.SpPCateService;
  * @author fancy
  * @Date 2017年4月21日
  */
-@RequestMapping("/cate")
+@RequestMapping("/unit")
 @Controller
-public class SpPCateController {
+public class SpUnitController {
 	@Autowired
-	private SpPCateService spPCateService;
+	private SpUnitService spUnitService;
 
-	@RequestMapping("/getAllCates")
+	@RequestMapping("/getAllUnits")
 	@ResponseBody
-	public ApiResponse getAllCates(@RequestBody SpPCate cate) {
+	public ApiResponse getAllUnits(@RequestBody SpUnit unit) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		
-		if(cate == null){
+		if(unit == null){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		List<SpPCate> CateLists = new ArrayList<SpPCate>();
-		CateLists = spPCateService.getSpPCates(cate);
+		List<SpUnit> UnitLists = new ArrayList<SpUnit>();
+		UnitLists = spUnitService.getSpUnits(unit);
 
-		return  ApiResponse.getInstance(CateLists);
+		return  ApiResponse.getInstance(UnitLists);
 	}
 
-	@RequestMapping("/saveCate")
+	@RequestMapping("/saveUnit")
 	@ResponseBody
-	public ApiResponse saveCate(SpPCate spPCate) {
+	public ApiResponse saveUnit(SpUnit spUnit) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		if(spPCate == null ){
+		if(spUnit == null ){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		int save = spPCateService.saveSpPCate(spPCate);
+		int save = spUnitService.saveSpUnit(spUnit);
 		if(save<=0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
@@ -67,15 +67,15 @@ public class SpPCateController {
 
 	}
 
-	@RequestMapping("/deleteCate")
+	@RequestMapping("/deleteUnit")
 	@ResponseBody
-	public ApiResponse deleteCate(@RequestBody List<Integer> ids) {
+	public ApiResponse deleteUnit(@RequestBody List<Integer> ids) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 	
-		int delete = spPCateService.deleteSpPCate(ids);
+		int delete = spUnitService.deleteSpUnit(ids);
 		if(delete<=0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);

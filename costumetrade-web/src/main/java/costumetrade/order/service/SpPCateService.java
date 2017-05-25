@@ -10,7 +10,7 @@ public interface SpPCateService {
 	 * 获取商品种类
 	 * 
 	 * */
-	public List<SpPCate> getSpPCates(int cropId);
+	public List<SpPCate> getSpPCates(SpPCate spPCate);
 	/**
 	 * 保存商品种类
 	 * 
@@ -21,5 +21,5 @@ public interface SpPCateService {
 	 * 删除商品种类
 	 * 
 	 * */
-	public int deleteSpPCate(int  id);
+	public int deleteSpPCate(List<Integer> ids);
 }
