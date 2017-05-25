@@ -149,6 +149,7 @@
       <if test="saleOp == 'desc'">
         order by product.saleNum desc
       </if>
+      LIMIT #{page.startRow},#{page.pageSize} 
   </select>
   <select id="selectProduct" parameterType="costumetrade.order.query.ProductQuery" resultMap="ProductResultMap">
     select 

@@ -33,9 +33,9 @@
     from sp_psize
     where storeId = #{storeId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="List">
     delete from sp_psize
-    where id = #{id,jdbcType=INTEGER}
+    where id in <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SpPSize">
     insert into sp_psize (id, storeId, sizeName, 

@@ -20,11 +20,14 @@
     from sp_psize_custom
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="getSpPSizeCustoms" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="getSpPSizeCustoms" resultMap="BaseResultMap">
     select 
-    <include refid="Base_Column_List" />
+    id, storeId, customName, value
     from sp_psize_custom
     where storeId = #{storeId,jdbcType=INTEGER}
+    <if test="page!=null">
+    LIMIT #{page.startRow},#{page.pageSize}
+    </if>
   </select>
   <select id="getSpPSizeCustom" resultMap="BaseResultMap">
     select 
@@ -40,9 +43,9 @@
     where value = #{value,jdbcType=VARCHAR}
     and storeId = #{storeId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="List">
     delete from sp_psize_custom
-    where id = #{id,jdbcType=INTEGER}
+    where id in <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SpPSizeCustom">
     insert into sp_psize_custom (id, storeId, customName, 

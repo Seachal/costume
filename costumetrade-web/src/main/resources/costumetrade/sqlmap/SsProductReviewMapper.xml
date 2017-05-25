@@ -20,6 +20,18 @@
     from ss_product_review
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectReviews" parameterType="costumetrade.order.query.ProductQuery" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ss_product_review
+    where storeId = #{storeId,jdbcType=INTEGER}
+    <if test="id!=null">
+     and productId = #{id}
+    </if>
+   <if test="page!=null">
+    LIMIT #{page.startRow},#{page.pageSize}
+    </if>
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ss_product_review
     where id = #{id,jdbcType=INTEGER}

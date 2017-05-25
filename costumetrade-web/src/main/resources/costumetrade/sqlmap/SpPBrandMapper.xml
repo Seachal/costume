@@ -27,11 +27,13 @@
     from sp_pbrand
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="getSpPBrands" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
+  <select id="getSpPBrands"  resultMap="BaseResultMap">
+    select id, brandName, storeId,profit_d0
     from sp_pbrand
     where storeId = #{storeId,jdbcType=INTEGER}
+   <if test="page!=null">
+    LIMIT #{page.startRow},#{page.pageSize}
+    </if>
   </select>
   <select id="getSpPBrand"  resultMap="BaseResultMap">
     select 
@@ -47,9 +49,9 @@
     where storeId = #{storeId,jdbcType=INTEGER}
     and brandName = #{brandname,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="List">
     delete from sp_pbrand
-    where id = #{id,jdbcType=INTEGER}
+    where id in <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
   </delete>
   
   

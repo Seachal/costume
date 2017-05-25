@@ -41,6 +41,9 @@
       <if test="stocknum != null">
        and stock.stockNum &gt;= #{stocknum,jdbcType=DOUBLE}
       </if>
+      <if test="page!=null">
+   		 LIMIT #{page.startRow},#{page.pageSize}
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ss_stock
@@ -180,4 +183,15 @@
       createBy = #{createby,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
+  
+  <update id="batchUpdate"  parameterType="java.util.List">
+	      <foreach collection="stocks" item="item" index="index" open="" close="" separator=";">
+				update ss_stock_#{storeid,jdbcType=INTEGER} 
+				<set>
+				  stockNum = #{item.stocknum,jdbcType=DOUBLE}
+				</set>
+				where id = ${item.id}
+		 </foreach>
+		 
+    </update>
 </mapper>

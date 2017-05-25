@@ -36,15 +36,18 @@
     and cateName = #{catename,jdbcType=VARCHAR}
   </select>
   
-  <select id="getSpPCates" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="getSpPCates"  resultMap="BaseResultMap">
     select 
-    <include refid="Base_Column_List" />
+  	id, cateName, storeId
     from sp_product_type
     where storeId = #{storeId,jdbcType=INTEGER}
+    <if test="page!=null">
+    LIMIT #{page.startRow},#{page.pageSize}
+    </if>
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="List">
     delete from sp_product_type
-    where id = #{id,jdbcType=INTEGER}
+    where id in <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SpPCate">
     insert into sp_product_type (id, cateName, storeId, 

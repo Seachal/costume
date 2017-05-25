@@ -7,16 +7,19 @@
     <result column="productId" jdbcType="VARCHAR" property="productid" />
     <result column="purchasePrice" jdbcType="DECIMAL" property="purchaseprice" />
     <result column="tagPrice" jdbcType="DECIMAL" property="tagprice" />
-    <result column="wholePrice" jdbcType="DECIMAL" property="wholeprice" />
-    <result column="packPrice" jdbcType="DECIMAL" property="packprice" />
-    <result column="retailPrice" jdbcType="DECIMAL" property="retailprice" />
+    <result column="fourthPrice" jdbcType="DECIMAL" property="fourthPrice" />
+    <result column="fifthPrice" jdbcType="DECIMAL" property="fifthPrice" />
+    <result column="firsthPrice" jdbcType="DECIMAL" property="firsthPrice" />
+    <result column="secondPrice" jdbcType="DECIMAL" property="secondPrice" />
+    <result column="thirdPrice" jdbcType="DECIMAL" property="thirdPrice" />
+    
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
     <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, storeId, productId, purchasePrice, tagPrice, wholePrice, packPrice, retailPrice, 
+    id, storeId, productId, purchasePrice, tagPrice, firsthPrice, secondPrice, thirdPrice, fourthPrice,fifthPrice,
     modify_time, modify_by, create_time, create_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -37,13 +40,13 @@
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SsPrice">
     insert into ss_pprice (id, storeId, productId, 
-      purchasePrice, tagPrice, wholePrice, 
-      packPrice, retailPrice, modify_time, 
+      purchasePrice, tagPrice,firsthPrice, secondPrice, thirdPrice, fourthPrice,fifthPrice, modify_time, 
       modify_by, create_time, create_by
       )
     values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=VARCHAR}, #{productid,jdbcType=VARCHAR}, 
-      #{purchaseprice,jdbcType=DECIMAL}, #{tagprice,jdbcType=DECIMAL}, #{wholeprice,jdbcType=DECIMAL}, 
-      #{packprice,jdbcType=DECIMAL}, #{retailprice,jdbcType=DECIMAL}, #{modifyTime,jdbcType=TIMESTAMP}, 
+      #{purchaseprice,jdbcType=DECIMAL}, #{tagprice,jdbcType=DECIMAL}, #{firsthPrice,jdbcType=DECIMAL}, 
+      #{secondPrice,jdbcType=DECIMAL}, #{thirdPrice,jdbcType=DECIMAL},#{fourthPrice,jdbcType=DECIMAL}, #{fifthPrice,jdbcType=DECIMAL},
+       #{modifyTime,jdbcType=TIMESTAMP}, 
       #{modifyBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}
       )
   </insert>
@@ -65,14 +68,20 @@
       <if test="tagprice != null">
         tagPrice,
       </if>
-      <if test="wholeprice != null">
-        wholePrice,
+      <if test="firsthPrice != null">
+        firsthPrice,
       </if>
-      <if test="packprice != null">
-        packPrice,
+      <if test="secondPrice != null">
+        secondPrice,
       </if>
-      <if test="retailprice != null">
-        retailPrice,
+      <if test="thirdPrice != null">
+        thirdPrice,
+      </if>
+      <if test="fourthPrice != null">
+        fourthPrice,
+      </if>
+      <if test="fifthPrice != null">
+        fifthPrice,
       </if>
       <if test="modifyTime != null">
         modify_time,
@@ -103,14 +112,20 @@
       <if test="tagprice != null">
         #{tagprice,jdbcType=DECIMAL},
       </if>
-      <if test="wholeprice != null">
-        #{wholeprice,jdbcType=DECIMAL},
+      <if test="firsthPrice != null">
+        #{firsthPrice,jdbcType=DECIMAL},
       </if>
-      <if test="packprice != null">
-        #{packprice,jdbcType=DECIMAL},
+      <if test="secondPrice != null">
+        #{secondPrice,jdbcType=DECIMAL},
       </if>
-      <if test="retailprice != null">
-        #{retailprice,jdbcType=DECIMAL},
+      <if test="thirdPrice != null">
+        #{thirdPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="fourthPrice != null">
+        #{fourthPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="fifthPrice != null">
+        #{fifthPrice,jdbcType=DECIMAL},
       </if>
       <if test="modifyTime != null">
         #{modifyTime,jdbcType=TIMESTAMP},
@@ -141,15 +156,22 @@
       <if test="tagprice != null">
         tagPrice = #{tagprice,jdbcType=DECIMAL},
       </if>
-      <if test="wholeprice != null">
-        wholePrice = #{wholeprice,jdbcType=DECIMAL},
+      <if test="fifthPrice != null">
+        fifthPrice = #{fifthPrice,jdbcType=DECIMAL},
       </if>
-      <if test="packprice != null">
-        packPrice = #{packprice,jdbcType=DECIMAL},
+      <if test="fourthPrice != null">
+        fourthPrice = #{fourthPrice,jdbcType=DECIMAL},
       </if>
-      <if test="retailprice != null">
-        retailPrice = #{retailprice,jdbcType=DECIMAL},
+      <if test="thirdPrice != null">
+        thirdPrice = #{thirdPrice,jdbcType=DECIMAL},
       </if>
+      <if test="secondPrice != null">
+        secondPrice = #{secondPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="firsthPrice != null">
+        firsthPrice = #{firsthPrice,jdbcType=DECIMAL},
+      </if>
+    
       <if test="modifyTime != null">
         modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       </if>
@@ -171,9 +193,11 @@
       productId = #{productid,jdbcType=VARCHAR},
       purchasePrice = #{purchaseprice,jdbcType=DECIMAL},
       tagPrice = #{tagprice,jdbcType=DECIMAL},
-      wholePrice = #{wholeprice,jdbcType=DECIMAL},
-      packPrice = #{packprice,jdbcType=DECIMAL},
-      retailPrice = #{retailprice,jdbcType=DECIMAL},
+      firsthPrice = #{firsthPrice,jdbcType=DECIMAL},
+      secondPrice = #{secondPrice,jdbcType=DECIMAL},
+      thirdPrice = #{thirdPrice,jdbcType=DECIMAL},
+      fourthPrice = #{fourthPrice,jdbcType=DECIMAL},
+      fifthPrice = #{fifthPrice,jdbcType=DECIMAL},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       modify_by = #{modifyBy,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
