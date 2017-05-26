@@ -6,13 +6,14 @@
     <result column="storeId" jdbcType="INTEGER" property="storeId" />
     <result column="sizeName" jdbcType="VARCHAR" property="sizename" />
     <result column="barcode" jdbcType="VARCHAR" property="barcode" />
+    <result column="price_raise" jdbcType="DECIMAL" property="priceRaise" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
     <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, storeId, sizeName, barcode, create_time, create_by, modify_time, modify_by
+    id, storeId, sizeName,price_raise, barcode, create_time, create_by, modify_time, modify_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -38,10 +39,10 @@
     where id in <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SpPSize">
-    insert into sp_psize (id, storeId, sizeName, 
+    insert into sp_psize (id, storeId, sizeName, price_raise
       barcode, create_time, create_by, 
       modify_time, modify_by)
-    values (#{id,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER}, #{sizename,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER}, #{sizename,jdbcType=VARCHAR}, #{priceRaise,jdbcType=DECIMAL},
       #{barcode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
   </insert>
@@ -56,6 +57,9 @@
       </if>
       <if test="sizename != null">
         sizeName,
+      </if>
+      <if test="priceRaise != null">
+        price_raise,
       </if>
       <if test="barcode != null">
         barcode,
@@ -83,6 +87,9 @@
       <if test="sizename != null">
         #{sizename,jdbcType=VARCHAR},
       </if>
+      <if test="priceRaise != null">
+        #{priceRaise,jdbcType=DECIMAL},
+      </if>
       <if test="barcode != null">
         #{barcode,jdbcType=VARCHAR},
       </if>
@@ -109,6 +116,9 @@
       <if test="sizename != null">
         sizeName = #{sizename,jdbcType=VARCHAR},
       </if>
+      <if test="priceRaise != null">
+        price_raise = #{priceRaise,jdbcType=DECIMAL},
+      </if>
       <if test="barcode != null">
         barcode = #{barcode,jdbcType=VARCHAR},
       </if>
@@ -131,6 +141,7 @@
     update sp_psize
     set storeId = #{storeId,jdbcType=INTEGER},
       sizeName = #{sizename,jdbcType=VARCHAR},
+      price_raise = #{priceRaise,jdbcType=DECIMAL},
       barcode = #{barcode,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},

@@ -100,7 +100,7 @@
     where id in <foreach collection="id" item="item" index="index" open="(" separator="," close=")">#{item,jdbcType=VARCHAR}</foreach>
   </select>
   
-  <select id="selectProducts" parameterType="costumetrade.order.query.ProductQuery" resultMap="ProductsResultMap">
+  <select id="selectProducts"  resultMap="ProductsResultMap">
     SELECT 
   	product.id,product.storeId,product.code,product.name,product.image,product.time_up,
   	(CASE 
@@ -108,48 +108,54 @@
   			WHEN c.saleType = 2 THEN price1.wholePrice 
   			WHEN c.saleType = 3 THEN price1.packPrice
   			WHEN c.saleType = 4 THEN price1.retailPrice ELSE price1.wholePrice END) price,product.saleNum
-    FROM sp_product_1 product
+    FROM sp_product_#{product.storeId,jdbcType=INTEGER} product
     LEFT JOIN ss_pprice_1 price1 ON price1.productId = product.id AND price1.storeId = product.storeId
     LEFT JOIN (SELECT customType.saleType,client.storeId ,client.id FROM sp_client CLIENT 
     							LEFT JOIN sp_customer_type customType ON customType.id = client.cate
-    							WHERE client.id = #{clientId,jdbcType=INTEGER}  ) c ON c.storeId = product.storeId 
+    							WHERE client.id = #{product.clientId,jdbcType=INTEGER}  ) c ON c.storeId = product.storeId 
     LEFT JOIN sp_pbrand brand ON brand.id = product.brandId
     LEFT JOIN sp_product_type productType ON productType.id = product.prductType
     WHERE 1=1
     and product.time_down &gt;= CURDATE() 
     and product.time_up &lt;= CURDATE() 
-    and product.status =#{status}
-     <if test="code != null">
-      and  product.code like  CONCAT('%',#{code},'%')
+    <if test="product.status != null">
+     and product.status =#{product.status}
+    </if>
+   
+     <if test="product.code != null">
+      and  product.code like  CONCAT('%',#{product.code},'%')
       </if>
-     <if test="productTypeArray != null">
+     <if test="product.productTypeArray != null">
        and productType.cateName in <foreach collection="productTypeArray" item="item" index="index" open="(" separator="," close=")"> #{item}</foreach>
       </if>
-     <if test="productBrandArray != null">
+     <if test="product.productBrandArray != null">
        and brand.brandName in <foreach collection="productBrandArray" item="item" index="index" open="(" separator="," close=")"> #{item}</foreach>
       </if>
-      <if test="productSeasonArray != null">
+      <if test="product.productSeasonArray != null">
        and product.season in <foreach collection="productSeasonArray" item="item" index="index" open="(" separator="," close=")"> #{item}</foreach>
       </if>
-      <if test="timeUpOp == 'asc'">
+      <if test="product.timeUpOp == 'asc'">
         order by product.time_up asc
       </if>
-      <if test="timeUpOp == 'desc'">
+      <if test="product.timeUpOp == 'desc'">
         order by product.time_up desc
       </if>
-      <if test="priceOp == 'asc'">
+      <if test="product.priceOp == 'asc'">
         order by price asc
       </if>
-      <if test="priceOp == 'desc'">
+      <if test="product.priceOp == 'desc'">
         order by price desc
       </if>
-      <if test="saleOp == 'asc'">
+      <if test="product.saleOp == 'asc'">
         order by product.saleNum asc
       </if>
-      <if test="saleOp == 'desc'">
+      <if test="product.saleOp == 'desc'">
         order by product.saleNum desc
       </if>
-      LIMIT #{page.startRow},#{page.pageSize} 
+    
+       LIMIT #{page.startRow},#{page.pageSize}
+ 
+       
   </select>
   <select id="selectProduct" parameterType="costumetrade.order.query.ProductQuery" resultMap="ProductResultMap">
     select 
@@ -211,10 +217,7 @@
       #{timeUp,jdbcType=TIMESTAMP}, #{timeDown,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
       #{createBy,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="costumetrade.order.domain.SpProduct">
-   <selectKey resultType="java.lang.String" order="AFTER" keyProperty="id">
-		SELECT LAST_INSERT_ID() AS id
-	</selectKey>
+  <insert id="insertSelective" keyProperty="id" parameterType="costumetrade.order.domain.SpProduct">
     insert into sp_product_#{storeId,jdbcType=INTEGER}
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
