@@ -88,8 +88,10 @@ public class SpProductServiceImpl implements SpProductService{
 				}
 			}
 		}
-	
-		return spProductMapper.selectProducts(productQuery);
+		Page page = new Page();
+		page.setPageNum(productQuery.getPageNum());
+		page.setPageSize(productQuery.getPageSize());
+		return spProductMapper.selectProducts(productQuery,page);
 	}
 
 	@Override
@@ -178,7 +180,7 @@ public class SpProductServiceImpl implements SpProductService{
 			return spProductMapper.updateByPrimaryKeySelective(product);
 		}else{
 			//保存商品
-			product.setId(UUID.randomUUID().toString());
+			product.setId(UUID.randomUUID().toString().replaceAll("\\-", ""));
 			product.setStatus(0);
 			if(product.getSeason() != null){
 				product.setSeason(Enum.valueOf(SeasonTypeEnum.class,product.getSeason()).getValue());
@@ -188,8 +190,8 @@ public class SpProductServiceImpl implements SpProductService{
 				product.setUnit(Enum.valueOf(UnitTypeEnum.class,product.getUnit()).getValue());
 			}
 			product.setSaleNum(BigDecimal.valueOf(0));
-			String id = spProductMapper.insertSelective(product);
-			if(id != null ){
+			int save = spProductMapper.insertSelective(product);
+			if(save > 0 ){
 				SsPrice price = new SsPrice();
 				price.setStoreid(product.getStoreId());
 				price.setPurchaseprice(product.getPurchaseprice());
@@ -199,7 +201,7 @@ public class SpProductServiceImpl implements SpProductService{
 				price.setThirdPrice(product.getThirdPrice());
 				price.setFourthPrice(product.getFourthPrice());
 				price.setTagprice(product.getTagprice());
-				price.setProductid(id);
+				price.setProductid(product.getId());
 				price.setCreateTime(new Date());
 				price.setModifyTime(new Date());
 				price.setCreateBy(product.getCreateBy());
@@ -260,13 +262,13 @@ public class SpProductServiceImpl implements SpProductService{
 			product.setBrandid(brandId);
 		}
 		product.setStatus(1);//待处理状态
-		String id = spProductMapper.insertSelective(product);
-		if(id != null ){
+		int save = spProductMapper.insertSelective(product);
+		if(save > 0 ){
 			SsPrice price = new SsPrice();
 			price.setStoreid(product.getStoreId());
 			price.setPurchaseprice(product.getPurchaseprice());
 			price.setTagprice(product.getTagprice());
-			price.setProductid(id);
+			price.setProductid(product.getId());
 			price.setCreateTime(new Date());
 			price.setModifyTime(new Date());
 			price.setCreateBy(product.getCreateBy());

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpPBrand;
 import costumetrade.order.mapper.SpPBrandMapper;
 import costumetrade.order.service.SpPBrandService;
@@ -17,8 +18,10 @@ public class SpPBrandServiceImpl implements SpPBrandService{
 	private SpPBrandMapper spPBrandMapper;
 	
 	public List<SpPBrand> getSpPBrands(SpPBrand spPBrand) {
-
-		return spPBrandMapper.getSpPBrands(spPBrand.getStoreId(),spPBrand.getPage());
+		Page page = new Page();
+		page.setPageNum(spPBrand.getPageNum());
+		page.setPageSize(spPBrand.getPageSize());
+		return spPBrandMapper.getSpPBrands(spPBrand.getStoreId(),page);
 	}
 	public int saveSpPBrand(SpPBrand spPBrand) {
 		int save = 0;

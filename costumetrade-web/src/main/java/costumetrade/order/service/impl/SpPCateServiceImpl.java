@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpPCate;
 import costumetrade.order.mapper.SpPCateMapper;
 import costumetrade.order.service.SpPCateService;
@@ -17,7 +18,10 @@ public class SpPCateServiceImpl implements SpPCateService{
 	private SpPCateMapper spPCateMapper;
 	
 	public List<SpPCate> getSpPCates(SpPCate spPCate) {
-		return spPCateMapper.getSpPCates(spPCate.getStoreId(),spPCate.getPage());
+		Page page = new Page();
+		page.setPageNum(spPCate.getPageNum());
+		page.setPageSize(spPCate.getPageSize());
+		return spPCateMapper.getSpPCates(spPCate.getStoreId(),page);
 	}
 	public int saveSpPCate(SpPCate spPCate) {
 		int save = 0;

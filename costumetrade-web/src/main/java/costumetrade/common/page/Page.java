@@ -16,19 +16,21 @@ public class Page implements Serializable {
 	 * 总共页数
 	 */
 	private Integer pages;
-	/**
-	 * 行数
-	 */
-	private Integer pageSize = 10;
+	
 	
 	/**
 	 * 总行数
 	 */
 	private long total;
+	
+	/**
+	 * 行数
+	 */
+	private Integer pageSize;
 	/**
 	 * 当前页码
 	 */
-	private Integer pageNum = 1;
+	private Integer pageNum;
 	
 
 	
@@ -37,7 +39,7 @@ public class Page implements Serializable {
 	}
 
 	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
+		this.pageSize = pageSize==null?10:pageSize;
 	}
 
 	public long getTotal() {
@@ -65,7 +67,7 @@ public class Page implements Serializable {
 	}
 	
 	public void setPageNum(Integer pageNum) {
-		this.pageNum = pageNum;
+		this.pageNum = pageNum==null?1:pageNum;
 	}
 	
 

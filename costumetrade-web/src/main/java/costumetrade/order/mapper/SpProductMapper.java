@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.query.ProductQuery;
 @Mapper
@@ -15,7 +16,7 @@ public interface SpProductMapper {
 
     int insert(SpProduct record);
 
-    String insertSelective(SpProduct record);
+    int insertSelective(SpProduct record);
 
     SpProduct selectByPrimaryKey(@Param("id")String id,@Param("storeId")Integer storeId);
     
@@ -25,7 +26,7 @@ public interface SpProductMapper {
 
     int updateByPrimaryKey(SpProduct record);
     
-    List<SpProduct> selectProducts(ProductQuery param);
+    List<SpProduct> selectProducts(@Param("product")ProductQuery product , @Param("page")Page page);
     
     ProductQuery selectProduct(ProductQuery param);
 }

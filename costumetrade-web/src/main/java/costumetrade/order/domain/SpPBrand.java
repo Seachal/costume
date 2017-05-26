@@ -82,7 +82,14 @@ public class SpPBrand extends Entity {
      */
     private String modifyBy;
     
-    private Page page;
+	/**
+	 * 行数
+	 */
+	private Integer pageSize;
+	/**
+	 * 当前页码
+	 */
+	private Integer pageNum;
 
     private static final long serialVersionUID = 1L;
 
@@ -208,12 +215,22 @@ public class SpPBrand extends Entity {
         this.modifyBy = modifyBy == null ? null : modifyBy.trim();
     }
 
-	public Page getPage() {
-		return page;
+	public Integer getPageSize() {
+		return pageSize;
 	}
 
-	public void setPage(Page page) {
-		this.page = page;
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
 	}
+
+	public Integer getPageNum() {
+		return pageNum;
+	}
+
+	public void setPageNum(Integer pageNum) {
+		this.pageNum = pageNum;
+	}
+
+
     
 }

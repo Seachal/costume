@@ -1,5 +1,6 @@
 package costumetrade.order.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import costumetrade.common.Entity;
@@ -46,7 +47,12 @@ public class SpPSize extends Entity {
      */
     private String modifyBy;
     
-    private Page page;
+    /**
+     * 尺码加价
+     * */
+    private BigDecimal priceRaise;
+    
+    
 
     private static final long serialVersionUID = 1L;
 
@@ -115,13 +121,15 @@ public class SpPSize extends Entity {
         this.modifyBy = modifyBy == null ? null : modifyBy.trim();
     }
 
-	public Page getPage() {
-		return page;
+
+
+	public BigDecimal getPriceRaise() {
+		return priceRaise;
 	}
 
-	public void setPage(Page page) {
-		this.page = page;
+	public void setPriceRaise(BigDecimal priceRaise) {
+		this.priceRaise = priceRaise;
 	}
-    
+
     
 }

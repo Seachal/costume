@@ -1,5 +1,6 @@
 package costumetrade.order.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import costumetrade.common.Entity;
@@ -44,6 +45,20 @@ public class SpPColor extends Entity {
      *  修改人
      */
     private String modifyBy;
+    
+    /**
+     * 尺码加价
+     * */
+    private BigDecimal priceRaise;
+    
+	/**
+	 * 行数
+	 */
+	private Integer pageSize;
+	/**
+	 * 当前页码
+	 */
+	private Integer pageNum;
 
     private static final long serialVersionUID = 1L;
 
@@ -112,4 +127,31 @@ public class SpPColor extends Entity {
     public void setModifyBy(String modifyBy) {
         this.modifyBy = modifyBy == null ? null : modifyBy.trim();
     }
+
+	public BigDecimal getPriceRaise() {
+		return priceRaise;
+	}
+
+	public void setPriceRaise(BigDecimal priceRaise) {
+		this.priceRaise = priceRaise;
+	}
+
+	public Integer getPageSize() {
+		return pageSize;
+	}
+
+	public void setPageSize(Integer pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public Integer getPageNum() {
+		return pageNum;
+	}
+
+	public void setPageNum(Integer pageNum) {
+		this.pageNum = pageNum;
+	}
+	
+	
+    
 }
