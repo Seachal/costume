@@ -8,7 +8,7 @@
     <result column="code" jdbcType="VARCHAR" property="code" />
     <result column="levelType" jdbcType="INTEGER" property="levelType" />
     <result column="brandId" jdbcType="INTEGER" property="brandid" />
-    <result column="prductType" jdbcType="INTEGER" property="prducttype" />
+    <result column="productType" jdbcType="INTEGER" property="producttype" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="fastcode" jdbcType="VARCHAR" property="fastcode" />
     <result column="barcode" jdbcType="VARCHAR" property="barcode" />
@@ -58,10 +58,12 @@
     <result column="time_up" jdbcType="TIMESTAMP" property="timeUp" />
     <result column="storeId" jdbcType="DECIMAL" property="storeId" />
     <result column="brand" jdbcType="VARCHAR" property="brand" />
-    <result column="prducttype" jdbcType="VARCHAR" property="prducttype" />
+    <result column="producttype" jdbcType="VARCHAR" property="producttype" />
     <result column="colors" jdbcType="VARCHAR" property="colors" />
     <result column="sizes" jdbcType="VARCHAR" property="sizes" />
     <result column="handcount" jdbcType="INTEGER" property="handcount" />
+    <result column="isModify" jdbcType="INTEGER" property="isModify" />
+    <result column="isDiscount" jdbcType="INTEGER" property="isDiscount" />
     <result column="year" jdbcType="VARCHAR" property="year" />
     <result column="season" jdbcType="VARCHAR" property="season" />
     <result column="image1" jdbcType="VARCHAR" property="image1" />
@@ -77,7 +79,7 @@
   </resultMap>
   
   <sql id="Base_Column_List">
-    id, storeId, status, code, brandId, prductType, name, fastcode, barcode, barcodes, levelType,
+    id, storeId, status, code, brandId, productType, name,isDiscount,isModify, fastcode, barcode, barcodes, levelType,
     grade, unit, colors, sizes, handcount, year, season, salTag, salMonth,saleNum, image, image1, 
     image2, image3, image4, description, warn_low, warn_high, time_up, time_down, create_time, 
     create_by, modify_time, modify_by
@@ -114,7 +116,7 @@
     							LEFT JOIN sp_customer_type customType ON customType.id = client.cate
     							WHERE client.id = #{product.clientId,jdbcType=INTEGER}  ) c ON c.storeId = product.storeId 
     LEFT JOIN sp_pbrand brand ON brand.id = product.brandId
-    LEFT JOIN sp_product_type productType ON productType.id = product.prductType
+    LEFT JOIN sp_product_type productType ON productType.id = product.productType
     WHERE 1=1
     and product.time_down &gt;= CURDATE() 
     and product.time_up &lt;= CURDATE() 
@@ -168,7 +170,7 @@
   	price1.wholePrice as originalPrice,
   	product.storeId,
   	brand.brandName as brand,
-  	productType.cateName as prducttype,
+  	productType.cateName as producttype,
   	product.colors,
   	product.sizes,
   	product.handcount, product.description,store.name as storeName,store.storePhoto as storeImage,
@@ -179,7 +181,7 @@
     							left join sp_customer_type customType on customType.id = client.cate
     							where  client.id = #{clientId,jdbcType=INTEGER} ) c on c.storeId = product.storeId 
     left join sp_pbrand brand on brand.id = product.brandId
-    left join sp_product_type productType on productType.id = product.prductType
+    left join sp_product_type productType on productType.id = product.productType
     left join sp_store store on store.id = product.storeId
     where 1=1
     and product.storeId = #{storeId,jdbcType=INTEGER}
@@ -195,9 +197,9 @@
   </update>
   <insert id="insert" parameterType="costumetrade.order.domain.SpProduct">
     insert into sp_product (id, storeId, status,levelType, 
-      code, brandId, prductType, 
+      code, brandId, productType, 
       name, fastcode, barcode, 
-      barcodes, grade, unit, 
+      barcodes, grade, unit, isModify,isDiscount,
       colors, sizes, handcount, 
       year, season, salTag, 
       salMonth,saleNum, image, image1, 
@@ -206,9 +208,9 @@
       time_up, time_down, create_time, 
       create_by, modify_time, modify_by)
     values (#{id,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{levelType,jdbcType=INTEGER},
-      #{code,jdbcType=VARCHAR}, #{brandid,jdbcType=INTEGER}, #{prducttype,jdbcType=INTEGER}, 
+      #{code,jdbcType=VARCHAR}, #{brandid,jdbcType=INTEGER}, #{producttype,jdbcType=INTEGER}, 
       #{name,jdbcType=VARCHAR}, #{fastcode,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR}, 
-      #{barcodes,jdbcType=VARCHAR}, #{grade,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, 
+      #{barcodes,jdbcType=VARCHAR}, #{grade,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{isModify,jdbcType=INTEGER}, #{isDiscount,jdbcType=INTEGER}, 
       #{colors,jdbcType=VARCHAR}, #{sizes,jdbcType=VARCHAR}, #{handcount,jdbcType=INTEGER}, 
       #{year,jdbcType=VARCHAR}, #{season,jdbcType=VARCHAR}, #{saltag,jdbcType=VARCHAR}, 
       #{salmonth,jdbcType=DECIMAL},#{saleNum,jdbcType=DECIMAL}, #{image,jdbcType=VARCHAR}, #{image1,jdbcType=VARCHAR}, 
@@ -238,8 +240,14 @@
       <if test="brandid != null">
         brandId,
       </if>
-      <if test="prducttype != null">
-        prductType,
+      <if test="producttype != null">
+        productType,
+      </if>
+      <if test="isDiscount != null">
+        isDiscount,
+      </if>
+      <if test="isModify != null">
+        isModify,
       </if>
       <if test="name != null">
         name,
@@ -346,8 +354,14 @@
       <if test="brandid != null">
         #{brandid,jdbcType=INTEGER},
       </if>
-      <if test="prducttype != null">
-        #{prducttype,jdbcType=INTEGER},
+      <if test="producttype != null">
+        #{producttype,jdbcType=INTEGER},
+      </if>
+      <if test="isDiscount != null">
+        #{isDiscount,jdbcType=INTEGER},
+      </if>
+      <if test="isModify != null">
+        #{isModify,jdbcType=INTEGER},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
@@ -451,8 +465,14 @@
       <if test="brandid != null">
         brandId = #{brandid,jdbcType=INTEGER},
       </if>
-      <if test="prducttype != null">
-        prductType = #{prducttype,jdbcType=INTEGER},
+      <if test="producttype != null">
+        productType = #{producttype,jdbcType=INTEGER},
+      </if>
+      <if test="isDiscount != null">
+        isDiscount = #{isDiscount,jdbcType=INTEGER},
+      </if>
+      <if test="isModify != null">
+        isModify = #{isModify,jdbcType=INTEGER},
       </if>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
@@ -548,7 +568,7 @@
       status = #{status,jdbcType=INTEGER},
       code = #{code,jdbcType=VARCHAR},
       brandId = #{brandid,jdbcType=INTEGER},
-      prductType = #{prducttype,jdbcType=INTEGER},
+      productType = #{producttype,jdbcType=INTEGER},
       name = #{name,jdbcType=VARCHAR},
       fastcode = #{fastcode,jdbcType=VARCHAR},
       barcode = #{barcode,jdbcType=VARCHAR},

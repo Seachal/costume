@@ -147,9 +147,6 @@
       <if test="storeid != null">
         storeId = #{storeid,jdbcType=VARCHAR},
       </if>
-      <if test="productid != null">
-        productId = #{productid,jdbcType=VARCHAR},
-      </if>
       <if test="purchaseprice != null">
         purchasePrice = #{purchaseprice,jdbcType=DECIMAL},
       </if>
@@ -185,7 +182,13 @@
         create_by = #{createBy,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where 1=1
+    <if test="id != null">
+    and id = #{id,jdbcType=INTEGER}
+    </if>
+    <if test="productid != null">
+       and productId = #{productid,jdbcType=VARCHAR}
+    </if>
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsPrice">
     update ss_pprice

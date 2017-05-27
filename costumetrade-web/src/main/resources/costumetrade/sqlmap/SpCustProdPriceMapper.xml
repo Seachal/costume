@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="costumetrade.user.mapper.SpCustProdPriceMapper">
+	<resultMap id="BaseResultMap" type="costumetrade.user.domain.SpCustProdPrice">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="storeId" jdbcType="INTEGER" property="storeid" />
+		<result column="type" jdbcType="VARCHAR" property="type" />
+		<result column="custTypeName" jdbcType="VARCHAR" property="custtypename" />
+		<result column="prodGrade" jdbcType="VARCHAR" property="prodgrade" />
+		<result column="custPriceJson" jdbcType="VARCHAR" property="custpricejson" />
+		<result column="discPriceJson" jdbcType="VARCHAR" property="discpricejson" />
+		<result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+		<result column="createBy" jdbcType="VARCHAR" property="createby" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, storeId, type, custTypeName, prodGrade, custPriceJson, discPriceJson,
+		createTime,
+		createBy
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sp_cust_prod_price
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="select" parameterType="costumetrade.user.domain.SpCustProdPrice"
+		resultMap="BaseResultMap">
+		select
+		id, storeId,custTypeName,custPriceJson, discPriceJson
+		from sp_cust_prod_price
+		where 1=1
+		<if test="id != null">
+			and id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="storeid != null">
+			and storeId = #{storeid,jdbcType=INTEGER}
+		</if>
+		<if test="type != null">
+			and type = #{type,jdbcType=VARCHAR}
+		</if>
+		<if test="custtypename != null">
+			and custTypeName = #{custtypename,jdbcType=VARCHAR}
+		</if>
+		<if test="prodgrade != null">
+			and prodGrade = #{prodgrade,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from sp_cust_prod_price
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="costumetrade.user.domain.SpCustProdPrice">
+		insert into sp_cust_prod_price (id, storeId, type,
+		custTypeName, prodGrade, custPriceJson,
+		discPriceJson, createTime, createBy
+		)
+		values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER},
+		#{type,jdbcType=VARCHAR},
+		#{custtypename,jdbcType=VARCHAR}, #{prodgrade,jdbcType=VARCHAR}, #{custpricejson,jdbcType=VARCHAR},
+		#{discpricejson,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP},
+		#{createby,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="costumetrade.user.domain.SpCustProdPrice">
+		insert into sp_cust_prod_price
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="storeid != null">
+				storeId,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="custtypename != null">
+				custTypeName,
+			</if>
+			<if test="prodgrade != null">
+				prodGrade,
+			</if>
+			<if test="custpricejson != null">
+				custPriceJson,
+			</if>
+			<if test="discpricejson != null">
+				discPriceJson,
+			</if>
+			<if test="createtime != null">
+				createTime,
+			</if>
+			<if test="createby != null">
+				createBy,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="storeid != null">
+				#{storeid,jdbcType=INTEGER},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=VARCHAR},
+			</if>
+			<if test="custtypename != null">
+				#{custtypename,jdbcType=VARCHAR},
+			</if>
+			<if test="prodgrade != null">
+				#{prodgrade,jdbcType=VARCHAR},
+			</if>
+			<if test="custpricejson != null">
+				#{custpricejson,jdbcType=VARCHAR},
+			</if>
+			<if test="discpricejson != null">
+				#{discpricejson,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				#{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createby != null">
+				#{createby,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="costumetrade.user.domain.SpCustProdPrice">
+		update sp_cust_prod_price
+		<set>
+			<if test="storeid != null">
+				storeId = #{storeid,jdbcType=INTEGER},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=VARCHAR},
+			</if>
+			<if test="custtypename != null">
+				custTypeName = #{custtypename,jdbcType=VARCHAR},
+			</if>
+			<if test="prodgrade != null">
+				prodGrade = #{prodgrade,jdbcType=VARCHAR},
+			</if>
+			<if test="custpricejson != null">
+				custPriceJson = #{custpricejson,jdbcType=VARCHAR},
+			</if>
+			<if test="discpricejson != null">
+				discPriceJson = #{discpricejson,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				createTime = #{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createby != null">
+				createBy = #{createby,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SpCustProdPrice">
+		update sp_cust_prod_price
+		set storeId = #{storeid,jdbcType=INTEGER},
+		type = #{type,jdbcType=VARCHAR},
+		custTypeName = #{custtypename,jdbcType=VARCHAR},
+		prodGrade = #{prodgrade,jdbcType=VARCHAR},
+		custPriceJson = #{custpricejson,jdbcType=VARCHAR},
+		discPriceJson = #{discpricejson,jdbcType=VARCHAR},
+		createTime = #{createtime,jdbcType=TIMESTAMP},
+		createBy = #{createby,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

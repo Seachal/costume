@@ -41,9 +41,7 @@
       <if test="stocknum != null">
        and stock.stockNum &gt;= #{stocknum,jdbcType=DOUBLE}
       </if>
-      <if test="page!=null">
-   		 LIMIT #{page.startRow},#{page.pageSize}
-    </if>
+   
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ss_stock
