@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONArray;
+import com.mysql.fabric.xmlrpc.base.Array;
+
 import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpPBrand;
 import costumetrade.order.domain.SpPCate;
@@ -35,7 +38,10 @@ import costumetrade.order.mapper.SsStockMapper;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.query.Rules;
 import costumetrade.order.service.SpProductService;
+import costumetrade.user.domain.PriceJson;
+import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SsDataDictionary;
+import costumetrade.user.mapper.SpCustProdPriceMapper;
 import costumetrade.user.mapper.SsDataDictionaryMapper;
 
 @Transactional
@@ -63,6 +69,9 @@ public class SpProductServiceImpl implements SpProductService{
 	private SpUnitMapper spUnitMapper;
 	@Autowired
 	private SsProductReviewMapper  ssProductReviewMapper;
+	@Autowired
+	private SpCustProdPriceMapper spCustProdPriceMapper;
+	
 	
 	@Override
 	public List<SpProduct> selectProducts(ProductQuery productQuery) {
@@ -109,8 +118,7 @@ public class SpProductServiceImpl implements SpProductService{
 		List<SpUnit> units = spUnitMapper.getUnits(storeId,null) ;
 		
 		List<String> list = new ArrayList<String>();
-		list.add("SALE_PRICE");//价格名称
-		list.add("PRODUCT_LEVEL");//货品级别
+		list.add("SELLING_METHOD");//售价方式
 		List<SsDataDictionary> dict = ssDataDictionaryMapper.selectDictionarys(list,storeId);
 		
 		ProductQuery queryResult = new ProductQuery();
@@ -120,20 +128,39 @@ public class SpProductServiceImpl implements SpProductService{
 		queryResult.setProductSize(sizes);
 		queryResult.setProductTypeList(productTypes);
 		queryResult.setUnitList(units);
-	
-		List<String> gradeList = new ArrayList<String>();
-		List<String> priceNameList = new ArrayList<String>();
+		//获取售价生成方式，value=1表示按照毛利，value=2表示按照折扣
+		String custOrDiscTag = "1"; 
 		if(dict !=null && dict.size()>0){
 			for(SsDataDictionary dictionary : dict){
-				if("SALE_PRICE".equals(dictionary.getDictGroup())){
-					priceNameList.add(dictionary.getDictValue());
-				}else if("PRODUCT_LEVEL".equals(dictionary.getDictGroup())){
-					gradeList.add(dictionary.getDictValue());
+				if("SELLING_METHOD".equals(dictionary.getDictGroup())){
+					custOrDiscTag = dictionary.getDictValue();
 				}
 			}
 		}
-		queryResult.setPriceNameList(priceNameList);
+		//获取商品等级对应的折扣率和毛利率
+		List<SpCustProdPrice> custProdPrice = new ArrayList<SpCustProdPrice>();
+		SpCustProdPrice spCustProdPrice = new SpCustProdPrice();
+		spCustProdPrice.setType(2+"");
+		spCustProdPrice.setStoreid(storeId);
+		custProdPrice = spCustProdPriceMapper.select(spCustProdPrice);
+		
+		List<String> gradeList = new ArrayList<String>();
+		List<SpCustProdPrice> custProdList = new ArrayList<SpCustProdPrice>();
+		if(custProdPrice.size()>0){
+			for(SpCustProdPrice price : custProdPrice){
+				price.setCustPriceJson((List<PriceJson>) JSONArray.parse(price.getCustpricejson()));
+				price.setDiscPriceJson((List<PriceJson>) JSONArray.parse(price.getDiscpricejson()));
+				gradeList.add(price.getCusttypename());
+				price.setCustpricejson(null);
+				price.setDiscpricejson(null);
+				custProdList.add(price);
+			}
+		}
+		
 		queryResult.setGradeList(gradeList);
+		queryResult.setCustProdPrice(custProdList);
+		queryResult.setCustOrDiscTag(custOrDiscTag);
+		
 		if(productId != null ){
 			SpProduct product = spProductMapper.selectByPrimaryKey(productId, storeId);
 			if(product != null){
@@ -158,7 +185,9 @@ public class SpProductServiceImpl implements SpProductService{
 				queryResult.setUnit(product.getUnit());
 				queryResult.setId(product.getId());
 				queryResult.setBrand(product.getBrandid()+"");
-				queryResult.setPrducttype(product.getPrducttype()+"");
+				queryResult.setProducttype(product.getProducttype()+"");
+				queryResult.setIsDiscount(product.getIsDiscount());
+				queryResult.setIsModify(product.getIsModify());
 			}
 			SsPrice price = ssPriceMapper.select(storeId, productId);
 			queryResult.setPurchaseprice(price.getPurchaseprice());
@@ -168,27 +197,45 @@ public class SpProductServiceImpl implements SpProductService{
 			queryResult.setSecondPrice(price.getSecondPrice());
 			queryResult.setThirdPrice(price.getThirdPrice());
 			queryResult.setFourthPrice(price.getFourthPrice());
+			
+			queryResult.setBrandList(null);
+			queryResult.setProductSize(null);
+			queryResult.setProductTypeList(null);
+			queryResult.setUnitList(null);
+			queryResult.setCustProdPrice(null);
 		}
 		return queryResult;
 	}
 
 	@Override
-	public int saveProduct(SpProduct product) {
+	public String saveProduct(SpProduct product) {
 		// 查询货号是否存在
 		if(product.getId() != null){
 			product.setStatus(0);
-			return spProductMapper.updateByPrimaryKeySelective(product);
+			spProductMapper.updateByPrimaryKeySelective(product);
+			//判断是否需保存价格
+			SsPrice price = new SsPrice();
+			price.setFifthPrice(product.getFifthPrice());
+			price.setFirsthPrice(product.getFirsthPrice());
+			price.setFourthPrice(product.getFourthPrice());
+			price.setProductid(product.getId());
+			price.setPurchaseprice(product.getPurchaseprice());
+			price.setTagprice(product.getTagprice());
+			price.setThirdPrice(product.getThirdPrice());
+			price.setSecondPrice(product.getSecondPrice());
+			price.setModifyTime(new Date());
+			ssPriceMapper.updateByPrimaryKeySelective(price);
+			
+			//判断是否需保存文件地址
+			if(product.getFileList() != null && product.getFileList().size()>0){
+				ssProductFileMapper.insertFiles(product.getFileList(),null);
+			}
+			return product.getId();
 		}else{
 			//保存商品
 			product.setId(UUID.randomUUID().toString().replaceAll("\\-", ""));
 			product.setStatus(0);
-			if(product.getSeason() != null){
-				product.setSeason(Enum.valueOf(SeasonTypeEnum.class,product.getSeason()).getValue());
-			}
-
-			if(product.getUnit() != null){
-				product.setUnit(Enum.valueOf(UnitTypeEnum.class,product.getUnit()).getValue());
-			}
+		
 			product.setSaleNum(BigDecimal.valueOf(0));
 			int save = spProductMapper.insertSelective(product);
 			if(save > 0 ){
@@ -210,17 +257,17 @@ public class SpProductServiceImpl implements SpProductService{
 				ssPriceMapper.insertSelective(price);
 				
 			}else{
-				return 0;
+				return null;
 			}
 			List<SsProductFile> files = product.getFileList();
 			if(files !=null && files.size()>0){
 				int op = ssProductFileMapper.insertFiles(files,null);
 				if(op <= 0){
-					return 0;
+					return null;
 				}
 			}
 		
-			return 1;	
+			return product.getId();	
 		}
 	}
 
@@ -244,7 +291,7 @@ public class SpProductServiceImpl implements SpProductService{
 			productType = spPCateMapper.insertSelective(type);
 		}
 		if(productType > 0){
-			product.setPrducttype(productType);
+			product.setProducttype(productType);
 		}
 		//查询商品品牌是否存在买家，不存在，新增
 		SpPBrand brand = spPBrandMapper.getSpPBrand(product.getBrandid(), product.getStoreId());

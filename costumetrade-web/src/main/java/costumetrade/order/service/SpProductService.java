@@ -24,7 +24,7 @@ public interface SpProductService {
 	 * 获取商品詳情
 	 * 
 	 * */
-	public int saveProduct(SpProduct product);
+	public String saveProduct(SpProduct product);
 	/**
 	 * 获取图片
 	 * 

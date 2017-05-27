@@ -41,12 +41,22 @@ public class SpProduct extends Entity {
     /**
      *  商品种类
      */
-    private Integer prducttype;
+    private Integer producttype;
 
     /**
      *  商品名称
      */
     private String name;
+    
+    /**
+     *  是否手动修改价格 1、修改 2、不修改
+     */
+    private Integer isModify;
+    
+    /**
+     *  是否参与打折 1、参与打折 2、不参与打折
+     */
+    private Integer isDiscount;
 
     /**
      *  助记简码
@@ -228,7 +238,6 @@ public class SpProduct extends Entity {
 	 * 图片文件集合
 	 * */
 	private List<SsProductFile> fileList;
-	private Page page;
     private static final long serialVersionUID = 1L;
     
 
@@ -274,12 +283,12 @@ public class SpProduct extends Entity {
         this.brandid = brandid;
     }
 
-    public Integer getPrducttype() {
-        return prducttype;
+    public Integer getProducttype() {
+        return producttype;
     }
 
-    public void setPrducttype(Integer prducttype) {
-        this.prducttype = prducttype;
+    public void setProducttype(Integer producttype) {
+        this.producttype = producttype;
     }
 
     public String getName() {
@@ -605,12 +614,21 @@ public class SpProduct extends Entity {
 		this.fileList = fileList;
 	}
 
-	public Page getPage() {
-		return page;
+
+	public Integer getIsModify() {
+		return isModify;
 	}
 
-	public void setPage(Page page) {
-		this.page = page;
+	public void setIsModify(Integer isModify) {
+		this.isModify = isModify;
+	}
+
+	public Integer getIsDiscount() {
+		return isDiscount;
+	}
+
+	public void setIsDiscount(Integer isDiscount) {
+		this.isDiscount = isDiscount;
 	}
 	
 	

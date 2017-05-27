@@ -5,11 +5,11 @@ import java.util.Date;
 import java.util.List;
 
 import costumetrade.common.Entity;
-import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpPBrand;
 import costumetrade.order.domain.SpPCate;
 import costumetrade.order.domain.SpPSizeCustom;
 import costumetrade.order.domain.SpUnit;
+import costumetrade.user.domain.SpCustProdPrice;
 
 public class ProductQuery extends Entity{
 
@@ -45,7 +45,7 @@ public class ProductQuery extends Entity{
     /**
      *  商品种类
      */
-    private String prducttype;
+    private String producttype;
 
     /**
      *  商品名称
@@ -83,11 +83,7 @@ public class ProductQuery extends Entity{
      */
     private List<String> seasonList;
     
-    private  List<String> gradeList;
-    
 
-    
-    private List<String> priceNameList ;
 
     
     /**
@@ -204,7 +200,22 @@ public class ProductQuery extends Entity{
      *  商品单位
      */
     private String unit;
-
+    
+    /**
+     *  是否手动修改价格 1、修改 2、不修改
+     */
+    private Integer isModify;
+    
+    /**
+     *  是否参与打折 1、参与打折 2、不参与打折
+     */
+    private Integer isDiscount;
+    
+    private String custOrDiscTag;
+    
+    private List<SpCustProdPrice> custProdPrice;
+    
+    private List<String> gradeList;
 
 	/**
 	 * 货品列表查询  开始
@@ -342,12 +353,14 @@ public class ProductQuery extends Entity{
 		this.brand = brand;
 	}
 
-	public String getPrducttype() {
-		return prducttype;
+
+
+	public String getProducttype() {
+		return producttype;
 	}
 
-	public void setPrducttype(String prducttype) {
-		this.prducttype = prducttype;
+	public void setProducttype(String producttype) {
+		this.producttype = producttype;
 	}
 
 	public String getName() {
@@ -546,17 +559,6 @@ public class ProductQuery extends Entity{
 		this.status = status;
 	}
 
-	public List<String> getPriceNameList() {
-		return priceNameList;
-	}
-
-	public void setPriceNameList(List<String> priceNameList) {
-		this.priceNameList = priceNameList;
-	}
-
-	public void setGradeList(List<String> gradeList) {
-		this.gradeList = gradeList;
-	}
 
 	public BigDecimal getPurchaseprice() {
 		return purchaseprice;
@@ -609,9 +611,7 @@ public class ProductQuery extends Entity{
 		this.barcodes = barcodes;
 	}
 
-	public List<String> getGradeList() {
-		return gradeList;
-	}
+
 
 	public String getGrade() {
 		return grade;
@@ -707,6 +707,46 @@ public class ProductQuery extends Entity{
 
 	public void setPageNum(Integer pageNum) {
 		this.pageNum = pageNum;
+	}
+
+	public List<SpCustProdPrice> getCustProdPrice() {
+		return custProdPrice;
+	}
+
+	public void setCustProdPrice(List<SpCustProdPrice> custProdPrice) {
+		this.custProdPrice = custProdPrice;
+	}
+
+	public String getCustOrDiscTag() {
+		return custOrDiscTag;
+	}
+
+	public void setCustOrDiscTag(String custOrDiscTag) {
+		this.custOrDiscTag = custOrDiscTag;
+	}
+
+	public Integer getIsModify() {
+		return isModify;
+	}
+
+	public void setIsModify(Integer isModify) {
+		this.isModify = isModify;
+	}
+
+	public Integer getIsDiscount() {
+		return isDiscount;
+	}
+
+	public void setIsDiscount(Integer isDiscount) {
+		this.isDiscount = isDiscount;
+	}
+
+	public List<String> getGradeList() {
+		return gradeList;
+	}
+
+	public void setGradeList(List<String> gradeList) {
+		this.gradeList = gradeList;
 	}
 
 	

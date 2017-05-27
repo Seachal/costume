@@ -132,12 +132,15 @@ public class SpProductController {
 			return result;
 		}
 		
-		int save = spProductService.saveProduct(product);
-		if(save<=0){
+		String id = spProductService.saveProduct(product);
+		if(id==null){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
 			return result;
+		}else{
+			result.setData( id);
 		}
+		
 		return  result;
 	}
 	

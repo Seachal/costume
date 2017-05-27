@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import costumetrade.cache.Cache;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
+import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpCustomerType;
 import costumetrade.user.domain.SsDataDictionary;
 import costumetrade.user.service.SsDataDictionaryService;
@@ -57,6 +58,50 @@ public class SsDataDictionaryController {
 		}
 		return result;
 
+	}
+	@RequestMapping("/saveTypeOrGradeRate")
+	@ResponseBody
+	public ApiResponse saveTypeOrGradeRate(@RequestBody SpCustProdPrice spCustProdPrice) {
+		
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(spCustProdPrice == null ){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.name());
+			return result;
+		}
+		int save = ssDataDictionaryService.saveTypeOrGradeRate(spCustProdPrice);
+		if(save<=0){
+			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			return result;
+		}
+		return result;
+		
+	}
+	@RequestMapping("/getTypeOrGradeRate")
+	@ResponseBody
+	public ApiResponse getTypeOrGradeRate(@RequestBody SpCustProdPrice spCustProdPrice) {
+		
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(spCustProdPrice == null ){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.name());
+			return result;
+		}
+		SpCustProdPrice price = ssDataDictionaryService.getTypeOrGradeRate(spCustProdPrice);
+		if(price == null){
+			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			return result;
+		}else{
+			result.setData(price);
+		}
+		return result;
+		
 	}
 	@RequestMapping("/saveCustomerType")
 	@ResponseBody

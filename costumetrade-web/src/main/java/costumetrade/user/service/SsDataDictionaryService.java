@@ -2,6 +2,7 @@ package costumetrade.user.service;
 
 import java.util.List;
 
+import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpCustomerType;
 import costumetrade.user.domain.SsDataDictionary;
 import costumetrade.user.query.DataDictionaryQuery;
@@ -38,4 +39,9 @@ public interface SsDataDictionaryService {
 	public DataDictionaryQuery initCustomType(DataDictionaryQuery query);
 	
 	public SpCustomerType saveCustomType(SpCustomerType customerType);
+	
+	public int saveTypeOrGradeRate(SpCustProdPrice spCustProdPrice);
+	
+	public SpCustProdPrice getTypeOrGradeRate(SpCustProdPrice spCustProdPrice);
+	
 }

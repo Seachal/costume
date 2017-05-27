@@ -8,8 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONArray;
+
+import costumetrade.user.domain.PriceJson;
+import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpCustomerType;
 import costumetrade.user.domain.SsDataDictionary;
+import costumetrade.user.mapper.SpCustProdPriceMapper;
 import costumetrade.user.mapper.SpCustomerTypeMapper;
 import costumetrade.user.mapper.SsDataDictionaryMapper;
 import costumetrade.user.query.DataDictionaryQuery;
@@ -22,6 +27,9 @@ public class SsDataDictionaryServiceImpl implements SsDataDictionaryService{
 	private SsDataDictionaryMapper ssDataDictionaryMapper;
 	@Autowired
 	private SpCustomerTypeMapper spCustomerTypeMapper;
+	@Autowired
+	private SpCustProdPriceMapper  spCustProdPriceMapper;
+	
 	@Override
 	public List<SsDataDictionary> getDataDictionarys(Integer storeId) {
 		return ssDataDictionaryMapper.getDataDictionarys(storeId);
@@ -125,6 +133,23 @@ public class SsDataDictionaryServiceImpl implements SsDataDictionaryService{
 			spCustomerTypeMapper.updateByPrimaryKeySelective(customerType);
 		}
 		return customerType;
+	}
+
+	@Override
+	public int saveTypeOrGradeRate(SpCustProdPrice spCustProdPrice) {
+		spCustProdPrice.setCustpricejson(JSONArray.toJSONString(spCustProdPrice.getCustPriceJson()));
+		spCustProdPrice.setDiscpricejson(JSONArray.toJSONString(spCustProdPrice.getDiscPriceJson()));
+		return spCustProdPriceMapper.insertSelective(spCustProdPrice);
+	}
+
+	@Override
+	public SpCustProdPrice getTypeOrGradeRate(SpCustProdPrice spCustProdPrice) {
+		SpCustProdPrice custProdPrice = spCustProdPriceMapper.selectByPrimaryKey(spCustProdPrice.getId());
+		custProdPrice.setCustPriceJson((List<PriceJson>) JSONArray.parse(custProdPrice.getCustpricejson()));
+		custProdPrice.setDiscPriceJson((List<PriceJson>) JSONArray.parse(custProdPrice.getDiscpricejson()));
+		custProdPrice.setCustpricejson(null);
+		custProdPrice.setDiscpricejson(null);
+		return custProdPrice;
 	}
 	
 
