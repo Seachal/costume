@@ -6,8 +6,6 @@ import java.util.List;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,7 +22,9 @@ import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.domain.SpClient;
 import costumetrade.order.service.SpClientService;
 import costumetrade.order.service.WeChatService;
+import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SsDataDictionary;
+import costumetrade.user.mapper.SpCustProdPriceMapper;
 import costumetrade.user.service.SsDataDictionaryService;
 
 /**
@@ -42,6 +42,9 @@ public class SpClientController {
 	private SsDataDictionaryService  ssDataDictionaryService;
 	@Autowired
 	private WeChatService weChatService;
+	@Autowired
+	private SpCustProdPriceMapper custProdPriceMapper;
+	
 	
 	@RequestMapping("/getTwoDimension")
 	@ResponseBody
@@ -131,17 +134,12 @@ public class SpClientController {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		SsDataDictionary dict = new SsDataDictionary();
-		dict.setStoreId(storeId);
-		dict.setDictGroup("CUSTOMER_TYPE");
-		List<SsDataDictionary> data = ssDataDictionaryService.getDataDicts(dict);
-		if(data == null){
-			result.setCode(ResponseInfo.NOT_DATA.code);
-			result.setMsg(ResponseInfo.NOT_DATA.msg);
-			return result;
-		}else{
-			result.setData(data);
-		}
+		SpCustProdPrice tempProdPrice = new SpCustProdPrice();
+		tempProdPrice.setStoreid(storeId);
+		
+		List<SpCustProdPrice> custProdList = custProdPriceMapper.select(tempProdPrice);
+	    result.setData(custProdList);
+		
 		return result;
 	}
 /*	@RequestMapping("/deleteClient")

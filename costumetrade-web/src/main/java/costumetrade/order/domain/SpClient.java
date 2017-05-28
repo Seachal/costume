@@ -3,6 +3,7 @@ package costumetrade.order.domain;
 import java.util.Date;
 
 import costumetrade.common.Entity;
+import costumetrade.user.domain.SpCustProdPrice;
 
 public class SpClient extends Entity {
     /**
@@ -134,6 +135,8 @@ public class SpClient extends Entity {
      *  修改人
      */
     private String modifyBy;
+    
+    private SpCustProdPrice prodPrice;
 
     private static final long serialVersionUID = 1L;
 
@@ -344,4 +347,14 @@ public class SpClient extends Entity {
     public void setModifyBy(String modifyBy) {
         this.modifyBy = modifyBy == null ? null : modifyBy.trim();
     }
+
+	public SpCustProdPrice getProdPrice() {
+		return prodPrice;
+	}
+
+	public void setProdPrice(SpCustProdPrice prodPrice) {
+		this.prodPrice = prodPrice;
+	}
+    
+    
 }
