@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="costumetrade.user.domain.SpStore">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="parentId" jdbcType="INTEGER" property="parentid" />
+    <result column="storeType" jdbcType="INTEGER" property="storeType" />
     <result column="storePhoto" jdbcType="VARCHAR" property="storephoto" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="server" jdbcType="VARCHAR" property="server" />
@@ -23,7 +24,7 @@
     <result column="description" jdbcType="VARCHAR" property="description" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, parentId, storePhoto, name, server, contact, phone, cphone, address, create_time, 
+    id, parentId, storePhoto, name,storeType, server, contact, phone, cphone, address, create_time, 
     create_by, modify_time, modify_by, we_ticket, we_url, region, wechat, birthday, description
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -37,14 +38,14 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="costumetrade.user.domain.SpStore">
-    insert into sp_store (id, parentId, storePhoto, 
+    insert into sp_store (id, parentId, storePhoto,storeType, 
       name, server, contact, 
       phone, cphone, address, 
       create_time, create_by, modify_time, 
       modify_by, we_ticket, we_url, 
       region, wechat, birthday, 
       description)
-    values (#{id,jdbcType=INTEGER}, #{parentid,jdbcType=INTEGER}, #{storephoto,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{parentid,jdbcType=INTEGER}, #{storephoto,jdbcType=VARCHAR}, #{storeType,jdbcType=INTEGER},
       #{name,jdbcType=VARCHAR}, #{server,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{cphone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, 
@@ -63,6 +64,9 @@
       </if>
       <if test="storephoto != null">
         storePhoto,
+      </if>
+      <if test="storeType != null">
+        storeType,
       </if>
       <if test="name != null">
         name,
@@ -123,6 +127,9 @@
       <if test="storephoto != null">
         #{storephoto,jdbcType=VARCHAR},
       </if>
+      <if test="storeType != null">
+        #{storeType,jdbcType=VARCHAR},
+      </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
@@ -182,6 +189,9 @@
       <if test="storephoto != null">
         storePhoto = #{storephoto,jdbcType=VARCHAR},
       </if>
+      <if test="storeType != null">
+        storeType = #{storeType,jdbcType=VARCHAR},
+      </if>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
@@ -237,6 +247,7 @@
     update sp_store
     set parentId = #{parentid,jdbcType=INTEGER},
       storePhoto = #{storephoto,jdbcType=VARCHAR},
+      storeType = #{storeType,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
       server = #{server,jdbcType=VARCHAR},
       contact = #{contact,jdbcType=VARCHAR},

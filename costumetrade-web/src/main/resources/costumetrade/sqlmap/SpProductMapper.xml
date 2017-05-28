@@ -48,6 +48,13 @@
     <result column="storeId" jdbcType="INTEGER" property="storeId" />
     <result column="price" jdbcType="DECIMAL" property="price" />
     <result column="saleNum" jdbcType="DECIMAL" property="saleNum" />
+    <result column="purchasePrice" jdbcType="DECIMAL" property="purchaseprice" />
+    <result column="tagPrice" jdbcType="DECIMAL" property="tagprice" />
+    <result column="fourthPrice" jdbcType="DECIMAL" property="fourthPrice" />
+    <result column="fifthPrice" jdbcType="DECIMAL" property="fifthPrice" />
+    <result column="firsthPrice" jdbcType="DECIMAL" property="firsthPrice" />
+    <result column="secondPrice" jdbcType="DECIMAL" property="secondPrice" />
+    <result column="thirdPrice" jdbcType="DECIMAL" property="thirdPrice" />
   </resultMap>
   
   <resultMap id="ProductResultMap" type="costumetrade.order.query.ProductQuery">
@@ -76,6 +83,14 @@
     <result column="storeImage" jdbcType="VARCHAR" property="storeImage" />
     <result column="salePrice" jdbcType="DECIMAL" property="salePrice" />
     <result column="originalPrice" jdbcType="DECIMAL" property="originalPrice" />
+    
+    <result column="purchasePrice" jdbcType="DECIMAL" property="purchaseprice" />
+    <result column="tagPrice" jdbcType="DECIMAL" property="tagprice" />
+    <result column="fourthPrice" jdbcType="DECIMAL" property="fourthPrice" />
+    <result column="fifthPrice" jdbcType="DECIMAL" property="fifthPrice" />
+    <result column="firsthPrice" jdbcType="DECIMAL" property="firsthPrice" />
+    <result column="secondPrice" jdbcType="DECIMAL" property="secondPrice" />
+    <result column="thirdPrice" jdbcType="DECIMAL" property="thirdPrice" />
   </resultMap>
   
   <sql id="Base_Column_List">
@@ -93,6 +108,7 @@
     select 
     <include refid="Base_Column_List" />
     from sp_product_#{storeId,jdbcType=INTEGER}
+  
     where id = #{id,jdbcType=VARCHAR}
   </select>
   <select id="selectById"  resultMap="BaseResultMap">
@@ -105,16 +121,9 @@
   <select id="selectProducts"  resultMap="ProductsResultMap">
     SELECT 
   	product.id,product.storeId,product.code,product.name,product.image,product.time_up,
-  	(CASE 
-  			WHEN c.saleType = 1 THEN price1.tagPrice 
-  			WHEN c.saleType = 2 THEN price1.wholePrice 
-  			WHEN c.saleType = 3 THEN price1.packPrice
-  			WHEN c.saleType = 4 THEN price1.retailPrice ELSE price1.wholePrice END) price,product.saleNum
+	price.purchasePrice, price.tagPrice, price.firsthPrice, price.secondPrice, price.thirdPrice, price.fourthPrice,price.fifthPrice,product.saleNum
     FROM sp_product_#{product.storeId,jdbcType=INTEGER} product
-    LEFT JOIN ss_pprice_1 price1 ON price1.productId = product.id AND price1.storeId = product.storeId
-    LEFT JOIN (SELECT customType.saleType,client.storeId ,client.id FROM sp_client CLIENT 
-    							LEFT JOIN sp_customer_type customType ON customType.id = client.cate
-    							WHERE client.id = #{product.clientId,jdbcType=INTEGER}  ) c ON c.storeId = product.storeId 
+    LEFT JOIN ss_pprice_#{product.storeId,jdbcType=INTEGER} price ON price.productId = product.id AND price.storeId = product.storeId
     LEFT JOIN sp_pbrand brand ON brand.id = product.brandId
     LEFT JOIN sp_product_type productType ON productType.id = product.productType
     WHERE 1=1
@@ -123,7 +132,6 @@
     <if test="product.status != null">
      and product.status =#{product.status}
     </if>
-   
      <if test="product.code != null">
       and  product.code like  CONCAT('%',#{product.code},'%')
       </if>
@@ -162,11 +170,7 @@
   <select id="selectProduct" parameterType="costumetrade.order.query.ProductQuery" resultMap="ProductResultMap">
     select 
   	product.id,product.code,product.name,product.image,product.time_up,
-  	(case 
-  			when c.saleType = 1 then price1.tagPrice 
-  			when c.saleType = 2 then price1.wholePrice 
-  			when c.saleType = 3 then price1.packPrice
-  			when c.saleType = 4 then price1.retailPrice else price1.wholePrice end) salePrice,
+  	price.purchasePrice, price.tagPrice, price.firsthPrice, price.secondPrice, price.thirdPrice, price.fourthPrice,price.fifthPrice,
   	price1.wholePrice as originalPrice,
   	product.storeId,
   	brand.brandName as brand,
@@ -176,10 +180,7 @@
   	product.handcount, product.description,store.name as storeName,store.storePhoto as storeImage,
   	product.year , product.season, product.image1, product.image2, product.image3, product.image4
     from sp_product_#{storeId,jdbcType=INTEGER} product
-    left join ss_pprice_#{storeId,jdbcType=INTEGER} price1 on price1.productId = product.id and price1.storeId = product.storeId
-    left join (select customType.saleType,client.storeId from sp_client client 
-    							left join sp_customer_type customType on customType.id = client.cate
-    							where  client.id = #{clientId,jdbcType=INTEGER} ) c on c.storeId = product.storeId 
+    left join ss_pprice_#{storeId,jdbcType=INTEGER} price on price.productId = product.id and price.storeId = product.storeId
     left join sp_pbrand brand on brand.id = product.brandId
     left join sp_product_type productType on productType.id = product.productType
     left join sp_store store on store.id = product.storeId
