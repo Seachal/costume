@@ -26,7 +26,7 @@ public class Page implements Serializable {
 	/**
 	 * 行数
 	 */
-	private Integer pageSize;
+	private Integer pageSize=10;
 	/**
 	 * 当前页码
 	 */
