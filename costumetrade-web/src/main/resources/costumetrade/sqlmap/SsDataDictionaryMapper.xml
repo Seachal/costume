@@ -140,6 +140,63 @@
       </if>
     </trim>
   </insert>
+  <insert id="insertDatas" parameterType="List">
+  	<foreach collection="datas" index="index" item="item" separator=";">
+    insert into ss_data_dictionary
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="item.storeId != null">
+        storeId,
+      </if>
+      <if test="item.dictGroupName != null">
+        dict_group_name,
+      </if>
+      <if test="item.dictGroup != null">
+        dict_group,
+      </if>
+      <if test="item.dictValue != null">
+        dict_value,
+      </if>
+      <if test="item.dictText != null">
+        dict_text,
+      </if>
+      <if test="item.sortNum != null">
+        sort_num,
+      </if>
+      <if test="item.status != null">
+        status,
+      </if>
+      <if test="item.createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="item.storeId != null">
+        #{item.storeId,jdbcType=INTEGER},
+      </if>
+      <if test="item.dictGroupName != null">
+        #{item.dictGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="item.dictGroup != null">
+        #{item.dictGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="item.dictValue != null">
+        #{item.dictValue,jdbcType=VARCHAR},
+      </if>
+      <if test="item.dictText != null">
+        #{item.dictText,jdbcType=VARCHAR},
+      </if>
+      <if test="item.sortNum != null">
+        #{item.sortNum,jdbcType=INTEGER},
+      </if>
+      <if test="item.status != null">
+        #{item.status,jdbcType=INTEGER},
+      </if>
+      <if test="item.createTime != null">
+        #{item.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+    </foreach>
+  </insert>
   <update id="updateByPrimaryKeySelective" parameterType="costumetrade.user.domain.SsDataDictionary">
     update ss_data_dictionary
     <set>
@@ -172,6 +229,39 @@
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateDatas" parameterType="List">
+  <foreach collection="datas" index="index" item="item" separator=";">
+    update ss_data_dictionary
+    <set>
+      <if test="item.storeId != null">
+        storeId = #{item.storeId,jdbcType=INTEGER},
+      </if>
+      <if test="item.dictGroupName != null">
+        dict_group_name = #{item.dictGroupName,jdbcType=VARCHAR},
+      </if>
+      <if test="item.dictGroup != null">
+        dict_group = #{item.dictGroup,jdbcType=VARCHAR},
+      </if>
+      <if test="item.dictValue != null">
+        dict_value = #{item.dictValue,jdbcType=VARCHAR},
+      </if>
+      <if test="item.dictText != null">
+        dict_text = #{item.dictText,jdbcType=VARCHAR},
+      </if>
+      <if test="item.sortNum != null">
+        sort_num = #{item.sortNum,jdbcType=INTEGER},
+      </if>
+      <if test="item.status != null">
+        status = #{item.status,jdbcType=INTEGER},
+      </if>
+      <if test="item.createTime != null">
+        create_time = #{item.createTime,jdbcType=TIMESTAMP},
+      </if>
+     
+    </set>
+    where id = #{item.id,jdbcType=INTEGER}
+    </foreach>
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SsDataDictionary">
     update ss_data_dictionary
