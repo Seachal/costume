@@ -64,7 +64,7 @@
     <result column="image" jdbcType="VARCHAR" property="image" />
     <result column="time_up" jdbcType="TIMESTAMP" property="timeUp" />
     <result column="storeId" jdbcType="DECIMAL" property="storeId" />
-    <result column="brand" jdbcType="VARCHAR" property="brand" />
+    <result column="brandId" jdbcType="VARCHAR" property="brandid" />
     <result column="producttype" jdbcType="VARCHAR" property="producttype" />
     <result column="colors" jdbcType="VARCHAR" property="colors" />
     <result column="sizes" jdbcType="VARCHAR" property="sizes" />
@@ -171,9 +171,8 @@
     select 
   	product.id,product.code,product.name,product.image,product.time_up,
   	price.purchasePrice, price.tagPrice, price.firsthPrice, price.secondPrice, price.thirdPrice, price.fourthPrice,price.fifthPrice,
-  	price1.wholePrice as originalPrice,
   	product.storeId,
-  	brand.brandName as brand,
+  	brand.brandId,
   	productType.cateName as producttype,
   	product.colors,
   	product.sizes,
