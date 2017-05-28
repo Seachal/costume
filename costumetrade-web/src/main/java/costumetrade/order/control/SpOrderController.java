@@ -58,8 +58,13 @@ public class SpOrderController {
 		}
 		
 		//获取货品单位
-		List<SpProduct> products = spProductService.selectProductById(param.getProductIdArray(),order.getSellerstoreid());
-		param.setClientId((Integer) httpSession.getAttribute("clientId"));
+		//List<SpProduct> products = spProductService.selectProductById(param.getProductIdArray(),order.getSellerstoreid());
+		if(null!=param.getStoreId()){
+			param.setClientId(param.getStoreId());
+		}else if(null!=param.getUserId()){
+			param.setClientId(param.getUserId());
+		}
+		
 		order.setClientId(param.getClientId());
 		order.setCreateby(param.getClientId()+"");
 		order.setModifyby(param.getClientId()+"");
@@ -74,10 +79,10 @@ public class SpOrderController {
 				detail.setPrice(param.getPriceArray().get(i));
 				detail.setProductid(param.getProductIdArray().get(i)+"");
 				detail.setProductname(param.getProductNameArray().get(i));
-				
-				if(param.getProductIdArray().get(i).equals(products.get(i).getId())){
+				detail.setProductunit(param.getProductUnitArray().get(i));
+/*				if(param.getProductIdArray().get(i).equals(products.get(i).getId())){
 					detail.setProductunit(products.get(i).getUnit());
-				}
+				}*/
 				detail.setCreateby(order.getCreateby());
 				detail.setCreatetime(new Date());
 				detail.setModifyby(order.getModifyby());
@@ -86,17 +91,11 @@ public class SpOrderController {
 				details.add(detail);
 			}
 		}
+	
+		int ret = spOrderService.saveOrders(details,order,param.getClientId());
+			result.setData(ret);
+			return result;
 		
-
-		SsStoOrder o = spOrderService.saveOrders(details,order,param.getClientId());
-		if(o == null){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
-			return result;
-		}else{
-			result.setData(o);
-			return result;
-		}
 		
 	}
 	@RequestMapping("/orderInit")
