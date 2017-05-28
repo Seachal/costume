@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import costumetrade.order.domain.SpPSize;
+import costumetrade.order.enums.ResultTypeEnum;
 import costumetrade.order.mapper.SpPSizeMapper;
 import costumetrade.order.service.SpPSizeService;
 
@@ -25,7 +26,7 @@ public class SpPSizeServiceImpl implements SpPSizeService{
 		//查询对应yanse是否存在，存在的话进行update 不存在save
 		SpPSize getSize = spPSizeMapper.selectByName(spPSize.getStoreId(),spPSize.getSizename());
 		if(getSize != null){
-			return save;
+			return ResultTypeEnum.RESULT_EXISTS.getCode();
 		}else {
 			save = spPSizeMapper.insert(spPSize) ;
 		}

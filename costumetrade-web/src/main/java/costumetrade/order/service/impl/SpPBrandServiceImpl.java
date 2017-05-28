@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpPBrand;
+import costumetrade.order.enums.ResultTypeEnum;
 import costumetrade.order.mapper.SpPBrandMapper;
 import costumetrade.order.service.SpPBrandService;
 
@@ -28,7 +29,7 @@ public class SpPBrandServiceImpl implements SpPBrandService{
 		//查询对应品牌是否存在，存在的话进行update 不存在save
 		SpPBrand getBrand = spPBrandMapper.getSpPBrandByName(spPBrand.getBrandname(), spPBrand.getStoreId());
 		if(getBrand != null){
-			return save;
+			return ResultTypeEnum.RESULT_EXISTS.getCode();
 		}else {
 			save = spPBrandMapper.insert(spPBrand) ;
 		}

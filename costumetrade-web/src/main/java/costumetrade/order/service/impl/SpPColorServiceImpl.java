@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import costumetrade.order.domain.SpPColor;
+import costumetrade.order.enums.ResultTypeEnum;
 import costumetrade.order.mapper.SpPColorMapper;
 import costumetrade.order.service.SpPColorService;
 
@@ -25,7 +26,7 @@ public class SpPColorServiceImpl implements SpPColorService{
 		//查询对应颜色是否存在，存在的话进行update 不存在save
 		SpPColor getColor = spPColorMapper.selectByName(spPColor.getColorname(), spPColor.getStoreId());
 		if(getColor != null){
-			return save;
+			return ResultTypeEnum.RESULT_EXISTS.getCode();
 		}else {
 			save = spPColorMapper.insert(spPColor) ;
 		}

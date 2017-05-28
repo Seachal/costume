@@ -26,6 +26,8 @@ public class OrderQuery extends Entity {
      */
     private Integer storeId;
     
+    private Integer userId;
+    
     private String orderNo;
     
     private Integer operate;//订单状态  1：新增   2、已付款  3、审核  4、发货  5、收货  6、已取消
@@ -38,6 +40,9 @@ public class OrderQuery extends Entity {
 	private List<String> productIdArray;
 
 	private List<String> productNameArray;
+	
+	private List<String> productUnitArray;
+	
 
 	private List<BigDecimal> countArray;
 
@@ -168,6 +173,22 @@ public class OrderQuery extends Entity {
 
 	public void setOrderType(Integer orderType) {
 		this.orderType = orderType;
+	}
+
+	public List<String> getProductUnitArray() {
+		return productUnitArray;
+	}
+
+	public void setProductUnitArray(List<String> productUnitArray) {
+		this.productUnitArray = productUnitArray;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
  
    

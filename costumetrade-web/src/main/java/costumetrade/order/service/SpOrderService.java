@@ -21,7 +21,7 @@ public interface SpOrderService {
 	 *下单
 	 * 
 	 * */
-	public SsStoOrder saveOrders(List<SsStoDetail> details,SsStoOrder order,Integer clientId);
+	public int saveOrders(List<SsStoDetail> details,SsStoOrder order,Integer clientId);
 	
 	/*
 	 * 查询订单详情

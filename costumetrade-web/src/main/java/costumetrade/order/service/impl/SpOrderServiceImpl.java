@@ -72,7 +72,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 	private SsProductReviewMapper ssProductReviewMapper;
 	
 	@Override
-	public SsStoOrder saveOrders(List<SsStoDetail> details,SsStoOrder order,Integer clientId) {
+	public int saveOrders(List<SsStoDetail> details,SsStoOrder order,Integer clientId) {
 		
 		String orderNo = OrderNoGenerator.generate("O");
 		List<SsStoDetail> detail = new ArrayList<SsStoDetail>();
@@ -117,11 +117,11 @@ public class SpOrderServiceImpl implements SpOrderService{
 			ssStoDetailMapper.saveDetailStore(detail,order.getSellerstoreid());
 			save = ssStoOrderMapper.insertStore(order,order.getSellerstoreid());
 		}
-		SsStoOrder o = null ;
+/*		SsStoOrder o = null ;
 		if(save >0){
 			o = order(orderNo, order.getSellerstoreid());
-		}
-		return o;
+		}*/
+		return save;
 	}
 	@Override
 	public OrderDetailQuery getOrder(String orderNo ,Integer orderType, Integer clientId) {
