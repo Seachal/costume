@@ -1,6 +1,7 @@
 package costumetrade.order.service.impl;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletOutputStream;
@@ -103,17 +104,12 @@ public class SpClientServiceImpl implements SpClientService{
 		
 	}
 	@Override
-	public List<SpClient> getClients(Integer clientId,Integer type) {
-		SpClient client = new SpClient();
-		client = spClientMapper.selectByPrimaryKey(clientId);
-		if(client.getStoreid() != null){
-			client.setType(type+"");
-			return spClientMapper.select(client);
-		}else{
-			return null;
-		}
-		
+	public List<SpClient> getClients(SpClient spClient) {
+		 List<SpClient> clientList = spClientMapper.select(spClient);
+		return clientList;
 	}
+	
+	
 	@Override
 	public SpClient getClient(Integer clientId) {
 		// TODO Auto-generated method stub

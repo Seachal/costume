@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="costumetrade.user.mapper.SpPrivilegeMapper">
+  <resultMap id="BaseResultMap" type="costumetrade.user.domain.SpPrivilege">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="storeId" jdbcType="BIGINT" property="storeid" />
+    <result column="operate_code" jdbcType="VARCHAR" property="operateCode" />
+    <result column="operate_name" jdbcType="VARCHAR" property="operateName" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="is_del" jdbcType="INTEGER" property="isDel" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, storeId, operate_code, operate_name, parent_id, is_del, create_date, update_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sp_privilege
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+   <select id="getSpPrivilegeList" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sp_privilege
+  </select> 
+   <select id="getSpPrivilegeList" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sp_privilege
+  </select> 
+  <select id="isPrivilegeExsist" parameterType="java.util.Map" resultMap="BaseResultMap">
+     SELECT  a.id FROM   sp_privilege_employee  a JOIN sp_privilege b ON a.privilege_id=b.id 
+      WHERE 1=1
+       <if test="empId != null">
+       and a.employee_id = #{empId,jdbcType=VARCHAR}
+      </if>
+      <if test="operateCode != null">
+       and b.operate_code = #{operateCode,jdbcType=VARCHAR}
+      </if>
+  </select> 
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from sp_privilege
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="costumetrade.user.domain.SpPrivilege">
+    insert into sp_privilege (id, storeId, operate_code, 
+      operate_name, parent_id, is_del, 
+      create_date, update_date)
+    values (#{id,jdbcType=BIGINT}, #{storeid,jdbcType=BIGINT}, #{operateCode,jdbcType=VARCHAR}, 
+      #{operateName,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, #{isDel,jdbcType=INTEGER}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="costumetrade.user.domain.SpPrivilege">
+    insert into sp_privilege
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="storeid != null">
+        storeId,
+      </if>
+      <if test="operateCode != null">
+        operate_code,
+      </if>
+      <if test="operateName != null">
+        operate_name,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="isDel != null">
+        is_del,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="storeid != null">
+        #{storeid,jdbcType=BIGINT},
+      </if>
+      <if test="operateCode != null">
+        #{operateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operateName != null">
+        #{operateName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="isDel != null">
+        #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.user.domain.SpPrivilege">
+    update sp_privilege
+    <set>
+      <if test="storeid != null">
+        storeId = #{storeid,jdbcType=BIGINT},
+      </if>
+      <if test="operateCode != null">
+        operate_code = #{operateCode,jdbcType=VARCHAR},
+      </if>
+      <if test="operateName != null">
+        operate_name = #{operateName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=BIGINT},
+      </if>
+      <if test="isDel != null">
+        is_del = #{isDel,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SpPrivilege">
+    update sp_privilege
+    set storeId = #{storeid,jdbcType=BIGINT},
+      operate_code = #{operateCode,jdbcType=VARCHAR},
+      operate_name = #{operateName,jdbcType=VARCHAR},
+      parent_id = #{parentId,jdbcType=BIGINT},
+      is_del = #{isDel,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

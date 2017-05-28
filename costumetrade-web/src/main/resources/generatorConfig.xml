@@ -55,12 +55,16 @@
 			enableUpdateByExample="false" enableDeleteByExample="false"
 			enableSelectByExample="false" selectByExampleQueryId="false">
 		</table>-->
-		<table tableName="sc_trade_info"  domainObjectName="sc_trade_info"
+		<table tableName="sp_privilege"  domainObjectName="sp_privilege"
 			enableCountByExample="false"
 			enableUpdateByExample="false" enableDeleteByExample="false"
 			enableSelectByExample="false" selectByExampleQueryId="false">
 		</table>
-		
+		<table tableName="sp_privilege_employee"  domainObjectName="sp_privilege_employee"
+			enableCountByExample="false"
+			enableUpdateByExample="false" enableDeleteByExample="false"
+			enableSelectByExample="false" selectByExampleQueryId="false">
+		</table>		
 		
 	</context>
 </generatorConfiguration>

@@ -32,8 +32,6 @@ public class SpUserController {
 	@Autowired
 	private SpUserService spUserService;
 	@Autowired
-	private HttpSession httpSession;
-	@Autowired
 	private WeChatService weChatService;
 	
 	@RequestMapping("/login")

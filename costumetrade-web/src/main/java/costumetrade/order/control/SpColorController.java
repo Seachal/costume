@@ -32,7 +32,12 @@ public class SpColorController {
 	@RequestMapping("/getAllColors")
 	@ResponseBody
 	public ApiResponse getAllColors(String storeId) {
-		
+		ApiResponse result = new ApiResponse();
+		if(storeId == null ){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
 		List<SpPColor> colorLists = new ArrayList<SpPColor>();
 		colorLists = spPColorService.getSpPColors(Integer.valueOf(storeId));
 

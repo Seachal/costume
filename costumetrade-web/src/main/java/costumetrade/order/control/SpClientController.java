@@ -39,8 +39,6 @@ public class SpClientController {
 	@Autowired
 	private SpClientService spClientService;
 	@Autowired
-	private HttpSession httpSession;
-	@Autowired
 	private SsDataDictionaryService  ssDataDictionaryService;
 	@Autowired
 	private WeChatService weChatService;
@@ -100,16 +98,15 @@ public class SpClientController {
 	
 	@RequestMapping("/getClients")
 	@ResponseBody
-	public ApiResponse getClients(Integer type) {
+	public ApiResponse getClients(SpClient spClient) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		Integer clientId=(Integer) httpSession.getAttribute("clientId");
 		
-		List<SpClient> client = spClientService.getClients(clientId,type);
+		List<SpClient> client = spClientService.getClients(spClient);
 		if(client.size()<=0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}
 		return result;
@@ -121,12 +118,11 @@ public class SpClientController {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		//Integer clientId=(Integer) httpSession.getAttribute("clientId");
 		
 		SpClient client = spClientService.getClient(clientId);
 		if(client == null){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}
 		return result;
@@ -137,22 +133,20 @@ public class SpClientController {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		//Integer clientId=(Integer) httpSession.getAttribute("clientId");
 		SsDataDictionary dict = new SsDataDictionary();
 		dict.setStoreId(storeId);
 		dict.setDictGroup("CUSTOMER_TYPE");
-		dict.setDictGroupName("客户类型");
 		List<SsDataDictionary> data = ssDataDictionaryService.getDataDicts(dict);
 		if(data == null){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
 			result.setData(data);
 		}
 		return result;
 	}
-	@RequestMapping("/deleteClient")
+/*	@RequestMapping("/deleteClient")
 	@ResponseBody
 	public ApiResponse deleteClient(SpClient client) {
 		ApiResponse result = new ApiResponse();
@@ -166,7 +160,7 @@ public class SpClientController {
 			return result;
 		}
 		return result;
-	}
+	}*/
 	@RequestMapping("/scanQRCode")
 	@ResponseBody
 	public ApiResponse scanQRCode(String sceneStr) throws Exception {

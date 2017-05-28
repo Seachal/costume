@@ -51,6 +51,12 @@ public class SpOrderController {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(order == null || param == null){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		
 		//获取货品单位
 		List<SpProduct> products = spProductService.selectProductById(param.getProductIdArray(),order.getSellerstoreid());
 		param.setClientId((Integer) httpSession.getAttribute("clientId"));
@@ -81,12 +87,7 @@ public class SpOrderController {
 			}
 		}
 		
-		if(order == null || param == null){
-			result.setCode(ResponseInfo.LACK_PARAM.code);
-			result.setMsg(ResponseInfo.LACK_PARAM.msg);
-			return result;
-		}
-	
+
 		SsStoOrder o = spOrderService.saveOrders(details,order,param.getClientId());
 		if(o == null){
 			result.setCode(ResponseInfo.EXCEPTION.code);

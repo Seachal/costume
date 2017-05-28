@@ -12,5 +12,5 @@ public interface SpUserService {
 	/**
 	 * 保存个人中心信息
 	 * */
-	public Object saveUserOrStore(SpStore spStore);
+	public int saveUserOrStore(SpStore spStore);
 }

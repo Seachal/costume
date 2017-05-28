@@ -49,28 +49,16 @@ public class SpUserServiceImpl implements SpUserService{
 		return wechat;
 	}
 	@Override
-	public Object saveUserOrStore(SpStore spStore) {
-		Object obj = null;
+	public int saveUserOrStore(SpStore spStore) {
 		if(spStore.getStoreId() != null){
-			SpStore store = spStoreMapper.selectByPrimaryKey(spStore.getStoreId());
-			if(store == null){
-				return null;
-			}else{
-				spStoreMapper.updateByPrimaryKeySelective(spStore);
-				obj= spStoreMapper.selectByPrimaryKey(spStore.getStoreId());
-			}
-			
+			return spStoreMapper.updateByPrimaryKeySelective(spStore);			
 		}else if(spStore.getUserId() != null){
-			SpUser user = spUserMapper.selectByPrimaryKey(spStore.getUserId());
-			if(user ==null){
-				return null;
-			}else{
 				SpUser spUser = new SpUser();
-				spUser.setId(user.getId());
+				spUser.setId(spStore.getUserId());
 				spUser.setAddress(spStore.getAddress());
 				spUser.setBirthday(spStore.getBirthday());
 				spUser.setCphone(spStore.getCphone());
-				spUser.setCreateBy(user.getId()+"");
+				spUser.setCreateBy(spStore.getUserId()+"");
 				spUser.setCreateTime(new Date());
 				spUser.setName(spStore.getName());
 				spUser.setPhone(spStore.getPhone());
@@ -78,11 +66,10 @@ public class SpUserServiceImpl implements SpUserService{
 				spUser.setRegion(spStore.getRegion());
 				spUser.setRemark(spStore.getDescription());
 				spUser.setWechatNo(spStore.getWechat());
-				spUserMapper.updateByPrimaryKeySelective(spUser);
-				obj =  spUserMapper.selectByPrimaryKey(spStore.getUserId());
-			}
+				return spUserMapper.updateByPrimaryKeySelective(spUser);
 		}
-		return obj;
+		
+		return 0;
 	}
 	
 }

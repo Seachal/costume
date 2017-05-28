@@ -23,7 +23,7 @@ public interface SpClientService {
 	
 	public int saveClient(SpClient client);
 	
-	public List<SpClient> getClients(Integer clientId,Integer type);
+	public List<SpClient> getClients(SpClient spClient);
 	
 	public SpClient getClient(Integer clientId);
 	

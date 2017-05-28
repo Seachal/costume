@@ -36,7 +36,7 @@ public class SsDataDictionaryServiceImpl implements SsDataDictionaryService{
 	}
 
 	@Override
-	public List<SsDataDictionary> saveDataDictionary(List<SsDataDictionary> dictionarys) {
+	public List<SsDataDictionary> saveDataDictionary(List<SsDataDictionary> dictionarys ) {
 		for(SsDataDictionary dictionary : dictionarys){
 			List<SsDataDictionary> dict = ssDataDictionaryMapper.select(dictionary);
 			if(dict == null){
@@ -46,7 +46,7 @@ public class SsDataDictionaryServiceImpl implements SsDataDictionaryService{
 				dictionary.setId(dict.get(0).getId());
 				ssDataDictionaryMapper.updateByPrimaryKeySelective(dictionary);
 			}
-			if("CUSTOMER_TYPE".equals(dictionary.getDictGroup())){
+/*			if("CUSTOMER_TYPE".equals(dictionary.getDictGroup())){
 				SpCustomerType type = new SpCustomerType();
 				type.setTypename(dictionary.getDictValue());
 				type.setStoreid(dictionary.getStoreId());
@@ -64,7 +64,7 @@ public class SsDataDictionaryServiceImpl implements SsDataDictionaryService{
 					type.setId(customType.getId());
 					spCustomerTypeMapper.updateByPrimaryKeySelective(type);
 				}
-			}
+			}*/
 		}
 		Integer storeId = dictionarys.get(0).getStoreId();
 		return ssDataDictionaryMapper.getDataDictionarys(storeId);

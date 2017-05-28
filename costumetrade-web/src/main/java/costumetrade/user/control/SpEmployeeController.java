@@ -32,10 +32,10 @@ public class SpEmployeeController {
 	
 	@RequestMapping("/getAllEmployees")
 	@ResponseBody
-	public ApiResponse getAllEmployees(String subId) {
+	public ApiResponse getAllEmployees(String storeId) {
 		
 		List<SpEmployee> employeeLists = new ArrayList<SpEmployee>();
-		employeeLists = spEmployeeService.getAllEmployees(subId);
+		employeeLists = spEmployeeService.getAllEmployees(storeId);
 /*		CacheableLong cacheLong = (CacheableLong)cache.get("产品_品牌_样式_id");
 		if(null!=cacheLong){
 			cache.add("产品_品牌_样式_id", new CacheableLong(cacheLong.getLong()+2l));
