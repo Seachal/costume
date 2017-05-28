@@ -50,8 +50,8 @@ public class SpCartController {
 		}
 		int save = spCartService.saveSpCart(spCart);
 		if(save<=0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}
 		return result;
@@ -68,8 +68,8 @@ public class SpCartController {
 	
 		int delete = spCartService.deleteSpCart(id);
 		if(delete<=0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}
 		return result;

@@ -80,9 +80,7 @@ public class SpOrderController {
 				detail.setProductid(param.getProductIdArray().get(i)+"");
 				detail.setProductname(param.getProductNameArray().get(i));
 				detail.setProductunit(param.getProductUnitArray().get(i));
-/*				if(param.getProductIdArray().get(i).equals(products.get(i).getId())){
-					detail.setProductunit(products.get(i).getUnit());
-				}*/
+
 				detail.setCreateby(order.getCreateby());
 				detail.setCreatetime(new Date());
 				detail.setModifyby(order.getModifyby());
@@ -91,13 +89,14 @@ public class SpOrderController {
 				details.add(detail);
 			}
 		}
-	
-		int ret = spOrderService.saveOrders(details,order,param.getClientId());
-			result.setData(ret);
-			return result;
-		
-		
+		Integer save = spOrderService.saveOrders(details,order,param.getClientId());
+		if(save <=0){
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
+		}
+		return result;
 	}
+	
 	@RequestMapping("/orderInit")
 	@ResponseBody
 	public ApiResponse orderInit() {
@@ -121,8 +120,8 @@ public class SpOrderController {
 		OrderDetailQuery query = spOrderService.getOrder(orderNo,orderType,clientId);
 		
 		if(query == null){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
 			result.setData(query);
@@ -145,8 +144,8 @@ public class SpOrderController {
 		List<SsStoOrder> query = spOrderService.getOrders(orderType,orderStatus,clientId);
 		
 		if(query.size() < 0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
 			result.setData(query);
@@ -168,12 +167,11 @@ public class SpOrderController {
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		//param.setClientId((Integer) httpSession.getAttribute("clientId"));
 		int operate = spOrderService.orderOperate(param);
 		
 		if(operate <= 0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}else{
 			return result;
@@ -196,8 +194,8 @@ public class SpOrderController {
 		int operate = spOrderService.orderPay(ssFinancial);
 		
 		if(operate <= 0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}else{
 			return result;
@@ -215,8 +213,8 @@ public class SpOrderController {
 		int  confirm = spOrderService.confirmLogistic(scLogistics);
 		
 		if(confirm <= 0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}else{
 			return result;
@@ -234,8 +232,8 @@ public class SpOrderController {
 		//scLogistics.setCreateby((String) httpSession.getAttribute("clientId"));
 		MessageResp<List<RouteRespDto>> response = spOrderService.queryLogistic(ssStoOrder);
 		if(response == null){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
 			result.setData(response);
@@ -255,8 +253,8 @@ public class SpOrderController {
 
 		int response =spOrderService.saveReview(ssProductReview);
 		if(response <= 0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}
 		return result;

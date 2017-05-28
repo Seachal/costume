@@ -41,7 +41,7 @@ public class SpPCateController {
 		}
 		List<SpPCate> CateLists = new ArrayList<SpPCate>();
 		CateLists = spPCateService.getSpPCates(cate);
-
+		
 		return  ApiResponse.getInstance(CateLists);
 	}
 
@@ -59,8 +59,8 @@ public class SpPCateController {
 		}
 		int save = spPCateService.saveSpPCate(spPCate);
 		if(save<=0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}
 		return result;
@@ -77,8 +77,8 @@ public class SpPCateController {
 	
 		int delete = spPCateService.deleteSpPCate(ids);
 		if(delete<=0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}
 		return result;

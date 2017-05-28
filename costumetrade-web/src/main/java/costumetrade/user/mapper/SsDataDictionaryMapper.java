@@ -13,6 +13,8 @@ public interface SsDataDictionaryMapper {
     int insert(SsDataDictionary record);
 
     int insertSelective(SsDataDictionary record);
+    
+    int insertDatas(@Param("datas")List<SsDataDictionary> datas);
 
     SsDataDictionary selectByPrimaryKey(Integer id);
     
@@ -23,6 +25,8 @@ public interface SsDataDictionaryMapper {
     List<SsDataDictionary> getDataDictionarys(Integer storeId);
     
     int updateByPrimaryKeySelective(SsDataDictionary record);
+    
+    int updateDatas(@Param("datas")List<SsDataDictionary> record);
 
     int updateByPrimaryKey(SsDataDictionary record);
 }

@@ -36,38 +36,25 @@ public class SsDataDictionaryServiceImpl implements SsDataDictionaryService{
 	}
 
 	@Override
-	public List<SsDataDictionary> saveDataDictionary(List<SsDataDictionary> dictionarys ) {
+	public Integer saveDataDictionary(List<SsDataDictionary> dictionarys ) {
+		List<SsDataDictionary> dataDictionarys1 = new ArrayList<SsDataDictionary>();//有ID的数据 进行批量修改
+		List<SsDataDictionary> dataDictionarys2 = new ArrayList<SsDataDictionary>();//无ID的数据进行批量
+		int save =0;
 		for(SsDataDictionary dictionary : dictionarys){
-			List<SsDataDictionary> dict = ssDataDictionaryMapper.select(dictionary);
-			if(dict == null){
-				dictionary.setStatus(0);
-				ssDataDictionaryMapper.insertSelective(dictionary);
+			if(dictionary.getId() != null){
+				dataDictionarys1.add(dictionary);
 			}else{
-				dictionary.setId(dict.get(0).getId());
-				ssDataDictionaryMapper.updateByPrimaryKeySelective(dictionary);
+				dictionary.setCreateTime(new Date());
+				dataDictionarys2.add(dictionary);
 			}
-/*			if("CUSTOMER_TYPE".equals(dictionary.getDictGroup())){
-				SpCustomerType type = new SpCustomerType();
-				type.setTypename(dictionary.getDictValue());
-				type.setStoreid(dictionary.getStoreId());
-				type.setSaletype(dictionary.getSaletype());
-				type.setCreateBy(dictionary.getCreateBy());
-				type.setCreateTime(dictionary.getCreateTime());
-				type.setIntegration(dictionary.getIntegration());
-				type.setVisibleGrade(dictionary.getVisibleGrade());
-				type.setModifyBy(dictionary.getCreateBy());
-				type.setModifyTime(new Date());
-				SpCustomerType customType = spCustomerTypeMapper.selectByName(type);
-				if(customType == null ){
-					spCustomerTypeMapper.insertSelective(type);
-				}else{
-					type.setId(customType.getId());
-					spCustomerTypeMapper.updateByPrimaryKeySelective(type);
-				}
-			}*/
 		}
-		Integer storeId = dictionarys.get(0).getStoreId();
-		return ssDataDictionaryMapper.getDataDictionarys(storeId);
+		if(dataDictionarys1.size()>0){
+			save =ssDataDictionaryMapper.updateDatas(dataDictionarys2);
+		}
+		if(dataDictionarys2.size()>0){
+			save = ssDataDictionaryMapper.insertDatas(dataDictionarys2);
+		}
+		return save;
 	}
 
 	@Override

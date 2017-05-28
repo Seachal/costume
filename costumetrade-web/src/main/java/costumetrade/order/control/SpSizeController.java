@@ -53,8 +53,8 @@ public class SpSizeController {
 		}
 		int save = spPSizeService.saveSpPSize(spPSize);
 		if(save<=0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}
 		return result;
@@ -71,8 +71,8 @@ public class SpSizeController {
 	
 		int delete = spPSizeService.deleteSpPSize(ids);
 		if(delete<=0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}
 		return result;
@@ -102,8 +102,8 @@ public class SpSizeController {
 		}
 		int save = spPSizeCustomService.saveSpPSizeCustom(spPSizeCustom);
 		if(save<=0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}
 		return result;
@@ -120,8 +120,8 @@ public class SpSizeController {
 	
 		int delete = spPSizeCustomService.deleteSpPSizeCustom(ids);
 		if(delete<=0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}
 		return result;

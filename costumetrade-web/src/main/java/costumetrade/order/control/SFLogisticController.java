@@ -76,8 +76,8 @@ public class SFLogisticController {
 		}
 		MessageResp<OrderQueryRespDto> response = sFLogisticsService.querySF(orderQueryReqDto);
 		if(response == null){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
 			result.setData(response);
@@ -96,8 +96,8 @@ public class SFLogisticController {
 	
 		MessageResp<List<RouteRespDto>> response = sFLogisticsService.queryRouteSF(routeReqDto);
 		if(response == null){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
 			result.setData(response);

@@ -39,7 +39,7 @@ public interface SpProductService {
 	 * 保存商品库存
 	 * 
 	 * */
-	public List<SsStock> updateStock(List<SsStock> stocks);
+	public 	Integer updateStock(List<SsStock> stocks);
 	/**
 	 * 新增商品初始化查询
 	 * 

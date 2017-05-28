@@ -53,8 +53,8 @@ public class SpUserController {
 			chat = spUserService.login(openid);
 		}
 		if(chat == null){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}
 
@@ -71,7 +71,7 @@ public class SpUserController {
 			result.setMsg(ResponseInfo.LACK_PARAM.name());
 			return result;
 		}
-		Object obj = spUserService.saveUserOrStore(store);
+		Integer obj = spUserService.saveUserOrStore(store);
 		return  ApiResponse.getInstance(obj);
 	}
 	

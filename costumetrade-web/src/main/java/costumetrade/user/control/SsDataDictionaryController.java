@@ -48,13 +48,11 @@ public class SsDataDictionaryController {
 			result.setMsg(ResponseInfo.LACK_PARAM.name());
 			return result;
 		}
-		List<SsDataDictionary> dict = ssDataDictionaryService.saveDataDictionary(dictionarys);
-		if(dict == null){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+		Integer save = ssDataDictionaryService.saveDataDictionary(dictionarys);
+		if(save <= 0){
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
-		}else{
-			result.setData(dict);
 		}
 		return result;
 

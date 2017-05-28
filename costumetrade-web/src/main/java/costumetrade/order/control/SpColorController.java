@@ -40,7 +40,11 @@ public class SpColorController {
 		}
 		List<SpPColor> colorLists = new ArrayList<SpPColor>();
 		colorLists = spPColorService.getSpPColors(Integer.valueOf(storeId));
-
+		if(colorLists == null){
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			return result;
+		}
 		return  ApiResponse.getInstance(colorLists);
 	}
 
@@ -58,8 +62,8 @@ public class SpColorController {
 		}
 		int save = spPColorService.saveSpPColor(spPColor);
 		if(save<=0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}
 		return result;
@@ -76,8 +80,8 @@ public class SpColorController {
 		
 		int delete = spPColorService.deleteSpPColor(id);
 		if(delete<=0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}
 		return result;
@@ -89,7 +93,7 @@ public class SpColorController {
 		
 		List<SpPColorCustom> colorCustomLists = new ArrayList<SpPColorCustom>();
 		colorCustomLists = spPColorCustomService.getSpPColorCustoms(corpId);
-
+	
 		return  ApiResponse.getInstance(colorCustomLists);
 	}
 
@@ -107,8 +111,8 @@ public class SpColorController {
 		}
 		int save = spPColorCustomService.saveSpPColorCustom(spPColorCustom);
 		if(save<=0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}
 		return result;
@@ -125,8 +129,8 @@ public class SpColorController {
 	
 		int delete = spPColorCustomService.deleteSpPColorCustom(id);
 		if(delete<=0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}
 		return result;

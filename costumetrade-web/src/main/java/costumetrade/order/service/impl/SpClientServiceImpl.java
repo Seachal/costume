@@ -105,19 +105,17 @@ public class SpClientServiceImpl implements SpClientService{
 	}
 	@Override
 	public List<SpClient> getClients(SpClient spClient) {
-		 List<SpClient> clientList = spClientMapper.select(spClient);
+		List<SpClient> clientList = spClientMapper.select(spClient);
 		return clientList;
 	}
 	
 	
 	@Override
 	public SpClient getClient(Integer clientId) {
-		// TODO Auto-generated method stub
 		return spClientMapper.selectByPrimaryKey(clientId);
 	}
 	@Override
 	public int deleteClient(Integer clientId) {
-		// TODO Auto-generated method stub
 		return spClientMapper.deleteById(clientId);
 	}
 	

@@ -19,7 +19,7 @@ public interface SsDataDictionaryService {
 	 * 
 	 * 新增设置内容
 	 * */
-	public List<SsDataDictionary> saveDataDictionary(List<SsDataDictionary> dictionarys);
+	public Integer saveDataDictionary(List<SsDataDictionary> dictionarys);
 	
 	/**
 	 * 删除设置

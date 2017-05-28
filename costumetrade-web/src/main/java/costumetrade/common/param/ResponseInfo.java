@@ -25,6 +25,7 @@ public enum ResponseInfo {
 	MOBILE_VERIFICATION_CODE_ERROR(1008,"手机验证码错误"),
 	LACK_PARAM(1009,"缺少参数"),
 	TASK_EXPIRED(2000,"任务失效"), 
+	OPERATE_EXPIRED(1010,"操作失败"),
 	;
 
 	public final int code;

@@ -356,16 +356,9 @@ public class SpProductServiceImpl implements SpProductService{
 	}
 
 	@Override
-	public List<SsStock> updateStock(List<SsStock> stocks) {
+	public Integer updateStock(List<SsStock> stocks) {
 		int update =  ssStockMapper.batchUpdate(stocks);
-		List<SsStock> list = new ArrayList<SsStock>();
-		if(update > 0){
-			SsStock stock = new SsStock();
-			stock.setProductid(stocks.get(0).getProductid());
-			stock.setStoreid(stocks.get(0).getStoreid());
-			list = ssStockMapper.select(stock);
-		}
-		return list;
+		return update;
 	}
 
 	@Override

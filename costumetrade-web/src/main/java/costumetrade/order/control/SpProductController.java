@@ -113,8 +113,8 @@ public class SpProductController {
 		}
 		int delete = spProductService.updateProducts(idArray,Integer.valueOf(storeId));
 		if(delete <= 0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}
 		return  result;
@@ -134,8 +134,8 @@ public class SpProductController {
 		
 		String id = spProductService.saveProduct(product);
 		if(id==null){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}else{
 			result.setData( id);
@@ -155,8 +155,8 @@ public class SpProductController {
 		
 		List<SsStock> stocks = spProductService.takingStock(product);
 		if(stocks == null){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
 			result.setData(stocks);
@@ -174,10 +174,10 @@ public class SpProductController {
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		List<SsStock> stockList = spProductService.updateStock(stocks);
+		Integer stockList = spProductService.updateStock(stocks);
 		if(stockList == null){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}else{
 			result.setData(stockList);
@@ -193,8 +193,8 @@ public class SpProductController {
 		
 		List<SsProductFile> files = spProductService.getImages(productFile);
 		if(files == null){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
 			result.setData(files);
@@ -214,8 +214,8 @@ public class SpProductController {
 		}
 		List<SsProductReview> reviews = spProductService.getReviews(query);
 		if(reviews == null){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
 			result.setData(reviews);
