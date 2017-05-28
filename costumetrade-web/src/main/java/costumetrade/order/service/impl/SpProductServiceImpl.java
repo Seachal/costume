@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 
+
+
 import com.alibaba.fastjson.JSONArray;
 
 import costumetrade.common.page.Page;
@@ -43,8 +45,10 @@ import costumetrade.order.query.Rules;
 import costumetrade.order.service.SpProductService;
 import costumetrade.user.domain.PriceJson;
 import costumetrade.user.domain.SpCustProdPrice;
+import costumetrade.user.domain.SpStore;
 import costumetrade.user.domain.SsDataDictionary;
 import costumetrade.user.mapper.SpCustProdPriceMapper;
+import costumetrade.user.mapper.SpStoreMapper;
 import costumetrade.user.mapper.SsDataDictionaryMapper;
 
 @Transactional
@@ -74,7 +78,8 @@ public class SpProductServiceImpl implements SpProductService{
 	private SsProductReviewMapper  ssProductReviewMapper;
 	@Autowired
 	private SpCustProdPriceMapper spCustProdPriceMapper;
-	
+	@Autowired
+	private SpStoreMapper spStoreMapper;
 	
 	@Override
 	public List<SpProduct> selectProducts(ProductQuery productQuery) {
@@ -101,7 +106,6 @@ public class SpProductServiceImpl implements SpProductService{
 		}
 		Page page = new Page();
 		page.setPageNum(productQuery.getPageNum());
-		page.setPageSize(productQuery.getPageSize());
 		return spProductMapper.selectProducts(productQuery,page);
 	}
 
@@ -131,7 +135,12 @@ public class SpProductServiceImpl implements SpProductService{
 		queryResult.setProductTypeList(productTypes);
 		queryResult.setUnitList(units);
 		//获取售价生成方式，value=1表示按照毛利，value=2表示按照折扣
+		//设置生成方式默认值：根据店铺类型
+		SpStore spStore = spStoreMapper.selectByPrimaryKey(storeId);
 		String custOrDiscTag = "1"; 
+		if(spStore != null){
+			custOrDiscTag = spStore.getStoreType();
+		}
 		if(dict !=null && dict.size()>0){
 			for(SsDataDictionary dictionary : dict){
 				if("SELLING_METHOD".equals(dictionary.getDictGroup())){
@@ -195,6 +204,7 @@ public class SpProductServiceImpl implements SpProductService{
 				queryResult.setProducttype(product.getProducttype()+"");
 				queryResult.setIsDiscount(product.getIsDiscount());
 				queryResult.setIsModify(product.getIsModify());
+				queryResult.setGrade(product.getGrade());
 			}
 			SsPrice price = ssPriceMapper.select(storeId, productId);
 			queryResult.setPurchaseprice(price.getPurchaseprice());
@@ -224,6 +234,7 @@ public class SpProductServiceImpl implements SpProductService{
 			SsPrice price = new SsPrice();
 			price.setFifthPrice(product.getFifthPrice());
 			price.setFirsthPrice(product.getFirsthPrice());
+			price.setStoreid(product.getStoreId());
 			price.setFourthPrice(product.getFourthPrice());
 			price.setProductid(product.getId());
 			price.setPurchaseprice(product.getPurchaseprice());

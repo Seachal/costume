@@ -20,18 +20,20 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;*/
 import costumetrade.order.domain.SpClient;
+
+import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.mapper.SpCustProdPriceMapper;
+
 
 @Transactional
 @Service
 public class SpClientServiceImpl implements SpClientService{
 	@Autowired
 	private SpClientMapper spClientMapper;
+
 	@Autowired
-	private SpCustProdPriceMapper custProdPriceMapper;
-	
-	private static final int BLACK = 0xFF000000;
-	private static final int WHITE = 0xFFFFFFFF;
+	private SpCustProdPriceMapper spCustProdPriceMapper;
+
 	/** 
 	 *  生成web版本二维码 
 	 * @param url 要生成二维码的路径 
@@ -100,11 +102,11 @@ public class SpClientServiceImpl implements SpClientService{
 	@Override
 	public int saveClient(SpClient client) {
 		if(client.getId() == null){
-			int custProdInt = custProdPriceMapper.insert(client.getProdPrice());
+			int custProdInt = spCustProdPriceMapper.insert(client.getProdPrice());
 			client.setCate(String.valueOf(custProdInt));
 			return spClientMapper.insertSelective(client);
 		}else{
-			custProdPriceMapper.updateByPrimaryKey(client.getProdPrice());
+			spCustProdPriceMapper.updateByPrimaryKey(client.getProdPrice());
 			return spClientMapper.updateByPrimaryKeySelective(client);
 		}
 		
@@ -123,6 +125,25 @@ public class SpClientServiceImpl implements SpClientService{
 	@Override
 	public int deleteClient(Integer clientId) {
 		return spClientMapper.deleteById(clientId);
+	}
+	@Override
+	public List<SpCustProdPrice> initCustomer(Integer storeId) {
+		List<SpCustProdPrice> customTypeList= new ArrayList<SpCustProdPrice>();//存放ID 和客户种类值 
+		//获取客户种类
+		List<SpCustProdPrice> custProdPrice = new ArrayList<SpCustProdPrice>();
+		SpCustProdPrice spCustProdPrice = new SpCustProdPrice();
+		spCustProdPrice.setType(2+"");
+		spCustProdPrice.setStoreid(storeId);
+		custProdPrice = spCustProdPriceMapper.select(spCustProdPrice);
+		if(custProdPrice.size()>0){
+			for(SpCustProdPrice price : custProdPrice){
+				SpCustProdPrice prodPrice = new SpCustProdPrice(); 
+				prodPrice.setId(price.getId());
+				prodPrice.setCusttypename(price.getCusttypename());
+				customTypeList.add(prodPrice);
+			}
+		}
+		return customTypeList;
 	}
 	
 }

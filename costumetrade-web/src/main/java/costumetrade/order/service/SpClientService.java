@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import costumetrade.order.domain.SpClient;
+import costumetrade.user.domain.SpCustProdPrice;
 
 @Service
 @Transactional
@@ -28,4 +29,9 @@ public interface SpClientService {
 	public SpClient getClient(Integer clientId);
 	
 	public int deleteClient(Integer clientId);
+	
+	/**
+	 * 新增跳转初始化
+	 * */
+	public List<SpCustProdPrice> initCustomer(Integer storeId);
 }

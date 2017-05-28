@@ -21,7 +21,11 @@ public class SpStore extends Entity {
      *  店铺头像
      */
     private String storephoto;
-
+    
+    /**
+     * 店铺类型
+     * */
+    private String storeType;
     /**
      *  分店名称:
      */
@@ -275,6 +279,14 @@ public class SpStore extends Entity {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	public String getStoreType() {
+		return storeType;
+	}
+
+	public void setStoreType(String storeType) {
+		this.storeType = storeType;
 	}
 	
     

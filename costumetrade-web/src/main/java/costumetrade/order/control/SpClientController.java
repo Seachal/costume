@@ -1,11 +1,14 @@
 package costumetrade.order.control;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -134,12 +137,16 @@ public class SpClientController {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		SpCustProdPrice tempProdPrice = new SpCustProdPrice();
-		tempProdPrice.setStoreid(storeId);
-		
-		List<SpCustProdPrice> custProdList = custProdPriceMapper.select(tempProdPrice);
-	    result.setData(custProdList);
-		
+
+		List<SpCustProdPrice> data = spClientService.initCustomer(storeId);
+		if(data == null){
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			return result;
+		}else{
+			result.setData(data);
+		}
+
 		return result;
 	}
 /*	@RequestMapping("/deleteClient")
