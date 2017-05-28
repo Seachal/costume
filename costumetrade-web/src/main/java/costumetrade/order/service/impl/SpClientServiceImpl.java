@@ -20,12 +20,15 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;*/
 import costumetrade.order.domain.SpClient;
+import costumetrade.user.mapper.SpCustProdPriceMapper;
 
 @Transactional
 @Service
 public class SpClientServiceImpl implements SpClientService{
 	@Autowired
 	private SpClientMapper spClientMapper;
+	@Autowired
+	private SpCustProdPriceMapper custProdPriceMapper;
 	
 	private static final int BLACK = 0xFF000000;
 	private static final int WHITE = 0xFFFFFFFF;
@@ -97,8 +100,11 @@ public class SpClientServiceImpl implements SpClientService{
 	@Override
 	public int saveClient(SpClient client) {
 		if(client.getId() == null){
+			int custProdInt = custProdPriceMapper.insert(client.getProdPrice());
+			client.setCate(String.valueOf(custProdInt));
 			return spClientMapper.insertSelective(client);
 		}else{
+			custProdPriceMapper.updateByPrimaryKey(client.getProdPrice());
 			return spClientMapper.updateByPrimaryKeySelective(client);
 		}
 		
