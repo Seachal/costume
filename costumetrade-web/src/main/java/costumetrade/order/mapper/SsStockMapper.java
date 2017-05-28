@@ -3,6 +3,7 @@ package costumetrade.order.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import costumetrade.order.domain.SsStock;
 @Mapper
@@ -19,5 +20,5 @@ public interface SsStockMapper {
 
     int updateByPrimaryKey(SsStock record);
     
-    int batchUpdate(List<SsStock> stocks);
+    int batchUpdate(@Param("stocks")List<SsStock> stocks);
 }

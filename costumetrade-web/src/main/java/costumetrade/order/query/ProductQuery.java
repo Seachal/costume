@@ -2,7 +2,9 @@ package costumetrade.order.query;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import costumetrade.common.Entity;
 import costumetrade.order.domain.SpPBrand;
@@ -40,7 +42,7 @@ public class ProductQuery extends Entity{
     /**
      *  商品品牌Id号
      */
-    private String brand;
+    private String brandid;
 
     /**
      *  商品种类
@@ -215,7 +217,7 @@ public class ProductQuery extends Entity{
     
     private List<SpCustProdPrice> custProdPrice;
     
-    private List<String> gradeList;
+    private List<SpCustProdPrice>  gradeList;
 
 	/**
 	 * 货品列表查询  开始
@@ -345,12 +347,12 @@ public class ProductQuery extends Entity{
 
 	
 
-	public String getBrand() {
-		return brand;
+	public String getBrandid() {
+		return brandid;
 	}
 
-	public void setBrand(String brand) {
-		this.brand = brand;
+	public void setBrandId(String brandid) {
+		this.brandid = brandid;
 	}
 
 
@@ -741,13 +743,15 @@ public class ProductQuery extends Entity{
 		this.isDiscount = isDiscount;
 	}
 
-	public List<String> getGradeList() {
+	public List<SpCustProdPrice> getGradeList() {
 		return gradeList;
 	}
 
-	public void setGradeList(List<String> gradeList) {
+	public void setGradeList(List<SpCustProdPrice> gradeList) {
 		this.gradeList = gradeList;
 	}
+
+
 
 	
 	

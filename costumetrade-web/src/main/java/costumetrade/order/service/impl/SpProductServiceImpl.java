@@ -3,15 +3,20 @@ package costumetrade.order.service.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
+import javax.print.attribute.HashAttributeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
+
 import com.alibaba.fastjson.JSONArray;
-import com.mysql.fabric.xmlrpc.base.Array;
 
 import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpPBrand;
@@ -23,8 +28,6 @@ import costumetrade.order.domain.SsPrice;
 import costumetrade.order.domain.SsProductFile;
 import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStock;
-import costumetrade.order.enums.SeasonTypeEnum;
-import costumetrade.order.enums.UnitTypeEnum;
 import costumetrade.order.mapper.SpPBrandMapper;
 import costumetrade.order.mapper.SpPCateMapper;
 import costumetrade.order.mapper.SpPColorCustomMapper;
@@ -84,7 +87,6 @@ public class SpProductServiceImpl implements SpProductService{
 				productQuery.setSaleOp(productQuery.getSort().getOp());
 			}
 		}
-		
 		List<Rules> rules = productQuery.getRules();
 		if(rules != null && rules.size()>0){
 			for(int i=0 ; i< rules.size() ;i++){
@@ -140,17 +142,22 @@ public class SpProductServiceImpl implements SpProductService{
 		//获取商品等级对应的折扣率和毛利率
 		List<SpCustProdPrice> custProdPrice = new ArrayList<SpCustProdPrice>();
 		SpCustProdPrice spCustProdPrice = new SpCustProdPrice();
-		spCustProdPrice.setType(2+"");
+		spCustProdPrice.setType(1+"");
 		spCustProdPrice.setStoreid(storeId);
 		custProdPrice = spCustProdPriceMapper.select(spCustProdPrice);
 		
-		List<String> gradeList = new ArrayList<String>();
+		List<SpCustProdPrice> gradeList = new ArrayList<SpCustProdPrice>();
 		List<SpCustProdPrice> custProdList = new ArrayList<SpCustProdPrice>();
 		if(custProdPrice.size()>0){
 			for(SpCustProdPrice price : custProdPrice){
 				price.setCustPriceJson((List<PriceJson>) JSONArray.parse(price.getCustpricejson()));
 				price.setDiscPriceJson((List<PriceJson>) JSONArray.parse(price.getDiscpricejson()));
-				gradeList.add(price.getCusttypename());
+				
+				SpCustProdPrice prodPrice = new SpCustProdPrice();
+				prodPrice.setId(price.getId());
+				prodPrice.setCusttypename(price.getCusttypename());
+				gradeList.add(prodPrice);
+				
 				price.setCustpricejson(null);
 				price.setDiscpricejson(null);
 				custProdList.add(price);
@@ -184,7 +191,7 @@ public class SpProductServiceImpl implements SpProductService{
 				queryResult.setSizes(product.getSizes());
 				queryResult.setUnit(product.getUnit());
 				queryResult.setId(product.getId());
-				queryResult.setBrand(product.getBrandid()+"");
+				queryResult.setBrandId(product.getBrandid()+"");
 				queryResult.setProducttype(product.getProducttype()+"");
 				queryResult.setIsDiscount(product.getIsDiscount());
 				queryResult.setIsModify(product.getIsModify());
