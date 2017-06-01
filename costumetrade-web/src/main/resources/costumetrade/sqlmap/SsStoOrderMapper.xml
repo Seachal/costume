@@ -1,478 +1,628 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="costumetrade.order.mapper.SsStoOrderMapper">
-  <resultMap id="BaseResultMap" type="costumetrade.order.domain.SsStoOrder">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="sellerStoreId" jdbcType="INTEGER" property="sellerstoreid" />
-    <result column="buyerStoreId" jdbcType="INTEGER" property="buyerstoreid" />
-    <result column="operator" jdbcType="VARCHAR" property="operator" />
-    <result column="payOrderNo" jdbcType="VARCHAR" property="payorderno" />
-    <result column="refundDate" jdbcType="TIMESTAMP" property="refunddate" />
-    <result column="relatedOutTradeNo" jdbcType="VARCHAR" property="relatedouttradeno" />
-    <result column="refundStatus" jdbcType="VARCHAR" property="refundstatus" />
-    <result column="orderType" jdbcType="VARCHAR" property="ordertype" />
-    <result column="orderStatus" jdbcType="INTEGER" property="orderstatus" />
-    <result column="shipType" jdbcType="INTEGER" property="shiptype" />
-    <result column="shipStatus" jdbcType="INTEGER" property="shipstatus" />
-    <result column="shipContact" jdbcType="VARCHAR" property="shipcontact" />
-    <result column="shipPhone" jdbcType="VARCHAR" property="shipphone" />
-    <result column="shipAddress" jdbcType="VARCHAR" property="shipaddress" />
-    <result column="contactStoreId" jdbcType="VARCHAR" property="contactstoreid" />
-    <result column="remarks" jdbcType="VARCHAR" property="remarks" />
-    <result column="totalNum" jdbcType="DECIMAL" property="totalnum" />
-    <result column="totalAmt" jdbcType="DECIMAL" property="totalamt" />
-    <result column="discountRatio" jdbcType="INTEGER" property="discountratio" />
-    <result column="discount" jdbcType="DECIMAL" property="discount" />
-    <result column="mchange" jdbcType="DECIMAL" property="mchange" />
-    <result column="tax" jdbcType="DECIMAL" property="tax" />
-    <result column="realcost" jdbcType="DECIMAL" property="realcost" />
-    <result column="payCate1" jdbcType="VARCHAR" property="paycate1" />
-    <result column="payCost1" jdbcType="DECIMAL" property="paycost1" />
-    <result column="payCate2" jdbcType="VARCHAR" property="paycate2" />
-    <result column="payCost2" jdbcType="DECIMAL" property="paycost2" />
-    <result column="debetAmt" jdbcType="DECIMAL" property="debetamt" />
-    <result column="orderTime" jdbcType="TIMESTAMP" property="ordertime" />
-    <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
-    <result column="createBy" jdbcType="VARCHAR" property="createby" />
-    <result column="modifyTime" jdbcType="TIMESTAMP" property="modifytime" />
-    <result column="modifyBy" jdbcType="VARCHAR" property="modifyby" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, sellerStoreId, buyerStoreId, operator, payOrderNo, refundDate, relatedOutTradeNo, 
-    refundStatus, orderType, orderStatus, shipType, shipStatus, shipContact, shipPhone, 
-    shipAddress, contactStoreId, remarks, totalNum, totalAmt, discountRatio, discount, 
-    mchange, tax, realcost, payCate1, payCost1, payCate2, payCost2, debetAmt, orderTime, 
-    createTime, createBy, modifyTime, modifyBy
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from ss_stoorder
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <!-- 查询普通用户的采购单 -->
-  <select id="selectByOrderMember" parameterType="costumetrade.order.domain.SsStoOrder" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from ss_member_stoorder
-    where 1=1
-    <if test="ordertype != null">
-        and orderType = #{ordertype,jdbcType=VARCHAR}
-    </if>
-    <if test="payorderno != null">
-        and payOrderNo = #{payorderno,jdbcType=VARCHAR}
-    </if>
-    <if test="status != null">
-   		and orderStatus in <foreach collection="status" item="item" index="index" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
-  	</if>
-  </select>
-  <!-- 查询店家的采购单或者销售单 -->
-  <select id="selectByOrderStore" parameterType="costumetrade.order.domain.SsStoOrder" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from ss_stoorder_#{storeId,jdbcType=INTEGER}
-    where 1=1
-    <if test="ordertype != null">
-        and orderType =#{ordertype,jdbcType=VARCHAR}
-    </if>
-    <if test="sellerstoreid != null">
-        and sellerStoreId =#{sellerstoreid,jdbcType=INTEGER}
-    </if>
-    <if test="buyerstoreid != null">
-         and buyerStoreId =#{buyerstoreid,jdbcType=INTEGER}
-    </if>
-    <if test="payorderno != null">
-        and payOrderNo = #{payorderno,jdbcType=VARCHAR}
-    </if>
-    <if test="status != null">
-    and orderStatus in <foreach collection="status" item="item" index="index" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
-  	</if>
-  </select>
-  
-  <select id="selectByOrderNo" resultMap="BaseResultMap">
-    select 
-       a.id, a.sellerStoreId, a.buyerStoreId, a.operator, a.payOrderNo, a.refundDate, a.relatedOutTradeNo, 
-    a.refundStatus, a.orderType, a.orderStatus, a.shipType, a.shipStatus, a.shipContact, a.shipPhone, 
-    a.shipAddress, a.contactStoreId, a.remarks, a.totalNum, a.totalAmt, a.discountRatio, a.discount, 
-    a.mchange, a.tax, a.realcost, a.payCate1, a.payCost1, a.payCate2, a.payCost2
-    from ss_stoorder_#{storeId,jdbcType=INTEGER} a left join sc_trade_info b on a.payOrderNo = b.payOrderNo
-    where b.tradeNo = #{tradeNo,jdbcType=VARCHAR}
-  </select>
-  <select id="selectByTradeNo" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from ss_stoorder_#{storeId,jdbcType=INTEGER}
-    where payOrderNo = #{orderNo,jdbcType=VARCHAR}
-  </select>
+	<resultMap id="BaseResultMap" type="costumetrade.order.domain.SsStoOrder">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="sellerStoreId" jdbcType="INTEGER" property="sellerstoreid" />
+		<result column="buyerStoreId" jdbcType="INTEGER" property="buyerstoreid" />
+		<result column="buyer" jdbcType="VARCHAR" property="buyer" />
+		<result column="seller" jdbcType="VARCHAR" property="seller" />
+		<result column="operator" jdbcType="VARCHAR" property="operator" />
+		<result column="payOrderNo" jdbcType="VARCHAR" property="payorderno" />
+		<result column="refundDate" jdbcType="TIMESTAMP" property="refunddate" />
+		<result column="relatedOutTradeNo" jdbcType="VARCHAR" property="relatedouttradeno" />
+		<result column="refundStatus" jdbcType="VARCHAR" property="refundstatus" />
+		<result column="orderType" jdbcType="VARCHAR" property="ordertype" />
+		<result column="orderStatus" jdbcType="INTEGER" property="orderstatus" />
+		<result column="shipType" jdbcType="INTEGER" property="shiptype" />
+		<result column="shipStatus" jdbcType="INTEGER" property="shipstatus" />
+		<result column="shipContact" jdbcType="VARCHAR" property="shipcontact" />
+		<result column="shipPhone" jdbcType="VARCHAR" property="shipphone" />
+		<result column="shipAddress" jdbcType="VARCHAR" property="shipaddress" />
+		<result column="contactStoreId" jdbcType="VARCHAR" property="contactstoreid" />
+		<result column="remarks" jdbcType="VARCHAR" property="remarks" />
+		<result column="totalNum" jdbcType="DECIMAL" property="totalnum" />
+		<result column="totalAmt" jdbcType="DECIMAL" property="totalamt" />
+		<result column="discountRatio" jdbcType="INTEGER" property="discountratio" />
+		<result column="discount" jdbcType="DECIMAL" property="discount" />
+		<result column="mchange" jdbcType="DECIMAL" property="mchange" />
+		<result column="tax" jdbcType="DECIMAL" property="tax" />
+		<result column="realcost" jdbcType="DECIMAL" property="realcost" />
+		<result column="payCate1" jdbcType="VARCHAR" property="paycate1" />
+		<result column="payCost1" jdbcType="DECIMAL" property="paycost1" />
+		<result column="payCate2" jdbcType="VARCHAR" property="paycate2" />
+		<result column="payCost2" jdbcType="DECIMAL" property="paycost2" />
+		<result column="debetAmt" jdbcType="DECIMAL" property="debetamt" />
+		<result column="orderTime" jdbcType="TIMESTAMP" property="ordertime" />
+		<result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+		<result column="createBy" jdbcType="VARCHAR" property="createby" />
+		<result column="modifyTime" jdbcType="TIMESTAMP" property="modifytime" />
+		<result column="modifyBy" jdbcType="VARCHAR" property="modifyby" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, sellerStoreId, buyerStoreId,seller,buyer, operator, payOrderNo, refundDate,
+		relatedOutTradeNo,
+		refundStatus, orderType, orderStatus, shipType, shipStatus, shipContact, shipPhone,
+		shipAddress, contactStoreId, remarks, totalNum, totalAmt,
+		discountRatio, discount,
+		mchange, tax, realcost, payCate1, payCost1, payCate2, payCost2, debetAmt,
+		orderTime,
+		createTime, createBy, modifyTime, modifyBy
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from ss_stoorder
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<!-- 查询普通用户的采购单 -->
+	<select id="selectByOrderMemberCount" resultType="java.lang.Integer">
+		select count(*) as count
+		from ss_member_stoorder stoorder
+		LEFT JOIN sc_wechat_bind wechat ON wechat.userId = stoorder.buyerStoreId
+		LEFT JOIN sp_user u ON u.id=wechat.userId
+		LEFT JOIN sp_store store ON store.id = stoorder.sellerStoreId
+		where 1=1
+		<if test="spStoOrder.ordertype != null">
+			and stoorder.orderType = #{spStoOrder.ordertype,jdbcType=VARCHAR}
+		</if>
+		<if test="spStoOrder.payorderno != null">
+			and stoorder.payOrderNo = #{spStoOrder.payorderno,jdbcType=VARCHAR}
+		</if>
+		<if test="spStoOrder.buyerstoreid != null">
+			and stoorder.buyerStoreId =#{spStoOrder.buyerstoreid,jdbcType=INTEGER}
+		</if>
+		<if test="spStoOrder.status != null">
+			and stoorder.orderStatus in
+			<foreach collection="spStoOrder.status" item="item" index="index"
+				separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
+		</if>
 
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from ss_stoorder
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" >
-    insert into ss_stoorder_#{sellerStoreId,jdbcType=INTEGER} (sellerStoreId, buyerStoreId, 
-      operator, payOrderNo, refundDate, 
-      relatedOutTradeNo, refundStatus, orderType, 
-      orderStatus, shipType, shipStatus, 
-      shipContact, shipPhone, shipAddress, 
-      contactStoreId, remarks, totalNum, 
-      totalAmt, discountRatio, discount, 
-      mchange, tax, realcost, 
-      payCate1, payCost1, payCate2, 
-      payCost2, debetAmt, orderTime, 
-      createTime, createBy, modifyTime, 
-      modifyBy)
-    values (#{record.sellerstoreid,jdbcType=INTEGER}, #{record.buyerstoreid,jdbcType=INTEGER}, 
-      #{record.operator,jdbcType=VARCHAR}, #{record.payorderno,jdbcType=VARCHAR}, #{record.refunddate,jdbcType=TIMESTAMP}, 
-      #{record.relatedouttradeno,jdbcType=VARCHAR}, #{record.refundstatus,jdbcType=VARCHAR}, #{record.ordertype,jdbcType=VARCHAR}, 
-      #{record.orderstatus,jdbcType=INTEGER}, #{record.shiptype,jdbcType=INTEGER}, #{record.shipstatus,jdbcType=INTEGER}, 
-      #{record.shipcontact,jdbcType=VARCHAR}, #{record.shipphone,jdbcType=VARCHAR}, #{record.shipaddress,jdbcType=VARCHAR}, 
-      #{record.contactstoreid,jdbcType=VARCHAR}, #{record.remarks,jdbcType=VARCHAR}, #{record.totalnum,jdbcType=DECIMAL}, 
-      #{record.totalamt,jdbcType=DECIMAL}, #{record.discountratio,jdbcType=INTEGER}, #{record.discount,jdbcType=DECIMAL}, 
-      #{record.mchange,jdbcType=DECIMAL}, #{record.tax,jdbcType=DECIMAL}, #{record.realcost,jdbcType=DECIMAL}, 
-      #{record.paycate1,jdbcType=VARCHAR}, #{record.paycost1,jdbcType=DECIMAL}, #{record.paycate2,jdbcType=VARCHAR}, 
-      #{record.paycost2,jdbcType=DECIMAL}, #{record.debetamt,jdbcType=DECIMAL}, #{record.ordertime,jdbcType=TIMESTAMP}, 
-      #{record.createtime,jdbcType=TIMESTAMP}, #{record.createby,jdbcType=VARCHAR}, #{record.modifytime,jdbcType=TIMESTAMP}, 
-      #{record.modifyby,jdbcType=VARCHAR});
-      
-      
-    insert into ss_member_stoorder (sellerStoreId, buyerStoreId, 
-      operator, payOrderNo, refundDate, 
-      relatedOutTradeNo, refundStatus, orderType, 
-      orderStatus, shipType, shipStatus, 
-      shipContact, shipPhone, shipAddress, 
-      contactStoreId, remarks, totalNum, 
-      totalAmt, discountRatio, discount, 
-      mchange, tax, realcost, 
-      payCate1, payCost1, payCate2, 
-      payCost2, debetAmt, orderTime, 
-      createTime, createBy, modifyTime, 
-      modifyBy)
-       values (#{record.sellerstoreid,jdbcType=INTEGER}, #{record.buyerstoreid,jdbcType=INTEGER}, 
-      #{record.operator,jdbcType=VARCHAR}, #{record.payorderno,jdbcType=VARCHAR}, #{record.refunddate,jdbcType=TIMESTAMP}, 
-      #{record.relatedouttradeno,jdbcType=VARCHAR}, #{record.refundstatus,jdbcType=VARCHAR}, #{record.ordertype,jdbcType=VARCHAR}, 
-      #{record.orderstatus,jdbcType=INTEGER}, #{record.shiptype,jdbcType=INTEGER}, #{record.shipstatus,jdbcType=INTEGER}, 
-      #{record.shipcontact,jdbcType=VARCHAR}, #{record.shipphone,jdbcType=VARCHAR}, #{record.shipaddress,jdbcType=VARCHAR}, 
-      #{record.contactstoreid,jdbcType=VARCHAR}, #{record.remarks,jdbcType=VARCHAR}, #{record.totalnum,jdbcType=DECIMAL}, 
-      #{record.totalamt,jdbcType=DECIMAL}, #{record.discountratio,jdbcType=INTEGER}, #{record.discount,jdbcType=DECIMAL}, 
-      #{record.mchange,jdbcType=DECIMAL}, #{record.tax,jdbcType=DECIMAL}, #{record.realcost,jdbcType=DECIMAL}, 
-      #{record.paycate1,jdbcType=VARCHAR}, #{record.paycost1,jdbcType=DECIMAL}, #{record.paycate2,jdbcType=VARCHAR}, 
-      #{record.paycost2,jdbcType=DECIMAL}, #{record.debetamt,jdbcType=DECIMAL}, #{record.ordertime,jdbcType=TIMESTAMP}, 
-      #{record.createtime,jdbcType=TIMESTAMP}, #{record.createby,jdbcType=VARCHAR}, #{record.modifytime,jdbcType=TIMESTAMP}, 
-      #{record.modifyby,jdbcType=VARCHAR});
-  </insert>
-  
- 
-  <insert id="insertStore" >
-    insert into ss_stoorder_#{storeId,jdbcType=INTEGER} (sellerStoreId, buyerStoreId, 
-      operator, payOrderNo, refundDate, 
-      relatedOutTradeNo, refundStatus, orderType, 
-      orderStatus, shipType, shipStatus, 
-      shipContact, shipPhone, shipAddress, 
-      contactStoreId, remarks, totalNum, 
-      totalAmt, discountRatio, discount, 
-      mchange, tax, realcost, 
-      payCate1, payCost1, payCate2, 
-      payCost2, debetAmt, orderTime, 
-      createTime, createBy, modifyTime, 
-      modifyBy)
-    values (#{record.sellerstoreid,jdbcType=INTEGER}, #{record.buyerstoreid,jdbcType=INTEGER}, 
-      #{record.operator,jdbcType=VARCHAR}, #{record.payorderno,jdbcType=VARCHAR}, #{record.refunddate,jdbcType=TIMESTAMP}, 
-      #{record.relatedouttradeno,jdbcType=VARCHAR}, #{record.refundstatus,jdbcType=VARCHAR}, #{record.ordertype,jdbcType=VARCHAR}, 
-      #{record.orderstatus,jdbcType=INTEGER}, #{record.shiptype,jdbcType=INTEGER}, #{record.shipstatus,jdbcType=INTEGER}, 
-      #{record.shipcontact,jdbcType=VARCHAR}, #{record.shipphone,jdbcType=VARCHAR}, #{record.shipaddress,jdbcType=VARCHAR}, 
-      #{record.contactstoreid,jdbcType=VARCHAR}, #{record.remarks,jdbcType=VARCHAR}, #{record.totalnum,jdbcType=DECIMAL}, 
-      #{record.totalamt,jdbcType=DECIMAL}, #{record.discountratio,jdbcType=INTEGER}, #{record.discount,jdbcType=DECIMAL}, 
-      #{record.mchange,jdbcType=DECIMAL}, #{record.tax,jdbcType=DECIMAL}, #{record.realcost,jdbcType=DECIMAL}, 
-      #{record.paycate1,jdbcType=VARCHAR}, #{record.paycost1,jdbcType=DECIMAL}, #{record.paycate2,jdbcType=VARCHAR}, 
-      #{record.paycost2,jdbcType=DECIMAL}, #{record.debetamt,jdbcType=DECIMAL}, #{record.ordertime,jdbcType=TIMESTAMP}, 
-      #{record.createtime,jdbcType=TIMESTAMP}, #{record.createby,jdbcType=VARCHAR}, #{record.modifytime,jdbcType=TIMESTAMP}, 
-      #{record.modifyby,jdbcType=VARCHAR})
-      
-   
-  </insert>
-  <insert id="insertSelective" parameterType="costumetrade.order.domain.SsStoOrder">
-    insert into ss_stoorder
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="sellerstoreid != null">
-        sellerStoreId,
-      </if>
-      <if test="buyerstoreid != null">
-        buyerStoreId,
-      </if>
-      <if test="operator != null">
-        operator,
-      </if>
-      <if test="payorderno != null">
-        payOrderNo,
-      </if>
-      <if test="refunddate != null">
-        refundDate,
-      </if>
-      <if test="relatedouttradeno != null">
-        relatedOutTradeNo,
-      </if>
-      <if test="refundstatus != null">
-        refundStatus,
-      </if>
-      <if test="ordertype != null">
-        orderType,
-      </if>
-      <if test="orderstatus != null">
-        orderStatus,
-      </if>
-      <if test="shiptype != null">
-        shipType,
-      </if>
-      <if test="shipstatus != null">
-        shipStatus,
-      </if>
-      <if test="shipcontact != null">
-        shipContact,
-      </if>
-      <if test="shipphone != null">
-        shipPhone,
-      </if>
-      <if test="shipaddress != null">
-        shipAddress,
-      </if>
-      <if test="contactstoreid != null">
-        contactStoreId,
-      </if>
-      <if test="remarks != null">
-        remarks,
-      </if>
-      <if test="totalnum != null">
-        totalNum,
-      </if>
-      <if test="totalamt != null">
-        totalAmt,
-      </if>
-      <if test="discountratio != null">
-        discountRatio,
-      </if>
-      <if test="discount != null">
-        discount,
-      </if>
-      <if test="mchange != null">
-        mchange,
-      </if>
-      <if test="tax != null">
-        tax,
-      </if>
-      <if test="realcost != null">
-        realcost,
-      </if>
-      <if test="paycate1 != null">
-        payCate1,
-      </if>
-      <if test="paycost1 != null">
-        payCost1,
-      </if>
-      <if test="paycate2 != null">
-        payCate2,
-      </if>
-      <if test="paycost2 != null">
-        payCost2,
-      </if>
-      <if test="debetamt != null">
-        debetAmt,
-      </if>
-      <if test="ordertime != null">
-        orderTime,
-      </if>
-      <if test="createtime != null">
-        createTime,
-      </if>
-      <if test="createby != null">
-        createBy,
-      </if>
-      <if test="modifytime != null">
-        modifyTime,
-      </if>
-      <if test="modifyby != null">
-        modifyBy,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="sellerstoreid != null">
-        #{sellerstoreid,jdbcType=INTEGER},
-      </if>
-      <if test="buyerstoreid != null">
-        #{buyerstoreid,jdbcType=INTEGER},
-      </if>
-      <if test="operator != null">
-        #{operator,jdbcType=VARCHAR},
-      </if>
-      <if test="payorderno != null">
-        #{payorderno,jdbcType=VARCHAR},
-      </if>
-      <if test="refunddate != null">
-        #{refunddate,jdbcType=TIMESTAMP},
-      </if>
-      <if test="relatedouttradeno != null">
-        #{relatedouttradeno,jdbcType=VARCHAR},
-      </if>
-      <if test="refundstatus != null">
-        #{refundstatus,jdbcType=VARCHAR},
-      </if>
-      <if test="ordertype != null">
-        #{ordertype,jdbcType=VARCHAR},
-      </if>
-      <if test="orderstatus != null">
-        #{orderstatus,jdbcType=INTEGER},
-      </if>
-      <if test="shiptype != null">
-        #{shiptype,jdbcType=INTEGER},
-      </if>
-      <if test="shipstatus != null">
-        #{shipstatus,jdbcType=INTEGER},
-      </if>
-      <if test="shipcontact != null">
-        #{shipcontact,jdbcType=VARCHAR},
-      </if>
-      <if test="shipphone != null">
-        #{shipphone,jdbcType=VARCHAR},
-      </if>
-      <if test="shipaddress != null">
-        #{shipaddress,jdbcType=VARCHAR},
-      </if>
-      <if test="contactstoreid != null">
-        #{contactstoreid,jdbcType=VARCHAR},
-      </if>
-      <if test="remarks != null">
-        #{remarks,jdbcType=VARCHAR},
-      </if>
-      <if test="totalnum != null">
-        #{totalnum,jdbcType=DECIMAL},
-      </if>
-      <if test="totalamt != null">
-        #{totalamt,jdbcType=DECIMAL},
-      </if>
-      <if test="discountratio != null">
-        #{discountratio,jdbcType=INTEGER},
-      </if>
-      <if test="discount != null">
-        #{discount,jdbcType=DECIMAL},
-      </if>
-      <if test="mchange != null">
-        #{mchange,jdbcType=DECIMAL},
-      </if>
-      <if test="tax != null">
-        #{tax,jdbcType=DECIMAL},
-      </if>
-      <if test="realcost != null">
-        #{realcost,jdbcType=DECIMAL},
-      </if>
-      <if test="paycate1 != null">
-        #{paycate1,jdbcType=VARCHAR},
-      </if>
-      <if test="paycost1 != null">
-        #{paycost1,jdbcType=DECIMAL},
-      </if>
-      <if test="paycate2 != null">
-        #{paycate2,jdbcType=VARCHAR},
-      </if>
-      <if test="paycost2 != null">
-        #{paycost2,jdbcType=DECIMAL},
-      </if>
-      <if test="debetamt != null">
-        #{debetamt,jdbcType=DECIMAL},
-      </if>
-      <if test="ordertime != null">
-        #{ordertime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createtime != null">
-        #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createby != null">
-        #{createby,jdbcType=VARCHAR},
-      </if>
-      <if test="modifytime != null">
-        #{modifytime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyby != null">
-        #{modifyby,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  
-  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SsStoOrder">
-    update ss_stoorder_#{sellerstoreid,jdbcType=INTEGER}
-    <set>
-      <if test="orderstatus != null">
-        orderStatus = #{orderstatus,jdbcType=INTEGER},
-      </if>
-    </set>
-    where payOrderNo = #{payorderno,jdbcType=VARCHAR};
-    
-    update ss_member_stoorder
-    <set>
-      <if test="orderstatus != null">
-        orderStatus = #{orderstatus,jdbcType=INTEGER},
-      </if>
-    </set>
-    where payOrderNo = #{payorderno,jdbcType=VARCHAR};
-  </update>
-  
-  <update id="updateByPrimaryKeySelectiveStore" parameterType="costumetrade.order.domain.SsStoOrder">
-    update ss_stoorder_#{sellerstoreid,jdbcType=INTEGER}
-    <set>
-      <if test="orderstatus != null">
-        orderStatus = #{orderstatus,jdbcType=INTEGER},
-      </if>
-    </set>
-    where payOrderNo = #{payorderno,jdbcType=VARCHAR};
-    
-    update ss_stoorder_#{buyerstoreid,jdbcType=INTEGER}
-    <set>
-      <if test="orderstatus != null">
-        orderStatus = #{orderstatus,jdbcType=INTEGER},
-      </if>
-    </set>
-    where payOrderNo = #{payorderno,jdbcType=VARCHAR};
-  </update>
-  <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsStoOrder">
-    update ss_stoorder
-    set sellerStoreId = #{sellerstoreid,jdbcType=INTEGER},
-      buyerStoreId = #{buyerstoreid,jdbcType=INTEGER},
-      operator = #{operator,jdbcType=VARCHAR},
-      payOrderNo = #{payorderno,jdbcType=VARCHAR},
-      refundDate = #{refunddate,jdbcType=TIMESTAMP},
-      relatedOutTradeNo = #{relatedouttradeno,jdbcType=VARCHAR},
-      refundStatus = #{refundstatus,jdbcType=VARCHAR},
-      orderType = #{ordertype,jdbcType=VARCHAR},
-      orderStatus = #{orderstatus,jdbcType=INTEGER},
-      shipType = #{shiptype,jdbcType=INTEGER},
-      shipStatus = #{shipstatus,jdbcType=INTEGER},
-      shipContact = #{shipcontact,jdbcType=VARCHAR},
-      shipPhone = #{shipphone,jdbcType=VARCHAR},
-      shipAddress = #{shipaddress,jdbcType=VARCHAR},
-      contactStoreId = #{contactstoreid,jdbcType=VARCHAR},
-      remarks = #{remarks,jdbcType=VARCHAR},
-      totalNum = #{totalnum,jdbcType=DECIMAL},
-      totalAmt = #{totalamt,jdbcType=DECIMAL},
-      discountRatio = #{discountratio,jdbcType=INTEGER},
-      discount = #{discount,jdbcType=DECIMAL},
-      mchange = #{mchange,jdbcType=DECIMAL},
-      tax = #{tax,jdbcType=DECIMAL},
-      realcost = #{realcost,jdbcType=DECIMAL},
-      payCate1 = #{paycate1,jdbcType=VARCHAR},
-      payCost1 = #{paycost1,jdbcType=DECIMAL},
-      payCate2 = #{paycate2,jdbcType=VARCHAR},
-      payCost2 = #{paycost2,jdbcType=DECIMAL},
-      debetAmt = #{debetamt,jdbcType=DECIMAL},
-      orderTime = #{ordertime,jdbcType=TIMESTAMP},
-      createTime = #{createtime,jdbcType=TIMESTAMP},
-      createBy = #{createby,jdbcType=VARCHAR},
-      modifyTime = #{modifytime,jdbcType=TIMESTAMP},
-      modifyBy = #{modifyby,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+	</select>
+	<select id="selectByOrderMember" resultMap="BaseResultMap">
+		select
+		stoorder.id, stoorder.sellerStoreId, stoorder.buyerStoreId,store.name as seller,u.name as buyer, stoorder.operator, stoorder.payOrderNo, stoorder.refundDate,
+		stoorder.relatedOutTradeNo,
+		stoorder.refundStatus, stoorder.orderType, stoorder.orderStatus,
+		 stoorder.contactStoreId, stoorder.remarks, stoorder.totalNum, stoorder.totalAmt,
+		stoorder.discountRatio, stoorder.discount,
+		stoorder.mchange, stoorder.tax, stoorder.realcost, stoorder.payCate1, stoorder.payCost1, stoorder.payCate2, stoorder.payCost2, stoorder.debetAmt,
+		stoorder.orderTime
+		from ss_member_stoorder stoorder
+		LEFT JOIN sc_wechat_bind wechat ON wechat.userId = stoorder.buyerStoreId
+		LEFT JOIN sp_user u ON u.id=wechat.userId
+		LEFT JOIN sp_store store ON store.id = stoorder.sellerStoreId
+		where 1=1
+		<if test="spStoOrder.ordertype != null">
+			and stoorder.orderType = #{spStoOrder.ordertype,jdbcType=VARCHAR}
+		</if>
+		<if test="spStoOrder.payorderno != null">
+			and stoorder.payOrderNo = #{spStoOrder.payorderno,jdbcType=VARCHAR}
+		</if>
+		<if test="spStoOrder.buyerstoreid != null">
+			and stoorder.buyerStoreId =#{spStoOrder.buyerstoreid,jdbcType=INTEGER}
+		</if>
+		<if test="spStoOrder.status != null">
+			and stoorder.orderStatus in
+			<foreach collection="spStoOrder.status" item="item" index="index"
+				separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
+		</if>
+		<if test="page!=null">
+			LIMIT #{page.startRow},#{page.pageSize}
+		</if>
+	</select>
+	<!-- 查询店家的采购单或者销售单 -->
+	<select id="selectByOrderStoreCount" resultType="java.lang.Integer">
+		SELECT count(*) count
+		from ss_stoorder_#{spStoOrder.storeId,jdbcType=INTEGER} stoorder
+		LEFT JOIN sp_store store ON store.id = stoorder.sellerStoreId
+		LEFT JOIN sp_store store1 ON store1.id = stoorder.buyerStoreId
+		where 1=1
+		<if test="spStoOrder.ordertype != null">
+			and stoorder.orderType =#{spStoOrder.ordertype,jdbcType=VARCHAR}
+		</if>
+		<if test="spStoOrder.sellerstoreid != null">
+			and stoorder.sellerStoreId =#{spStoOrder.sellerstoreid,jdbcType=INTEGER}
+		</if>
+		<if test="spStoOrder.buyerstoreid != null">
+			and stoorder.buyerStoreId =#{spStoOrder.buyerstoreid,jdbcType=INTEGER}
+		</if>
+		<if test="spStoOrder.payorderno != null">
+			and stoorder.payOrderNo = #{spStoOrder.payorderno,jdbcType=VARCHAR}
+		</if>
+		<if test="spStoOrder.status != null">
+			and stoorder.orderStatus in
+			<foreach collection="spStoOrder.status" item="item" index="index"
+				separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
+		</if>
+	</select>
+	
+	<select id="selectByOrderStore" resultMap="BaseResultMap">
+		SELECT
+		stoorder.id, stoorder.sellerStoreId, stoorder.buyerStoreId,store.name AS seller,store1.name AS buyer, stoorder.operator, stoorder.payOrderNo, stoorder.refundDate,
+		stoorder.relatedOutTradeNo,
+		stoorder.refundStatus, stoorder.orderType, stoorder.orderStatus,
+		 stoorder.contactStoreId, stoorder.remarks, stoorder.totalNum, stoorder.totalAmt,
+		stoorder.discountRatio, stoorder.discount,
+		stoorder.mchange, stoorder.tax, stoorder.realcost, stoorder.payCate1, stoorder.payCost1, stoorder.payCate2, stoorder.payCost2, stoorder.debetAmt,
+		stoorder.orderTime
+		from ss_stoorder_#{spStoOrder.storeId,jdbcType=INTEGER} stoorder
+		LEFT JOIN sp_store store ON store.id = stoorder.sellerStoreId
+		LEFT JOIN sp_store store1 ON store1.id = stoorder.buyerStoreId
+		where 1=1
+		<if test="spStoOrder.ordertype != null">
+			and stoorder.orderType =#{spStoOrder.ordertype,jdbcType=VARCHAR}
+		</if>
+		<if test="spStoOrder.sellerstoreid != null">
+			and stoorder.sellerStoreId =#{spStoOrder.sellerstoreid,jdbcType=INTEGER}
+		</if>
+		<if test="spStoOrder.buyerstoreid != null">
+			and stoorder.buyerStoreId =#{spStoOrder.buyerstoreid,jdbcType=INTEGER}
+		</if>
+		<if test="spStoOrder.payorderno != null">
+			and stoorder.payOrderNo = #{spStoOrder.payorderno,jdbcType=VARCHAR}
+		</if>
+		<if test="spStoOrder.status != null">
+			and stoorder.orderStatus in
+			<foreach collection="spStoOrder.status" item="item" index="index"
+				separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
+		</if>
+		<if test="page!=null">
+			LIMIT #{page.startRow},#{page.pageSize}
+		</if>
+	</select>
+
+	<select id="selectByOrderNo" resultMap="BaseResultMap">
+		select
+		a.id, a.sellerStoreId, a.buyerStoreId, a.operator, a.payOrderNo,
+		a.refundDate, a.relatedOutTradeNo,
+		a.refundStatus, a.orderType, a.orderStatus, a.shipType, a.shipStatus, a.shipContact,
+		a.shipPhone,
+		a.shipAddress, a.contactStoreId, a.remarks, a.totalNum, a.totalAmt, a.discountRatio,
+		a.discount,
+		a.mchange, a.tax, a.realcost, a.payCate1, a.payCost1, a.payCate2, a.payCost2
+		from ss_stoorder_#{storeId,jdbcType=INTEGER} a left join sc_trade_info
+		b on a.payOrderNo = b.payOrderNo
+		where b.tradeNo = #{tradeNo,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByTradeNo" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from ss_stoorder_#{storeId,jdbcType=INTEGER}
+		where payOrderNo = #{orderNo,jdbcType=VARCHAR}
+	</select>
+
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from ss_stoorder
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert">
+		insert into ss_stoorder_#{sellerStoreId,jdbcType=INTEGER} (sellerStoreId,
+		buyerStoreId,
+		operator, payOrderNo, refundDate,
+		relatedOutTradeNo, refundStatus, orderType,
+		orderStatus, shipType, shipStatus,
+		shipContact, shipPhone, shipAddress,
+		contactStoreId, remarks, totalNum,
+		totalAmt, discountRatio, discount,
+		mchange, tax, realcost,
+		payCate1, payCost1, payCate2,
+		payCost2, debetAmt, orderTime,
+		createTime, createBy, modifyTime,
+		modifyBy)
+		values (#{record.sellerstoreid,jdbcType=INTEGER},
+		#{record.buyerstoreid,jdbcType=INTEGER},
+		#{record.operator,jdbcType=VARCHAR},
+		#{record.payorderno,jdbcType=VARCHAR},
+		#{record.refunddate,jdbcType=TIMESTAMP},
+		#{record.relatedouttradeno,jdbcType=VARCHAR},
+		#{record.refundstatus,jdbcType=VARCHAR},
+		#{record.ordertype,jdbcType=VARCHAR},
+		#{record.orderstatus,jdbcType=INTEGER},
+		#{record.shiptype,jdbcType=INTEGER},
+		#{record.shipstatus,jdbcType=INTEGER},
+		#{record.shipcontact,jdbcType=VARCHAR},
+		#{record.shipphone,jdbcType=VARCHAR},
+		#{record.shipaddress,jdbcType=VARCHAR},
+		#{record.contactstoreid,jdbcType=VARCHAR},
+		#{record.remarks,jdbcType=VARCHAR},
+		#{record.totalnum,jdbcType=DECIMAL},
+		#{record.totalamt,jdbcType=DECIMAL},
+		#{record.discountratio,jdbcType=INTEGER},
+		#{record.discount,jdbcType=DECIMAL},
+		#{record.mchange,jdbcType=DECIMAL}, #{record.tax,jdbcType=DECIMAL},
+		#{record.realcost,jdbcType=DECIMAL},
+		#{record.paycate1,jdbcType=VARCHAR},
+		#{record.paycost1,jdbcType=DECIMAL},
+		#{record.paycate2,jdbcType=VARCHAR},
+		#{record.paycost2,jdbcType=DECIMAL},
+		#{record.debetamt,jdbcType=DECIMAL},
+		#{record.ordertime,jdbcType=TIMESTAMP},
+		#{record.createtime,jdbcType=TIMESTAMP},
+		#{record.createby,jdbcType=VARCHAR},
+		#{record.modifytime,jdbcType=TIMESTAMP},
+		#{record.modifyby,jdbcType=VARCHAR});
+
+
+		insert into ss_member_stoorder (sellerStoreId, buyerStoreId,
+		operator, payOrderNo, refundDate,
+		relatedOutTradeNo, refundStatus, orderType,
+		orderStatus, shipType, shipStatus,
+		shipContact, shipPhone, shipAddress,
+		contactStoreId, remarks, totalNum,
+		totalAmt, discountRatio, discount,
+		mchange, tax, realcost,
+		payCate1, payCost1, payCate2,
+		payCost2, debetAmt, orderTime,
+		createTime, createBy, modifyTime,
+		modifyBy)
+		values (#{record.sellerstoreid,jdbcType=INTEGER},
+		#{record.buyerstoreid,jdbcType=INTEGER},
+		#{record.operator,jdbcType=VARCHAR},
+		#{record.payorderno,jdbcType=VARCHAR},
+		#{record.refunddate,jdbcType=TIMESTAMP},
+		#{record.relatedouttradeno,jdbcType=VARCHAR},
+		#{record.refundstatus,jdbcType=VARCHAR},
+		#{record.ordertype,jdbcType=VARCHAR},
+		#{record.orderstatus,jdbcType=INTEGER},
+		#{record.shiptype,jdbcType=INTEGER},
+		#{record.shipstatus,jdbcType=INTEGER},
+		#{record.shipcontact,jdbcType=VARCHAR},
+		#{record.shipphone,jdbcType=VARCHAR},
+		#{record.shipaddress,jdbcType=VARCHAR},
+		#{record.contactstoreid,jdbcType=VARCHAR},
+		#{record.remarks,jdbcType=VARCHAR},
+		#{record.totalnum,jdbcType=DECIMAL},
+		#{record.totalamt,jdbcType=DECIMAL},
+		#{record.discountratio,jdbcType=INTEGER},
+		#{record.discount,jdbcType=DECIMAL},
+		#{record.mchange,jdbcType=DECIMAL}, #{record.tax,jdbcType=DECIMAL},
+		#{record.realcost,jdbcType=DECIMAL},
+		#{record.paycate1,jdbcType=VARCHAR},
+		#{record.paycost1,jdbcType=DECIMAL},
+		#{record.paycate2,jdbcType=VARCHAR},
+		#{record.paycost2,jdbcType=DECIMAL},
+		#{record.debetamt,jdbcType=DECIMAL},
+		#{record.ordertime,jdbcType=TIMESTAMP},
+		#{record.createtime,jdbcType=TIMESTAMP},
+		#{record.createby,jdbcType=VARCHAR},
+		#{record.modifytime,jdbcType=TIMESTAMP},
+		#{record.modifyby,jdbcType=VARCHAR});
+	</insert>
+
+
+	<insert id="insertStore">
+		insert into ss_stoorder_#{storeId,jdbcType=INTEGER} (sellerStoreId,
+		buyerStoreId,
+		operator, payOrderNo, refundDate,
+		relatedOutTradeNo, refundStatus, orderType,
+		orderStatus, shipType, shipStatus,
+		shipContact, shipPhone, shipAddress,
+		contactStoreId, remarks, totalNum,
+		totalAmt, discountRatio, discount,
+		mchange, tax, realcost,
+		payCate1, payCost1, payCate2,
+		payCost2, debetAmt, orderTime,
+		createTime, createBy, modifyTime,
+		modifyBy)
+		values (#{record.sellerstoreid,jdbcType=INTEGER},
+		#{record.buyerstoreid,jdbcType=INTEGER},
+		#{record.operator,jdbcType=VARCHAR},
+		#{record.payorderno,jdbcType=VARCHAR},
+		#{record.refunddate,jdbcType=TIMESTAMP},
+		#{record.relatedouttradeno,jdbcType=VARCHAR},
+		#{record.refundstatus,jdbcType=VARCHAR},
+		#{record.ordertype,jdbcType=VARCHAR},
+		#{record.orderstatus,jdbcType=INTEGER},
+		#{record.shiptype,jdbcType=INTEGER},
+		#{record.shipstatus,jdbcType=INTEGER},
+		#{record.shipcontact,jdbcType=VARCHAR},
+		#{record.shipphone,jdbcType=VARCHAR},
+		#{record.shipaddress,jdbcType=VARCHAR},
+		#{record.contactstoreid,jdbcType=VARCHAR},
+		#{record.remarks,jdbcType=VARCHAR},
+		#{record.totalnum,jdbcType=DECIMAL},
+		#{record.totalamt,jdbcType=DECIMAL},
+		#{record.discountratio,jdbcType=INTEGER},
+		#{record.discount,jdbcType=DECIMAL},
+		#{record.mchange,jdbcType=DECIMAL}, #{record.tax,jdbcType=DECIMAL},
+		#{record.realcost,jdbcType=DECIMAL},
+		#{record.paycate1,jdbcType=VARCHAR},
+		#{record.paycost1,jdbcType=DECIMAL},
+		#{record.paycate2,jdbcType=VARCHAR},
+		#{record.paycost2,jdbcType=DECIMAL},
+		#{record.debetamt,jdbcType=DECIMAL},
+		#{record.ordertime,jdbcType=TIMESTAMP},
+		#{record.createtime,jdbcType=TIMESTAMP},
+		#{record.createby,jdbcType=VARCHAR},
+		#{record.modifytime,jdbcType=TIMESTAMP},
+		#{record.modifyby,jdbcType=VARCHAR})
+
+
+	</insert>
+	<insert id="insertSelective" parameterType="costumetrade.order.domain.SsStoOrder">
+		insert into ss_stoorder
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="sellerstoreid != null">
+				sellerStoreId,
+			</if>
+			<if test="buyerstoreid != null">
+				buyerStoreId,
+			</if>
+			<if test="operator != null">
+				operator,
+			</if>
+			<if test="payorderno != null">
+				payOrderNo,
+			</if>
+			<if test="refunddate != null">
+				refundDate,
+			</if>
+			<if test="relatedouttradeno != null">
+				relatedOutTradeNo,
+			</if>
+			<if test="refundstatus != null">
+				refundStatus,
+			</if>
+			<if test="ordertype != null">
+				orderType,
+			</if>
+			<if test="orderstatus != null">
+				orderStatus,
+			</if>
+			<if test="shiptype != null">
+				shipType,
+			</if>
+			<if test="shipstatus != null">
+				shipStatus,
+			</if>
+			<if test="shipcontact != null">
+				shipContact,
+			</if>
+			<if test="shipphone != null">
+				shipPhone,
+			</if>
+			<if test="shipaddress != null">
+				shipAddress,
+			</if>
+			<if test="contactstoreid != null">
+				contactStoreId,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="totalnum != null">
+				totalNum,
+			</if>
+			<if test="totalamt != null">
+				totalAmt,
+			</if>
+			<if test="discountratio != null">
+				discountRatio,
+			</if>
+			<if test="discount != null">
+				discount,
+			</if>
+			<if test="mchange != null">
+				mchange,
+			</if>
+			<if test="tax != null">
+				tax,
+			</if>
+			<if test="realcost != null">
+				realcost,
+			</if>
+			<if test="paycate1 != null">
+				payCate1,
+			</if>
+			<if test="paycost1 != null">
+				payCost1,
+			</if>
+			<if test="paycate2 != null">
+				payCate2,
+			</if>
+			<if test="paycost2 != null">
+				payCost2,
+			</if>
+			<if test="debetamt != null">
+				debetAmt,
+			</if>
+			<if test="ordertime != null">
+				orderTime,
+			</if>
+			<if test="createtime != null">
+				createTime,
+			</if>
+			<if test="createby != null">
+				createBy,
+			</if>
+			<if test="modifytime != null">
+				modifyTime,
+			</if>
+			<if test="modifyby != null">
+				modifyBy,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="sellerstoreid != null">
+				#{sellerstoreid,jdbcType=INTEGER},
+			</if>
+			<if test="buyerstoreid != null">
+				#{buyerstoreid,jdbcType=INTEGER},
+			</if>
+			<if test="operator != null">
+				#{operator,jdbcType=VARCHAR},
+			</if>
+			<if test="payorderno != null">
+				#{payorderno,jdbcType=VARCHAR},
+			</if>
+			<if test="refunddate != null">
+				#{refunddate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="relatedouttradeno != null">
+				#{relatedouttradeno,jdbcType=VARCHAR},
+			</if>
+			<if test="refundstatus != null">
+				#{refundstatus,jdbcType=VARCHAR},
+			</if>
+			<if test="ordertype != null">
+				#{ordertype,jdbcType=VARCHAR},
+			</if>
+			<if test="orderstatus != null">
+				#{orderstatus,jdbcType=INTEGER},
+			</if>
+			<if test="shiptype != null">
+				#{shiptype,jdbcType=INTEGER},
+			</if>
+			<if test="shipstatus != null">
+				#{shipstatus,jdbcType=INTEGER},
+			</if>
+			<if test="shipcontact != null">
+				#{shipcontact,jdbcType=VARCHAR},
+			</if>
+			<if test="shipphone != null">
+				#{shipphone,jdbcType=VARCHAR},
+			</if>
+			<if test="shipaddress != null">
+				#{shipaddress,jdbcType=VARCHAR},
+			</if>
+			<if test="contactstoreid != null">
+				#{contactstoreid,jdbcType=VARCHAR},
+			</if>
+			<if test="remarks != null">
+				#{remarks,jdbcType=VARCHAR},
+			</if>
+			<if test="totalnum != null">
+				#{totalnum,jdbcType=DECIMAL},
+			</if>
+			<if test="totalamt != null">
+				#{totalamt,jdbcType=DECIMAL},
+			</if>
+			<if test="discountratio != null">
+				#{discountratio,jdbcType=INTEGER},
+			</if>
+			<if test="discount != null">
+				#{discount,jdbcType=DECIMAL},
+			</if>
+			<if test="mchange != null">
+				#{mchange,jdbcType=DECIMAL},
+			</if>
+			<if test="tax != null">
+				#{tax,jdbcType=DECIMAL},
+			</if>
+			<if test="realcost != null">
+				#{realcost,jdbcType=DECIMAL},
+			</if>
+			<if test="paycate1 != null">
+				#{paycate1,jdbcType=VARCHAR},
+			</if>
+			<if test="paycost1 != null">
+				#{paycost1,jdbcType=DECIMAL},
+			</if>
+			<if test="paycate2 != null">
+				#{paycate2,jdbcType=VARCHAR},
+			</if>
+			<if test="paycost2 != null">
+				#{paycost2,jdbcType=DECIMAL},
+			</if>
+			<if test="debetamt != null">
+				#{debetamt,jdbcType=DECIMAL},
+			</if>
+			<if test="ordertime != null">
+				#{ordertime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createtime != null">
+				#{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createby != null">
+				#{createby,jdbcType=VARCHAR},
+			</if>
+			<if test="modifytime != null">
+				#{modifytime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyby != null">
+				#{modifyby,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+
+	<update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SsStoOrder">
+		update ss_stoorder_#{sellerstoreid,jdbcType=INTEGER}
+		<set>
+			<if test="orderstatus != null">
+				orderStatus = #{orderstatus,jdbcType=INTEGER},
+			</if>
+		</set>
+		where payOrderNo = #{payorderno,jdbcType=VARCHAR};
+
+		update ss_member_stoorder
+		<set>
+			<if test="orderstatus != null">
+				orderStatus = #{orderstatus,jdbcType=INTEGER},
+			</if>
+		</set>
+		where payOrderNo = #{payorderno,jdbcType=VARCHAR};
+	</update>
+
+	<update id="updateByPrimaryKeySelectiveStore" parameterType="costumetrade.order.domain.SsStoOrder">
+		update ss_stoorder_#{sellerstoreid,jdbcType=INTEGER}
+		<set>
+			<if test="orderstatus != null">
+				orderStatus = #{orderstatus,jdbcType=INTEGER},
+			</if>
+		</set>
+		where payOrderNo = #{payorderno,jdbcType=VARCHAR};
+
+		update ss_stoorder_#{buyerstoreid,jdbcType=INTEGER}
+		<set>
+			<if test="orderstatus != null">
+				orderStatus = #{orderstatus,jdbcType=INTEGER},
+			</if>
+		</set>
+		where payOrderNo = #{payorderno,jdbcType=VARCHAR};
+	</update>
+	<update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsStoOrder">
+		update ss_stoorder
+		set sellerStoreId = #{sellerstoreid,jdbcType=INTEGER},
+		buyerStoreId = #{buyerstoreid,jdbcType=INTEGER},
+		operator = #{operator,jdbcType=VARCHAR},
+		payOrderNo = #{payorderno,jdbcType=VARCHAR},
+		refundDate = #{refunddate,jdbcType=TIMESTAMP},
+		relatedOutTradeNo = #{relatedouttradeno,jdbcType=VARCHAR},
+		refundStatus = #{refundstatus,jdbcType=VARCHAR},
+		orderType = #{ordertype,jdbcType=VARCHAR},
+		orderStatus = #{orderstatus,jdbcType=INTEGER},
+		shipType = #{shiptype,jdbcType=INTEGER},
+		shipStatus = #{shipstatus,jdbcType=INTEGER},
+		shipContact = #{shipcontact,jdbcType=VARCHAR},
+		shipPhone = #{shipphone,jdbcType=VARCHAR},
+		shipAddress = #{shipaddress,jdbcType=VARCHAR},
+		contactStoreId = #{contactstoreid,jdbcType=VARCHAR},
+		remarks = #{remarks,jdbcType=VARCHAR},
+		totalNum = #{totalnum,jdbcType=DECIMAL},
+		totalAmt = #{totalamt,jdbcType=DECIMAL},
+		discountRatio = #{discountratio,jdbcType=INTEGER},
+		discount = #{discount,jdbcType=DECIMAL},
+		mchange = #{mchange,jdbcType=DECIMAL},
+		tax = #{tax,jdbcType=DECIMAL},
+		realcost = #{realcost,jdbcType=DECIMAL},
+		payCate1 = #{paycate1,jdbcType=VARCHAR},
+		payCost1 = #{paycost1,jdbcType=DECIMAL},
+		payCate2 = #{paycate2,jdbcType=VARCHAR},
+		payCost2 = #{paycost2,jdbcType=DECIMAL},
+		debetAmt = #{debetamt,jdbcType=DECIMAL},
+		orderTime = #{ordertime,jdbcType=TIMESTAMP},
+		createTime = #{createtime,jdbcType=TIMESTAMP},
+		createBy = #{createby,jdbcType=VARCHAR},
+		modifyTime = #{modifytime,jdbcType=TIMESTAMP},
+		modifyBy = #{modifyby,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
 </mapper>

@@ -49,11 +49,11 @@
     delete from sp_product_type
     where id in <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
   </delete>
-  <insert id="insert" parameterType="costumetrade.order.domain.SpPCate">
-    insert into sp_product_type (id, cateName, storeId, 
+  <insert id="insert" parameterType="costumetrade.order.domain.SpPCate" useGeneratedKeys="true" keyProperty="id">
+    insert into sp_product_type ( cateName, storeId, 
       fastcode, create_time, create_by, 
       modify_time, modify_by)
-    values (#{id,jdbcType=INTEGER}, #{catename,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER}, 
+    values ( #{catename,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER}, 
       #{fastcode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
   </insert>

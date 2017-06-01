@@ -33,16 +33,17 @@
     <include refid="Base_Column_List" />
     from sp_psize
     where storeId = #{storeId,jdbcType=INTEGER}
+    
   </select>
   <delete id="deleteByPrimaryKey" parameterType="List">
     delete from sp_psize
     where id in <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
   </delete>
-  <insert id="insert" parameterType="costumetrade.order.domain.SpPSize">
-    insert into sp_psize (id, storeId, sizeName, price_raise
+  <insert id="insert" parameterType="costumetrade.order.domain.SpPSize" useGeneratedKeys="true" keyProperty="id">
+    insert into sp_psize (storeId, sizeName, price_raise
       barcode, create_time, create_by, 
       modify_time, modify_by)
-    values (#{id,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER}, #{sizename,jdbcType=VARCHAR}, #{priceRaise,jdbcType=DECIMAL},
+    values (#{storeId,jdbcType=INTEGER}, #{sizename,jdbcType=VARCHAR}, #{priceRaise,jdbcType=DECIMAL},
       #{barcode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
   </insert>

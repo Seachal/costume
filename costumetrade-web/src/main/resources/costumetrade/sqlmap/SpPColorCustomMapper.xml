@@ -34,9 +34,9 @@
     where 
     storeId = #{storeId,jdbcType=INTEGER}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="List">
     delete from sp_pcolor_custom
-    where id = #{id,jdbcType=INTEGER}
+    where id in <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SpPColorCustom">
     insert into sp_pcolor_custom (id, storeId, customName, 

@@ -1,602 +1,669 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="costumetrade.order.mapper.SpProductMapper">
-  <resultMap id="BaseResultMap" type="costumetrade.order.domain.SpProduct">
-    <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="storeId" jdbcType="INTEGER" property="storeId" />
-    <result column="status" jdbcType="INTEGER" property="status" />
-    <result column="code" jdbcType="VARCHAR" property="code" />
-    <result column="levelType" jdbcType="INTEGER" property="levelType" />
-    <result column="brandId" jdbcType="INTEGER" property="brandid" />
-    <result column="productType" jdbcType="INTEGER" property="producttype" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="fastcode" jdbcType="VARCHAR" property="fastcode" />
-    <result column="barcode" jdbcType="VARCHAR" property="barcode" />
-    <result column="barcodes" jdbcType="VARCHAR" property="barcodes" />
-    <result column="grade" jdbcType="VARCHAR" property="grade" />
-    <result column="unit" jdbcType="VARCHAR" property="unit" />
-    <result column="colors" jdbcType="VARCHAR" property="colors" />
-    <result column="sizes" jdbcType="VARCHAR" property="sizes" />
-    <result column="handcount" jdbcType="INTEGER" property="handcount" />
-    <result column="year" jdbcType="VARCHAR" property="year" />
-    <result column="season" jdbcType="VARCHAR" property="season" />
-    <result column="salTag" jdbcType="VARCHAR" property="saltag" />
-    <result column="salMonth" jdbcType="DECIMAL" property="salmonth" />
-    <result column="saleNum" jdbcType="DECIMAL" property="saleNum" />
-    <result column="image" jdbcType="VARCHAR" property="image" />
-    <result column="image1" jdbcType="VARCHAR" property="image1" />
-    <result column="image2" jdbcType="VARCHAR" property="image2" />
-    <result column="image3" jdbcType="VARCHAR" property="image3" />
-    <result column="image4" jdbcType="VARCHAR" property="image4" />
-    <result column="description" jdbcType="VARCHAR" property="description" />
-    <result column="warn_low" jdbcType="DOUBLE" property="warnLow" />
-    <result column="warn_high" jdbcType="DOUBLE" property="warnHigh" />
-    <result column="time_up" jdbcType="TIMESTAMP" property="timeUp" />
-    <result column="time_down" jdbcType="TIMESTAMP" property="timeDown" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
-    <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
-    <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
-  </resultMap>
-  
-  <resultMap id="ProductsResultMap" type="costumetrade.order.query.ProductQuery">
-    <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="code" jdbcType="VARCHAR" property="code" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="image" jdbcType="VARCHAR" property="image" />
-    <result column="time_up" jdbcType="TIMESTAMP" property="timeUp" />
-    <result column="storeId" jdbcType="INTEGER" property="storeId" />
-    <result column="price" jdbcType="DECIMAL" property="price" />
-    <result column="saleNum" jdbcType="DECIMAL" property="saleNum" />
-    <result column="purchasePrice" jdbcType="DECIMAL" property="purchaseprice" />
-    <result column="tagPrice" jdbcType="DECIMAL" property="tagprice" />
-    <result column="fourthPrice" jdbcType="DECIMAL" property="fourthPrice" />
-    <result column="fifthPrice" jdbcType="DECIMAL" property="fifthPrice" />
-    <result column="firsthPrice" jdbcType="DECIMAL" property="firsthPrice" />
-    <result column="secondPrice" jdbcType="DECIMAL" property="secondPrice" />
-    <result column="thirdPrice" jdbcType="DECIMAL" property="thirdPrice" />
-  </resultMap>
-  
-  <resultMap id="ProductResultMap" type="costumetrade.order.query.ProductQuery">
-    <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="code" jdbcType="VARCHAR" property="code" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="image" jdbcType="VARCHAR" property="image" />
-    <result column="time_up" jdbcType="TIMESTAMP" property="timeUp" />
-    <result column="storeId" jdbcType="DECIMAL" property="storeId" />
-    <result column="brandId" jdbcType="VARCHAR" property="brandid" />
-    <result column="producttype" jdbcType="VARCHAR" property="producttype" />
-    <result column="colors" jdbcType="VARCHAR" property="colors" />
-    <result column="sizes" jdbcType="VARCHAR" property="sizes" />
-    <result column="handcount" jdbcType="INTEGER" property="handcount" />
-    <result column="isModify" jdbcType="INTEGER" property="isModify" />
-    <result column="isDiscount" jdbcType="INTEGER" property="isDiscount" />
-    <result column="year" jdbcType="VARCHAR" property="year" />
-    <result column="season" jdbcType="VARCHAR" property="season" />
-    <result column="image1" jdbcType="VARCHAR" property="image1" />
-    <result column="image2" jdbcType="VARCHAR" property="image2" />
-    <result column="image3" jdbcType="VARCHAR" property="image3" />
-    <result column="image4" jdbcType="VARCHAR" property="image4" />
-    <result column="description" jdbcType="VARCHAR" property="description" />
-    <result column="time_down" jdbcType="TIMESTAMP" property="timeDown" />
-    <result column="storeName" jdbcType="VARCHAR" property="storeName" />
-    <result column="storeImage" jdbcType="VARCHAR" property="storeImage" />
-    <result column="salePrice" jdbcType="DECIMAL" property="salePrice" />
-    <result column="originalPrice" jdbcType="DECIMAL" property="originalPrice" />
-    
-    <result column="purchasePrice" jdbcType="DECIMAL" property="purchaseprice" />
-    <result column="tagPrice" jdbcType="DECIMAL" property="tagprice" />
-    <result column="fourthPrice" jdbcType="DECIMAL" property="fourthPrice" />
-    <result column="fifthPrice" jdbcType="DECIMAL" property="fifthPrice" />
-    <result column="firsthPrice" jdbcType="DECIMAL" property="firsthPrice" />
-    <result column="secondPrice" jdbcType="DECIMAL" property="secondPrice" />
-    <result column="thirdPrice" jdbcType="DECIMAL" property="thirdPrice" />
-  </resultMap>
-  
-  <sql id="Base_Column_List">
-    id, storeId, status, code, brandId, productType, name,isDiscount,isModify, fastcode, barcode, barcodes, levelType,
-    grade, unit, colors, sizes, handcount, year, season, salTag, salMonth,saleNum, image, image1, 
-    image2, image3, image4, description, warn_low, warn_high, time_up, time_down, create_time, 
-    create_by, modify_time, modify_by
-  </sql>
-  <sql id="Products_Column_List">
-    id,subId,code,name,image,time_up,price,saleNum
-  </sql>
-  
-  
-  <select id="selectByPrimaryKey"  resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from sp_product_#{storeId,jdbcType=INTEGER}
-  
-    where id = #{id,jdbcType=VARCHAR}
-  </select>
-  <select id="selectById"  resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from sp_product_#{storeId,jdbcType=INTEGER}
-    where id in <foreach collection="id" item="item" index="index" open="(" separator="," close=")">#{item,jdbcType=VARCHAR}</foreach>
-  </select>
-  
-  <select id="selectProducts"  resultMap="ProductsResultMap">
-    SELECT 
-  	product.id,product.storeId,product.code,product.name,product.image,product.time_up,
-	price.purchasePrice, price.tagPrice, price.firsthPrice, price.secondPrice, price.thirdPrice, price.fourthPrice,price.fifthPrice,product.saleNum
-    FROM sp_product_#{product.storeId,jdbcType=INTEGER} product
-    LEFT JOIN ss_pprice_#{product.storeId,jdbcType=INTEGER} price ON price.productId = product.id AND price.storeId = product.storeId
-    LEFT JOIN sp_pbrand brand ON brand.id = product.brandId
-    LEFT JOIN sp_product_type productType ON productType.id = product.productType
-    WHERE 1=1
-    and product.time_down &gt;= CURDATE() 
-    and product.time_up &lt;= CURDATE() 
-    <if test="product.status != null">
-     and product.status =#{product.status}
-    </if>
-     <if test="product.code != null">
-      and  product.code like  CONCAT('%',#{product.code},'%')
-      </if>
-     <if test="product.productTypeArray != null">
-       and productType.cateName in <foreach collection="productTypeArray" item="item" index="index" open="(" separator="," close=")"> #{item}</foreach>
-      </if>
-     <if test="product.productBrandArray != null">
-       and brand.brandName in <foreach collection="productBrandArray" item="item" index="index" open="(" separator="," close=")"> #{item}</foreach>
-      </if>
-      <if test="product.productSeasonArray != null">
-       and product.season in <foreach collection="productSeasonArray" item="item" index="index" open="(" separator="," close=")"> #{item}</foreach>
-      </if>
-      <if test="product.timeUpOp == 'asc'">
-        order by product.time_up asc
-      </if>
-      <if test="product.timeUpOp == 'desc'">
-        order by product.time_up desc
-      </if>
-      <if test="product.priceOp == 'asc'">
-        order by price asc
-      </if>
-      <if test="product.priceOp == 'desc'">
-        order by price desc
-      </if>
-      <if test="product.saleOp == 'asc'">
-        order by product.saleNum asc
-      </if>
-      <if test="product.saleOp == 'desc'">
-        order by product.saleNum desc
-      </if>
-    
-       LIMIT #{page.startRow},#{page.pageSize}
- 
-       
-  </select>
-  <select id="selectProduct" parameterType="costumetrade.order.query.ProductQuery" resultMap="ProductResultMap">
-    select 
-  	product.id,product.code,product.name,product.image,product.time_up,
-  	price.purchasePrice, price.tagPrice, price.firsthPrice, price.secondPrice, price.thirdPrice, price.fourthPrice,price.fifthPrice,
-  	product.storeId,
-  	brand.brandId,
-  	productType.cateName as producttype,
-  	product.colors,
-  	product.sizes,
-  	product.handcount, product.description,store.name as storeName,store.storePhoto as storeImage,
-  	product.year , product.season, product.image1, product.image2, product.image3, product.image4
-    from sp_product_#{storeId,jdbcType=INTEGER} product
-    left join ss_pprice_#{storeId,jdbcType=INTEGER} price on price.productId = product.id and price.storeId = product.storeId
-    left join sp_pbrand brand on brand.id = product.brandId
-    left join sp_product_type productType on productType.id = product.productType
-    left join sp_store store on store.id = product.storeId
-    where 1=1
-    and product.storeId = #{storeId,jdbcType=INTEGER}
-    and product.id = #{id,jdbcType=INTEGER}
-  </select>
-  <delete id="deleteByIds" >
-    delete from sp_product_#{storeId,jdbcType=INTEGER}
-    where id in<foreach collection="ids" item="item" index="index" open="(" separator="," close=")">#{item,jdbcType=VARCHAR}</foreach> 
-  </delete>
-  <update id="updateByIds" >
-    update sp_product_#{storeId,jdbcType=INTEGER} set status = 2
-    where id in<foreach collection="ids" item="item" index="index" open="(" separator="," close=")">#{item,jdbcType=VARCHAR}</foreach> 
-  </update>
-  <insert id="insert" parameterType="costumetrade.order.domain.SpProduct">
-    insert into sp_product (id, storeId, status,levelType, 
-      code, brandId, productType, 
-      name, fastcode, barcode, 
-      barcodes, grade, unit, isModify,isDiscount,
-      colors, sizes, handcount, 
-      year, season, salTag, 
-      salMonth,saleNum, image, image1, 
-      image2, image3, image4, 
-      description, warn_low, warn_high, 
-      time_up, time_down, create_time, 
-      create_by, modify_time, modify_by)
-    values (#{id,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{levelType,jdbcType=INTEGER},
-      #{code,jdbcType=VARCHAR}, #{brandid,jdbcType=INTEGER}, #{producttype,jdbcType=INTEGER}, 
-      #{name,jdbcType=VARCHAR}, #{fastcode,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR}, 
-      #{barcodes,jdbcType=VARCHAR}, #{grade,jdbcType=VARCHAR}, #{unit,jdbcType=VARCHAR}, #{isModify,jdbcType=INTEGER}, #{isDiscount,jdbcType=INTEGER}, 
-      #{colors,jdbcType=VARCHAR}, #{sizes,jdbcType=VARCHAR}, #{handcount,jdbcType=INTEGER}, 
-      #{year,jdbcType=VARCHAR}, #{season,jdbcType=VARCHAR}, #{saltag,jdbcType=VARCHAR}, 
-      #{salmonth,jdbcType=DECIMAL},#{saleNum,jdbcType=DECIMAL}, #{image,jdbcType=VARCHAR}, #{image1,jdbcType=VARCHAR}, 
-      #{image2,jdbcType=VARCHAR}, #{image3,jdbcType=VARCHAR}, #{image4,jdbcType=VARCHAR}, 
-      #{description,jdbcType=VARCHAR}, #{warnLow,jdbcType=DOUBLE}, #{warnHigh,jdbcType=DOUBLE}, 
-      #{timeUp,jdbcType=TIMESTAMP}, #{timeDown,jdbcType=TIMESTAMP}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{createBy,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" keyProperty="id" parameterType="costumetrade.order.domain.SpProduct">
-    insert into sp_product_#{storeId,jdbcType=INTEGER}
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="levelType != null">
-        levelType,
-      </if>
-      <if test="storeId != null">
-        storeId,
-      </if>
-      <if test="status != null">
-        status,
-      </if>
-      <if test="code != null">
-        code,
-      </if>
-      <if test="brandid != null">
-        brandId,
-      </if>
-      <if test="producttype != null">
-        productType,
-      </if>
-      <if test="isDiscount != null">
-        isDiscount,
-      </if>
-      <if test="isModify != null">
-        isModify,
-      </if>
-      <if test="name != null">
-        name,
-      </if>
-      <if test="fastcode != null">
-        fastcode,
-      </if>
-      <if test="barcode != null">
-        barcode,
-      </if>
-      <if test="barcodes != null">
-        barcodes,
-      </if>
-      <if test="grade != null">
-        grade,
-      </if>
-      <if test="unit != null">
-        unit,
-      </if>
-      <if test="colors != null">
-        colors,
-      </if>
-      <if test="sizes != null">
-        sizes,
-      </if>
-      <if test="handcount != null">
-        handcount,
-      </if>
-      <if test="year != null">
-        year,
-      </if>
-      <if test="season != null">
-        season,
-      </if>
-      <if test="saltag != null">
-        salTag,
-      </if>
-      <if test="salmonth != null">
-        salMonth,
-      </if>
-      <if test="saleNum != null">
-        saleNum,
-      </if>
-      <if test="image != null">
-        image,
-      </if>
-      <if test="image1 != null">
-        image1,
-      </if>
-      <if test="image2 != null">
-        image2,
-      </if>
-      <if test="image3 != null">
-        image3,
-      </if>
-      <if test="image4 != null">
-        image4,
-      </if>
-      <if test="description != null">
-        description,
-      </if>
-      <if test="warnLow != null">
-        warn_low,
-      </if>
-      <if test="warnHigh != null">
-        warn_high,
-      </if>
-      <if test="timeUp != null">
-        time_up,
-      </if>
-      <if test="timeDown != null">
-        time_down,
-      </if>
-      <if test="createTime != null">
-        create_time,
-      </if>
-      <if test="createBy != null">
-        create_by,
-      </if>
-      <if test="modifyTime != null">
-        modify_time,
-      </if>
-      <if test="modifyBy != null">
-        modify_by,
-      </if>
-     
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="levelType != null">
-        #{levelType,jdbcType=INTEGER},
-      </if>
-      <if test="storeId != null">
-        #{storeId,jdbcType=INTEGER},
-      </if>
-      <if test="status != null">
-        #{status,jdbcType=INTEGER},
-      </if>
-      <if test="code != null">
-        #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="brandid != null">
-        #{brandid,jdbcType=INTEGER},
-      </if>
-      <if test="producttype != null">
-        #{producttype,jdbcType=INTEGER},
-      </if>
-      <if test="isDiscount != null">
-        #{isDiscount,jdbcType=INTEGER},
-      </if>
-      <if test="isModify != null">
-        #{isModify,jdbcType=INTEGER},
-      </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="fastcode != null">
-        #{fastcode,jdbcType=VARCHAR},
-      </if>
-      <if test="barcode != null">
-        #{barcode,jdbcType=VARCHAR},
-      </if>
-      <if test="barcodes != null">
-        #{barcodes,jdbcType=VARCHAR},
-      </if>
-      <if test="grade != null">
-        #{grade,jdbcType=VARCHAR},
-      </if>
-      <if test="unit != null">
-        #{unit,jdbcType=VARCHAR},
-      </if>
-      <if test="colors != null">
-        #{colors,jdbcType=VARCHAR},
-      </if>
-      <if test="sizes != null">
-        #{sizes,jdbcType=VARCHAR},
-      </if>
-      <if test="handcount != null">
-        #{handcount,jdbcType=INTEGER},
-      </if>
-      <if test="year != null">
-        #{year,jdbcType=VARCHAR},
-      </if>
-      <if test="season != null">
-        #{season,jdbcType=VARCHAR},
-      </if>
-      <if test="saltag != null">
-        #{saltag,jdbcType=VARCHAR},
-      </if>
-      <if test="salmonth != null">
-        #{salmonth,jdbcType=DECIMAL},
-      </if>
-      <if test="saleNum != null">
-        #{saleNum,jdbcType=DECIMAL},
-      </if>
-      <if test="image != null">
-        #{image,jdbcType=VARCHAR},
-      </if>
-      <if test="image1 != null">
-        #{image1,jdbcType=VARCHAR},
-      </if>
-      <if test="image2 != null">
-        #{image2,jdbcType=VARCHAR},
-      </if>
-      <if test="image3 != null">
-        #{image3,jdbcType=VARCHAR},
-      </if>
-      <if test="image4 != null">
-        #{image4,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null">
-        #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="warnLow != null">
-        #{warnLow,jdbcType=DOUBLE},
-      </if>
-      <if test="warnHigh != null">
-        #{warnHigh,jdbcType=DOUBLE},
-      </if>
-      <if test="timeUp != null">
-        #{timeUp,jdbcType=TIMESTAMP},
-      </if>
-      <if test="timeDown != null">
-        #{timeDown,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createBy != null">
-        #{createBy,jdbcType=VARCHAR},
-      </if>
-      <if test="modifyTime != null">
-        #{modifyTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyBy != null">
-        #{modifyBy,jdbcType=VARCHAR},
-      </if>
-     
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SpProduct">
-    update sp_product_#{storeId,jdbcType=INTEGER}
-    <set>
-      <if test="storeId != null">
-        storeId = #{storeId,jdbcType=INTEGER},
-      </if>
-      <if test="status != null">
-        status = #{status,jdbcType=INTEGER},
-      </if>
-      <if test="code != null">
-        code = #{code,jdbcType=VARCHAR},
-      </if>
-      <if test="brandid != null">
-        brandId = #{brandid,jdbcType=INTEGER},
-      </if>
-      <if test="producttype != null">
-        productType = #{producttype,jdbcType=INTEGER},
-      </if>
-      <if test="isDiscount != null">
-        isDiscount = #{isDiscount,jdbcType=INTEGER},
-      </if>
-      <if test="isModify != null">
-        isModify = #{isModify,jdbcType=INTEGER},
-      </if>
-      <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
-      </if>
-      <if test="fastcode != null">
-        fastcode = #{fastcode,jdbcType=VARCHAR},
-      </if>
-      <if test="barcode != null">
-        barcode = #{barcode,jdbcType=VARCHAR},
-      </if>
-      <if test="barcodes != null">
-        barcodes = #{barcodes,jdbcType=VARCHAR},
-      </if>
-      <if test="grade != null">
-        grade = #{grade,jdbcType=VARCHAR},
-      </if>
-      <if test="unit != null">
-        unit = #{unit,jdbcType=VARCHAR},
-      </if>
-      <if test="colors != null">
-        colors = #{colors,jdbcType=VARCHAR},
-      </if>
-      <if test="sizes != null">
-        sizes = #{sizes,jdbcType=VARCHAR},
-      </if>
-      <if test="handcount != null">
-        handcount = #{handcount,jdbcType=INTEGER},
-      </if>
-      <if test="year != null">
-        year = #{year,jdbcType=VARCHAR},
-      </if>
-      <if test="season != null">
-        season = #{season,jdbcType=VARCHAR},
-      </if>
-      <if test="saltag != null">
-        salTag = #{saltag,jdbcType=VARCHAR},
-      </if>
-      <if test="salmonth != null">
-        salMonth = #{salmonth,jdbcType=DECIMAL},
-      </if>
-      <if test="saleNum != null">
-        saleNum = #{saleNum,jdbcType=DECIMAL},
-      </if>
-      <if test="image != null">
-        image = #{image,jdbcType=VARCHAR},
-      </if>
-      <if test="image1 != null">
-        image1 = #{image1,jdbcType=VARCHAR},
-      </if>
-      <if test="image2 != null">
-        image2 = #{image2,jdbcType=VARCHAR},
-      </if>
-      <if test="image3 != null">
-        image3 = #{image3,jdbcType=VARCHAR},
-      </if>
-      <if test="image4 != null">
-        image4 = #{image4,jdbcType=VARCHAR},
-      </if>
-      <if test="description != null">
-        description = #{description,jdbcType=VARCHAR},
-      </if>
-      <if test="warnLow != null">
-        warn_low = #{warnLow,jdbcType=DOUBLE},
-      </if>
-      <if test="warnHigh != null">
-        warn_high = #{warnHigh,jdbcType=DOUBLE},
-      </if>
-      <if test="timeUp != null">
-        time_up = #{timeUp,jdbcType=TIMESTAMP},
-      </if>
-      <if test="timeDown != null">
-        time_down = #{timeDown,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createBy != null">
-        create_by = #{createBy,jdbcType=VARCHAR},
-      </if>
-      <if test="modifyTime != null">
-        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyBy != null">
-        modify_by = #{modifyBy,jdbcType=VARCHAR},
-      </if>
-     
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SpProduct">
-    update sp_product
-    set storeId = #{storeId,jdbcType=INTEGER},
-      status = #{status,jdbcType=INTEGER},
-      code = #{code,jdbcType=VARCHAR},
-      brandId = #{brandid,jdbcType=INTEGER},
-      productType = #{producttype,jdbcType=INTEGER},
-      name = #{name,jdbcType=VARCHAR},
-      fastcode = #{fastcode,jdbcType=VARCHAR},
-      barcode = #{barcode,jdbcType=VARCHAR},
-      barcodes = #{barcodes,jdbcType=VARCHAR},
-      grade = #{grade,jdbcType=VARCHAR},
-      unit = #{unit,jdbcType=VARCHAR},
-      colors = #{colors,jdbcType=VARCHAR},
-      sizes = #{sizes,jdbcType=VARCHAR},
-      handcount = #{handcount,jdbcType=INTEGER},
-      year = #{year,jdbcType=VARCHAR},
-      season = #{season,jdbcType=VARCHAR},
-      salTag = #{saltag,jdbcType=VARCHAR},
-      salMonth = #{salmonth,jdbcType=DECIMAL},
-      saleNum = #{saleNum,jdbcType=DECIMAL},
-      image = #{image,jdbcType=VARCHAR},
-      image1 = #{image1,jdbcType=VARCHAR},
-      image2 = #{image2,jdbcType=VARCHAR},
-      image3 = #{image3,jdbcType=VARCHAR},
-      image4 = #{image4,jdbcType=VARCHAR},
-      description = #{description,jdbcType=VARCHAR},
-      warn_low = #{warnLow,jdbcType=DOUBLE},
-      warn_high = #{warnHigh,jdbcType=DOUBLE},
-      time_up = #{timeUp,jdbcType=TIMESTAMP},
-      time_down = #{timeDown,jdbcType=TIMESTAMP},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      create_by = #{createBy,jdbcType=VARCHAR},
-      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
-      modify_by = #{modifyBy,jdbcType=VARCHAR},
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+	<resultMap id="BaseResultMap" type="costumetrade.order.domain.SpProduct">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="storeId" jdbcType="INTEGER" property="storeId" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="levelType" jdbcType="INTEGER" property="levelType" />
+		<result column="brandId" jdbcType="INTEGER" property="brandid" />
+		<result column="productType" jdbcType="INTEGER" property="producttype" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="fastcode" jdbcType="VARCHAR" property="fastcode" />
+		<result column="barcode" jdbcType="VARCHAR" property="barcode" />
+		<result column="barcodes" jdbcType="VARCHAR" property="barcodes" />
+		<result column="grade" jdbcType="VARCHAR" property="grade" />
+		<result column="unit" jdbcType="VARCHAR" property="unit" />
+		<result column="colors" jdbcType="VARCHAR" property="colors" />
+		<result column="sizes" jdbcType="VARCHAR" property="sizes" />
+		<result column="handcount" jdbcType="INTEGER" property="handcount" />
+		<result column="year" jdbcType="VARCHAR" property="year" />
+		<result column="season" jdbcType="VARCHAR" property="season" />
+		<result column="salTag" jdbcType="VARCHAR" property="saltag" />
+		<result column="salMonth" jdbcType="DECIMAL" property="salmonth" />
+		<result column="saleNum" jdbcType="DECIMAL" property="saleNum" />
+		<result column="image" jdbcType="VARCHAR" property="image" />
+		<result column="image1" jdbcType="VARCHAR" property="image1" />
+		<result column="image2" jdbcType="VARCHAR" property="image2" />
+		<result column="image3" jdbcType="VARCHAR" property="image3" />
+		<result column="image4" jdbcType="VARCHAR" property="image4" />
+		<result column="description" jdbcType="VARCHAR" property="description" />
+		<result column="warn_low" jdbcType="DOUBLE" property="warnLow" />
+		<result column="warn_high" jdbcType="DOUBLE" property="warnHigh" />
+		<result column="time_up" jdbcType="TIMESTAMP" property="timeUp" />
+		<result column="time_down" jdbcType="TIMESTAMP" property="timeDown" />
+		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
+		<result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
+		<result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
+	</resultMap>
+
+	<resultMap id="ProductsResultMap" type="costumetrade.order.query.ProductQuery">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="image" jdbcType="VARCHAR" property="image" />
+		<result column="time_up" jdbcType="TIMESTAMP" property="timeUp" />
+		<result column="storeId" jdbcType="INTEGER" property="storeId" />
+		<result column="price" jdbcType="DECIMAL" property="price" />
+		<result column="saleNum" jdbcType="DECIMAL" property="saleNum" />
+		<result column="purchasePrice" jdbcType="DECIMAL" property="purchaseprice" />
+		<result column="tagPrice" jdbcType="DECIMAL" property="tagprice" />
+		<result column="fourthPrice" jdbcType="DECIMAL" property="fourthPrice" />
+		<result column="fifthPrice" jdbcType="DECIMAL" property="fifthPrice" />
+		<result column="firsthPrice" jdbcType="DECIMAL" property="firsthPrice" />
+		<result column="secondPrice" jdbcType="DECIMAL" property="secondPrice" />
+		<result column="thirdPrice" jdbcType="DECIMAL" property="thirdPrice" />
+	</resultMap>
+
+	<resultMap id="ProductResultMap" type="costumetrade.order.query.ProductQuery">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="image" jdbcType="VARCHAR" property="image" />
+		<result column="time_up" jdbcType="TIMESTAMP" property="timeUp" />
+		<result column="storeId" jdbcType="DECIMAL" property="storeId" />
+		<result column="brandId" jdbcType="VARCHAR" property="brandid" />
+		<result column="producttype" jdbcType="VARCHAR" property="producttype" />
+		<result column="colors" jdbcType="VARCHAR" property="colors" />
+		<result column="sizes" jdbcType="VARCHAR" property="sizes" />
+		<result column="handcount" jdbcType="INTEGER" property="handcount" />
+		<result column="isModify" jdbcType="INTEGER" property="isModify" />
+		<result column="isDiscount" jdbcType="INTEGER" property="isDiscount" />
+		<result column="year" jdbcType="VARCHAR" property="year" />
+		<result column="season" jdbcType="VARCHAR" property="season" />
+		<result column="image1" jdbcType="VARCHAR" property="image1" />
+		<result column="image2" jdbcType="VARCHAR" property="image2" />
+		<result column="image3" jdbcType="VARCHAR" property="image3" />
+		<result column="image4" jdbcType="VARCHAR" property="image4" />
+		<result column="description" jdbcType="VARCHAR" property="description" />
+		<result column="time_down" jdbcType="TIMESTAMP" property="timeDown" />
+		<result column="storeName" jdbcType="VARCHAR" property="storeName" />
+		<result column="storeImage" jdbcType="VARCHAR" property="storeImage" />
+		<result column="salePrice" jdbcType="DECIMAL" property="salePrice" />
+		<result column="originalPrice" jdbcType="DECIMAL" property="originalPrice" />
+
+		<result column="purchasePrice" jdbcType="DECIMAL" property="purchaseprice" />
+		<result column="tagPrice" jdbcType="DECIMAL" property="tagprice" />
+		<result column="fourthPrice" jdbcType="DECIMAL" property="fourthPrice" />
+		<result column="fifthPrice" jdbcType="DECIMAL" property="fifthPrice" />
+		<result column="firsthPrice" jdbcType="DECIMAL" property="firsthPrice" />
+		<result column="secondPrice" jdbcType="DECIMAL" property="secondPrice" />
+		<result column="thirdPrice" jdbcType="DECIMAL" property="thirdPrice" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, storeId, status, code, brandId, productType,
+		name,isDiscount,isModify, fastcode, barcode, barcodes, levelType,
+		grade, unit, colors, sizes, handcount, year, season, salTag,
+		salMonth,saleNum, image, image1,
+		image2, image3, image4, description, warn_low, warn_high, time_up, time_down,
+		create_time,
+		create_by, modify_time, modify_by
+	</sql>
+	<sql id="Products_Column_List">
+		id,subId,code,name,image,time_up,price,saleNum
+	</sql>
+
+
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sp_product_#{storeId,jdbcType=INTEGER}
+
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<select id="selectById" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sp_product_#{storeId,jdbcType=INTEGER}
+		where id in
+		<foreach collection="id" item="item" index="index" open="("
+			separator="," close=")">#{item,jdbcType=VARCHAR}</foreach>
+	</select>
+
+	<select id="selectProducts" resultMap="ProductsResultMap">
+		SELECT
+		product.id,product.storeId,product.code,product.name,product.image,product.time_up,
+		price.purchasePrice, price.tagPrice, price.firsthPrice,
+		price.secondPrice, price.thirdPrice,
+		price.fourthPrice,price.fifthPrice,product.saleNum
+		FROM sp_product_#{product.storeId,jdbcType=INTEGER} product
+		LEFT JOIN ss_pprice_#{product.storeId,jdbcType=INTEGER} price ON
+		price.productId = product.id AND price.storeId = product.storeId
+		LEFT JOIN sp_pbrand brand ON brand.id = product.brandId
+		LEFT JOIN sp_product_type productType ON productType.id =
+		product.productType
+		WHERE 1=1
+		
+		<if test="product.status != null">
+			and product.status =#{product.status}
+		</if>
+		<if test="product.code != null">
+			and product.code like CONCAT('%',#{product.code},'%')
+		</if>
+		<if test="product.productTypeArray != null">
+			and productType.cateName in
+			<foreach collection="product.productTypeArray" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		<if test="product.productBrandArray != null">
+			and brand.brandName in
+			<foreach collection="product.productBrandArray" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		<if test="product.productSeasonArray != null">
+			and product.season in
+			<foreach collection="product.productSeasonArray" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		<if test="product.grades != null">
+			and product.grade in
+			<foreach collection="product.grades" item="item" index="index"
+				open="(" separator="," close=")"> #{item}</foreach>
+			
+			and product.time_down &gt;= CURDATE()
+			and product.time_up &lt;= CURDATE()
+		</if>
+		<if test="product.timeUpOp == 'asc'">
+			order by product.time_up asc
+		</if>
+		<if test="product.timeUpOp == 'desc'">
+			order by product.time_up desc
+		</if>
+		<if test="product.priceOp == 'asc' and product.custTypeCode == 1">
+			order by price.firsthPrice asc
+		</if>
+		<if test="product.priceOp == 'asc' and product.custTypeCode == 2">
+			order by price.secondPrice asc
+		</if>
+		<if test="product.priceOp == 'asc' and product.custTypeCode == 3">
+			order by price.thirdPrice asc
+		</if>
+		<if test="product.priceOp == 'asc' and product.custTypeCode == 4">
+			order by price.fourthPrice asc
+		</if>
+		<if test="product.priceOp == 'asc' and product.custTypeCode == 5">
+			order by price.fifthPrice asc
+		</if>
+		
+		<if test="product.priceOp == 'desc' and product.custTypeCode == 1">
+			order by price.firsthPrice desc
+		</if>
+		<if test="product.priceOp == 'desc' and product.custTypeCode == 2">
+			order by price.secondPrice desc
+		</if>
+		<if test="product.priceOp == 'desc' and product.custTypeCode == 3">
+			order by price.thirdPrice desc
+		</if>
+		<if test="product.priceOp == 'desc' and product.custTypeCode == 4">
+			order by price.fourthPrice desc
+		</if>
+		<if test="product.priceOp == 'desc' and product.custTypeCode == 5">
+			order by price.fifthPrice desc
+		</if>
+	
+		<if test="product.saleOp == 'asc'">
+			order by product.saleNum asc
+		</if>
+		<if test="product.saleOp == 'desc'">
+			order by product.saleNum desc
+		</if>
+
+		LIMIT #{page.startRow},#{page.pageSize}
+
+
+	</select>
+	<select id="selectProduct" parameterType="costumetrade.order.query.ProductQuery"
+		resultMap="ProductResultMap">
+		select
+		product.id,product.code,product.name,product.image,product.time_up,
+		price.purchasePrice, price.tagPrice, price.firsthPrice, price.secondPrice,
+		price.thirdPrice, price.fourthPrice,price.fifthPrice,
+		product.storeId,
+		brand.brandId,
+		productType.cateName as producttype,
+		product.colors,
+		product.sizes,
+		product.handcount, product.description,store.name as storeName,store.storePhoto as
+		storeImage,
+		product.year , product.season, product.image1, product.image2, product.image3,
+		product.image4
+		from sp_product_#{storeId,jdbcType=INTEGER} product
+		left join ss_pprice_#{storeId,jdbcType=INTEGER} price on price.productId =
+		product.id and price.storeId = product.storeId
+		left join sp_pbrand brand on brand.id = product.brandId
+		left join sp_product_type productType on productType.id =
+		product.productType
+		left join sp_store store on store.id = product.storeId
+		where 1=1
+		and product.storeId = #{storeId,jdbcType=INTEGER}
+		and product.id = #{id,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByIds">
+		delete from sp_product_#{storeId,jdbcType=INTEGER}
+		where id in
+		<foreach collection="ids" item="item" index="index" open="("
+			separator="," close=")">#{item,jdbcType=VARCHAR}</foreach>
+	</delete>
+	<update id="updateByIds">
+		update sp_product_#{storeId,jdbcType=INTEGER} set status = 2
+		where id in
+		<foreach collection="ids" item="item" index="index" open="("
+			separator="," close=")">#{item,jdbcType=VARCHAR}</foreach>
+	</update>
+	<insert id="insert" parameterType="costumetrade.order.domain.SpProduct">
+		insert into sp_product (id, storeId, status,levelType,
+		code, brandId, productType,
+		name, fastcode, barcode,
+		barcodes, grade, unit, isModify,isDiscount,
+		colors, sizes, handcount,
+		year, season, salTag,
+		salMonth,saleNum, image, image1,
+		image2, image3, image4,
+		description, warn_low, warn_high,
+		time_up, time_down, create_time,
+		create_by, modify_time, modify_by)
+		values (#{id,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER},
+		#{status,jdbcType=INTEGER}, #{levelType,jdbcType=INTEGER},
+		#{code,jdbcType=VARCHAR}, #{brandid,jdbcType=INTEGER},
+		#{producttype,jdbcType=INTEGER},
+		#{name,jdbcType=VARCHAR}, #{fastcode,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR},
+		#{barcodes,jdbcType=VARCHAR}, #{grade,jdbcType=VARCHAR},
+		#{unit,jdbcType=VARCHAR}, #{isModify,jdbcType=INTEGER},
+		#{isDiscount,jdbcType=INTEGER},
+		#{colors,jdbcType=VARCHAR}, #{sizes,jdbcType=VARCHAR}, #{handcount,jdbcType=INTEGER},
+		#{year,jdbcType=VARCHAR}, #{season,jdbcType=VARCHAR},
+		#{saltag,jdbcType=VARCHAR},
+		#{salmonth,jdbcType=DECIMAL},#{saleNum,jdbcType=DECIMAL},
+		#{image,jdbcType=VARCHAR}, #{image1,jdbcType=VARCHAR},
+		#{image2,jdbcType=VARCHAR}, #{image3,jdbcType=VARCHAR},
+		#{image4,jdbcType=VARCHAR},
+		#{description,jdbcType=VARCHAR}, #{warnLow,jdbcType=DOUBLE}, #{warnHigh,jdbcType=DOUBLE},
+		#{timeUp,jdbcType=TIMESTAMP}, #{timeDown,jdbcType=TIMESTAMP},
+		#{createTime,jdbcType=TIMESTAMP},
+		#{createBy,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" keyProperty="id"
+		parameterType="costumetrade.order.domain.SpProduct">
+		insert into sp_product_#{storeId,jdbcType=INTEGER}
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="levelType != null">
+				levelType,
+			</if>
+			<if test="storeId != null">
+				storeId,
+			</if>
+			<if test="status != null">
+				status,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="brandid != null">
+				brandId,
+			</if>
+			<if test="producttype != null">
+				productType,
+			</if>
+			<if test="isDiscount != null">
+				isDiscount,
+			</if>
+			<if test="isModify != null">
+				isModify,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+			<if test="fastcode != null">
+				fastcode,
+			</if>
+			<if test="barcode != null">
+				barcode,
+			</if>
+			<if test="barcodes != null">
+				barcodes,
+			</if>
+			<if test="grade != null">
+				grade,
+			</if>
+			<if test="unit != null">
+				unit,
+			</if>
+			<if test="colors != null">
+				colors,
+			</if>
+			<if test="sizes != null">
+				sizes,
+			</if>
+			<if test="handcount != null">
+				handcount,
+			</if>
+			<if test="year != null">
+				year,
+			</if>
+			<if test="season != null">
+				season,
+			</if>
+			<if test="saltag != null">
+				salTag,
+			</if>
+			<if test="salmonth != null">
+				salMonth,
+			</if>
+			<if test="saleNum != null">
+				saleNum,
+			</if>
+			<if test="image != null">
+				image,
+			</if>
+			<if test="image1 != null">
+				image1,
+			</if>
+			<if test="image2 != null">
+				image2,
+			</if>
+			<if test="image3 != null">
+				image3,
+			</if>
+			<if test="image4 != null">
+				image4,
+			</if>
+			<if test="description != null">
+				description,
+			</if>
+			<if test="warnLow != null">
+				warn_low,
+			</if>
+			<if test="warnHigh != null">
+				warn_high,
+			</if>
+			<if test="timeUp != null">
+				time_up,
+			</if>
+			<if test="timeDown != null">
+				time_down,
+			</if>
+			<if test="createTime != null">
+				create_time,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="modifyTime != null">
+				modify_time,
+			</if>
+			<if test="modifyBy != null">
+				modify_by,
+			</if>
+
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="levelType != null">
+				#{levelType,jdbcType=INTEGER},
+			</if>
+			<if test="storeId != null">
+				#{storeId,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=INTEGER},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="brandid != null">
+				#{brandid,jdbcType=INTEGER},
+			</if>
+			<if test="producttype != null">
+				#{producttype,jdbcType=INTEGER},
+			</if>
+			<if test="isDiscount != null">
+				#{isDiscount,jdbcType=INTEGER},
+			</if>
+			<if test="isModify != null">
+				#{isModify,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				#{name,jdbcType=VARCHAR},
+			</if>
+			<if test="fastcode != null">
+				#{fastcode,jdbcType=VARCHAR},
+			</if>
+			<if test="barcode != null">
+				#{barcode,jdbcType=VARCHAR},
+			</if>
+			<if test="barcodes != null">
+				#{barcodes,jdbcType=VARCHAR},
+			</if>
+			<if test="grade != null">
+				#{grade,jdbcType=VARCHAR},
+			</if>
+			<if test="unit != null">
+				#{unit,jdbcType=VARCHAR},
+			</if>
+			<if test="colors != null">
+				#{colors,jdbcType=VARCHAR},
+			</if>
+			<if test="sizes != null">
+				#{sizes,jdbcType=VARCHAR},
+			</if>
+			<if test="handcount != null">
+				#{handcount,jdbcType=INTEGER},
+			</if>
+			<if test="year != null">
+				#{year,jdbcType=VARCHAR},
+			</if>
+			<if test="season != null">
+				#{season,jdbcType=VARCHAR},
+			</if>
+			<if test="saltag != null">
+				#{saltag,jdbcType=VARCHAR},
+			</if>
+			<if test="salmonth != null">
+				#{salmonth,jdbcType=DECIMAL},
+			</if>
+			<if test="saleNum != null">
+				#{saleNum,jdbcType=DECIMAL},
+			</if>
+			<if test="image != null">
+				#{image,jdbcType=VARCHAR},
+			</if>
+			<if test="image1 != null">
+				#{image1,jdbcType=VARCHAR},
+			</if>
+			<if test="image2 != null">
+				#{image2,jdbcType=VARCHAR},
+			</if>
+			<if test="image3 != null">
+				#{image3,jdbcType=VARCHAR},
+			</if>
+			<if test="image4 != null">
+				#{image4,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				#{description,jdbcType=VARCHAR},
+			</if>
+			<if test="warnLow != null">
+				#{warnLow,jdbcType=DOUBLE},
+			</if>
+			<if test="warnHigh != null">
+				#{warnHigh,jdbcType=DOUBLE},
+			</if>
+			<if test="timeUp != null">
+				#{timeUp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="timeDown != null">
+				#{timeDown,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createBy != null">
+				#{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyTime != null">
+				#{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyBy != null">
+				#{modifyBy,jdbcType=VARCHAR},
+			</if>
+
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SpProduct">
+		update sp_product_#{storeId,jdbcType=INTEGER}
+		<set>
+			<if test="storeId != null">
+				storeId = #{storeId,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="brandid != null">
+				brandId = #{brandid,jdbcType=INTEGER},
+			</if>
+			<if test="producttype != null">
+				productType = #{producttype,jdbcType=INTEGER},
+			</if>
+			<if test="isDiscount != null">
+				isDiscount = #{isDiscount,jdbcType=INTEGER},
+			</if>
+			<if test="isModify != null">
+				isModify = #{isModify,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="fastcode != null">
+				fastcode = #{fastcode,jdbcType=VARCHAR},
+			</if>
+			<if test="barcode != null">
+				barcode = #{barcode,jdbcType=VARCHAR},
+			</if>
+			<if test="barcodes != null">
+				barcodes = #{barcodes,jdbcType=VARCHAR},
+			</if>
+			<if test="grade != null">
+				grade = #{grade,jdbcType=VARCHAR},
+			</if>
+			<if test="unit != null">
+				unit = #{unit,jdbcType=VARCHAR},
+			</if>
+			<if test="colors != null">
+				colors = #{colors,jdbcType=VARCHAR},
+			</if>
+			<if test="sizes != null">
+				sizes = #{sizes,jdbcType=VARCHAR},
+			</if>
+			<if test="handcount != null">
+				handcount = #{handcount,jdbcType=INTEGER},
+			</if>
+			<if test="year != null">
+				year = #{year,jdbcType=VARCHAR},
+			</if>
+			<if test="season != null">
+				season = #{season,jdbcType=VARCHAR},
+			</if>
+			<if test="saltag != null">
+				salTag = #{saltag,jdbcType=VARCHAR},
+			</if>
+			<if test="salmonth != null">
+				salMonth = #{salmonth,jdbcType=DECIMAL},
+			</if>
+			<if test="saleNum != null">
+				saleNum = #{saleNum,jdbcType=DECIMAL},
+			</if>
+			<if test="image != null">
+				image = #{image,jdbcType=VARCHAR},
+			</if>
+			<if test="image1 != null">
+				image1 = #{image1,jdbcType=VARCHAR},
+			</if>
+			<if test="image2 != null">
+				image2 = #{image2,jdbcType=VARCHAR},
+			</if>
+			<if test="image3 != null">
+				image3 = #{image3,jdbcType=VARCHAR},
+			</if>
+			<if test="image4 != null">
+				image4 = #{image4,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="warnLow != null">
+				warn_low = #{warnLow,jdbcType=DOUBLE},
+			</if>
+			<if test="warnHigh != null">
+				warn_high = #{warnHigh,jdbcType=DOUBLE},
+			</if>
+			<if test="timeUp != null">
+				time_up = #{timeUp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="timeDown != null">
+				time_down = #{timeDown,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createTime != null">
+				create_time = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createBy != null">
+				create_by = #{createBy,jdbcType=VARCHAR},
+			</if>
+			<if test="modifyTime != null">
+				modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyBy != null">
+				modify_by = #{modifyBy,jdbcType=VARCHAR},
+			</if>
+
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SpProduct">
+		update sp_product
+		set storeId = #{storeId,jdbcType=INTEGER},
+		status = #{status,jdbcType=INTEGER},
+		code = #{code,jdbcType=VARCHAR},
+		brandId = #{brandid,jdbcType=INTEGER},
+		productType = #{producttype,jdbcType=INTEGER},
+		name = #{name,jdbcType=VARCHAR},
+		fastcode = #{fastcode,jdbcType=VARCHAR},
+		barcode = #{barcode,jdbcType=VARCHAR},
+		barcodes = #{barcodes,jdbcType=VARCHAR},
+		grade = #{grade,jdbcType=VARCHAR},
+		unit = #{unit,jdbcType=VARCHAR},
+		colors = #{colors,jdbcType=VARCHAR},
+		sizes = #{sizes,jdbcType=VARCHAR},
+		handcount = #{handcount,jdbcType=INTEGER},
+		year = #{year,jdbcType=VARCHAR},
+		season = #{season,jdbcType=VARCHAR},
+		salTag = #{saltag,jdbcType=VARCHAR},
+		salMonth = #{salmonth,jdbcType=DECIMAL},
+		saleNum = #{saleNum,jdbcType=DECIMAL},
+		image = #{image,jdbcType=VARCHAR},
+		image1 = #{image1,jdbcType=VARCHAR},
+		image2 = #{image2,jdbcType=VARCHAR},
+		image3 = #{image3,jdbcType=VARCHAR},
+		image4 = #{image4,jdbcType=VARCHAR},
+		description = #{description,jdbcType=VARCHAR},
+		warn_low = #{warnLow,jdbcType=DOUBLE},
+		warn_high = #{warnHigh,jdbcType=DOUBLE},
+		time_up = #{timeUp,jdbcType=TIMESTAMP},
+		time_down = #{timeDown,jdbcType=TIMESTAMP},
+		create_time = #{createTime,jdbcType=TIMESTAMP},
+		create_by = #{createBy,jdbcType=VARCHAR},
+		modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+		modify_by = #{modifyBy,jdbcType=VARCHAR},
+		where id = #{id,jdbcType=INTEGER}
+	</update>
 </mapper>

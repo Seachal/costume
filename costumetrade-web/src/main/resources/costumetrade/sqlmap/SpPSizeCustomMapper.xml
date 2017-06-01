@@ -47,11 +47,11 @@
     delete from sp_psize_custom
     where id in <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
   </delete>
-  <insert id="insert" parameterType="costumetrade.order.domain.SpPSizeCustom">
-    insert into sp_psize_custom (id, storeId, customName, 
+  <insert id="insert" parameterType="costumetrade.order.domain.SpPSizeCustom" useGeneratedKeys="true" keyProperty="id">
+    insert into sp_psize_custom ( storeId, customName, 
       value, create_time, create_by, 
       modify_time, modify_by)
-    values (#{id,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER}, #{customname,jdbcType=VARCHAR}, 
+    values (#{storeId,jdbcType=INTEGER}, #{customname,jdbcType=VARCHAR}, 
       #{value,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
   </insert>

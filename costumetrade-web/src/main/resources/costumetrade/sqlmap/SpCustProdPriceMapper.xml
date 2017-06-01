@@ -5,6 +5,7 @@
 		<id column="id" jdbcType="INTEGER" property="id" />
 		<result column="storeId" jdbcType="INTEGER" property="storeid" />
 		<result column="type" jdbcType="VARCHAR" property="type" />
+		<result column="custTypeCode" jdbcType="VARCHAR" property="custTypeCode" />
 		<result column="custTypeName" jdbcType="VARCHAR" property="custtypename" />
 		<result column="prodGrade" jdbcType="VARCHAR" property="prodgrade" />
 		<result column="custPriceJson" jdbcType="VARCHAR" property="custpricejson" />
@@ -13,7 +14,7 @@
 		<result column="createBy" jdbcType="VARCHAR" property="createby" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, storeId, type, custTypeName, prodGrade, custPriceJson, discPriceJson,
+		id, storeId, type,custTypeCode, custTypeName, prodGrade, custPriceJson, discPriceJson,
 		createTime,
 		createBy
 	</sql>
@@ -27,7 +28,7 @@
 	<select id="select" parameterType="costumetrade.user.domain.SpCustProdPrice"
 		resultMap="BaseResultMap">
 		select
-		id, storeId,custTypeName,custPriceJson, discPriceJson
+		id, storeId,custTypeName,custTypeCode,custPriceJson, discPriceJson
 		from sp_cust_prod_price
 		where 1=1
 		<if test="id != null">
@@ -51,12 +52,12 @@
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
 	<insert id="insert" parameterType="costumetrade.user.domain.SpCustProdPrice">
-		insert into sp_cust_prod_price (id, storeId, type,
+		insert into sp_cust_prod_price (id, storeId, type,custTypeCode,
 		custTypeName, prodGrade, custPriceJson,
 		discPriceJson, createTime, createBy
 		)
 		values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER},
-		#{type,jdbcType=VARCHAR},
+		#{type,jdbcType=VARCHAR},#{custTypeCode,jdbcType=VARCHAR},
 		#{custtypename,jdbcType=VARCHAR}, #{prodgrade,jdbcType=VARCHAR}, #{custpricejson,jdbcType=VARCHAR},
 		#{discpricejson,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP},
 		#{createby,jdbcType=VARCHAR}
@@ -73,6 +74,9 @@
 			</if>
 			<if test="type != null">
 				type,
+			</if>
+			<if test="custTypeCode != null">
+				custTypeCode,
 			</if>
 			<if test="custtypename != null">
 				custTypeName,
@@ -103,6 +107,9 @@
 			<if test="type != null">
 				#{type,jdbcType=VARCHAR},
 			</if>
+			<if test="custTypeCode != null">
+				#{custTypeCode,jdbcType=VARCHAR},
+			</if>
 			<if test="custtypename != null">
 				#{custtypename,jdbcType=VARCHAR},
 			</if>
@@ -132,6 +139,9 @@
 			<if test="type != null">
 				type = #{type,jdbcType=VARCHAR},
 			</if>
+			<if test="custTypeCode != null">
+				custTypeCode = #{custTypeCode,jdbcType=VARCHAR},
+			</if>
 			<if test="custtypename != null">
 				custTypeName = #{custtypename,jdbcType=VARCHAR},
 			</if>
@@ -157,6 +167,7 @@
 		update sp_cust_prod_price
 		set storeId = #{storeid,jdbcType=INTEGER},
 		type = #{type,jdbcType=VARCHAR},
+		custTypeCode = #{custTypeCode,jdbcType=VARCHAR},
 		custTypeName = #{custtypename,jdbcType=VARCHAR},
 		prodGrade = #{prodgrade,jdbcType=VARCHAR},
 		custPriceJson = #{custpricejson,jdbcType=VARCHAR},
