@@ -5,10 +5,11 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpPColor;
 @Mapper
 public interface SpPColorMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(@Param("ids")List<Integer> ids);
 
     int insert(SpPColor record);
 
@@ -18,7 +19,7 @@ public interface SpPColorMapper {
     
     SpPColor selectByName(@Param("colorname")String colorname, @Param("storeId")Integer storeId);
     
-    List<SpPColor> getSpPColors(Integer storeId);
+    List<SpPColor> getSpPColors(@Param("storeId")int storeId,@Param("page")Page page);
 
     int updateByPrimaryKeySelective(SpPColor record);
 

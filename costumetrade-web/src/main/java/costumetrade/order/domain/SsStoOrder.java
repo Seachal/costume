@@ -22,6 +22,9 @@ public class SsStoOrder extends Entity {
      */
     private Integer buyerstoreid;
 
+    private String buyer;
+    
+    private String seller;
     /**
      *  经办人
      */
@@ -181,19 +184,22 @@ public class SsStoOrder extends Entity {
     
     private Integer storeId ;
     
-    private Integer clientId ;
+    private String openid ;
   
- 
+    private Integer pageNum;
+    
     private static final long serialVersionUID = 1L;
     
+    private BigDecimal unPay;
+    
     
 
-    public Integer getClientId() {
-		return clientId;
+	public String getOpenid() {
+		return openid;
 	}
 
-	public void setClientId(Integer clientId) {
-		this.clientId = clientId;
+	public void setOpenid(String openid) {
+		this.openid = openid;
 	}
 
 	public Integer getId() {
@@ -482,6 +488,38 @@ public class SsStoOrder extends Entity {
 
 	public void setStoreId(Integer storeId) {
 		this.storeId = storeId;
+	}
+
+	public Integer getPageNum() {
+		return pageNum;
+	}
+
+	public void setPageNum(Integer pageNum) {
+		this.pageNum = pageNum;
+	}
+
+	public BigDecimal getUnPay() {
+		return unPay = totalamt.subtract(realcost);
+	}
+
+	public void setUnPay(BigDecimal unPay) {
+		this.unPay = unPay;
+	}
+
+	public String getBuyer() {
+		return buyer;
+	}
+
+	public void setBuyer(String buyer) {
+		this.buyer = buyer;
+	}
+
+	public String getSeller() {
+		return seller;
+	}
+
+	public void setSeller(String seller) {
+		this.seller = seller;
 	}
     
     

@@ -5,10 +5,11 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpPSize;
 @Mapper
 public interface SpPSizeMapper {
-    int deleteByPrimaryKey(List<Integer> ids);
+    int deleteByPrimaryKey(@Param("ids")List<Integer> ids);
 
     int insert(SpPSize record);
 
@@ -22,5 +23,5 @@ public interface SpPSizeMapper {
 
     int updateByPrimaryKey(SpPSize record);
     
-    List<SpPSize> getSpPSizes(int storeId);
+    List<SpPSize> getSpPSizes(@Param("storeId")int storeId);
 }

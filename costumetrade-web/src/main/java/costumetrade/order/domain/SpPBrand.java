@@ -81,11 +81,7 @@ public class SpPBrand extends Entity {
      *  修改人
      */
     private String modifyBy;
-    
-	/**
-	 * 行数
-	 */
-	private Integer pageSize;
+   
 	/**
 	 * 当前页码
 	 */
@@ -215,13 +211,6 @@ public class SpPBrand extends Entity {
         this.modifyBy = modifyBy == null ? null : modifyBy.trim();
     }
 
-	public Integer getPageSize() {
-		return pageSize;
-	}
-
-	public void setPageSize(Integer pageSize) {
-		this.pageSize = pageSize;
-	}
 
 	public Integer getPageNum() {
 		return pageNum;

@@ -9,7 +9,9 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
@@ -58,7 +60,7 @@ public class FTPClientUtils {
             FTPClient ftpClient = new FTPClient(); //构造一个FtpClient实例  
             //ftpClient.setControlEncoding(encoding); //设置字符集  
             ftpClient.setControlEncoding("gbk");
-           
+            
             
             try {
                 //设置为passive模式  
@@ -68,6 +70,7 @@ public class FTPClientUtils {
                 
 				connect(ftpClient);//连接到ftp服务器  
 				ftpClient.setSoTimeout(clientTimeout);
+				ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				logger.error("connect FTP  异常:"+e);
@@ -315,9 +318,13 @@ public  boolean getFileFromFold(String remotePath,String[] fileNames){
 				                String subDate = ftpFileName.substring(fileName.length()+1, fileName.length()+1+8);
 				                String localFileName = ftpFileName.replace(subDate, FileHelper.getNowDateFold());
 				                File localFile = new File(FileHelper.getFoldPrefilePath()+"/"+localFileName);      
-				                OutputStream out = new FileOutputStream(localFile);  
-				                getFTPClient().retrieveFile(ftpFileName, out);  
+				                OutputStream out = new FileOutputStream(localFile); 
+				               
+				                ZipOutputStream zipOut = new ZipOutputStream(out);
+				               
+				                getFTPClient().retrieveFile(ftpFileName, zipOut);  
 				                out.close();
+				                zipOut.close();
 				                success = true;
 				                downedFiles.add(fileName);
 				                continue Label;
@@ -434,7 +441,58 @@ public  boolean getFileFromFold(String remotePath,String[] fileNames){
 			}
 	        return success;
     }
-    
+    public void downloadFile(String remotePath,String[] fileNames){
+    	 String topFold = remotePath;
+ 	    boolean success = false;
+ 	    if(null == fileNames || fileNames.length <=0 ){
+ 	    	
+ 	    }
+ 	    
+ 	    if(null == remotePath || "".equalsIgnoreCase(remotePath)){
+ 	    	topFold = "/";
+ 	    }
+ 	    List<String> downedFiles = new ArrayList<String>();
+ 	    
+ 	    try {  
+ 	        	if(downedFiles.size() == fileNames.length){
+ 	        		
+ 	        	}
+ 	        	
+ 		        getFTPClient().changeWorkingDirectory(topFold);//转移到FTP服务器目录   
+ 		        FTPFile[] ftpFiles = getFTPClient().listFiles(); 
+ 		        
+ 		        Label:for(String fileName:fileNames){
+ 			       for(FTPFile ftpFile:ftpFiles){  
+ 			    	    String ftpFileName = ftpFile.getName();
+ 		                if(ftpFileName.indexOf(fileName) >= 0){
+ 				                String subDate = ftpFileName.substring(fileName.length()+1, fileName.length()+1+8);
+ 				                String localFileName = ftpFileName.replace(subDate, FileHelper.getNowDateFold());
+ 				                File localFile = new File(FileHelper.getFoldPrefilePath()+"/"+localFileName);      
+ 				                OutputStream out = new FileOutputStream(localFile); 
+ 				               
+ 				                ZipOutputStream zipOut = new ZipOutputStream(out);
+ 				               
+ 				                getFTPClient().retrieveFile(ftpFileName, zipOut);  
+ 				                out.close();
+ 				                zipOut.close();
+ 				                success = true;
+ 				                downedFiles.add(fileName);
+ 				                continue Label;
+ 		                }
+ 		            }
+ 	        }  
+ 	    } catch (IOException e) {  
+ 	    	success = false;
+ 	        logger.error("输入输出异常:"+e);
+ 	    } finally {  
+ 	        if (getFTPClient().isConnected()) {  
+ 	            try {  
+ 	                getFTPClient().disconnect();  
+ 	            } catch (IOException ioe) {  
+ 	            }  
+ 	        }  
+ 	    } 
+    }
     public boolean uploadFile(String path,String ftpFileName){
     	boolean success = false;
     	//getFTPClient();

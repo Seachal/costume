@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import costumetrade.common.param.ApiResponse;
@@ -28,7 +29,7 @@ public class SpPBrandController {
 
 	@RequestMapping("/getAllBrands")
 	@ResponseBody
-	public ApiResponse getAllBrands(@RequestBody SpPBrand brand) {
+	public ApiResponse getAllBrands(SpPBrand brand) {
 		
 		List<SpPBrand> CateLists = new ArrayList<SpPBrand>();
 		CateLists = spPBrandService.getSpPBrands(brand);
@@ -53,6 +54,8 @@ public class SpPBrandController {
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
+		}else{
+			result.setData(save);
 		}
 		return result;
 
@@ -60,7 +63,7 @@ public class SpPBrandController {
 
 	@RequestMapping("/deleteBrand")
 	@ResponseBody
-	public ApiResponse deleteBrand(@RequestBody List<Integer> ids) {
+	public ApiResponse deleteBrand(@RequestParam List<Integer> ids) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);

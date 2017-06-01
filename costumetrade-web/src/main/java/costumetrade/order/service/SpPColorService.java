@@ -9,7 +9,7 @@ public interface SpPColorService {
 	 * 获取所有颜色
 	 * 
 	 * */
-	public List<SpPColor> getSpPColors(int cropId);
+	public List<SpPColor> getSpPColors(SpPColor spPColor);
 	/**
 	 * 保存颜色信息
 	 * 
@@ -20,5 +20,5 @@ public interface SpPColorService {
 	 * 删除颜色信息
 	 * 
 	 * */
-	public int deleteSpPColor(int  id);
+	public int deleteSpPColor(List<Integer> ids);
 }

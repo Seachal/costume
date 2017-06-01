@@ -36,9 +36,9 @@ public class SpPColorCustomServiceImpl implements SpPColorCustomService{
 		
 		 
 	}
-	public int deleteSpPColorCustom(int id) {
+	public int deleteSpPColorCustom(List<Integer> ids) {
 	
-		return spPColorCustomMapper.deleteByPrimaryKey(id);
+		return spPColorCustomMapper.deleteByPrimaryKey(ids);
 	}
 
 }

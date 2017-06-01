@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import costumetrade.common.param.ApiResponse;
@@ -29,7 +30,7 @@ public class SpPCateController {
 
 	@RequestMapping("/getAllCates")
 	@ResponseBody
-	public ApiResponse getAllCates(@RequestBody SpPCate cate) {
+	public ApiResponse getAllCates(SpPCate cate) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
@@ -62,6 +63,8 @@ public class SpPCateController {
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
+		}else{
+			result.setData(save);
 		}
 		return result;
 
@@ -69,7 +72,7 @@ public class SpPCateController {
 
 	@RequestMapping("/deleteCate")
 	@ResponseBody
-	public ApiResponse deleteCate(@RequestBody List<Integer> ids) {
+	public ApiResponse deleteCate(@RequestParam List<Integer> ids) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);

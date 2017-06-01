@@ -59,15 +59,15 @@ public class SpOrderController {
 		
 		//获取货品单位
 		//List<SpProduct> products = spProductService.selectProductById(param.getProductIdArray(),order.getSellerstoreid());
-		if(null!=param.getStoreId()){
-			param.setClientId(param.getStoreId());
-		}else if(null!=param.getUserId()){
-			param.setClientId(param.getUserId());
-		}
-		
-		order.setClientId(param.getClientId());
-		order.setCreateby(param.getClientId()+"");
-		order.setModifyby(param.getClientId()+"");
+//		if(null!=param.getStoreId()){
+//			param.setClientId(param.getStoreId());
+//		}else if(null!=param.getUserId()){
+//			param.setClientId(param.getUserId());
+//		}
+//		
+		order.setOpenid(param.getOpenid());
+//		order.setCreateby(param.getClientId()+"");
+//		order.setModifyby(param.getClientId()+"");
 
 		List<SsStoDetail> details = new ArrayList<SsStoDetail>();
 		if(param.getProductIdArray().size()>0){
@@ -89,7 +89,7 @@ public class SpOrderController {
 				details.add(detail);
 			}
 		}
-		Integer save = spOrderService.saveOrders(details,order,param.getClientId());
+		Integer save = spOrderService.saveOrders(details,order,param.getOpenid());
 		if(save <=0){
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
@@ -99,10 +99,10 @@ public class SpOrderController {
 	
 	@RequestMapping("/orderInit")
 	@ResponseBody
-	public ApiResponse orderInit() {
+	public ApiResponse orderInit(String openid) {
 		Integer clientId = (Integer) httpSession.getAttribute("clientId");
 		ApiResponse result = new ApiResponse();
-		ScStoreAddr addr = spOrderService.orderInit(clientId);
+		ScStoreAddr addr = spOrderService.orderInit(openid);
 		return result.getInstance(addr);
 		
 	}
@@ -113,11 +113,11 @@ public class SpOrderController {
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		
-		order.setClientId((Integer) httpSession.getAttribute("clientId"));
+		
 		String orderNo  = order.getPayorderno() ;
 		Integer orderType =  Integer.parseInt(order.getOrdertype());
-		Integer clientId = order.getClientId();
-		OrderDetailQuery query = spOrderService.getOrder(orderNo,orderType,clientId);
+		String openid = order.getOpenid();
+		OrderDetailQuery query = spOrderService.getOrder(orderNo,orderType,openid);
 		
 		if(query == null){
 			result.setCode(ResponseInfo.NOT_DATA.code);
@@ -136,12 +136,11 @@ public class SpOrderController {
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		
-		order.setClientId((Integer) httpSession.getAttribute("clientId"));
 		Integer orderType  = Integer.parseInt(order.getOrdertype()) ;
 		Integer orderStatus =  order.getOrderstatus();
-		Integer clientId = order.getClientId();
+		String openid = order.getOpenid();
 		
-		List<SsStoOrder> query = spOrderService.getOrders(orderType,orderStatus,clientId);
+		List<SsStoOrder> query = spOrderService.getOrders(orderType,orderStatus,openid,order.getPageNum());
 		
 		if(query.size() < 0){
 			result.setCode(ResponseInfo.NOT_DATA.code);

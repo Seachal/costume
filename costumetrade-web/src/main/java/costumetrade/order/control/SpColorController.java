@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import costumetrade.common.param.ApiResponse;
@@ -31,15 +33,15 @@ public class SpColorController {
 
 	@RequestMapping("/getAllColors")
 	@ResponseBody
-	public ApiResponse getAllColors(String storeId) {
+	public ApiResponse getAllColors(SpPColor spPColor) {
 		ApiResponse result = new ApiResponse();
-		if(storeId == null ){
+		if(spPColor == null ){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
 		List<SpPColor> colorLists = new ArrayList<SpPColor>();
-		colorLists = spPColorService.getSpPColors(Integer.valueOf(storeId));
+		colorLists = spPColorService.getSpPColors(spPColor);
 		if(colorLists == null){
 			result.setCode(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
@@ -65,6 +67,8 @@ public class SpColorController {
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
+		}else{
+			result.setData(save);
 		}
 		return result;
 
@@ -72,13 +76,19 @@ public class SpColorController {
 
 	@RequestMapping("/deleteColor")
 	@ResponseBody
-	public ApiResponse deleteColor(int id) {
+	public ApiResponse deleteColor(@RequestParam List<Integer> ids) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
+//		List<Integer> id = new ArrayList<Integer>();
+//		if(ids.size()>0){
+//			for(int i=0 ;i<ids.size();i++){
+//				id.add(Integer.parseInt(ids.get(i)));
+//			}
+//		}
 		
-		int delete = spPColorService.deleteSpPColor(id);
+		int delete = spPColorService.deleteSpPColor(ids);
 		if(delete<=0){
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
@@ -89,10 +99,10 @@ public class SpColorController {
 	
 	@RequestMapping("/getAllColorCustoms")
 	@ResponseBody
-	public ApiResponse getAllColorCustoms( int corpId) {
+	public ApiResponse getAllColorCustoms( int storeId) {
 		
 		List<SpPColorCustom> colorCustomLists = new ArrayList<SpPColorCustom>();
-		colorCustomLists = spPColorCustomService.getSpPColorCustoms(corpId);
+		colorCustomLists = spPColorCustomService.getSpPColorCustoms(storeId);
 	
 		return  ApiResponse.getInstance(colorCustomLists);
 	}
@@ -121,13 +131,13 @@ public class SpColorController {
 
 	@RequestMapping("/deleteColorCustom")
 	@ResponseBody
-	public ApiResponse deleteColorCustom(int id) {
+	public ApiResponse deleteColorCustom(@RequestParam List<Integer> ids) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 	
-		int delete = spPColorCustomService.deleteSpPColorCustom(id);
+		int delete = spPColorCustomService.deleteSpPColorCustom(ids);
 		if(delete<=0){
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);

@@ -2,9 +2,7 @@ package costumetrade.order.query;
 
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import costumetrade.common.Entity;
 import costumetrade.order.domain.SpPBrand;
@@ -134,10 +132,13 @@ public class ProductQuery extends Entity{
     private BigDecimal salePrice;
     
     private BigDecimal originalPrice;
-    
+    /**
+     * 小程序平台微信用户ID号
+     * */
 
-	private Integer clientId;
+	private Integer weChatId;
 	
+	private String openid;
     
     /**
      *  进货价
@@ -224,12 +225,14 @@ public class ProductQuery extends Entity{
 	 */
 	private Sort sort;
     private List<Rules>  rules;
+    private Integer custTypeCode;
 	private String timeUpOp; // 升序为asc，降序为desc
 	private String priceOp; // 升序为asc，降序为desc
 	private List<String> productTypeArray; // 商品类别
 	private List<String> productBrandArray; // 商品品牌
 	private List<String> productSeasonArray; // 商品季节
 	private String saleOp;
+	List<String> grades;
 	/**
 	 * 货品列表查询  结束
 	 */
@@ -267,12 +270,18 @@ public class ProductQuery extends Entity{
 		this.id = id;
 	}
 
-	public Integer getClientId() {
-		return clientId;
+	
+
+	public Integer getWeChatId() {
+		return weChatId;
 	}
 
-	public void setClientId(Integer clientId) {
-		this.clientId = clientId;
+	public void setWeChatId(Integer weChatId) {
+		this.weChatId = weChatId;
+	}
+
+	public void setBrandid(String brandid) {
+		this.brandid = brandid;
 	}
 
 	public Integer getStoreId() {
@@ -751,8 +760,32 @@ public class ProductQuery extends Entity{
 		this.gradeList = gradeList;
 	}
 
+	public String getOpenid() {
+		return openid;
+	}
 
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
 
+	public List<String> getGrades() {
+		return grades;
+	}
+
+	public void setGrades(List<String> grades) {
+		this.grades = grades;
+	}
+
+	public Integer getCustTypeCode() {
+		return custTypeCode;
+	}
+
+	public void setCustTypeCode(Integer custTypeCode) {
+		this.custTypeCode = custTypeCode;
+	}
+
+	
+	
 	
 	
 	

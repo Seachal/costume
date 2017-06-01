@@ -1,12 +1,15 @@
 package costumetrade.order.control;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.zip.ZipInputStream;
 
 import javax.servlet.http.HttpSession;
 
@@ -31,6 +34,7 @@ import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStock;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.service.SpProductService;
+import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.service.SsDataDictionaryService;
 
 /**
@@ -45,8 +49,6 @@ public class SpProductController {
     public static Logger logger = Logger.getLogger(SpProductController.class);
     @Autowired
     private SsDataDictionaryService ssDataDictionaryService;
-    @Autowired
-    private HttpSession httpSession;
 	@Autowired
 	private SpProductService spProductService;
 
@@ -64,14 +66,19 @@ public class SpProductController {
 		if(paramProduct.getStatus() == null){
 			paramProduct.setStatus(0);
 		}
-		List<SpProduct> productLists = spProductService.selectProducts(paramProduct);
+		List<ProductQuery> productLists = spProductService.selectProducts(paramProduct);
+	
+		if(productLists ==null){
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			return result;
+		}
 		return  ApiResponse.getInstance(productLists);
 	}
 	
 	@RequestMapping("/getProductDetail")
 	@ResponseBody
 	public ApiResponse getProduct(ProductQuery paramProduct) {
-		paramProduct.setClientId((Integer) httpSession.getAttribute("clientId"));
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
@@ -150,9 +157,7 @@ public class SpProductController {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		product.setCreateBy((String) httpSession.getAttribute("clientId"));
-		product.setModifyBy((String) httpSession.getAttribute("clientId"));
-		
+	
 		List<SsStock> stocks = spProductService.takingStock(product);
 		if(stocks == null){
 			result.setCode(ResponseInfo.NOT_DATA.code);
@@ -233,40 +238,93 @@ public class SpProductController {
 		SimpleDateFormat format = new SimpleDateFormat("yyyyMM");
 		String date = format.format(new Date());
 		Integer d = Integer.valueOf(date);
-		
+		//获取上传文件后缀
 		String fileName = file.getOriginalFilename();
-		UUID uuid=UUID.randomUUID();
-        String str = uuid.toString(); 
-		fileName =str+fileName.substring(fileName.lastIndexOf("."), fileName.length());
+		String postfix = fileName.substring(fileName.lastIndexOf(".")+1, fileName.length());
+		List<String> videoPostfix = new ArrayList<String>();//视频后缀
+		videoPostfix.add("avi");
+		videoPostfix.add("mpg");
+		videoPostfix.add("mpeg");
+		videoPostfix.add("rmvb");
+		videoPostfix.add("rm");
+		videoPostfix.add("wmv");
+		videoPostfix.add("mp4");
 		
-		String pathOriginal = "/touchart/original/"+d+"/"; //原图路径
-
-		String pathReduce  = "/touchart/reduce/"+d+"/"; //缩略图路径
+		List<String> imagePostfix = new ArrayList<String>();//图片后缀
+		imagePostfix.add("bmp");
+		imagePostfix.add("gif");
+		imagePostfix.add("jpg");
+		imagePostfix.add("jpeg");
+		imagePostfix.add("png");
+		imagePostfix.add("pic");
+		
+		UUID uuid=UUID.randomUUID();
+        String str = uuid.toString().replaceAll("\\-", ""); 
+		fileName =str+fileName.substring(fileName.lastIndexOf("."), fileName.length());
+		String commonUrl="/touchartImage/imageTomcat/apache-tomcat-7.0.76/webapps/ROOT";
+		String pathOriginal = "/original/"+d+"/"; //原图路径
+		String pathReduce  = "/reduce/"+d+"/"; //缩略图路径
+		String video ="/video/"+d+"/";
 		InputStream input;
+		//ZipInputStream zipInput;
+	
 		try {
+			SsProductFile image = new SsProductFile();
 			input = file.getInputStream();
-			boolean upload = FTPClientUtils.getInstance().uploadFileToFtp(pathOriginal, fileName, input);
-			  DiskFileItem fileItem = (DiskFileItem) file.getFileItem();
-			  File f = ImageUtils.compressionFile(fileItem.getStoreLocation(),fileName);
-			  boolean upload1 = FTPClientUtils.getInstance().uploadFileToFtp(pathReduce, fileName,new FileInputStream(f));
-			if(upload){
-				SsProductFile image = new SsProductFile();
+			//zipInput=new ZipInputStream(new BufferedInputStream(input));
+			boolean upload =false;
+			if(imagePostfix.contains(postfix)){
+				upload = FTPClientUtils.getInstance().uploadFileToFtp(commonUrl+pathOriginal, fileName, input);
+				DiskFileItem fileItem = (DiskFileItem) file.getFileItem();
+				File f = ImageUtils.compressionFile(fileItem.getStoreLocation(),fileName);
+				FTPClientUtils.getInstance().uploadFileToFtp(commonUrl+pathReduce, fileName,new FileInputStream(f));
+				
 				image.setFilename(file.getOriginalFilename());
 				image.setUrl(pathOriginal+fileName);
 				image.setResizeFixUrl(pathReduce+fileName);
+			}else if(videoPostfix.contains(postfix)){
+				upload = FTPClientUtils.getInstance().uploadFileToFtp(commonUrl+video, fileName, input);
+				image.setFilename(file.getOriginalFilename());
+				image.setUrl(video+fileName);
+			}else{
+				result.setCode(ResponseInfo.FILE_FORMAT.code);
+				result.setMsg(ResponseInfo.FILE_FORMAT.msg);
+			}
+			if(upload){
 				result.setData(image);
 			}else{
-				result.setCode(ResponseInfo.EXCEPTION.code);
-				result.setMsg(ResponseInfo.EXCEPTION.msg);
+				result.setCode(ResponseInfo.UPLOAD_EXCEPTION.code);
+				result.setMsg(ResponseInfo.UPLOAD_EXCEPTION.msg);
 			}
 		} catch (Exception e) {
-
+			result.setCode(ResponseInfo.UPLOAD_EXCEPTION.code);
+			result.setMsg(ResponseInfo.UPLOAD_EXCEPTION.msg);
 			logger.error("FTP 文件上传错误："+e.getMessage());
-
 		} 
 		return  result;
 	}
-
+	
+	@RequestMapping("/downloadVideo")
+	@ResponseBody
+	public ApiResponse downloadVideo(String fileUrl) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		//设置上传图片路径       upload/日期/
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMM");
+		String date = format.format(new Date());
+		Integer d = Integer.valueOf(date);
+		//获取上传文件后缀
+		String[] fileNames = new String[1];
+		fileNames[0] = fileUrl.substring(fileUrl.lastIndexOf("/"), fileUrl.length());
+	
+		String commonUrl="/touchartImage/imageTomcat/apache-tomcat-7.0.76/webapps/ROOT";
+	
+		String video =fileUrl;
+	
+		FTPClientUtils.getInstance().downFileFromFtp(commonUrl+video, fileNames);
+		return  result;
+	}
 	
 	
 }

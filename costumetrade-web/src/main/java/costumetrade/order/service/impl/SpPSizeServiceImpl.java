@@ -30,7 +30,7 @@ public class SpPSizeServiceImpl implements SpPSizeService{
 		}else {
 			save = spPSizeMapper.insert(spPSize) ;
 		}
-		return save;
+		return spPSize.getId();
 		 
 	}
 	public int deleteSpPSize(List<Integer> ids) {

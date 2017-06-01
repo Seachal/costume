@@ -20,7 +20,6 @@ public class SpPCateServiceImpl implements SpPCateService{
 	public List<SpPCate> getSpPCates(SpPCate spPCate) {
 		Page page = new Page();
 		page.setPageNum(spPCate.getPageNum());
-		page.setPageSize(spPCate.getPageSize());
 		return spPCateMapper.getSpPCates(spPCate.getStoreId(),page);
 	}
 	public int saveSpPCate(SpPCate spPCate) {
@@ -32,7 +31,7 @@ public class SpPCateServiceImpl implements SpPCateService{
 		}else {
 			save = spPCateMapper.insert(spPCate) ;
 		}
-		return save;
+		return spPCate.getId();
 		
 		 
 	}

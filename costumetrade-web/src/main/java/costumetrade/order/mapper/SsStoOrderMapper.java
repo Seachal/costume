@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import costumetrade.common.page.Page;
 import costumetrade.order.domain.SsStoOrder;
 
 @Mapper
@@ -31,7 +32,10 @@ public interface SsStoOrderMapper {
     
     SsStoOrder selectByOrderId(Integer orderId);
     
-    List<SsStoOrder> selectByOrderMember(SsStoOrder spStoOrder);
+    List<SsStoOrder> selectByOrderMember(@Param("spStoOrder")SsStoOrder spStoOrder ,@Param("page") Page page);
     
-    List<SsStoOrder> selectByOrderStore(SsStoOrder spStoOrder);
+    List<SsStoOrder> selectByOrderStore(@Param("spStoOrder")SsStoOrder spStoOrder ,@Param("page") Page page);
+    int selectByOrderMemberCount(@Param("spStoOrder")SsStoOrder spStoOrder);
+    
+    int selectByOrderStoreCount(@Param("spStoOrder")SsStoOrder spStoOrder);
 }

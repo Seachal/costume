@@ -26,7 +26,7 @@ public interface SpProductMapper {
 
     int updateByPrimaryKey(SpProduct record);
     
-    List<SpProduct> selectProducts(@Param("product")ProductQuery product , @Param("page")Page page);
+    List<ProductQuery> selectProducts(@Param("product")ProductQuery product , @Param("page")Page page);
     
     ProductQuery selectProduct(ProductQuery param);
 }

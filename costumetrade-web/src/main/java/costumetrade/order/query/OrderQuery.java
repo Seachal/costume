@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import costumetrade.common.Entity;
+import costumetrade.order.domain.SsStoOrder;
 
 public class OrderQuery extends Entity {
 	  /**
@@ -35,7 +36,7 @@ public class OrderQuery extends Entity {
 	/*
 	 * 下单参数  开始
 	 * */
-	private Integer clientId; //1、普通会员   2、店家
+	private String openid; //1、普通会员   2、店家
 	
 	private List<String> productIdArray;
 
@@ -54,8 +55,10 @@ public class OrderQuery extends Entity {
 	/*
 	 * 下单参数  结束
 	 * */
-
+	private Integer count ;
     
+	private List<SsStoOrder> ssStoOrder;
+	
     private static final long serialVersionUID = 1L;
 
 
@@ -143,12 +146,14 @@ public class OrderQuery extends Entity {
 		this.storeId = storeId;
 	}
 
-	public Integer getClientId() {
-		return clientId;
+
+
+	public String getOpenid() {
+		return openid;
 	}
 
-	public void setClientId(Integer clientId) {
-		this.clientId = clientId;
+	public void setOpenid(String openid) {
+		this.openid = openid;
 	}
 
 	public Integer getSellerstoreid() {
@@ -189,6 +194,22 @@ public class OrderQuery extends Entity {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
+	}
+
+	public List<SsStoOrder> getSsStoOrder() {
+		return ssStoOrder;
+	}
+
+	public void setSsStoOrder(List<SsStoOrder> ssStoOrder) {
+		this.ssStoOrder = ssStoOrder;
 	}
  
    

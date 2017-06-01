@@ -138,7 +138,7 @@ public class SpClientServiceImpl implements SpClientService{
 		if(custProdPrice.size()>0){
 			for(SpCustProdPrice price : custProdPrice){
 				SpCustProdPrice prodPrice = new SpCustProdPrice(); 
-				prodPrice.setId(price.getId());
+				prodPrice.setId(Integer.parseInt(price.getCustTypeCode()));
 				prodPrice.setCusttypename(price.getCusttypename());
 				customTypeList.add(prodPrice);
 			}

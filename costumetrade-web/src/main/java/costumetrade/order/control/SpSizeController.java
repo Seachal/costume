@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import costumetrade.common.param.ApiResponse;
@@ -56,6 +57,8 @@ public class SpSizeController {
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
+		}else{
+			result.setData(save);
 		}
 		return result;
 
@@ -63,7 +66,7 @@ public class SpSizeController {
 
 	@RequestMapping("/deleteSize")
 	@ResponseBody
-	public ApiResponse deleteSize(List<Integer> ids) {
+	public ApiResponse deleteSize(@RequestParam List<Integer> ids) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
@@ -105,6 +108,8 @@ public class SpSizeController {
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
+		}else{
+			result.setData(save);
 		}
 		return result;
 
@@ -112,7 +117,7 @@ public class SpSizeController {
 
 	@RequestMapping("/deleteSizeCustom")
 	@ResponseBody
-	public ApiResponse deleteSizeCustom(List<Integer> ids) {
+	public ApiResponse deleteSizeCustom(@RequestParam List<Integer> ids) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);

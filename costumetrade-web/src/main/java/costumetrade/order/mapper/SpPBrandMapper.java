@@ -15,7 +15,7 @@ public interface SpPBrandMapper {
     
     List<SpPBrand>  getSpPBrands(@Param("storeId")int storeId,@Param("page")Page page);
     
-    int deleteByPrimaryKey(List<Integer> ids);
+    int deleteByPrimaryKey(@Param("ids")List<Integer> ids);
     
     SpPBrand selectByPrimaryKey(Integer id);
     

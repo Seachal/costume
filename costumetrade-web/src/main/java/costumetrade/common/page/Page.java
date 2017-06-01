@@ -30,7 +30,7 @@ public class Page implements Serializable {
 	/**
 	 * 当前页码
 	 */
-	private Integer pageNum;
+	private Integer pageNum=1;
 	
 
 	

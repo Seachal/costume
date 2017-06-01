@@ -21,7 +21,6 @@ public class SpPBrandServiceImpl implements SpPBrandService{
 	public List<SpPBrand> getSpPBrands(SpPBrand spPBrand) {
 		Page page = new Page();
 		page.setPageNum(spPBrand.getPageNum());
-		page.setPageSize(spPBrand.getPageSize());
 		return spPBrandMapper.getSpPBrands(spPBrand.getStoreId(),page);
 	}
 	public int saveSpPBrand(SpPBrand spPBrand) {
@@ -33,7 +32,7 @@ public class SpPBrandServiceImpl implements SpPBrandService{
 		}else {
 			save = spPBrandMapper.insert(spPBrand) ;
 		}
-		return save;
+		return spPBrand.getId();
 		
 		 
 	}

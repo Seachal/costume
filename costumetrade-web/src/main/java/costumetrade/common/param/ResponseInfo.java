@@ -26,6 +26,8 @@ public enum ResponseInfo {
 	LACK_PARAM(1009,"缺少参数"),
 	TASK_EXPIRED(2000,"任务失效"), 
 	OPERATE_EXPIRED(1010,"操作失败"),
+	FILE_FORMAT(1011,"文件格式错误"),
+	UPLOAD_EXCEPTION(1012,"上传失败"),
 	;
 
 	public final int code;

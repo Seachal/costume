@@ -29,7 +29,7 @@ public class SpPSizeCustomServiceImpl implements SpPSizeCustomService{
 		}else {
 			save = spPSizeCustomMapper.insert(spPSizeCustom) ;
 		}
-		return save;
+		return spPSizeCustom.getId();
 		
 		 
 	}

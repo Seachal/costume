@@ -14,7 +14,7 @@ public interface SpProductService {
 	 * 获取所有商品
 	 * 
 	 * */
-	public List<SpProduct> selectProducts(ProductQuery productQuery);
+	public List<ProductQuery> selectProducts(ProductQuery productQuery);
 	/**
 	 * 获取商品詳情
 	 * 

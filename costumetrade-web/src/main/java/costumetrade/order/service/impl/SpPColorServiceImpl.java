@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpPColor;
 import costumetrade.order.enums.ResultTypeEnum;
 import costumetrade.order.mapper.SpPColorMapper;
@@ -17,9 +18,10 @@ public class SpPColorServiceImpl implements SpPColorService{
 	@Autowired
 	private SpPColorMapper spPColorMapper;
 	
-	public List<SpPColor> getSpPColors(int storeId) {
-
-		return spPColorMapper.getSpPColors(storeId);
+	public List<SpPColor> getSpPColors(SpPColor spPColor) {
+		Page page = new Page();
+		page.setPageNum(spPColor.getPageNum());
+		return spPColorMapper.getSpPColors(spPColor.getStoreId(),page);
 	}
 	public int saveSpPColor(SpPColor spPColor) {
 		int save = 0;
@@ -30,12 +32,12 @@ public class SpPColorServiceImpl implements SpPColorService{
 		}else {
 			save = spPColorMapper.insert(spPColor) ;
 		}
-		return save;
+		return spPColor.getId();
 		
 		 
 	}
-	public int deleteSpPColor(int id) {
-		return spPColorMapper.deleteByPrimaryKey(id);
+	public int deleteSpPColor(List<Integer> ids) {
+		return spPColorMapper.deleteByPrimaryKey(ids);
 	}
 	
 	

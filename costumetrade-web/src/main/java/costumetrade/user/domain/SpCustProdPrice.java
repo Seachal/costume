@@ -22,6 +22,8 @@ public class SpCustProdPrice extends Entity {
      *  种类 1：货品级别，2：会员类型
      */
     private String type;
+    
+    private String custTypeCode;
 
     /**
      *  名称(货品种类名称or等级名称)
@@ -147,6 +149,14 @@ public class SpCustProdPrice extends Entity {
 
 	public void setDiscPriceJson(List<PriceJson> discPriceJson) {
 		this.discPriceJson = discPriceJson;
+	}
+
+	public String getCustTypeCode() {
+		return custTypeCode;
+	}
+
+	public void setCustTypeCode(String custTypeCode) {
+		this.custTypeCode = custTypeCode == null ? null : custTypeCode.trim();
 	}
 	
     

@@ -24,7 +24,7 @@ public class SpUnit extends Entity {
     /**
      *  店铺ID
      */
-    private Integer storeid;
+    private Integer storeId;
 
     /**
      *  创建人
@@ -59,12 +59,12 @@ public class SpUnit extends Entity {
         this.createTime = createTime;
     }
 
-    public Integer getStoreid() {
-        return storeid;
+    public Integer getStoreId() {
+        return storeId;
     }
 
-    public void setStoreid(Integer storeid) {
-        this.storeid = storeid;
+    public void setStoreId(Integer storeId) {
+        this.storeId = storeId;
     }
 
     public String getCreateBy() {

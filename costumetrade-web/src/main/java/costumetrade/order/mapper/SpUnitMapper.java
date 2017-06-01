@@ -9,7 +9,7 @@ import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpUnit;
 @Mapper
 public interface SpUnitMapper {
-    int deleteByPrimaryKey(List<Integer> id);
+    int deleteByPrimaryKey(@Param("ids")List<Integer> ids);
 
     int insert(SpUnit record);
 

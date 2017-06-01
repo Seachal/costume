@@ -21,5 +21,5 @@ public interface SpPColorCustomService {
 	 * 删除颜色组信息
 	 * 
 	 * */
-	public int deleteSpPColorCustom(int id);
+	public int deleteSpPColorCustom(List<Integer> ids);
 }

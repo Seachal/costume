@@ -12,9 +12,17 @@ public class SpClient extends Entity {
     private Integer id;
 
     /**
-     *  店铺ID
+     *  当前店铺ID
      */
     private Integer storeid;
+    /**
+     *  对方店铺ID：针对店员
+     */
+    private Integer otherStoreId;
+    /**
+     *  普通用户ID：针对普通消费者
+     */
+    private Integer userId;
 
     /**
      *  货品级别
@@ -354,6 +362,22 @@ public class SpClient extends Entity {
 
 	public void setProdPrice(SpCustProdPrice prodPrice) {
 		this.prodPrice = prodPrice;
+	}
+
+	public Integer getOtherStoreId() {
+		return otherStoreId;
+	}
+
+	public void setOtherStoreId(Integer otherStoreId) {
+		this.otherStoreId = otherStoreId;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
     
     

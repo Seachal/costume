@@ -9,7 +9,7 @@ import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpPCate;
 @Mapper
 public interface SpPCateMapper {
-    int deleteByPrimaryKey(List<Integer> ids);
+    int deleteByPrimaryKey(@Param("ids")List<Integer> ids);
 
     int insert(SpPCate record);
 

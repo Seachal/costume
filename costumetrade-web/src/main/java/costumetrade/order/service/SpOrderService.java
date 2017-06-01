@@ -22,17 +22,17 @@ public interface SpOrderService {
 	 * 
 	 * */
 
-	public Integer saveOrders(List<SsStoDetail> details,SsStoOrder order,Integer clientId);
+	public Integer saveOrders(List<SsStoDetail> details,SsStoOrder order,String openid);
 
 	
 	/*
 	 * 查询订单详情
 	 * */
-	public OrderDetailQuery getOrder(String orderNo ,Integer orderType, Integer clientId);
+	public OrderDetailQuery getOrder(String orderNo ,Integer orderType, String openid);
 	/*
 	 * 查询订单列表
 	 * */
-	public List<SsStoOrder> getOrders(Integer orderType, Integer orderStatus , Integer clientId);
+	public List<SsStoOrder> getOrders(Integer orderType, Integer orderStatus , String openid,Integer pageNum);
 	
 	/*
 	 * 订单取消
@@ -45,7 +45,7 @@ public interface SpOrderService {
 	/*
 	 * 跳转订单页面查询地址
 	 * */
-	public ScStoreAddr orderInit(Integer clientId);
+	public ScStoreAddr orderInit(String openid);
 	/*
 	 * 根据订单号 查询订单
 	 * */

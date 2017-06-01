@@ -17,18 +17,18 @@ public class SpUnitServiceImpl implements SpUnitService{
 	private SpUnitMapper spUnitMapper;
 	
 	public List<SpUnit> getSpUnits(SpUnit spUnit) {
-		return spUnitMapper.getUnits(spUnit.getStoreid(),spUnit.getPage());
+		return spUnitMapper.getUnits(spUnit.getStoreId(),spUnit.getPage());
 	}
 	public int saveSpUnit(SpUnit spUnit) {
 		int save = 0;
 		//查询对应ID的员工是否存在，存在的话进行update 不存在save
-		SpUnit getCate = spUnitMapper.getSpUnitByName(spUnit.getUnit(), spUnit.getStoreid());
+		SpUnit getCate = spUnitMapper.getSpUnitByName(spUnit.getUnit(), spUnit.getStoreId());
 		if(getCate != null){
 			return save;
 		}else {
 			save = spUnitMapper.insert(spUnit) ;
 		}
-		return save;
+		return spUnit.getId();
 		
 		 
 	}
