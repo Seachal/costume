@@ -36,6 +36,7 @@ import costumetrade.order.mapper.SsStoDetailMapper;
 import costumetrade.order.mapper.SsStoOrderMapper;
 import costumetrade.order.mapper.SsStockMapper;
 import costumetrade.order.mapper.SsStockTransferMapper;
+import costumetrade.order.query.OrderCountQuery;
 import costumetrade.order.query.OrderDetailQuery;
 import costumetrade.order.query.OrderQuery;
 import costumetrade.order.service.SFLogisticsService;
@@ -378,7 +379,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 			采购单列签：1
 			orderStatus   值                    备注
 			待付款                                   1                       新增
-			待发货                                2，3                  付款和审核
+			待发货                                   2，3                      已付款    审核
 			待收货                                  4                       已发货
 			全部                                 所有状态                线上单据+线下单据
 		 * 
@@ -482,6 +483,81 @@ public class SpOrderServiceImpl implements SpOrderService{
 	@Override
 	public int saveReview(SsProductReview ssProductReview) {
 		return ssProductReviewMapper.insertSelective(ssProductReview);
+	}
+	@Override
+	public OrderCountQuery countOrders(String openid) {
+		ScWeChat wechat = scWeChatMapper.selectByOpenId(openid);
+		List<SsStoOrder> orders = new ArrayList<SsStoOrder>();
+		boolean isStore = false;
+		if(wechat.getStoreid()!=null){//店员身份
+			orders = ssStoOrderMapper.selectByOrderStoreCount(wechat.getStoreid());
+			isStore = true;
+		}else if(wechat.getUserid()!=null){//普通消费者
+			orders = ssStoOrderMapper.selectByOrderMemberCount();
+		}
+		Integer purchaseCount=0;//采购单总数
+	    Integer pNoPayCount=0;//采购单未付款数量
+	    Integer pNoShipCount=0 ;//采购单未发货数量
+	    Integer pNoReceiptCount=0 ;//采购单未收货数量
+	    
+	    Integer saleCount=0 ;//销售单总数
+	    Integer sNoPayCount=0 ;//销售单未收款数量
+	    Integer sNoShipCount=0 ;//销售单未发货数量
+	    Integer sNoAuditCount=0 ;//销售单未审核配货数量
+	    
+	    Integer ordersCount=0;//订单总数量
+		/**
+		 * 		采购单列签：1
+			orderStatus   值                    备注
+			待付款                                   1                       新增
+			待发货                                  2, 3                   已付款      审核
+			待收货                                  4                       已发货
+			全部                                 所有状态                线上单据+线下单据
+		 * 
+		 * 销售单列签：2
+			orderStatus   值                    备注
+			待付款                                    1                    新增
+			待审核                                    2                    付款
+			待发货                        	  3                    已审核
+		 * 
+		 * */
+		if(orders.size()>0){
+			for(SsStoOrder order : orders){
+				//采购汇总
+				if((isStore&&order.getBuyerstoreid().equals(wechat.getStoreid()))
+						||(!isStore&&order.getBuyerstoreid().equals(wechat.getUserid()))){
+					purchaseCount += order.getCount();
+					if(1==order.getOrderstatus()){
+						pNoPayCount += order.getCount();
+					}else if(3==order.getOrderstatus()||2==order.getOrderstatus()){
+						pNoShipCount += order.getCount();
+					}else if(4==order.getOrderstatus()){
+						pNoReceiptCount += order.getCount();
+					}
+				}
+				//销售汇总
+				if(isStore&&order.getSellerstoreid().equals(wechat.getStoreid())){
+					saleCount += order.getCount();
+					if(1==order.getOrderstatus()){
+						sNoPayCount += order.getCount();
+					}else if(2==order.getOrderstatus()){
+						sNoAuditCount += order.getCount();
+					}else if(3==order.getOrderstatus()){
+						sNoShipCount += order.getCount();
+					}
+				}
+			}
+		}
+		ordersCount = saleCount+purchaseCount;
+		OrderCountQuery query = new OrderCountQuery();
+		query.setOrdersCount(ordersCount);
+		query.setpNoPayCount(pNoPayCount);
+		query.setpNoReceiptCount(pNoReceiptCount);
+		query.setpNoShipCount(pNoShipCount);
+		query.setsNoAuditCount(sNoAuditCount);
+		query.setsNoPayCount(sNoPayCount);
+		query.setsNoShipCount(sNoShipCount);
+		return query;
 	}
 	
 	

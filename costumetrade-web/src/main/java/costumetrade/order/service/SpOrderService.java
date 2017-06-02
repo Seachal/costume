@@ -11,6 +11,7 @@ import costumetrade.order.domain.SsFinancial;
 import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStoDetail;
 import costumetrade.order.domain.SsStoOrder;
+import costumetrade.order.query.OrderCountQuery;
 import costumetrade.order.query.OrderDetailQuery;
 import costumetrade.order.query.OrderQuery;
 
@@ -66,4 +67,9 @@ public interface SpOrderService {
 	 * */
 	
 	public int saveReview(SsProductReview ssProductReview);
+	
+	/**
+	 * 统计订单数量
+	 * */
+	public OrderCountQuery countOrders(String openid);
 }

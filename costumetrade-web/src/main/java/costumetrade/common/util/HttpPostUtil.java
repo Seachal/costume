@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.SecureRandom;
@@ -31,15 +32,22 @@ import javax.servlet.http.HttpServletRequest;
 
 import net.sf.json.JSONObject;
 
+import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.HTTP;
+import org.apache.http.util.EntityUtils;
 
+import com.alibaba.fastjson.JSONException;
 import com.sf.openapi.common.utils.MyX509TrustManager;
+
+import costumetrade.common.param.ResponseInfo;
 
 /**
  * 通过HttpURLConnection模拟post表单提交
@@ -61,7 +69,7 @@ public class HttpPostUtil implements Serializable {
      * @throws NoSuchAlgorithmException 
      */
     @SuppressWarnings({ "deprecation", "resource" })
-    public static JSONObject sendPostRequestJSON(String requestUrl, JSONObject json) throws Exception {
+    public static JSONObject sendHTTPSPostRequestJSON(String requestUrl, JSONObject json) throws Exception {
 //        HttpClient client = new DefaultHttpClient();
 //       
 //        HttpPost post = new HttpPost(requestUrl);
@@ -145,6 +153,50 @@ public class HttpPostUtil implements Serializable {
          
     }
     
+    
+    public static JSONObject sendPostRequestJSON(String requestUrl, JSONObject json) throws Exception {
+      HttpClient client = new DefaultHttpClient();
+     
+      HttpPost post = new HttpPost(requestUrl);
+      JSONObject response = null;
+      try {
+          // 将JSON进行UTF-8编码,以便传输中文
+          String encoderJson = URLEncoder.encode(json.toString(), HTTP.UTF_8);
+          StringEntity string = new StringEntity(encoderJson);
+          string.setContentEncoding(CHAR_SET);
+          string.setContentType(CONTENT_TYPE);
+          post.setEntity(string);
+          HttpResponse res = client.execute(post);
+          if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+              HttpEntity entity = res.getEntity();
+              String result = EntityUtils.toString(entity);
+              response = JSONObject.fromObject(result);
+          }else{
+              response = new JSONObject();
+              try {
+                  response.put("code", ResponseInfo.EXCEPTION.code);
+                  response.put("msg", ResponseInfo.EXCEPTION.msg);
+              } catch (JSONException e1) {}
+          }
+      } catch (IOException e) {
+          response = new JSONObject();
+          try {
+              response.put("code", ResponseInfo.EXCEPTION.code);
+              response.put("msg", ResponseInfo.EXCEPTION.msg);
+          } catch (JSONException e1) {}
+          e.printStackTrace();
+      } catch (JSONException e) {
+          response = new JSONObject();
+          try {
+              response.put("code", ResponseInfo.EXCEPTION.code);
+              response.put("msg", ResponseInfo.EXCEPTION.msg);
+          } catch (JSONException e1) {}
+          e.printStackTrace();
+      }
+      return response;
+
+       
+  }
     /**
      * 处理银行通过网关发送过来的数据
      */

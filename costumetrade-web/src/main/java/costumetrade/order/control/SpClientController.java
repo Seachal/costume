@@ -181,6 +181,23 @@ public class SpClientController {
 		
 		return result;
 	}
+	@RequestMapping("/getWechatTwoCode")
+	@ResponseBody
+	public ApiResponse getWechatTwoCode() throws Exception {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		String object = weChatService.getWechatTwoCode();
+		if(object == null){
+			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setMsg(ResponseInfo.EXCEPTION.msg);
+			return result;
+		}else{
+			result.setData(object);
+		}
+		
+		return result;
+	}
 
 	
 }

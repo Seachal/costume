@@ -188,6 +188,8 @@ public class SsStoOrder extends Entity {
   
     private Integer pageNum;
     
+    private Integer count;
+    
     private static final long serialVersionUID = 1L;
     
     private BigDecimal unPay;
@@ -520,6 +522,14 @@ public class SsStoOrder extends Entity {
 
 	public void setSeller(String seller) {
 		this.seller = seller;
+	}
+
+	public Integer getCount() {
+		return count;
+	}
+
+	public void setCount(Integer count) {
+		this.count = count;
 	}
     
     

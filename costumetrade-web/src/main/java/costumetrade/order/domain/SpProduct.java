@@ -146,6 +146,12 @@ public class SpProduct extends Entity {
      *  商品图片
      */
     private String image4;
+    
+    private String video1;
+    
+    private String video2;
+    
+    private String video3;
 
     /**
      *  商品描述
@@ -629,6 +635,30 @@ public class SpProduct extends Entity {
 
 	public void setIsDiscount(Integer isDiscount) {
 		this.isDiscount = isDiscount;
+	}
+
+	public String getVideo1() {
+		return video1;
+	}
+
+	public void setVideo1(String video1) {
+		this.video1 = video1;
+	}
+
+	public String getVideo2() {
+		return video2;
+	}
+
+	public void setVideo2(String video2) {
+		this.video2 = video2;
+	}
+
+	public String getVideo3() {
+		return video3;
+	}
+
+	public void setVideo3(String video3) {
+		this.video3 = video3;
 	}
 	
 	

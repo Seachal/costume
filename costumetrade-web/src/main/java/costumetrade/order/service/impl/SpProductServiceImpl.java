@@ -337,6 +337,9 @@ public class SpProductServiceImpl implements SpProductService{
 				queryResult.setIsDiscount(product.getIsDiscount());
 				queryResult.setIsModify(product.getIsModify());
 				queryResult.setGrade(product.getGrade());
+				queryResult.setVideo1(product.getVideo1());
+				queryResult.setVideo2(product.getVideo2());
+				queryResult.setVideo3(product.getVideo3());
 			}
 			SsPrice price = ssPriceMapper.select(storeId, productId);
 			queryResult.setPurchaseprice(price.getPurchaseprice());
@@ -385,7 +388,8 @@ public class SpProductServiceImpl implements SpProductService{
 			//保存商品
 			product.setId(UUID.randomUUID().toString().replaceAll("\\-", ""));
 			product.setStatus(0);
-		
+			product.setCreateTime(new Date());
+			product.setModifyTime(new Date());
 			product.setSaleNum(BigDecimal.valueOf(0));
 			int save = spProductMapper.insertSelective(product);
 			if(save > 0 ){

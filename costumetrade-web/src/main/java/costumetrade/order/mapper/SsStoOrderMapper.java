@@ -35,7 +35,8 @@ public interface SsStoOrderMapper {
     List<SsStoOrder> selectByOrderMember(@Param("spStoOrder")SsStoOrder spStoOrder ,@Param("page") Page page);
     
     List<SsStoOrder> selectByOrderStore(@Param("spStoOrder")SsStoOrder spStoOrder ,@Param("page") Page page);
-    int selectByOrderMemberCount(@Param("spStoOrder")SsStoOrder spStoOrder);
     
-    int selectByOrderStoreCount(@Param("spStoOrder")SsStoOrder spStoOrder);
+    List<SsStoOrder> selectByOrderMemberCount();
+    
+    List<SsStoOrder> selectByOrderStoreCount(@Param("storeId")Integer storeId);
 }

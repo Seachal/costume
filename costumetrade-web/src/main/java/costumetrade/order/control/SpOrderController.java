@@ -23,6 +23,7 @@ import costumetrade.order.domain.SsFinancial;
 import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStoDetail;
 import costumetrade.order.domain.SsStoOrder;
+import costumetrade.order.query.OrderCountQuery;
 import costumetrade.order.query.OrderDetailQuery;
 import costumetrade.order.query.OrderQuery;
 import costumetrade.order.service.SpOrderService;
@@ -100,12 +101,30 @@ public class SpOrderController {
 	@RequestMapping("/orderInit")
 	@ResponseBody
 	public ApiResponse orderInit(String openid) {
-		Integer clientId = (Integer) httpSession.getAttribute("clientId");
 		ApiResponse result = new ApiResponse();
 		ScStoreAddr addr = spOrderService.orderInit(openid);
 		return result.getInstance(addr);
 		
 	}
+	@RequestMapping("/countOrders")
+	@ResponseBody
+	public ApiResponse countOrders(String openid) {
+		ApiResponse result = new ApiResponse();
+		if(openid == null){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		OrderCountQuery query = spOrderService.countOrders(openid);
+		if(query == null){
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+		}
+		return result.getInstance(query);
+		
+	}
+	
+	
 	@RequestMapping("/getOrder")
 	@ResponseBody
 	public ApiResponse getOrder(SsStoOrder order) {
