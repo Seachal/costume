@@ -39,6 +39,12 @@
 		<result column="modifyTime" jdbcType="TIMESTAMP" property="modifytime" />
 		<result column="modifyBy" jdbcType="VARCHAR" property="modifyby" />
 	</resultMap>
+	<resultMap id="CountResultMap" type="costumetrade.order.domain.SsStoOrder">
+		<result column="count" jdbcType="INTEGER" property="count" />
+		<result column="sellerStoreId" jdbcType="INTEGER" property="sellerstoreid" />
+		<result column="buyerStoreId" jdbcType="INTEGER" property="buyerstoreid" />
+		<result column="orderStatus" jdbcType="INTEGER" property="orderstatus" />
+	</resultMap>
 	<sql id="Base_Column_List">
 		id, sellerStoreId, buyerStoreId,seller,buyer, operator, payOrderNo, refundDate,
 		relatedOutTradeNo,
@@ -57,28 +63,10 @@
 		where id = #{id,jdbcType=INTEGER}
 	</select>
 	<!-- 查询普通用户的采购单 -->
-	<select id="selectByOrderMemberCount" resultType="java.lang.Integer">
-		select count(*) as count
-		from ss_member_stoorder stoorder
-		LEFT JOIN sc_wechat_bind wechat ON wechat.userId = stoorder.buyerStoreId
-		LEFT JOIN sp_user u ON u.id=wechat.userId
-		LEFT JOIN sp_store store ON store.id = stoorder.sellerStoreId
-		where 1=1
-		<if test="spStoOrder.ordertype != null">
-			and stoorder.orderType = #{spStoOrder.ordertype,jdbcType=VARCHAR}
-		</if>
-		<if test="spStoOrder.payorderno != null">
-			and stoorder.payOrderNo = #{spStoOrder.payorderno,jdbcType=VARCHAR}
-		</if>
-		<if test="spStoOrder.buyerstoreid != null">
-			and stoorder.buyerStoreId =#{spStoOrder.buyerstoreid,jdbcType=INTEGER}
-		</if>
-		<if test="spStoOrder.status != null">
-			and stoorder.orderStatus in
-			<foreach collection="spStoOrder.status" item="item" index="index"
-				separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
-		</if>
-
+	<select id="selectByOrderMemberCount"  resultMap="CountResultMap">
+		SELECT COUNT(1) as count,s.orderStatus,s.buyerStoreId,s.sellerStoreId 
+		FROM ss_member_stoorder s 
+		GROUP BY s.orderStatus,s.buyerStoreId,s.sellerStoreId
 	</select>
 	<select id="selectByOrderMember" resultMap="BaseResultMap">
 		select
@@ -113,29 +101,10 @@
 		</if>
 	</select>
 	<!-- 查询店家的采购单或者销售单 -->
-	<select id="selectByOrderStoreCount" resultType="java.lang.Integer">
-		SELECT count(*) count
-		from ss_stoorder_#{spStoOrder.storeId,jdbcType=INTEGER} stoorder
-		LEFT JOIN sp_store store ON store.id = stoorder.sellerStoreId
-		LEFT JOIN sp_store store1 ON store1.id = stoorder.buyerStoreId
-		where 1=1
-		<if test="spStoOrder.ordertype != null">
-			and stoorder.orderType =#{spStoOrder.ordertype,jdbcType=VARCHAR}
-		</if>
-		<if test="spStoOrder.sellerstoreid != null">
-			and stoorder.sellerStoreId =#{spStoOrder.sellerstoreid,jdbcType=INTEGER}
-		</if>
-		<if test="spStoOrder.buyerstoreid != null">
-			and stoorder.buyerStoreId =#{spStoOrder.buyerstoreid,jdbcType=INTEGER}
-		</if>
-		<if test="spStoOrder.payorderno != null">
-			and stoorder.payOrderNo = #{spStoOrder.payorderno,jdbcType=VARCHAR}
-		</if>
-		<if test="spStoOrder.status != null">
-			and stoorder.orderStatus in
-			<foreach collection="spStoOrder.status" item="item" index="index"
-				separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
-		</if>
+	<select id="selectByOrderStoreCount" parameterType="java.lang.Integer" resultMap="CountResultMap">
+		SELECT COUNT(1) as count,s.orderStatus,s.buyerStoreId,s.sellerStoreId 
+		FROM ss_stoorder_#{storeId,jdbcType=INTEGER} s 
+		GROUP BY s.orderStatus,s.buyerStoreId,s.sellerStoreId
 	</select>
 	
 	<select id="selectByOrderStore" resultMap="BaseResultMap">

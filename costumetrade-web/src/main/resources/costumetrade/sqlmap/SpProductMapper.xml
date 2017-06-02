@@ -28,6 +28,9 @@
 		<result column="image2" jdbcType="VARCHAR" property="image2" />
 		<result column="image3" jdbcType="VARCHAR" property="image3" />
 		<result column="image4" jdbcType="VARCHAR" property="image4" />
+		<result column="video1" jdbcType="VARCHAR" property="video1" />
+		<result column="video2" jdbcType="VARCHAR" property="video2" />
+		<result column="video3" jdbcType="VARCHAR" property="video3" />
 		<result column="description" jdbcType="VARCHAR" property="description" />
 		<result column="warn_low" jdbcType="DOUBLE" property="warnLow" />
 		<result column="warn_high" jdbcType="DOUBLE" property="warnHigh" />
@@ -77,6 +80,9 @@
 		<result column="image2" jdbcType="VARCHAR" property="image2" />
 		<result column="image3" jdbcType="VARCHAR" property="image3" />
 		<result column="image4" jdbcType="VARCHAR" property="image4" />
+		<result column="video1" jdbcType="VARCHAR" property="video1" />
+		<result column="video2" jdbcType="VARCHAR" property="video2" />
+		<result column="video3" jdbcType="VARCHAR" property="video3" />
 		<result column="description" jdbcType="VARCHAR" property="description" />
 		<result column="time_down" jdbcType="TIMESTAMP" property="timeDown" />
 		<result column="storeName" jdbcType="VARCHAR" property="storeName" />
@@ -97,7 +103,7 @@
 		id, storeId, status, code, brandId, productType,
 		name,isDiscount,isModify, fastcode, barcode, barcodes, levelType,
 		grade, unit, colors, sizes, handcount, year, season, salTag,
-		salMonth,saleNum, image, image1,
+		salMonth,saleNum, image, image1,video1,video2,video3,
 		image2, image3, image4, description, warn_low, warn_high, time_up, time_down,
 		create_time,
 		create_by, modify_time, modify_by
@@ -261,7 +267,7 @@
 		colors, sizes, handcount,
 		year, season, salTag,
 		salMonth,saleNum, image, image1,
-		image2, image3, image4,
+		image2, image3, image4,video1,video2,video3,
 		description, warn_low, warn_high,
 		time_up, time_down, create_time,
 		create_by, modify_time, modify_by)
@@ -279,7 +285,7 @@
 		#{salmonth,jdbcType=DECIMAL},#{saleNum,jdbcType=DECIMAL},
 		#{image,jdbcType=VARCHAR}, #{image1,jdbcType=VARCHAR},
 		#{image2,jdbcType=VARCHAR}, #{image3,jdbcType=VARCHAR},
-		#{image4,jdbcType=VARCHAR},
+		#{image4,jdbcType=VARCHAR},#{video1,jdbcType=VARCHAR},#{video2,jdbcType=VARCHAR},#{video3,jdbcType=VARCHAR},
 		#{description,jdbcType=VARCHAR}, #{warnLow,jdbcType=DOUBLE}, #{warnHigh,jdbcType=DOUBLE},
 		#{timeUp,jdbcType=TIMESTAMP}, #{timeDown,jdbcType=TIMESTAMP},
 		#{createTime,jdbcType=TIMESTAMP},
@@ -372,6 +378,15 @@
 			</if>
 			<if test="image4 != null">
 				image4,
+			</if>
+			<if test="video1 != null">
+				video1,
+			</if>
+			<if test="video2 != null">
+				video2,
+			</if>
+			<if test="video3 != null">
+				video3,
 			</if>
 			<if test="description != null">
 				description,
@@ -487,6 +502,15 @@
 			<if test="image4 != null">
 				#{image4,jdbcType=VARCHAR},
 			</if>
+			<if test="video1 != null">
+				#{video1,jdbcType=VARCHAR},
+			</if>
+			<if test="video2 != null">
+				#{video2,jdbcType=VARCHAR},
+			</if>
+			<if test="video3 != null">
+				#{video3,jdbcType=VARCHAR},
+			</if>
 			<if test="description != null">
 				#{description,jdbcType=VARCHAR},
 			</if>
@@ -598,6 +622,15 @@
 			<if test="image4 != null">
 				image4 = #{image4,jdbcType=VARCHAR},
 			</if>
+			<if test="video1 != null">
+				video1 = #{video1,jdbcType=VARCHAR},
+			</if>
+			<if test="video2 != null">
+				video2 = #{video2,jdbcType=VARCHAR},
+			</if>
+			<if test="video3 != null">
+				video3 = #{video3,jdbcType=VARCHAR},
+			</if>
 			<if test="description != null">
 				description = #{description,jdbcType=VARCHAR},
 			</if>
@@ -655,6 +688,9 @@
 		image2 = #{image2,jdbcType=VARCHAR},
 		image3 = #{image3,jdbcType=VARCHAR},
 		image4 = #{image4,jdbcType=VARCHAR},
+		video1 = #{video1,jdbcType=VARCHAR},
+		video2 = #{video2,jdbcType=VARCHAR},
+		video3 = #{video3,jdbcType=VARCHAR},
 		description = #{description,jdbcType=VARCHAR},
 		warn_low = #{warnLow,jdbcType=DOUBLE},
 		warn_high = #{warnHigh,jdbcType=DOUBLE},
