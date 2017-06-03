@@ -28,7 +28,7 @@
 	<select id="select" parameterType="costumetrade.user.domain.SpCustProdPrice"
 		resultMap="BaseResultMap">
 		select
-		id, storeId,custTypeName,custTypeCode,custPriceJson, discPriceJson
+		id, storeId,custTypeName,custTypeCode,custPriceJson, discPriceJson,prodGrade
 		from sp_cust_prod_price
 		where 1=1
 		<if test="id != null">

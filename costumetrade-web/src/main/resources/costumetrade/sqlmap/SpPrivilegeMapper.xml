@@ -20,7 +20,7 @@
     from sp_privilege
     where id = #{id,jdbcType=BIGINT}
   </select>
-   <select id="getSpPrivilegeList" parameterType="java.lang.Long" resultMap="BaseResultMap">
+   <select id="getSpPrivilegeList" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from sp_privilege

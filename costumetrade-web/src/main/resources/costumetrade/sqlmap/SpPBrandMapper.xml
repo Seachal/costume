@@ -31,9 +31,7 @@
     select id, brandName, storeId,profit_d0
     from sp_pbrand
     where storeId = #{storeId,jdbcType=INTEGER}
-   <if test="page!=null">
-    LIMIT #{page.startRow},#{page.pageSize}
-    </if>
+
   </select>
   <select id="getSpPBrand"  resultMap="BaseResultMap">
     select 

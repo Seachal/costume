@@ -22,9 +22,7 @@
     id, unit,storeId
     from sp_punit
     where storeId = #{storeId,jdbcType=INTEGER}
-    <if test="page!=null">
-    LIMIT #{page.startRow},#{page.pageSize}
-    </if>
+
   </select>
   
    <select id="getSpUnitByName"  resultMap="BaseResultMap">

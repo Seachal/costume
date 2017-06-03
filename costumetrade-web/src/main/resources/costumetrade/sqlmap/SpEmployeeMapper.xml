@@ -2,8 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="costumetrade.user.mapper.SpEmployeeMapper">
   <resultMap id="BaseResultMap" type="costumetrade.user.domain.SpEmployee">
-    <id column="storeId" jdbcType="INTEGER" property="storeId" />
-    <id column="id" jdbcType="VARCHAR" property="id" />
+  	<id column="id" jdbcType="INTEGER" property="id" />
+    <result column="storeId" jdbcType="INTEGER" property="storeId" />
+    
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="subbelong" jdbcType="VARCHAR" property="subbelong" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -18,24 +19,27 @@
     <result column="email" jdbcType="VARCHAR" property="email" />
     <result column="birthdate" jdbcType="TIMESTAMP" property="birthdate" />
     <result column="card_id" jdbcType="VARCHAR" property="cardId" />
+    <result column="weChatNo" jdbcType="VARCHAR" property="weChatNo" />
+    <result column="discount" jdbcType="DECIMAL" property="discount" />
+    <result column="zeroPrice" jdbcType="DECIMAL" property="zeroPrice" />
+    <result column="modifyPrice" jdbcType="VARCHAR" property="modifyPrice" />
   </resultMap>
   <sql id="Base_Column_List">
     storeId, id, status, subbelong, create_time, create_by, modify_time, modify_by, 
-    name, password, phone, cphone, address, email, birthdate, card_id
+    name, password, phone, cphone, address, email, birthdate, card_id,discount,zeroPrice,weChatNo,modifyPrice
   </sql>
   <select id="selectByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployee" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from sp_employee
     where 1=1
-     <if test="corpid != null">
+     <if test="storeId != null">
        and storeId = #{storeId,jdbcType=INTEGER}
       </if>
      <if test="id != null">
-      and id = #{id,jdbcType=VARCHAR}
+      and id = #{id,jdbcType=INTEGER}
       </if>
   </select>
-  
   <select id="getAllEmployees" parameterType="String"  resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -48,22 +52,23 @@
     delete from sp_employee
     where storeId = #{storeId,jdbcType=INTEGER}
       <if test="id != null">
-      and id = #{id,jdbcType=VARCHAR}
+      and id = #{id,jdbcType=INTEGER}
       </if>
   </delete>
-  <insert id="insert" parameterType="costumetrade.user.domain.SpEmployee">
-    insert into sp_employee (storeId, id, status, 
+  <insert id="insert" parameterType="costumetrade.user.domain.SpEmployee"  useGeneratedKeys="true" keyProperty="id">
+    insert into sp_employee (storeId, status, 
       subbelong, create_time, create_by, 
       modify_time, modify_by, 
       name, password, phone, 
       cphone, address, email, 
-      birthdate, card_id)
-    values (#{storeId,jdbcType=INTEGER}, #{id,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      birthdate, card_id,discount,zeroPrice,weChatNo,modifyPrice)
+    values (#{storeId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
       #{subbelong,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR}, 
       #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
       #{cphone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
-      #{birthdate,jdbcType=TIMESTAMP}, #{cardId,jdbcType=VARCHAR})
+      #{birthdate,jdbcType=TIMESTAMP}, #{cardId,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, #{zeroPrice,jdbcType=DECIMAL}, #{weChatNo,jdbcType=VARCHAR},
+      #{modifyPrice,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.user.domain.SpEmployee">
     insert into sp_employee
@@ -116,13 +121,25 @@
       <if test="cardId != null">
         card_id,
       </if>
+      <if test="discount != null">
+        discount,
+      </if>
+      <if test="zeroPrice != null">
+        zeroPrice,
+      </if>
+      <if test="weChatNo != null">
+        weChatNo,
+      </if>
+      <if test="modifyPrice != null">
+        modifyPrice,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="storeId != null">
         #{storeId,jdbcType=INTEGER},
       </if>
       <if test="id != null">
-        #{id,jdbcType=VARCHAR},
+        #{id,jdbcType=INTEGER},
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
@@ -165,6 +182,18 @@
       </if>
       <if test="cardId != null">
         #{cardId,jdbcType=VARCHAR},
+      </if>
+      <if test="discount != null">
+        #{discount,jdbcType=DECIMAL},
+      </if>
+      <if test="zeroPrice != null">
+        #{zeroPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="weChatNo != null">
+        #{weChatNo,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyPrice != null">
+        #{modifyPrice,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -213,9 +242,21 @@
       <if test="cardId != null">
         card_id = #{cardId,jdbcType=VARCHAR},
       </if>
+        <if test="discount != null">
+       discount = #{discount,jdbcType=DECIMAL},
+      </if>
+      <if test="zeroPrice != null">
+        zeroPrice =#{zeroPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="weChatNo != null">
+        weChatNo =#{weChatNo,jdbcType=VARCHAR},
+      </if>
+      <if test="modifyPrice != null">
+        modifyPrice =#{modifyPrice,jdbcType=VARCHAR},
+      </if>
     </set>
     where storeId = #{storeId,jdbcType=INTEGER}
-      and id = #{id,jdbcType=VARCHAR}
+      and id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployee">
     update sp_employee
@@ -232,8 +273,13 @@
       address = #{address,jdbcType=VARCHAR},
       email = #{email,jdbcType=VARCHAR},
       birthdate = #{birthdate,jdbcType=TIMESTAMP},
+      modifyPrice =#{modifyPrice,jdbcType=VARCHAR},
+      weChatNo =#{weChatNo,jdbcType=VARCHAR},
+      zeroPrice =#{zeroPrice,jdbcType=DECIMAL},
+      discount = #{discount,jdbcType=DECIMAL},
       card_id = #{cardId,jdbcType=VARCHAR}
+      
     where storeId = #{storeId,jdbcType=INTEGER}
-      and id = #{id,jdbcType=VARCHAR}
+      and id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

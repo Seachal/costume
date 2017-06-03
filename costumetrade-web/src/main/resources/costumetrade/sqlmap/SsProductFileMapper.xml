@@ -5,6 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="storeId" jdbcType="INTEGER" property="storeid" />
     <result column="productId" jdbcType="VARCHAR" property="productid" />
+    <result column="productName" jdbcType="VARCHAR" property="productName" />
     <result column="fileName" jdbcType="VARCHAR" property="filename" />
     <result column="url" jdbcType="VARCHAR" property="url" />
     <result column="resizeFixUrl" jdbcType="VARCHAR" property="resizeFixUrl" />
@@ -12,7 +13,7 @@
     <result column="createBy" jdbcType="VARCHAR" property="createby" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, storeId, productId, fileName, url,resizeFixUrl, createTime, createBy
+    id, storeId, productId,productName, fileName, url,resizeFixUrl, createTime, createBy
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -25,8 +26,11 @@
     <include refid="Base_Column_List" />
     from ss_product_file
     where 1=1
-    <if test="imageName !=null">
-    and fileName like CONCAT('%',#{imageName},'%')
+    <if test="ssProductFile.filename !=null">
+    and fileName like CONCAT('%',#{ssProductFile.filename},'%')
+    </if>
+    <if test="ssProductFileproductName !=null">
+    and productName like CONCAT('%',#{ssProductFile.productName},'%')
     </if>
     <if test="page!=null">
     LIMIT #{page.startRow},#{page.pageSize}
@@ -38,18 +42,18 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SsProductFile">
-    insert into ss_product_file (id, storeId, productId, 
+    insert into ss_product_file (id, storeId, productId, productName,
       fileName, url,resizeFixUrl, createTime, 
       createBy)
-    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{productid,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{productid,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR},
       #{filename,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{resizeFixUrl,jdbcType=VARCHAR},#{createtime,jdbcType=TIMESTAMP}, 
       #{createby,jdbcType=VARCHAR})
   </insert>
   <insert id="insertFiles">
-    insert into ss_product_file (storeId, productId, 
+    insert into ss_product_file (storeId, productId, productName,
       fileName, url,resizeFixUrl, createTime, 
       createBy)
-    values <foreach collection="files" index="index" item ="item" separator=",">( #{item.storeid,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR}, 
+    values <foreach collection="files" index="index" item ="item" separator=",">( #{item.storeid,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR}, #{item.productName,jdbcType=VARCHAR},  
       #{item.filename,jdbcType=VARCHAR}, #{item.url,jdbcType=VARCHAR},#{resizeFixUrl,jdbcType=VARCHAR}, #{item.createtime,jdbcType=TIMESTAMP}, 
       #{item.createby,jdbcType=VARCHAR})</foreach> 
   </insert>
@@ -64,6 +68,9 @@
       </if>
       <if test="productid != null">
         productId,
+      </if>
+      <if test="productName != null">
+        productName,
       </if>
       <if test="filename != null">
         fileName,
@@ -91,6 +98,9 @@
       <if test="productid != null">
         #{productid,jdbcType=VARCHAR},
       </if>
+      <if test="productName != null">
+        #{productName,jdbcType=VARCHAR},
+      </if>
       <if test="filename != null">
         #{filename,jdbcType=VARCHAR},
       </if>
@@ -117,6 +127,9 @@
       <if test="productid != null">
         productId = #{productid,jdbcType=VARCHAR},
       </if>
+      <if test="productName != null">
+        productName = #{productName,jdbcType=VARCHAR},
+      </if>
       <if test="filename != null">
         fileName = #{filename,jdbcType=VARCHAR},
       </if>
@@ -139,6 +152,7 @@
     update ss_product_file
     set storeId = #{storeid,jdbcType=INTEGER},
       productId = #{productid,jdbcType=VARCHAR},
+      productName = #{productName,jdbcType=VARCHAR},
       fileName = #{filename,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},
       resizeFixUrl = #{resizeFixUrl,jdbcType=VARCHAR},
