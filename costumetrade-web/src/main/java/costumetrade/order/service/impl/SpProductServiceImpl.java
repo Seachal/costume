@@ -499,7 +499,9 @@ public class SpProductServiceImpl implements SpProductService{
 
 	@Override
 	public List<SsProductFile> getImages(SsProductFile productFile) {
-		return ssProductFileMapper.selectByStoreId(null,productFile.getFilename());
+		Page page = new Page();
+		page.setPageNum(productFile.getPageNum());
+		return ssProductFileMapper.selectByStoreId(page,productFile);
 	}
 
 	@Override

@@ -14,6 +14,9 @@ import costumetrade.cache.CacheableLong;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.user.domain.SpEmployee;
+import costumetrade.user.domain.SpPrivilegeEmployee;
+import costumetrade.user.mapper.SpPrivilegeMapper;
+import costumetrade.user.service.ISpPrivilegeService;
 import costumetrade.user.service.SpEmployeeService;
 
 /**
@@ -29,21 +32,42 @@ public class SpEmployeeController {
 	private SpEmployeeService spEmployeeService;
 	@Autowired
 	private Cache cache;
+	@Autowired
+	private ISpPrivilegeService privilegeService;
 	
 	@RequestMapping("/getAllEmployees")
 	@ResponseBody
 	public ApiResponse getAllEmployees(String storeId) {
 		
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(storeId == null ){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.name());
+			return result;
+		}
 		List<SpEmployee> employeeLists = new ArrayList<SpEmployee>();
 		employeeLists = spEmployeeService.getAllEmployees(storeId);
-/*		CacheableLong cacheLong = (CacheableLong)cache.get("产品_品牌_样式_id");
-		if(null!=cacheLong){
-			cache.add("产品_品牌_样式_id", new CacheableLong(cacheLong.getLong()+2l));
-		}else{
-			CacheableLong  count = new CacheableLong(10);
-			cache.add("产品_品牌_样式_id", count);
-		}*/
+
 		return  ApiResponse.getInstance(employeeLists);
+	}
+	
+	@RequestMapping("/employeeInit")
+	@ResponseBody
+	public ApiResponse employeeInit(String storeId) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(storeId == null ){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.name());
+			return result;
+		}
+		
+		SpEmployee employee = spEmployeeService.employeeInit(storeId);
+		
+		return  ApiResponse.getInstance(employee);
 	}
 
 	@RequestMapping("/saveEmployee")
@@ -59,6 +83,17 @@ public class SpEmployeeController {
 			return result;
 		}
 		int save = spEmployeeService.saveEmployee(spEmployee);
+		
+		List<SpPrivilegeEmployee> privilegeEmployees = new ArrayList<SpPrivilegeEmployee>();
+		
+		for(Long privilegeId:spEmployee.getPrivilegeIds()){
+			SpPrivilegeEmployee privilegeEmp = new SpPrivilegeEmployee();
+			privilegeEmp.setEmployeeId(Long.valueOf(spEmployee.getId()));
+			privilegeEmp.setPrivilegeId(privilegeId);;
+			privilegeEmployees.add(privilegeEmp);
+		}
+		privilegeService.saveSpPrivilegeEmployees(privilegeEmployees);
+		
 		if(save<=0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);

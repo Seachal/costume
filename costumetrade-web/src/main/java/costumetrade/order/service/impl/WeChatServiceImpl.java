@@ -22,10 +22,12 @@ import costumetrade.order.service.WeChatService;
 @Service
 @Transactional
 public class WeChatServiceImpl implements WeChatService {
-	private final static String APP_ID="wx0f02d5eacaf954e7";
-	private final static String APP_SECRET="8d7f55d6a5008b7f8efead72672008a6";
-	//private final static String APP_ID="wx5f22c054831a13c1";
-	//private final static String APP_SECRET="e495479fe303ea701670c0ebc35c87c8";
+//	private final static String APP_ID="wx0f02d5eacaf954e7";
+//	private final static String APP_SECRET="8d7f55d6a5008b7f8efead72672008a6";
+	private final static String APP_ID="wx82428b2ac752c6a3";
+	private final static String APP_SECRET="ed8c5aa16cf56f66339fcb4be3377e30";
+//	private final static String APP_ID="wx5f22c054831a13c1";
+//	private final static String APP_SECRET="e495479fe303ea701670c0ebc35c87c8";
 	/**
 	 * 获取access
 	 * @throws IOException 
@@ -61,8 +63,8 @@ public class WeChatServiceImpl implements WeChatService {
 	 * @throws ClientProtocolException 
 	 * */
 	
-	public String getOpenIdAndKey(String Code) throws Exception{
-		String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+APP_ID+"&secret="+APP_SECRET+"&js_code="+Code+"&grant_type=authorization_code";
+	public String getOpenIdAndKey(String Code,String appId,String appSecret) throws Exception{
+		String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+appId+"&secret="+appSecret+"&js_code="+Code+"&grant_type=authorization_code";
 		String response = HttpClientUtils.get(url, "utf-8");
 		return response;
 	}

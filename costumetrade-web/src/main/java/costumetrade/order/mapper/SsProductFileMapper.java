@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import costumetrade.common.page.Page;
 import costumetrade.order.domain.SsProductFile;
 @Mapper
 public interface SsProductFileMapper {
@@ -16,7 +17,7 @@ public interface SsProductFileMapper {
 
     SsProductFile selectByPrimaryKey(Integer id);
     
-    List<SsProductFile> selectByStoreId(@Param("storeId")Integer storeId,@Param("imageName")String imageName);
+    List<SsProductFile> selectByStoreId(@Param("page")Page page,@Param("ssProductFile")SsProductFile ssProductFile);
 
     int updateByPrimaryKeySelective(SsProductFile record);
 

@@ -191,7 +191,7 @@ public class SpProductController {
 	}
 	@RequestMapping("/getImages")
 	@ResponseBody
-	public ApiResponse getImages(@RequestBody SsProductFile productFile) {
+	public ApiResponse getImages(SsProductFile productFile) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);

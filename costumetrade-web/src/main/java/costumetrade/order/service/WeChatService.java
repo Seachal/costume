@@ -6,6 +6,7 @@ import java.io.IOException;
 
 
 
+
 import org.apache.http.client.ClientProtocolException;
 
 
@@ -34,7 +35,7 @@ public interface WeChatService  {
 	 * @throws ClientProtocolException 
 	 * */
 	
-	public String getOpenIdAndKey(String Code) throws Exception;
+	public String getOpenIdAndKey(String Code,String appId,String appSecret) throws Exception;
 	
 	public String getWechatTwoCode() throws Exception;
 }

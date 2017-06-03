@@ -25,6 +25,8 @@ public class SsProductFile extends Entity {
      *  
      */
     private String filename;
+    
+    private String productName;
 
     /**
      *  
@@ -42,7 +44,7 @@ public class SsProductFile extends Entity {
      */
     private String createby;
     
-    private Page page;
+    private Integer pageNum;
 
     private static final long serialVersionUID = 1L;
 
@@ -110,12 +112,22 @@ public class SsProductFile extends Entity {
 		this.resizeFixUrl = resizeFixUrl;
 	}
 
-	public Page getPage() {
-		return page;
+
+
+	public String getProductName() {
+		return productName;
 	}
 
-	public void setPage(Page page) {
-		this.page = page;
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+
+	public Integer getPageNum() {
+		return pageNum;
+	}
+
+	public void setPageNum(Integer pageNum) {
+		this.pageNum = pageNum;
 	}
     
     

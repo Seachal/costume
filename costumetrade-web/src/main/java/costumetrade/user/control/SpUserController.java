@@ -35,7 +35,7 @@ public class SpUserController {
 	
 	@RequestMapping("/login")
 	@ResponseBody
-	public ApiResponse login(String code) throws Exception {
+	public ApiResponse login(String code,String appId,String appSecret) throws Exception {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
@@ -44,7 +44,7 @@ public class SpUserController {
 			result.setMsg(ResponseInfo.LACK_PARAM.name());
 			return result;
 		}
-		String openIdAndKey = weChatService.getOpenIdAndKey(code);
+		String openIdAndKey = weChatService.getOpenIdAndKey(code,appId,appSecret);
 		JSONObject json = JSON.parseObject(openIdAndKey);
 		String openid = json.getString("openid");
 		ScWeChat chat = null;

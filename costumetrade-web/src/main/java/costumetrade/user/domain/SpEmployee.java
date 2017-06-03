@@ -1,7 +1,9 @@
 package costumetrade.user.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import costumetrade.common.Entity;
 
@@ -90,9 +92,23 @@ public class SpEmployee extends Entity implements Serializable{
     /**
      *  员工编号:
      */
-    private String id;
+    private Integer id;
+    
+    private String weChatNo;
+    
+    private BigDecimal discount;
+    
+    private BigDecimal zeroPrice;
+    
+    private String modifyPrice ;
 
    
+    private List<Long> privilegeIds;
+    
+    private List<SpPrivilege> spPrivileges;
+    
+    List<SpCustProdPrice> customerTypeList;
+    
     public Integer getStoreId() {
 		return storeId;
 	}
@@ -101,12 +117,12 @@ public class SpEmployee extends Entity implements Serializable{
 		this.storeId = storeId;
 	}
 
-	public String getId() {
+	public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id == null ? null : id.trim();
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     
@@ -230,4 +246,64 @@ public class SpEmployee extends Entity implements Serializable{
     public void setCardId(String cardId) {
         this.cardId = cardId == null ? null : cardId.trim();
     }
+
+	public String getWeChatNo() {
+		return weChatNo;
+	}
+
+	public void setWeChatNo(String weChatNo) {
+		this.weChatNo = weChatNo;
+	}
+
+	public BigDecimal getDiscount() {
+		return discount;
+	}
+
+	public void setDiscount(BigDecimal discount) {
+		this.discount = discount;
+	}
+
+	public BigDecimal getZeroPrice() {
+		return zeroPrice;
+	}
+
+	public void setZeroPrice(BigDecimal zeroPrice) {
+		this.zeroPrice = zeroPrice;
+	}
+
+	public String getModifyPrice() {
+		return modifyPrice;
+	}
+
+	public void setModifyPrice(String modifyPrice) {
+		this.modifyPrice = modifyPrice;
+	}
+
+	public List<Long> getPrivilegeIds() {
+		return privilegeIds;
+	}
+
+	public void setPrivilegeIds(List<Long> privilegeIds) {
+		this.privilegeIds = privilegeIds;
+	}
+
+	public List<SpPrivilege> getSpPrivileges() {
+		return spPrivileges;
+	}
+
+	public void setSpPrivileges(List<SpPrivilege> spPrivileges) {
+		this.spPrivileges = spPrivileges;
+	}
+
+	public List<SpCustProdPrice> getCustomerTypeList() {
+		return customerTypeList;
+	}
+
+	public void setCustomerTypeList(List<SpCustProdPrice> customerTypeList) {
+		this.customerTypeList = customerTypeList;
+	}
+
+	
+    
+    
 }
