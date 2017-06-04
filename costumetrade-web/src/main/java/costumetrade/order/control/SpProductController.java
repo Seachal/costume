@@ -106,20 +106,60 @@ public class SpProductController {
 		ProductQuery q = spProductService.productInit(query);
 		return  ApiResponse.getInstance(q);
 	}
-	@RequestMapping("/updateProducts")
+	
+	@RequestMapping("/getShareProduct")
 	@ResponseBody
-	public ApiResponse updateProducts(@RequestParam("storeId")String storeId ,@RequestParam("idArray")List<String> idArray) {
+	public ApiResponse getShareProduct(ProductQuery query) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		
-		if(StringUtils.isBlank(storeId) && (idArray==null||idArray.size() <=0)){
+		if(StringUtils.isBlank(query.getStoreId()+"")){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		int delete = spProductService.updateProducts(idArray,Integer.valueOf(storeId));
-		if(delete <= 0){
+		List<ProductQuery> q= spProductService.getShareProduct(query);
+		return  ApiResponse.getInstance(q);
+	}
+	
+	@RequestMapping("/updateProductInit")
+	@ResponseBody
+	public ApiResponse updateProductInit(ProductQuery  productQuery ) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		if(productQuery.getStoreId()==null){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		ProductQuery query = spProductService.updateProductInit(productQuery);
+		if(query == null){
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			return result;
+		}else{
+			result.setData(query);
+		}
+		return  result;
+	}
+	
+	
+	@RequestMapping("/updateProducts")
+	@ResponseBody
+	public ApiResponse updateProducts(ProductQuery  productQuery ) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		if(productQuery.getStoreId()==null&& (productQuery.getIdArray()==null||productQuery.getIdArray().size() <=0)){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		int update = spProductService.updateProducts(productQuery);
+		if(update <= 0){
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
@@ -168,6 +208,7 @@ public class SpProductController {
 		}
 		return  result;
 	}
+	
 	@RequestMapping("/updateStock")
 	@ResponseBody
 	public ApiResponse updateStock(@RequestBody List<SsStock> stocks) {

@@ -16,6 +16,10 @@ public interface SpProductService {
 	 * */
 	public List<ProductQuery> selectProducts(ProductQuery productQuery);
 	/**
+	 * 分享链接查询商品
+	 * */
+	public List<ProductQuery> getShareProduct(ProductQuery productQuery);
+	/**
 	 * 获取商品詳情
 	 * 
 	 * */
@@ -46,6 +50,10 @@ public interface SpProductService {
 	 * */
 	public ProductQuery productInit(ProductQuery query);
 	/**
+	 * 批量修改初始化
+	 * */
+	public ProductQuery updateProductInit(ProductQuery query);
+	/**
 	 * 查询货品
 	 * 
 	 * */
@@ -59,7 +67,7 @@ public interface SpProductService {
 	 * 删除货品
 	 * 
 	 * */
-	public int updateProducts(List<String> id,Integer storeId);
+	public int updateProducts(ProductQuery  productQuery);
 	
 	public void insertSuspendingProduct(SpProduct product,Integer buyerStoreId);
 	

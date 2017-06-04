@@ -240,10 +240,15 @@ public class SpProduct extends Entity {
 	private String productName;
 	
 	private BigDecimal price;
+	
+	private Integer parentStoreId;
 	/**
 	 * 图片文件集合
 	 * */
 	private List<SsProductFile> fileList;
+	
+	private Integer pageNum;
+	
     private static final long serialVersionUID = 1L;
     
 
@@ -659,6 +664,22 @@ public class SpProduct extends Entity {
 
 	public void setVideo3(String video3) {
 		this.video3 = video3;
+	}
+
+	public Integer getParentStoreId() {
+		return parentStoreId;
+	}
+
+	public void setParentStoreId(Integer parentStoreId) {
+		this.parentStoreId = parentStoreId;
+	}
+
+	public Integer getPageNum() {
+		return pageNum;
+	}
+
+	public void setPageNum(Integer pageNum) {
+		this.pageNum = pageNum;
 	}
 	
 	

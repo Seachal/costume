@@ -191,6 +191,10 @@ public class SpOrderController {
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
+		}else if(operate == 2){//缺少库存
+			result.setCode(ResponseInfo.NO_STOCK.code);
+			result.setMsg(ResponseInfo.NO_STOCK.msg);
+			return result;
 		}else{
 			return result;
 		}

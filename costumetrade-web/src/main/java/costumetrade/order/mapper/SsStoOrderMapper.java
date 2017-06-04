@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import costumetrade.common.page.Page;
+import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SsStoOrder;
 
 @Mapper
@@ -19,6 +20,8 @@ public interface SsStoOrderMapper {
     int insertStore(@Param("record")SsStoOrder record,@Param("storeId")Integer storeId);
 
     SsStoOrder selectByPrimaryKey(Integer id);
+    
+    SsStoOrder selectSupplierByProduct(SpProduct product);
     
     SsStoOrder selectByOrderNo(@Param("orderNo")String orderNo,@Param("storeId")Integer storeId);
     

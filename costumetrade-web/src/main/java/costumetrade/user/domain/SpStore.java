@@ -1,6 +1,7 @@
 package costumetrade.user.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -25,7 +26,9 @@ public class SpStore extends Entity {
     /**
      * 店铺类型
      * */
-    private String storeType;
+    private Integer storeType;
+    
+    private Integer inventoryShare;
     /**
      *  分店名称:
      */
@@ -109,6 +112,8 @@ public class SpStore extends Entity {
     private Integer storeId;
     
     private Integer userId;
+    
+    
     
 
     private static final long serialVersionUID = 1L;
@@ -281,13 +286,23 @@ public class SpStore extends Entity {
 		this.userId = userId;
 	}
 
-	public String getStoreType() {
+	public Integer getStoreType() {
 		return storeType;
 	}
 
-	public void setStoreType(String storeType) {
+	public void setStoreType(Integer storeType) {
 		this.storeType = storeType;
 	}
+
+	public Integer getInventoryShare() {
+		return inventoryShare;
+	}
+
+	public void setInventoryShare(Integer inventoryShare) {
+		this.inventoryShare = inventoryShare ;
+	}
+
+
 	
     
 }

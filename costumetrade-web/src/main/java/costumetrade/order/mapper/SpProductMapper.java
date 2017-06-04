@@ -12,7 +12,7 @@ import costumetrade.order.query.ProductQuery;
 public interface SpProductMapper {
     int deleteByIds(@Param("storeId")Integer storeId,@Param("ids")List<String> ids);
     
-    int updateByIds(@Param("storeId")Integer storeId,@Param("ids")List<String> ids);
+    int updateByIds(ProductQuery  productQuery);
 
     int insert(SpProduct record);
 

@@ -2,6 +2,7 @@ package costumetrade.order.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import costumetrade.common.Entity;
 
@@ -68,7 +69,15 @@ public class SsStock extends Entity {
      * 商品名称
      * */
     private String name;
-
+    
+    private List<Integer> otherStoreIds;
+    
+    private Integer currentStore;
+    /*
+     * 供货商ID
+     * 
+     * **/
+    private Integer supplierStoreId;
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -175,6 +184,30 @@ public class SsStock extends Entity {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<Integer> getOtherStoreIds() {
+		return otherStoreIds;
+	}
+
+	public void setOtherStoreIds(List<Integer> otherStoreIds) {
+		this.otherStoreIds = otherStoreIds;
+	}
+
+	public Integer getCurrentStore() {
+		return currentStore;
+	}
+
+	public void setCurrentStore(Integer currentStore) {
+		this.currentStore = currentStore;
+	}
+
+	public Integer getSupplierStoreId() {
+		return supplierStoreId;
+	}
+
+	public void setSupplierStoreId(Integer supplierStoreId) {
+		this.supplierStoreId = supplierStoreId;
 	}
     
     

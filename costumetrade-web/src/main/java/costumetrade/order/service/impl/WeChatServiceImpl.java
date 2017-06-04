@@ -22,10 +22,10 @@ import costumetrade.order.service.WeChatService;
 @Service
 @Transactional
 public class WeChatServiceImpl implements WeChatService {
-//	private final static String APP_ID="wx0f02d5eacaf954e7";
-//	private final static String APP_SECRET="8d7f55d6a5008b7f8efead72672008a6";
-	private final static String APP_ID="wx82428b2ac752c6a3";
-	private final static String APP_SECRET="ed8c5aa16cf56f66339fcb4be3377e30";
+	private final static String APP_ID="wx0f02d5eacaf954e7";
+	private final static String APP_SECRET="8d7f55d6a5008b7f8efead72672008a6";
+//	private final static String APP_ID="wx82428b2ac752c6a3";
+//	private final static String APP_SECRET="ed8c5aa16cf56f66339fcb4be3377e30";
 //	private final static String APP_ID="wx5f22c054831a13c1";
 //	private final static String APP_SECRET="e495479fe303ea701670c0ebc35c87c8";
 	/**
@@ -70,7 +70,7 @@ public class WeChatServiceImpl implements WeChatService {
 	}
 	
 	/**
-	 * wechat 小程序生成二维码
+	 * wechat 小程序生成码
 	 * @throws Exception 
 	 * 
 	 * */
@@ -79,8 +79,10 @@ public class WeChatServiceImpl implements WeChatService {
 		String chat = getAccessToken();
 		com.alibaba.fastjson.JSONObject json = JSON.parseObject(chat);
 		String url = "http://api.weixin.qq.com/wxa/getwxacodeunlimit?access_token="+json.getString("access_token");
-//		String param ="{'scene':'1', 'width':430,'auto_color': false,'line_color': {'r': '0', 'g': '0', 'b':'0'}}";
-		String param ="{'action_name': 'QR_LIMIT_STR_SCENE', 'action_info': {'scene': {'scene_str': '123'}}}";
+		String param ="{'scene':'1', 'width':430,'auto_color': false,'line_color': {'r': '0', 'g': '0', 'b':'0'}}";
+		
+		
+		//String param ="{'action_name': 'QR_LIMIT_STR_SCENE', 'action_info': {'scene': {'scene_str': '123'}}}";
 		
 		
 		Map<String, Object> paramMap =new  HashMap<String,Object>();

@@ -33,7 +33,11 @@ public class SsProductReview extends Entity {
      *  评论详情
      */
     private String msg;
-
+    
+    /**
+     * 评价是上传的图片地址  是一个数组的字符串
+     * */
+    private String imageUrl;
     /**
      *  创建时间
      */
@@ -109,4 +113,14 @@ public class SsProductReview extends Entity {
     public void setCreateby(String createby) {
         this.createby = createby == null ? null : createby.trim();
     }
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+    
+    
 }

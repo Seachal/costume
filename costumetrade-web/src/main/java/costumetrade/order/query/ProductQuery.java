@@ -9,6 +9,7 @@ import costumetrade.order.domain.SpPBrand;
 import costumetrade.order.domain.SpPCate;
 import costumetrade.order.domain.SpPSizeCustom;
 import costumetrade.order.domain.SpUnit;
+import costumetrade.order.domain.SsProductReview;
 import costumetrade.user.domain.SpCustProdPrice;
 
 public class ProductQuery extends Entity{
@@ -226,6 +227,9 @@ public class ProductQuery extends Entity{
     
     private List<SpCustProdPrice>  gradeList;
 
+    private List<String> idArray;
+    
+    private List<SsProductReview> productReviews;
 	/**
 	 * 货品列表查询  开始
 	 */
@@ -238,7 +242,8 @@ public class ProductQuery extends Entity{
 	private List<String> productBrandArray; // 商品品牌
 	private List<String> productSeasonArray; // 商品季节
 	private String saleOp;
-	List<String> grades;
+	private List<String> grades;
+	private String productManagerQuery;
 	/**
 	 * 货品列表查询  结束
 	 */
@@ -259,6 +264,10 @@ public class ProductQuery extends Entity{
 	private Integer pageNum;
 	
 	private BigDecimal price ;
+	
+	private String appid;
+	
+	private String appSecret;
 	
 	public BigDecimal getPrice() {
 		return price;
@@ -812,6 +821,46 @@ public class ProductQuery extends Entity{
 
 	public void setVideo3(String video3) {
 		this.video3 = video3;
+	}
+
+	public List<String> getIdArray() {
+		return idArray;
+	}
+
+	public void setIdArray(List<String> idArray) {
+		this.idArray = idArray;
+	}
+
+	public String getAppid() {
+		return appid;
+	}
+
+	public void setAppid(String appid) {
+		this.appid = appid;
+	}
+
+	public String getAppSecret() {
+		return appSecret;
+	}
+
+	public void setAppSecret(String appSecret) {
+		this.appSecret = appSecret;
+	}
+
+	public String getProductManagerQuery() {
+		return productManagerQuery;
+	}
+
+	public void setProductManagerQuery(String productManagerQuery) {
+		this.productManagerQuery = productManagerQuery;
+	}
+
+	public List<SsProductReview> getProductReviews() {
+		return productReviews;
+	}
+
+	public void setProductReviews(List<SsProductReview> productReviews) {
+		this.productReviews = productReviews;
 	}
 
 	

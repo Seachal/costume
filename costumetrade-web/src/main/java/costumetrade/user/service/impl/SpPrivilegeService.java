@@ -5,13 +5,16 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import costumetrade.user.domain.SpPrivilege;
 import costumetrade.user.domain.SpPrivilegeEmployee;
 import costumetrade.user.mapper.SpPrivilegeEmployeeMapper;
 import costumetrade.user.mapper.SpPrivilegeMapper;
 import costumetrade.user.service.ISpPrivilegeService;
-
+@Service
+@Transactional
 public class SpPrivilegeService implements ISpPrivilegeService {
 	@Autowired
 	private SpPrivilegeMapper spPrivilegeMapper;

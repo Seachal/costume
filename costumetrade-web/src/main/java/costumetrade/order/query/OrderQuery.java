@@ -32,7 +32,8 @@ public class OrderQuery extends Entity {
     private String orderNo;
     
     private Integer operate;//订单状态  1：新增   2、已付款  3、审核  4、发货  5、收货  6、已取消
-
+    
+    private Boolean isContinue = false;//默认库存缺少时，不继续操作
 	/*
 	 * 下单参数  开始
 	 * */
@@ -211,6 +212,14 @@ public class OrderQuery extends Entity {
 	public void setSsStoOrder(List<SsStoOrder> ssStoOrder) {
 		this.ssStoOrder = ssStoOrder;
 	}
- 
+
+	public Boolean getIsContinue() {
+		return isContinue;
+	}
+
+	public void setIsContinue(Boolean isContinue) {
+		this.isContinue = isContinue;
+	}
+	
    
 }

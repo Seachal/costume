@@ -3,29 +3,16 @@ package costumetrade.order.service.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-
-import javax.print.attribute.HashAttributeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-
-
-
-
-
-
-
-
-
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.mysql.fabric.xmlrpc.base.Array;
+import com.alibaba.fastjson.JSONObject;
 
 import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpClient;
@@ -37,6 +24,7 @@ import costumetrade.order.domain.SpUnit;
 import costumetrade.order.domain.SsPrice;
 import costumetrade.order.domain.SsProductFile;
 import costumetrade.order.domain.SsProductReview;
+import costumetrade.order.domain.SsStoOrder;
 import costumetrade.order.domain.SsStock;
 import costumetrade.order.mapper.SpClientMapper;
 import costumetrade.order.mapper.SpPBrandMapper;
@@ -48,20 +36,22 @@ import costumetrade.order.mapper.SpUnitMapper;
 import costumetrade.order.mapper.SsPriceMapper;
 import costumetrade.order.mapper.SsProductFileMapper;
 import costumetrade.order.mapper.SsProductReviewMapper;
+import costumetrade.order.mapper.SsStoOrderMapper;
 import costumetrade.order.mapper.SsStockMapper;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.query.Rules;
 import costumetrade.order.service.SpProductService;
+import costumetrade.order.service.WeChatService;
 import costumetrade.user.domain.PriceJson;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpStore;
-import costumetrade.user.domain.SpUser;
 import costumetrade.user.domain.SsDataDictionary;
 import costumetrade.user.mapper.ScWeChatMapper;
 import costumetrade.user.mapper.SpCustProdPriceMapper;
 import costumetrade.user.mapper.SpStoreMapper;
 import costumetrade.user.mapper.SsDataDictionaryMapper;
+import costumetrade.user.service.SpUserService;
 
 @Transactional
 @Service
@@ -96,6 +86,12 @@ public class SpProductServiceImpl implements SpProductService{
 	private ScWeChatMapper scWeChatMapper;
 	@Autowired
 	private SpClientMapper spClientMapper;
+	@Autowired
+	private WeChatService weChatService;
+	@Autowired
+	private SpUserService spUserService;
+	@Autowired
+	private SsStoOrderMapper ssStoOrderMapper;
 	
 	@Override
 	public List<ProductQuery> selectProducts(ProductQuery productQuery) {
@@ -141,13 +137,18 @@ public class SpProductServiceImpl implements SpProductService{
 				grades = setGrages(Integer.parseInt(spCustProdPrice.getProdgrade()));
 				custTypeCode = Integer.parseInt(spCustProdPrice.getCustTypeCode());
 			}
+			productQuery.setGrades(grades);
+			productQuery.setCustTypeCode(custTypeCode);
+		}else{
+			productQuery.setProductManagerQuery("1");//表示货品管理查询
+			productQuery.setGrades(null);
+			productQuery.setCustTypeCode(null);
 		}
 	
 		Page page = new Page();
 		page.setPageNum(productQuery.getPageNum());
 		
-		productQuery.setGrades(grades);
-		productQuery.setCustTypeCode(custTypeCode);
+		
 		List<ProductQuery> products = spProductMapper.selectProducts(productQuery,page);
 		//商城商品列表设置销售价
 		List<ProductQuery> productList = new ArrayList<ProductQuery>();
@@ -224,6 +225,8 @@ public class SpProductServiceImpl implements SpProductService{
 			client.setStoreid(productQuery.getStoreId());
 			client.setType(1+"");
 			clients = spClientMapper.select(client);
+		}else{
+			return null;
 		}
 		if(clients !=null && clients.size() > 0 && mallProList){
 			client = clients.get(0);
@@ -233,6 +236,7 @@ public class SpProductServiceImpl implements SpProductService{
 	@Override
 	public ProductQuery selectProduct(ProductQuery queryDetail) {
 		ProductQuery query = spProductMapper.selectProduct(queryDetail);
+		
 		SpClient client = getClientByopenId(queryDetail);
 		int custTypeCode = 0;
 		if(client != null){
@@ -241,8 +245,11 @@ public class SpProductServiceImpl implements SpProductService{
 				BigDecimal salePrice = setPrice(query, custTypeCode);
 				query.setPrice(salePrice);
 				query.setSalePrice(salePrice);
+				query.setOriginalPrice(query.getTagprice());
 			}
 		}
+		List<SsProductReview> productReviews = ssProductReviewMapper.selectReviews(queryDetail);
+		query.setProductReviews(productReviews);
 		return query;
 	}
 
@@ -271,7 +278,7 @@ public class SpProductServiceImpl implements SpProductService{
 		SpStore spStore = spStoreMapper.selectByPrimaryKey(storeId);
 		String custOrDiscTag = "1"; 
 		if(spStore != null){
-			custOrDiscTag = spStore.getStoreType();
+			custOrDiscTag = spStore.getStoreType()+"";
 		}
 		if(dict !=null && dict.size()>0){
 			for(SsDataDictionary dictionary : dict){
@@ -485,16 +492,56 @@ public class SpProductServiceImpl implements SpProductService{
 	}
 
 	@Override
-	public int updateProducts(List<String> id, Integer storeId) {
-		return spProductMapper.updateByIds(storeId, id);
+	public int updateProducts(ProductQuery  productQuery) {
+		return spProductMapper.updateByIds(productQuery);
 	}
 
 	@Override
 	public List<SsStock> takingStock(SpProduct product) {
+		Integer currentStore = product.getStoreId();
+		//根据storeiD查询集团的storeId
+		SpStore store = spStoreMapper.selectByPrimaryKey(product.getStoreId());
+		List<SpStore> stores = new  ArrayList<SpStore>();
+		
+		
+		List<SsStock> stocks = new ArrayList<SsStock>();
+		List<SsStock> stockShares = new ArrayList<SsStock>();
 		SsStock stock = new SsStock();
 		stock.setProductid(product.getId());
 		stock.setStoreid(product.getStoreId());
-		return ssStockMapper.select(stock);
+		List<Integer> otherStoreIds = null;
+		
+		if(store.getParentid()!=null&&store.getInventoryShare()==1){//分店//查询允许共享的店铺
+			store = new SpStore();
+			store.setParentid(store.getParentid());
+			store.setInventoryShare(1);//允许共享
+			stores = spStoreMapper.selectStores(store, null);//查询允许共享的店铺
+			
+			if(stores.size()>0){
+				otherStoreIds = new ArrayList<Integer>();
+				for(SpStore store1 :stores){
+					if(store1.getId()!=product.getStoreId()){
+						otherStoreIds.add(store1.getId());
+					}
+					
+				}
+			}
+			stock.setOtherStoreIds(otherStoreIds);
+		}
+		stocks = ssStockMapper.select(stock);
+		List<SsStock> stockList = new ArrayList<SsStock>();
+		//查询对应的供货商
+		SsStoOrder order = ssStoOrderMapper.selectSupplierByProduct(product);
+		if(stocks.size()>0&&order!=null){
+			for(SsStock s : stocks){
+				s.setSupplierStoreId(order.getSellerstoreid());
+				stockList.add(s);
+			}
+		}
+		
+		return stockList;
+		
+		
 	}
 
 	@Override
@@ -513,5 +560,70 @@ public class SpProductServiceImpl implements SpProductService{
 	@Override
 	public List<SsProductReview> getReviews(ProductQuery query) {
 		return ssProductReviewMapper.selectReviews(query);
+	}
+	@Override
+	public ProductQuery updateProductInit(ProductQuery query) {
+		//获取商品等级
+		List<SpCustProdPrice> custProdPrice = new ArrayList<SpCustProdPrice>();
+		SpCustProdPrice spCustProdPrice = new SpCustProdPrice();
+		spCustProdPrice.setType(1+"");
+		spCustProdPrice.setStoreid(query.getStoreId());
+		custProdPrice = spCustProdPriceMapper.select(spCustProdPrice);
+				
+		List<SpCustProdPrice> gradeList = new ArrayList<SpCustProdPrice>();
+		if(custProdPrice.size()>0){
+			for(SpCustProdPrice price : custProdPrice){
+						SpCustProdPrice prodPrice = new SpCustProdPrice();
+						prodPrice.setId(Integer.parseInt(price.getCustTypeCode()));
+						prodPrice.setCusttypename(price.getCusttypename());
+						gradeList.add(prodPrice);
+				
+					}
+				}		
+		query.setGradeList(gradeList);
+		return query;
+	}
+	@Override
+	public List<ProductQuery> getShareProduct(ProductQuery productQuery) {
+		String openIdAndKey= null;
+		if(!"".equals(productQuery.getCode())){//这是code指小程序加载时传的code，不是商品code，用来获取openid
+			try {
+				openIdAndKey = weChatService.getOpenIdAndKey(productQuery.getCode(), productQuery.getAppid(), productQuery.getAppSecret());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		JSONObject json = JSON.parseObject(openIdAndKey);
+		String openid = json.getString("openid");
+		ScWeChat chat = null;
+		if(openid!=null){//进入小程序认证，
+			chat = spUserService.login(openid);
+		}
+		//查询分享到对方的用户在商铺里面是什么客户级别，根据客户级别显示销售价，如果不属于客户，就默认最低客户级别，显示最高销售价
+		SpClient client = new SpClient();
+		client.setStoreid(productQuery.getStoreId());
+		client.setType(1+"");
+		client.setUserId(chat.getUserid());
+		List<SpClient> clients = spClientMapper.select(client);
+		Integer custTypeCode =1;
+		if(clients.size()>0){
+			client = clients.get(0);
+			custTypeCode = Integer.parseInt(client.getCate());
+		}
+		
+		List<ProductQuery> products = spProductMapper.selectProducts(productQuery,null);
+		//商城商品列表设置销售价
+		List<ProductQuery> productList = new ArrayList<ProductQuery>();
+		if(products.size() >0){
+			for(ProductQuery product : products){
+				if(custTypeCode >0){
+					BigDecimal salePrice = setPrice(product, custTypeCode);
+					product.setSalePrice(salePrice);
+				}
+				productList.add(product);
+			}
+		}
+		
+		return productList;
 	}
 }

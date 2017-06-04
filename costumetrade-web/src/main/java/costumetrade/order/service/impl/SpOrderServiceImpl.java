@@ -173,7 +173,12 @@ public class SpOrderServiceImpl implements SpOrderService{
 		 * */
 	
 		if(param.getOperate() == 3){ //审核  配货
-			orderStock(param,null);
+			boolean operatestock =orderStock(param,null);
+			if(operatestock){
+				return 1;
+			}else{
+				return 2;
+			}
 		}
 		if(wechat.getStoreid() == null){
 			operate = ssStoOrderMapper.updateByPrimaryKeySelective(spStoOrder);
@@ -188,7 +193,8 @@ public class SpOrderServiceImpl implements SpOrderService{
 		}
 		
 	}
-	public void orderStock(OrderQuery param,List<SsStoDetail> d){
+	public Boolean orderStock(OrderQuery param,List<SsStoDetail> d){
+		boolean operate = true;
 		List<SsStoDetail> ssStoDetails = new ArrayList<SsStoDetail>();
 		List<SsStock> ssStocks = new ArrayList<SsStock>();
 		List<SsStock> ssStock = new ArrayList<SsStock>(); //对应店家查询的现有库存
@@ -200,7 +206,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 		List<String> ids = new ArrayList<String>();//商品ID集合
 		
 		ScWeChat wechat = scWeChatMapper.selectByOpenId(param.getOpenid());
-		//SpClient client = spClientMapper.selectByPrimaryKey(param.getClientId());
+		
 		boolean stockTag = true;
 		if(d == null || d.size()==0){
 			ssStoDetails = ssStoDetailMapper.selectByOrderId(param.getOrderNo(),param.getSellerstoreid());
@@ -221,24 +227,26 @@ public class SpOrderServiceImpl implements SpOrderService{
 			ids.add(detail.getProductid());
 		
 			List<SsStock> s = ssStockMapper.select(stock);
-			if(s == null || s.size()<=0){
-				stockTag = false ; //不存在库存
-				break;
-			}else{
-				stock = s.get(0);
+			if(s == null || s.size()<=0 ){
+				stockTag = false ; //库存不存在时，在库存记录中保存一条负库存记录
+				stock.setCreatetime(new Date());
+				stock.setCreateby(wechat.getUserid()+"");
 				ssStock.add(stock);
+			}else{
+				ssStock.add(s.get(0));
 			}
 			SsStockTransfer transfer = new SsStockTransfer();
 			transfer.setProductid(detail.getProductid());
 			transfer.setProductcolor(detail.getProductcolor());
 			transfer.setProductsize(detail.getProductsize());
 			transfer.setCount(detail.getCount());
+			transfer.setCreatedate(new Date());
 			transfer.setTransfertoid(param.getSellerstoreid());
 			transfer.setAmount(detail.getCount().multiply(detail.getPrice()));
 			transfers.add(transfer);
 		}
 		int updateSellerStock = 0;
-		if(stockTag){
+		if(stockTag||param.getIsContinue()){//当库存缺少，并允许继续操作配货时，控制
 			/**审核配货逻辑整理：
 			1、确定有没有库存
 			2、修改库存记录ss_stock  卖家
@@ -261,10 +269,17 @@ public class SpOrderServiceImpl implements SpOrderService{
 							&& ssStocks.get(i).getProductcolor().equals(ssStock.get(i).getProductcolor())
 							&& ssStocks.get(i).getProductsize().equals(ssStock.get(i).getProductsize())){
 						SsStock stock = new SsStock();
-						stock = ssStocks.get(i);
-						stock.setStoreid(param.getSellerstoreid());
-						stock.setStocknum(ssStock.get(i).getStocknum()-ssStocks.get(i).getStocknum());
-						updateSellerStock = ssStockMapper.updateByPrimaryKeySelective(stock); //更新卖家库存
+						//库存不存在时，在库存记录中保存一条负库存记录
+						stock = ssStock.get(i);
+						if(stock.getId() == null){
+							stock.setStocknum(0-stock.getStocknum());
+							updateSellerStock = ssStockMapper.insertSelective(stock);
+						}else{
+							stock.setStoreid(param.getSellerstoreid());
+							stock.setStocknum(ssStock.get(i).getStocknum()-ssStocks.get(i).getStocknum());
+							updateSellerStock = ssStockMapper.updateByPrimaryKeySelective(stock); //更新卖家库存
+						}
+						
 						
 						//更新卖家的商品销量
 						SpProduct p = spProductMapper.selectByPrimaryKey(ids.get(i), param.getSellerstoreid());
@@ -310,7 +325,10 @@ public class SpOrderServiceImpl implements SpOrderService{
 				}
 			}
 		
+		}else{
+			operate =false;
 		}
+		return operate;
 	}
 	
 	@Override
@@ -482,6 +500,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 	}
 	@Override
 	public int saveReview(SsProductReview ssProductReview) {
+		ssProductReview.setCreatetime(new Date());
 		return ssProductReviewMapper.insertSelective(ssProductReview);
 	}
 	@Override
