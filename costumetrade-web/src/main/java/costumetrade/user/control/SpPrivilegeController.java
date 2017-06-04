@@ -2,14 +2,11 @@ package costumetrade.user.control;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
-import costumetrade.user.domain.SpMenuEmployee;
 import costumetrade.user.domain.SpPrivilege;
 import costumetrade.user.domain.SpPrivilegeEmployee;
 import costumetrade.user.service.ISpPrivilegeService;
