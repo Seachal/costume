@@ -66,4 +66,30 @@ public class HttpClientUtils {
 		}
 	}
     
+	public static String postDo(String url, Map<String, Object> paramMap, String encode) throws ClientProtocolException, IOException {
+		DefaultHttpClient httpclient = new DefaultHttpClient();
+		try {
+			List<NameValuePair> params = new ArrayList<NameValuePair>(); 
+			for (String key : paramMap.keySet()) {
+				params.add(new BasicNameValuePair(key, paramMap.get(key).toString()));  
+			}
+			HttpPost httppost = new HttpPost(url);
+			httppost.addHeader(
+					"User-Agent",
+					"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022)");
+			UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, encode);
+			httppost.setEntity(ent);
+			HttpResponse response = httpclient.execute(httppost);  
+			HttpEntity resEntity = response.getEntity(); 
+			String html = EntityUtils.toString(resEntity,"utf-8");
+			//log.info(response.getStatusLine().getStatusCode());
+			return html;
+		}
+		finally {
+			if(httpclient!=null) {
+				httpclient.getConnectionManager().shutdown();
+			}
+		}
+	}
+	
 }
