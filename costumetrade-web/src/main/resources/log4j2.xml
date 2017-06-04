@@ -55,11 +55,11 @@
             <AppenderRef ref="console"/>
         </AsyncLogger>
         
-        <Logger name="costumetrade" level="debug" additivity="false">
+        <Logger name="costumetrade" level="error" additivity="false">
             <appenderRef ref="console"/>
         </Logger>
 
-        <Root level="debug">
+        <Root level="error">
             <AppenderRef ref="app"/>
             <AppenderRef ref="console"/>
         </Root>
