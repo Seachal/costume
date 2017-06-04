@@ -154,6 +154,11 @@
 			<foreach collection="product.productTypeArray" item="item"
 				index="index" open="(" separator="," close=")"> #{item}</foreach>
 		</if>
+		<if test="product.idArray != null">
+			and product.id in
+			<foreach collection="product.idArray" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
 		<if test="product.productBrandArray != null">
 			and brand.brandName in
 			<foreach collection="product.productBrandArray" item="item"
@@ -209,6 +214,12 @@
 		<if test="product.priceOp == 'desc' and product.custTypeCode == 5">
 			order by price.fifthPrice desc
 		</if>
+		<if test="product.priceOp == 'asc' and product.productManagerQuery == '1'">
+			order by price.tagPrice asc
+		</if>
+		<if test="product.priceOp == 'desc' and product.productManagerQuery == '1'">
+			order by price.tagPrice desc
+		</if>
 	
 		<if test="product.saleOp == 'asc'">
 			order by product.saleNum asc
@@ -254,9 +265,97 @@
 			separator="," close=")">#{item,jdbcType=VARCHAR}</foreach>
 	</delete>
 	<update id="updateByIds">
-		update sp_product_#{storeId,jdbcType=INTEGER} set status = 2
+		update sp_product_#{storeId,jdbcType=INTEGER} 
+		<set>
+			<if test="storeId != null">
+				storeId = #{storeId,jdbcType=INTEGER},
+			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
+			<if test="code != null">
+				code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="brandid != null">
+				brandId = #{brandid,jdbcType=INTEGER},
+			</if>
+			<if test="producttype != null">
+				productType = #{producttype,jdbcType=INTEGER},
+			</if>
+			<if test="isDiscount != null">
+				isDiscount = #{isDiscount,jdbcType=INTEGER},
+			</if>
+			<if test="isModify != null">
+				isModify = #{isModify,jdbcType=INTEGER},
+			</if>
+			<if test="name != null">
+				name = #{name,jdbcType=VARCHAR},
+			</if>
+			<if test="grade != null">
+				grade = #{grade,jdbcType=VARCHAR},
+			</if>
+			<if test="unit != null">
+				unit = #{unit,jdbcType=VARCHAR},
+			</if>
+			<if test="colors != null">
+				colors = #{colors,jdbcType=VARCHAR},
+			</if>
+			<if test="sizes != null">
+				sizes = #{sizes,jdbcType=VARCHAR},
+			</if>
+			<if test="handcount != null">
+				handcount = #{handcount,jdbcType=INTEGER},
+			</if>
+			<if test="year != null">
+				year = #{year,jdbcType=VARCHAR},
+			</if>
+			<if test="season != null">
+				season = #{season,jdbcType=VARCHAR},
+			</if>
+		
+			<if test="image != null">
+				image = #{image,jdbcType=VARCHAR},
+			</if>
+			<if test="image1 != null">
+				image1 = #{image1,jdbcType=VARCHAR},
+			</if>
+			<if test="image2 != null">
+				image2 = #{image2,jdbcType=VARCHAR},
+			</if>
+			<if test="image3 != null">
+				image3 = #{image3,jdbcType=VARCHAR},
+			</if>
+			<if test="image4 != null">
+				image4 = #{image4,jdbcType=VARCHAR},
+			</if>
+			<if test="video1 != null">
+				video1 = #{video1,jdbcType=VARCHAR},
+			</if>
+			<if test="video2 != null">
+				video2 = #{video2,jdbcType=VARCHAR},
+			</if>
+			<if test="video3 != null">
+				video3 = #{video3,jdbcType=VARCHAR},
+			</if>
+			<if test="description != null">
+				description = #{description,jdbcType=VARCHAR},
+			</if>
+			<if test="warnLow != null">
+				warn_low = #{warnLow,jdbcType=DOUBLE},
+			</if>
+			<if test="warnHigh != null">
+				warn_high = #{warnHigh,jdbcType=DOUBLE},
+			</if>
+			<if test="timeUp != null">
+				time_up = #{timeUp,jdbcType=TIMESTAMP},
+			</if>
+			<if test="timeDown != null">
+				time_down = #{timeDown,jdbcType=TIMESTAMP},
+			</if>
+		</set>
+		
 		where id in
-		<foreach collection="ids" item="item" index="index" open="("
+		<foreach collection="idArray" item="item" index="index" open="("
 			separator="," close=")">#{item,jdbcType=VARCHAR}</foreach>
 	</update>
 	<insert id="insert" parameterType="costumetrade.order.domain.SpProduct">

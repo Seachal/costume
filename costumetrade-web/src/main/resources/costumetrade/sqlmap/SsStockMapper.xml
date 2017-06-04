@@ -1,195 +1,232 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="costumetrade.order.mapper.SsStockMapper">
-  <resultMap id="BaseResultMap" type="costumetrade.order.domain.SsStock">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="storeId" jdbcType="INTEGER" property="storeid" />
-    <result column="productId" jdbcType="VARCHAR" property="productid" />
-    <result column="productColor" jdbcType="VARCHAR" property="productcolor" />
-    <result column="productSize" jdbcType="VARCHAR" property="productsize" />
-    <result column="code" jdbcType="VARCHAR" property="code" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="stockNum" jdbcType="DOUBLE" property="stocknum" />
-    <result column="productPrice" jdbcType="DECIMAL" property="productPrice" />
-    <result column="modifyTime" jdbcType="TIMESTAMP" property="modifytime" />
-    <result column="modifyBy" jdbcType="VARCHAR" property="modifyby" />
-    <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
-    <result column="createBy" jdbcType="VARCHAR" property="createby" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, storeId, productId, productColor, productSize, stockNum, productPrice, modifyTime, 
-    modifyBy, createTime, createBy
-  </sql>
-  <select id="select" parameterType="costumetrade.order.domain.SsStock" resultMap="BaseResultMap">
-    select 
-    stock.id,stock.storeId,stock.productId,product.code,product.name,stock.productColor, stock.productSize, stock.stockNum, stock.productPrice
-    from ss_stock_#{storeid,jdbcType=INTEGER} stock
-    left join sp_product_#{storeid,jdbcType=INTEGER} product on product.id = stock.productid
-    where 1=1
-       <if test="storeid != null">
-       and stock.storeId = #{storeid,jdbcType=INTEGER}
-      </if>
-      <if test="productid != null">
-       and stock.productId = #{productid,jdbcType=VARCHAR}
-      </if>
-      <if test="productcolor != null">
-       and stock.productColor =  #{productcolor,jdbcType=VARCHAR}
-      </if>
-      <if test="productsize != null">
-       and stock.productSize = #{productsize,jdbcType=VARCHAR}
-      </if>
-      <if test="stocknum != null">
-       and stock.stockNum &gt;= #{stocknum,jdbcType=DOUBLE}
-      </if>
-   
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from ss_stock
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="costumetrade.order.domain.SsStock">
-    insert into ss_stock (id, storeId, productId, 
-      productColor, productSize, stockNum, 
-      productPrice, modifyTime, modifyBy, 
-      createTime, createBy)
-    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{productid,jdbcType=VARCHAR}, 
-      #{productcolor,jdbcType=VARCHAR}, #{productsize,jdbcType=VARCHAR}, #{stocknum,jdbcType=DOUBLE}, 
-      #{productPrice,jdbcType=DECIMAL}, #{modifytime,jdbcType=TIMESTAMP}, #{modifyby,jdbcType=VARCHAR}, 
-      #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR})
-  </insert>
-  <insert id="insertSelective" parameterType="costumetrade.order.domain.SsStock">
-    insert into ss_stock_#{storeid,jdbcType=INTEGER}
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="storeid != null">
-        storeId,
-      </if>
-      <if test="productid != null">
-        productId,
-      </if>
-      <if test="productcolor != null">
-        productColor,
-      </if>
-      <if test="productsize != null">
-        productSize,
-      </if>
-      <if test="stocknum != null">
-        stockNum,
-      </if>
-      <if test="productPrice != null">
-        productPrice,
-      </if>
-      <if test="modifytime != null">
-        modifyTime,
-      </if>
-      <if test="modifyby != null">
-        modifyBy,
-      </if>
-      <if test="createtime != null">
-        createTime,
-      </if>
-      <if test="createby != null">
-        createBy,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="storeid != null">
-        #{storeid,jdbcType=INTEGER},
-      </if>
-      <if test="productid != null">
-        #{productid,jdbcType=VARCHAR},
-      </if>
-      <if test="productcolor != null">
-        #{productcolor,jdbcType=VARCHAR},
-      </if>
-      <if test="productsize != null">
-        #{productsize,jdbcType=VARCHAR},
-      </if>
-      <if test="stocknum != null">
-        #{stocknum,jdbcType=DOUBLE},
-      </if>
-      <if test="productPrice != null">
-        #{productPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="modifytime != null">
-        #{modifytime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyby != null">
-        #{modifyby,jdbcType=VARCHAR},
-      </if>
-      <if test="createtime != null">
-        #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createby != null">
-        #{createby,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SsStock">
-    update ss_stock_#{storeid,jdbcType=INTEGER}
-    <set>
-      <if test="stocknum != null">
-        stockNum = #{stocknum,jdbcType=DOUBLE},
-      </if>
-      <if test="productPrice != null">
-        productPrice = #{productPrice,jdbcType=DECIMAL},
-      </if>
-      <if test="modifytime != null">
-        modifyTime = #{modifytime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyby != null">
-        modifyBy = #{modifyby,jdbcType=VARCHAR},
-      </if>
-      <if test="createtime != null">
-        createTime = #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createby != null">
-        createBy = #{createby,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where 1=1
-       <if test="storeid != null">
-       and storeId = #{storeid,jdbcType=INTEGER}
-      </if>
-      <if test="productid != null">
-       and productId = #{productid,jdbcType=VARCHAR}
-      </if>
-      <if test="productcolor != null">
-       and productColor =  #{productcolor,jdbcType=VARCHAR}
-      </if>
-      <if test="productsize != null">
-       and productSize = #{productsize,jdbcType=VARCHAR}
-      </if>
-      
-  </update>
-  <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsStock">
-    update ss_stock
-    set storeId = #{storeid,jdbcType=INTEGER},
-      productId = #{productid,jdbcType=VARCHAR},
-      productColor = #{productcolor,jdbcType=VARCHAR},
-      productSize = #{productsize,jdbcType=VARCHAR},
-      stockNum = #{stocknum,jdbcType=DOUBLE},
-      productPrice = #{productPrice,jdbcType=DECIMAL},
-      modifyTime = #{modifytime,jdbcType=TIMESTAMP},
-      modifyBy = #{modifyby,jdbcType=VARCHAR},
-      createTime = #{createtime,jdbcType=TIMESTAMP},
-      createBy = #{createby,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  
-  <update id="batchUpdate"  parameterType="java.util.List">
-	      <foreach collection="stocks" item="item" index="index" open="" close="" separator=";">
-				update ss_stock_#{item.storeid,jdbcType=INTEGER} 
-				<set>
-				  stockNum = #{item.stocknum,jdbcType=DOUBLE}
-				</set>
-				where id = ${item.id}
-		 </foreach>
-		 
-    </update>
+	<resultMap id="BaseResultMap" type="costumetrade.order.domain.SsStock">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="storeId" jdbcType="INTEGER" property="storeid" />
+		<result column="productId" jdbcType="VARCHAR" property="productid" />
+		<result column="productColor" jdbcType="VARCHAR" property="productcolor" />
+		<result column="productSize" jdbcType="VARCHAR" property="productsize" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="stockNum" jdbcType="DOUBLE" property="stocknum" />
+		<result column="productPrice" jdbcType="DECIMAL" property="productPrice" />
+		<result column="modifyTime" jdbcType="TIMESTAMP" property="modifytime" />
+		<result column="modifyBy" jdbcType="VARCHAR" property="modifyby" />
+		<result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+		<result column="createBy" jdbcType="VARCHAR" property="createby" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, storeId, productId, productColor, productSize, stockNum,
+		productPrice, modifyTime,
+		modifyBy, createTime, createBy
+	</sql>
+	<select id="select" parameterType="costumetrade.order.domain.SsStock"
+		resultMap="BaseResultMap">
+		select s.id,s.storeId,s.productId,s.code,s.name,s.productColor,
+		s.productSize, SUM(s.stockNum) as stockNum , s.productPrice
+		from (select
+		stock.id,stock.storeId,stock.productId,product.code,product.name,stock.productColor,
+		stock.productSize, stock.stockNum, stock.productPrice
+		from ss_stock_#{storeid,jdbcType=INTEGER} stock
+		left join sp_product_#{storeid,jdbcType=INTEGER} product on product.id =
+		stock.productid
+		where 1=1
+		<if test="storeid != null">
+			and stock.storeId = #{storeid,jdbcType=INTEGER}
+		</if>
+		<if test="productid != null">
+			and stock.productId = #{productid,jdbcType=VARCHAR}
+		</if>
+		<if test="productcolor != null">
+			and stock.productColor = #{productcolor,jdbcType=VARCHAR}
+		</if>
+		<if test="productsize != null">
+			and stock.productSize = #{productsize,jdbcType=VARCHAR}
+		</if>
+		<if test="stocknum != null">
+			and stock.stockNum &gt;= #{stocknum,jdbcType=DOUBLE}
+		</if>
+		<if test="otherStoreIds != null">
+			<foreach collection="otherStoreIds" item="item" index="index">
+				union all
+				select
+				stock_#{item}.id,stock_#{item}.storeId,stock_#{item}.productId,product_#{item}.code,product_#{item}.name,stock_#{item}.productColor,
+				stock_#{item}.productSize, stock_#{item}.stockNum,
+				stock_#{item}.productPrice
+				from ss_stock_#{item,jdbcType=INTEGER} stock_#{item}
+				left join sp_product_#{item,jdbcType=INTEGER} product_#{item} on
+				product_#{item}.id = stock_#{item}.productid
+				where 1=1
+				<if test="item != null">
+					and stock_#{item}.storeId = #{item,jdbcType=INTEGER}
+				</if>
+				<if test="productid != null">
+					and stock_#{item}.productId = #{productid,jdbcType=VARCHAR}
+				</if>
+				<if test="productcolor != null">
+					and stock_#{item}.productColor = #{productcolor,jdbcType=VARCHAR}
+				</if>
+				<if test="productsize != null">
+					and stock_#{item}.productSize = #{productsize,jdbcType=VARCHAR}
+				</if>
+				
+			</foreach>
+
+		</if>
+		) s where 1=1
+		group by s.productId,s.productColor,s.productSize
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from ss_stock
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="costumetrade.order.domain.SsStock">
+		insert into ss_stock (id, storeId, productId,
+		productColor, productSize, stockNum,
+		productPrice, modifyTime, modifyBy,
+		createTime, createBy)
+		values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER},
+		#{productid,jdbcType=VARCHAR},
+		#{productcolor,jdbcType=VARCHAR}, #{productsize,jdbcType=VARCHAR}, #{stocknum,jdbcType=DOUBLE},
+		#{productPrice,jdbcType=DECIMAL}, #{modifytime,jdbcType=TIMESTAMP},
+		#{modifyby,jdbcType=VARCHAR},
+		#{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertSelective" parameterType="costumetrade.order.domain.SsStock">
+		insert into ss_stock_#{storeid,jdbcType=INTEGER}
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="storeid != null">
+				storeId,
+			</if>
+			<if test="productid != null">
+				productId,
+			</if>
+			<if test="productcolor != null">
+				productColor,
+			</if>
+			<if test="productsize != null">
+				productSize,
+			</if>
+			<if test="stocknum != null">
+				stockNum,
+			</if>
+			<if test="productPrice != null">
+				productPrice,
+			</if>
+			<if test="modifytime != null">
+				modifyTime,
+			</if>
+			<if test="modifyby != null">
+				modifyBy,
+			</if>
+			<if test="createtime != null">
+				createTime,
+			</if>
+			<if test="createby != null">
+				createBy,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="storeid != null">
+				#{storeid,jdbcType=INTEGER},
+			</if>
+			<if test="productid != null">
+				#{productid,jdbcType=VARCHAR},
+			</if>
+			<if test="productcolor != null">
+				#{productcolor,jdbcType=VARCHAR},
+			</if>
+			<if test="productsize != null">
+				#{productsize,jdbcType=VARCHAR},
+			</if>
+			<if test="stocknum != null">
+				#{stocknum,jdbcType=DOUBLE},
+			</if>
+			<if test="productPrice != null">
+				#{productPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="modifytime != null">
+				#{modifytime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyby != null">
+				#{modifyby,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				#{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createby != null">
+				#{createby,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SsStock">
+		update ss_stock_#{storeid,jdbcType=INTEGER}
+		<set>
+			<if test="stocknum != null">
+				stockNum = #{stocknum,jdbcType=DOUBLE},
+			</if>
+			<if test="productPrice != null">
+				productPrice = #{productPrice,jdbcType=DECIMAL},
+			</if>
+			<if test="modifytime != null">
+				modifyTime = #{modifytime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyby != null">
+				modifyBy = #{modifyby,jdbcType=VARCHAR},
+			</if>
+			<if test="createtime != null">
+				createTime = #{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createby != null">
+				createBy = #{createby,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where 1=1
+		<if test="storeid != null">
+			and storeId = #{storeid,jdbcType=INTEGER}
+		</if>
+		<if test="productid != null">
+			and productId = #{productid,jdbcType=VARCHAR}
+		</if>
+		<if test="productcolor != null">
+			and productColor = #{productcolor,jdbcType=VARCHAR}
+		</if>
+		<if test="productsize != null">
+			and productSize = #{productsize,jdbcType=VARCHAR}
+		</if>
+
+	</update>
+	<update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsStock">
+		update ss_stock
+		set storeId = #{storeid,jdbcType=INTEGER},
+		productId = #{productid,jdbcType=VARCHAR},
+		productColor = #{productcolor,jdbcType=VARCHAR},
+		productSize = #{productsize,jdbcType=VARCHAR},
+		stockNum = #{stocknum,jdbcType=DOUBLE},
+		productPrice = #{productPrice,jdbcType=DECIMAL},
+		modifyTime = #{modifytime,jdbcType=TIMESTAMP},
+		modifyBy = #{modifyby,jdbcType=VARCHAR},
+		createTime = #{createtime,jdbcType=TIMESTAMP},
+		createBy = #{createby,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+
+	<update id="batchUpdate" parameterType="java.util.List">
+		<foreach collection="stocks" item="item" index="index" open=""
+			close="" separator=";">
+			update ss_stock_#{item.storeid,jdbcType=INTEGER}
+			<set>
+				stockNum = #{item.stocknum,jdbcType=DOUBLE}
+			</set>
+			where id = ${item.id}
+		</foreach>
+
+	</update>
 </mapper>

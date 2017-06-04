@@ -40,7 +40,7 @@
     where id in <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SpPSize" useGeneratedKeys="true" keyProperty="id">
-    insert into sp_psize (storeId, sizeName, price_raise
+    insert into sp_psize (storeId, sizeName, price_raise,
       barcode, create_time, create_by, 
       modify_time, modify_by)
     values (#{storeId,jdbcType=INTEGER}, #{sizename,jdbcType=VARCHAR}, #{priceRaise,jdbcType=DECIMAL},

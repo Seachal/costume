@@ -46,14 +46,18 @@
 		<result column="orderStatus" jdbcType="INTEGER" property="orderstatus" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, sellerStoreId, buyerStoreId,seller,buyer, operator, payOrderNo, refundDate,
+		id, sellerStoreId, buyerStoreId,seller,buyer, operator,
+		payOrderNo, refundDate,
 		relatedOutTradeNo,
-		refundStatus, orderType, orderStatus, shipType, shipStatus, shipContact, shipPhone,
+		refundStatus, orderType,
+		orderStatus, shipType, shipStatus, shipContact, shipPhone,
 		shipAddress, contactStoreId, remarks, totalNum, totalAmt,
 		discountRatio, discount,
-		mchange, tax, realcost, payCate1, payCost1, payCate2, payCost2, debetAmt,
+		mchange, tax, realcost, payCate1, payCost1,
+		payCate2, payCost2, debetAmt,
 		orderTime,
-		createTime, createBy, modifyTime, modifyBy
+		createTime, createBy,
+		modifyTime, modifyBy
 	</sql>
 	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
 		resultMap="BaseResultMap">
@@ -62,34 +66,53 @@
 		from ss_stoorder
 		where id = #{id,jdbcType=INTEGER}
 	</select>
+
+	<select id="selectSupplierByProduct" parameterType="costumetrade.order.domain.SpProduct" resultType="costumetrade.order.domain.SsStoOrder">
+		SELECT MAX(d.createTime) as createTime,s.sellerStoreId,s.buyerStoreId 
+		FROM ss_stodetail_#{storeId} d
+		LEFT JOIN ss_stoorder_#{storeId} s ON s.payOrderNo = d.orderId
+		WHERE d.productId=#{id}
+	</select>
 	<!-- 查询普通用户的采购单 -->
-	<select id="selectByOrderMemberCount"  resultMap="CountResultMap">
-		SELECT COUNT(1) as count,s.orderStatus,s.buyerStoreId,s.sellerStoreId 
-		FROM ss_member_stoorder s 
+	<select id="selectByOrderMemberCount" resultMap="CountResultMap">
+		SELECT COUNT(1)
+		as count,s.orderStatus,s.buyerStoreId,s.sellerStoreId
+		FROM ss_member_stoorder s
 		GROUP BY s.orderStatus,s.buyerStoreId,s.sellerStoreId
 	</select>
 	<select id="selectByOrderMember" resultMap="BaseResultMap">
 		select
-		stoorder.id, stoorder.sellerStoreId, stoorder.buyerStoreId,store.name as seller,u.name as buyer, stoorder.operator, stoorder.payOrderNo, stoorder.refundDate,
+		stoorder.id, stoorder.sellerStoreId,
+		stoorder.buyerStoreId,store.name as seller,u.name as buyer,
+		stoorder.operator, stoorder.payOrderNo, stoorder.refundDate,
 		stoorder.relatedOutTradeNo,
-		stoorder.refundStatus, stoorder.orderType, stoorder.orderStatus,
-		 stoorder.contactStoreId, stoorder.remarks, stoorder.totalNum, stoorder.totalAmt,
+		stoorder.refundStatus, stoorder.orderType,
+		stoorder.orderStatus,
+		stoorder.contactStoreId, stoorder.remarks, stoorder.totalNum, stoorder.totalAmt,
 		stoorder.discountRatio, stoorder.discount,
-		stoorder.mchange, stoorder.tax, stoorder.realcost, stoorder.payCate1, stoorder.payCost1, stoorder.payCate2, stoorder.payCost2, stoorder.debetAmt,
+		stoorder.mchange,
+		stoorder.tax, stoorder.realcost, stoorder.payCate1, stoorder.payCost1,
+		stoorder.payCate2, stoorder.payCost2, stoorder.debetAmt,
 		stoorder.orderTime
 		from ss_member_stoorder stoorder
-		LEFT JOIN sc_wechat_bind wechat ON wechat.userId = stoorder.buyerStoreId
-		LEFT JOIN sp_user u ON u.id=wechat.userId
-		LEFT JOIN sp_store store ON store.id = stoorder.sellerStoreId
+		LEFT JOIN
+		sc_wechat_bind wechat ON wechat.userId = stoorder.buyerStoreId
+		LEFT
+		JOIN sp_user u ON u.id=wechat.userId
+		LEFT JOIN sp_store store ON
+		store.id = stoorder.sellerStoreId
 		where 1=1
 		<if test="spStoOrder.ordertype != null">
-			and stoorder.orderType = #{spStoOrder.ordertype,jdbcType=VARCHAR}
+			and stoorder.orderType =
+			#{spStoOrder.ordertype,jdbcType=VARCHAR}
 		</if>
 		<if test="spStoOrder.payorderno != null">
-			and stoorder.payOrderNo = #{spStoOrder.payorderno,jdbcType=VARCHAR}
+			and stoorder.payOrderNo =
+			#{spStoOrder.payorderno,jdbcType=VARCHAR}
 		</if>
 		<if test="spStoOrder.buyerstoreid != null">
-			and stoorder.buyerStoreId =#{spStoOrder.buyerstoreid,jdbcType=INTEGER}
+			and stoorder.buyerStoreId
+			=#{spStoOrder.buyerstoreid,jdbcType=INTEGER}
 		</if>
 		<if test="spStoOrder.status != null">
 			and stoorder.orderStatus in
@@ -101,36 +124,50 @@
 		</if>
 	</select>
 	<!-- 查询店家的采购单或者销售单 -->
-	<select id="selectByOrderStoreCount" parameterType="java.lang.Integer" resultMap="CountResultMap">
-		SELECT COUNT(1) as count,s.orderStatus,s.buyerStoreId,s.sellerStoreId 
-		FROM ss_stoorder_#{storeId,jdbcType=INTEGER} s 
+	<select id="selectByOrderStoreCount" parameterType="java.lang.Integer"
+		resultMap="CountResultMap">
+		SELECT COUNT(1) as
+		count,s.orderStatus,s.buyerStoreId,s.sellerStoreId
+		FROM ss_stoorder_#{storeId,jdbcType=INTEGER} s
 		GROUP BY s.orderStatus,s.buyerStoreId,s.sellerStoreId
 	</select>
-	
+
 	<select id="selectByOrderStore" resultMap="BaseResultMap">
 		SELECT
-		stoorder.id, stoorder.sellerStoreId, stoorder.buyerStoreId,store.name AS seller,store1.name AS buyer, stoorder.operator, stoorder.payOrderNo, stoorder.refundDate,
+		stoorder.id, stoorder.sellerStoreId,
+		stoorder.buyerStoreId,store.name AS seller,store1.name AS buyer,
+		stoorder.operator, stoorder.payOrderNo, stoorder.refundDate,
 		stoorder.relatedOutTradeNo,
-		stoorder.refundStatus, stoorder.orderType, stoorder.orderStatus,
-		 stoorder.contactStoreId, stoorder.remarks, stoorder.totalNum, stoorder.totalAmt,
+		stoorder.refundStatus, stoorder.orderType,
+		stoorder.orderStatus,
+		stoorder.contactStoreId, stoorder.remarks, stoorder.totalNum, stoorder.totalAmt,
 		stoorder.discountRatio, stoorder.discount,
-		stoorder.mchange, stoorder.tax, stoorder.realcost, stoorder.payCate1, stoorder.payCost1, stoorder.payCate2, stoorder.payCost2, stoorder.debetAmt,
+		stoorder.mchange,
+		stoorder.tax, stoorder.realcost, stoorder.payCate1, stoorder.payCost1,
+		stoorder.payCate2, stoorder.payCost2, stoorder.debetAmt,
 		stoorder.orderTime
-		from ss_stoorder_#{spStoOrder.storeId,jdbcType=INTEGER} stoorder
-		LEFT JOIN sp_store store ON store.id = stoorder.sellerStoreId
-		LEFT JOIN sp_store store1 ON store1.id = stoorder.buyerStoreId
+		from
+		ss_stoorder_#{spStoOrder.storeId,jdbcType=INTEGER} stoorder
+		LEFT JOIN
+		sp_store store ON store.id = stoorder.sellerStoreId
+		LEFT JOIN sp_store
+		store1 ON store1.id = stoorder.buyerStoreId
 		where 1=1
 		<if test="spStoOrder.ordertype != null">
-			and stoorder.orderType =#{spStoOrder.ordertype,jdbcType=VARCHAR}
+			and stoorder.orderType
+			=#{spStoOrder.ordertype,jdbcType=VARCHAR}
 		</if>
 		<if test="spStoOrder.sellerstoreid != null">
-			and stoorder.sellerStoreId =#{spStoOrder.sellerstoreid,jdbcType=INTEGER}
+			and stoorder.sellerStoreId
+			=#{spStoOrder.sellerstoreid,jdbcType=INTEGER}
 		</if>
 		<if test="spStoOrder.buyerstoreid != null">
-			and stoorder.buyerStoreId =#{spStoOrder.buyerstoreid,jdbcType=INTEGER}
+			and stoorder.buyerStoreId
+			=#{spStoOrder.buyerstoreid,jdbcType=INTEGER}
 		</if>
 		<if test="spStoOrder.payorderno != null">
-			and stoorder.payOrderNo = #{spStoOrder.payorderno,jdbcType=VARCHAR}
+			and stoorder.payOrderNo =
+			#{spStoOrder.payorderno,jdbcType=VARCHAR}
 		</if>
 		<if test="spStoOrder.status != null">
 			and stoorder.orderStatus in
@@ -144,41 +181,54 @@
 
 	<select id="selectByOrderNo" resultMap="BaseResultMap">
 		select
-		a.id, a.sellerStoreId, a.buyerStoreId, a.operator, a.payOrderNo,
+		a.id,
+		a.sellerStoreId, a.buyerStoreId, a.operator, a.payOrderNo,
 		a.refundDate, a.relatedOutTradeNo,
-		a.refundStatus, a.orderType, a.orderStatus, a.shipType, a.shipStatus, a.shipContact,
+		a.refundStatus, a.orderType,
+		a.orderStatus, a.shipType, a.shipStatus, a.shipContact,
 		a.shipPhone,
-		a.shipAddress, a.contactStoreId, a.remarks, a.totalNum, a.totalAmt, a.discountRatio,
+		a.shipAddress, a.contactStoreId, a.remarks, a.totalNum, a.totalAmt,
+		a.discountRatio,
 		a.discount,
-		a.mchange, a.tax, a.realcost, a.payCate1, a.payCost1, a.payCate2, a.payCost2
-		from ss_stoorder_#{storeId,jdbcType=INTEGER} a left join sc_trade_info
-		b on a.payOrderNo = b.payOrderNo
-		where b.tradeNo = #{tradeNo,jdbcType=VARCHAR}
+		a.mchange, a.tax, a.realcost, a.payCate1,
+		a.payCost1, a.payCate2, a.payCost2
+		from
+		ss_stoorder_#{storeId,jdbcType=INTEGER} a left join sc_trade_info
+		b on
+		a.payOrderNo = b.payOrderNo
+		where b.tradeNo =
+		#{tradeNo,jdbcType=VARCHAR}
 	</select>
 	<select id="selectByTradeNo" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from ss_stoorder_#{storeId,jdbcType=INTEGER}
-		where payOrderNo = #{orderNo,jdbcType=VARCHAR}
+		where payOrderNo =
+		#{orderNo,jdbcType=VARCHAR}
 	</select>
 
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-		delete from ss_stoorder
+		delete from
+		ss_stoorder
 		where id = #{id,jdbcType=INTEGER}
 	</delete>
 	<insert id="insert">
-		insert into ss_stoorder_#{sellerStoreId,jdbcType=INTEGER} (sellerStoreId,
+		insert into
+		ss_stoorder_#{sellerStoreId,jdbcType=INTEGER} (sellerStoreId,
 		buyerStoreId,
 		operator, payOrderNo, refundDate,
-		relatedOutTradeNo, refundStatus, orderType,
+		relatedOutTradeNo,
+		refundStatus, orderType,
 		orderStatus, shipType, shipStatus,
 		shipContact, shipPhone, shipAddress,
 		contactStoreId, remarks, totalNum,
 		totalAmt, discountRatio, discount,
 		mchange, tax, realcost,
-		payCate1, payCost1, payCate2,
+		payCate1,
+		payCost1, payCate2,
 		payCost2, debetAmt, orderTime,
-		createTime, createBy, modifyTime,
+		createTime, createBy,
+		modifyTime,
 		modifyBy)
 		values (#{record.sellerstoreid,jdbcType=INTEGER},
 		#{record.buyerstoreid,jdbcType=INTEGER},
@@ -214,19 +264,24 @@
 		#{record.modifyby,jdbcType=VARCHAR});
 
 
-		insert into ss_member_stoorder (sellerStoreId, buyerStoreId,
+		insert into ss_member_stoorder
+		(sellerStoreId, buyerStoreId,
 		operator, payOrderNo, refundDate,
 		relatedOutTradeNo, refundStatus, orderType,
-		orderStatus, shipType, shipStatus,
+		orderStatus, shipType,
+		shipStatus,
 		shipContact, shipPhone, shipAddress,
-		contactStoreId, remarks, totalNum,
+		contactStoreId,
+		remarks, totalNum,
 		totalAmt, discountRatio, discount,
-		mchange, tax, realcost,
+		mchange, tax,
+		realcost,
 		payCate1, payCost1, payCate2,
 		payCost2, debetAmt, orderTime,
 		createTime, createBy, modifyTime,
 		modifyBy)
-		values (#{record.sellerstoreid,jdbcType=INTEGER},
+		values
+		(#{record.sellerstoreid,jdbcType=INTEGER},
 		#{record.buyerstoreid,jdbcType=INTEGER},
 		#{record.operator,jdbcType=VARCHAR},
 		#{record.payorderno,jdbcType=VARCHAR},
@@ -262,20 +317,25 @@
 
 
 	<insert id="insertStore">
-		insert into ss_stoorder_#{storeId,jdbcType=INTEGER} (sellerStoreId,
+		insert into ss_stoorder_#{storeId,jdbcType=INTEGER}
+		(sellerStoreId,
 		buyerStoreId,
 		operator, payOrderNo, refundDate,
 		relatedOutTradeNo, refundStatus, orderType,
-		orderStatus, shipType, shipStatus,
+		orderStatus, shipType,
+		shipStatus,
 		shipContact, shipPhone, shipAddress,
-		contactStoreId, remarks, totalNum,
+		contactStoreId,
+		remarks, totalNum,
 		totalAmt, discountRatio, discount,
-		mchange, tax, realcost,
+		mchange, tax,
+		realcost,
 		payCate1, payCost1, payCate2,
 		payCost2, debetAmt, orderTime,
 		createTime, createBy, modifyTime,
 		modifyBy)
-		values (#{record.sellerstoreid,jdbcType=INTEGER},
+		values
+		(#{record.sellerstoreid,jdbcType=INTEGER},
 		#{record.buyerstoreid,jdbcType=INTEGER},
 		#{record.operator,jdbcType=VARCHAR},
 		#{record.payorderno,jdbcType=VARCHAR},
@@ -531,7 +591,8 @@
 		</set>
 		where payOrderNo = #{payorderno,jdbcType=VARCHAR};
 
-		update ss_member_stoorder
+		update
+		ss_member_stoorder
 		<set>
 			<if test="orderstatus != null">
 				orderStatus = #{orderstatus,jdbcType=INTEGER},
@@ -549,7 +610,8 @@
 		</set>
 		where payOrderNo = #{payorderno,jdbcType=VARCHAR};
 
-		update ss_stoorder_#{buyerstoreid,jdbcType=INTEGER}
+		update
+		ss_stoorder_#{buyerstoreid,jdbcType=INTEGER}
 		<set>
 			<if test="orderstatus != null">
 				orderStatus = #{orderstatus,jdbcType=INTEGER},
@@ -560,38 +622,62 @@
 	<update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsStoOrder">
 		update ss_stoorder
 		set sellerStoreId = #{sellerstoreid,jdbcType=INTEGER},
-		buyerStoreId = #{buyerstoreid,jdbcType=INTEGER},
-		operator = #{operator,jdbcType=VARCHAR},
-		payOrderNo = #{payorderno,jdbcType=VARCHAR},
-		refundDate = #{refunddate,jdbcType=TIMESTAMP},
-		relatedOutTradeNo = #{relatedouttradeno,jdbcType=VARCHAR},
-		refundStatus = #{refundstatus,jdbcType=VARCHAR},
-		orderType = #{ordertype,jdbcType=VARCHAR},
-		orderStatus = #{orderstatus,jdbcType=INTEGER},
-		shipType = #{shiptype,jdbcType=INTEGER},
-		shipStatus = #{shipstatus,jdbcType=INTEGER},
-		shipContact = #{shipcontact,jdbcType=VARCHAR},
-		shipPhone = #{shipphone,jdbcType=VARCHAR},
-		shipAddress = #{shipaddress,jdbcType=VARCHAR},
-		contactStoreId = #{contactstoreid,jdbcType=VARCHAR},
-		remarks = #{remarks,jdbcType=VARCHAR},
+		buyerStoreId =
+		#{buyerstoreid,jdbcType=INTEGER},
+		operator =
+		#{operator,jdbcType=VARCHAR},
+		payOrderNo =
+		#{payorderno,jdbcType=VARCHAR},
+		refundDate =
+		#{refunddate,jdbcType=TIMESTAMP},
+		relatedOutTradeNo =
+		#{relatedouttradeno,jdbcType=VARCHAR},
+		refundStatus =
+		#{refundstatus,jdbcType=VARCHAR},
+		orderType =
+		#{ordertype,jdbcType=VARCHAR},
+		orderStatus =
+		#{orderstatus,jdbcType=INTEGER},
+		shipType =
+		#{shiptype,jdbcType=INTEGER},
+		shipStatus =
+		#{shipstatus,jdbcType=INTEGER},
+		shipContact =
+		#{shipcontact,jdbcType=VARCHAR},
+		shipPhone =
+		#{shipphone,jdbcType=VARCHAR},
+		shipAddress =
+		#{shipaddress,jdbcType=VARCHAR},
+		contactStoreId =
+		#{contactstoreid,jdbcType=VARCHAR},
+		remarks =
+		#{remarks,jdbcType=VARCHAR},
 		totalNum = #{totalnum,jdbcType=DECIMAL},
 		totalAmt = #{totalamt,jdbcType=DECIMAL},
-		discountRatio = #{discountratio,jdbcType=INTEGER},
-		discount = #{discount,jdbcType=DECIMAL},
+		discountRatio =
+		#{discountratio,jdbcType=INTEGER},
+		discount =
+		#{discount,jdbcType=DECIMAL},
 		mchange = #{mchange,jdbcType=DECIMAL},
 		tax = #{tax,jdbcType=DECIMAL},
 		realcost = #{realcost,jdbcType=DECIMAL},
 		payCate1 = #{paycate1,jdbcType=VARCHAR},
-		payCost1 = #{paycost1,jdbcType=DECIMAL},
+		payCost1 =
+		#{paycost1,jdbcType=DECIMAL},
 		payCate2 = #{paycate2,jdbcType=VARCHAR},
 		payCost2 = #{paycost2,jdbcType=DECIMAL},
-		debetAmt = #{debetamt,jdbcType=DECIMAL},
-		orderTime = #{ordertime,jdbcType=TIMESTAMP},
-		createTime = #{createtime,jdbcType=TIMESTAMP},
-		createBy = #{createby,jdbcType=VARCHAR},
-		modifyTime = #{modifytime,jdbcType=TIMESTAMP},
-		modifyBy = #{modifyby,jdbcType=VARCHAR}
+		debetAmt =
+		#{debetamt,jdbcType=DECIMAL},
+		orderTime =
+		#{ordertime,jdbcType=TIMESTAMP},
+		createTime =
+		#{createtime,jdbcType=TIMESTAMP},
+		createBy =
+		#{createby,jdbcType=VARCHAR},
+		modifyTime =
+		#{modifytime,jdbcType=TIMESTAMP},
+		modifyBy =
+		#{modifyby,jdbcType=VARCHAR}
 		where id = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

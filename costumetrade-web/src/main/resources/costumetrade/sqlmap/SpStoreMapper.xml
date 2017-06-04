@@ -6,6 +6,7 @@
     <result column="parentId" jdbcType="INTEGER" property="parentid" />
     <result column="storeType" jdbcType="INTEGER" property="storeType" />
     <result column="storePhoto" jdbcType="VARCHAR" property="storephoto" />
+    <result column="inventoryShare" jdbcType="INTEGER" property="inventoryShare" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="server" jdbcType="VARCHAR" property="server" />
     <result column="contact" jdbcType="VARCHAR" property="contact" />
@@ -24,7 +25,7 @@
     <result column="description" jdbcType="VARCHAR" property="description" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, parentId, storePhoto, name,storeType, server, contact, phone, cphone, address, create_time, 
+    id, parentId, storePhoto, name,storeType, inventoryShare,server, contact, phone, cphone, address, create_time, 
     create_by, modify_time, modify_by, we_ticket, we_url, region, wechat, birthday, description
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -33,19 +34,45 @@
     from sp_store
     where id = #{id,jdbcType=INTEGER}
   </select>
+  <select id="selectStores"  resultMap="BaseResultMap">
+    select id, parentId, storePhoto, name,storeType, inventoryShare
+    from sp_store
+    where 1=1
+     <if test="store.parentid != null">
+       and parentId = #{store.parentid,jdbcType=INTEGER}
+      </if>
+      <if test="store.storephoto != null">
+       and storePhoto = #{store.storephoto,jdbcType=VARCHAR}
+      </if>
+      <if test="store.storeType != null">
+       and storeType = #{store.storeType,jdbcType=INTEGER}
+      </if>
+      <if test="store.inventoryShare != null">
+       and inventoryShare = #{store.inventoryShare,jdbcType=INTEGER}
+      </if>
+      <if test="store.name != null">
+       and name = #{store.name,jdbcType=VARCHAR}
+      </if>
+      <if test="store.id != null">
+  	   and id = #{store.id,jdbcType=INTEGER}
+      </if>
+      <if test="page != null">
+      LIMIT #{page.startRow},#{page.pageSize}
+      </if>
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sp_store
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="costumetrade.user.domain.SpStore">
-    insert into sp_store (id, parentId, storePhoto,storeType, 
+    insert into sp_store (id, parentId, storePhoto,storeType,inventoryShare, 
       name, server, contact, 
       phone, cphone, address, 
       create_time, create_by, modify_time, 
       modify_by, we_ticket, we_url, 
       region, wechat, birthday, 
       description)
-    values (#{id,jdbcType=INTEGER}, #{parentid,jdbcType=INTEGER}, #{storephoto,jdbcType=VARCHAR}, #{storeType,jdbcType=INTEGER},
+    values (#{id,jdbcType=INTEGER}, #{parentid,jdbcType=INTEGER}, #{storephoto,jdbcType=VARCHAR}, #{storeType,jdbcType=INTEGER},#{inventoryShare,jdbcType=INTEGER},
       #{name,jdbcType=VARCHAR}, #{server,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{cphone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, 
@@ -67,6 +94,9 @@
       </if>
       <if test="storeType != null">
         storeType,
+      </if>
+      <if test="inventoryShare != null">
+        inventoryShare,
       </if>
       <if test="name != null">
         name,
@@ -128,7 +158,10 @@
         #{storephoto,jdbcType=VARCHAR},
       </if>
       <if test="storeType != null">
-        #{storeType,jdbcType=VARCHAR},
+        #{storeType,jdbcType=INTEGER},
+      </if>
+      <if test="inventoryShare != null">
+        #{inventoryShare,jdbcType=INTEGER},
       </if>
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
@@ -190,7 +223,10 @@
         storePhoto = #{storephoto,jdbcType=VARCHAR},
       </if>
       <if test="storeType != null">
-        storeType = #{storeType,jdbcType=VARCHAR},
+        storeType = #{storeType,jdbcType=INTEGER},
+      </if>
+      <if test="inventoryShare != null">
+        inventoryShare = #{inventoryShare,jdbcType=INTEGER},
       </if>
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
@@ -247,7 +283,8 @@
     update sp_store
     set parentId = #{parentid,jdbcType=INTEGER},
       storePhoto = #{storephoto,jdbcType=VARCHAR},
-      storeType = #{storeType,jdbcType=VARCHAR},
+      storeType = #{storeType,jdbcType=INTEGER},
+      inventoryShare = #{inventoryShare,jdbcType=INTEGER},
       name = #{name,jdbcType=VARCHAR},
       server = #{server,jdbcType=VARCHAR},
       contact = #{contact,jdbcType=VARCHAR},

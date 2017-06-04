@@ -8,11 +8,12 @@
     <result column="headPhoto" jdbcType="VARCHAR" property="headphoto" />
     <result column="clientName" jdbcType="VARCHAR" property="clientname" />
     <result column="msg" jdbcType="VARCHAR" property="msg" />
+    <result column="imageUrl" jdbcType="VARCHAR" property="imageUrl" />
     <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
     <result column="createBy" jdbcType="VARCHAR" property="createby" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, storeId, productId, headPhoto, clientName, msg, createTime, createBy
+    id, storeId, productId, headPhoto, clientName, msg,imageUrl, createTime, createBy
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -22,7 +23,7 @@
   </select>
   <select id="selectReviews" parameterType="costumetrade.order.query.ProductQuery" resultMap="BaseResultMap">
     select 
-    <include refid="Base_Column_List" />
+    id, storeId, productId, headPhoto, clientName, msg,imageUrl
     from ss_product_review
     where storeId = #{storeId,jdbcType=INTEGER}
     <if test="id!=null">
@@ -38,10 +39,10 @@
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SsProductReview">
     insert into ss_product_review (id, storeId, productId, 
-      headPhoto, clientName, msg, 
+      headPhoto, clientName, msg,imageUrl, 
       createTime, createBy)
     values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{productid,jdbcType=INTEGER}, 
-      #{headphoto,jdbcType=VARCHAR}, #{clientname,jdbcType=VARCHAR}, #{msg,jdbcType=VARCHAR}, 
+      #{headphoto,jdbcType=VARCHAR}, #{clientname,jdbcType=VARCHAR}, #{msg,jdbcType=VARCHAR}, #{imageUrl,jdbcType=VARCHAR},
       #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.SsProductReview">
@@ -64,6 +65,9 @@
       </if>
       <if test="msg != null">
         msg,
+      </if>
+      <if test="imageUrl != null">
+        imageUrl,
       </if>
       <if test="createtime != null">
         createTime,
@@ -91,6 +95,9 @@
       <if test="msg != null">
         #{msg,jdbcType=VARCHAR},
       </if>
+      <if test="imageUrl != null">
+        #{imageUrl,jdbcType=VARCHAR},
+      </if>
       <if test="createtime != null">
         #{createtime,jdbcType=TIMESTAMP},
       </if>
@@ -117,6 +124,9 @@
       <if test="msg != null">
         msg = #{msg,jdbcType=VARCHAR},
       </if>
+      <if test="imageUrl != null">
+        msg = #{imageUrl,jdbcType=VARCHAR},
+      </if>
       <if test="createtime != null">
         createTime = #{createtime,jdbcType=TIMESTAMP},
       </if>
@@ -133,6 +143,7 @@
       headPhoto = #{headphoto,jdbcType=VARCHAR},
       clientName = #{clientname,jdbcType=VARCHAR},
       msg = #{msg,jdbcType=VARCHAR},
+      imageUrl = #{imageUrl,jdbcType=VARCHAR},
       createTime = #{createtime,jdbcType=TIMESTAMP},
       createBy = #{createby,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
