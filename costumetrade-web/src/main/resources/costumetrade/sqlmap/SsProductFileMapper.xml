@@ -29,7 +29,7 @@
     <if test="ssProductFile.filename !=null">
     and fileName like CONCAT('%',#{ssProductFile.filename},'%')
     </if>
-    <if test="ssProductFileproductName !=null">
+    <if test="ssProductFile.productName !=null">
     and productName like CONCAT('%',#{ssProductFile.productName},'%')
     </if>
     <if test="page!=null">
@@ -54,7 +54,7 @@
       fileName, url,resizeFixUrl, createTime, 
       createBy)
     values <foreach collection="files" index="index" item ="item" separator=",">( #{item.storeid,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR}, #{item.productName,jdbcType=VARCHAR},  
-      #{item.filename,jdbcType=VARCHAR}, #{item.url,jdbcType=VARCHAR},#{resizeFixUrl,jdbcType=VARCHAR}, #{item.createtime,jdbcType=TIMESTAMP}, 
+      #{item.filename,jdbcType=VARCHAR}, #{item.url,jdbcType=VARCHAR},#{item.resizeFixUrl,jdbcType=VARCHAR}, #{item.createtime,jdbcType=TIMESTAMP}, 
       #{item.createby,jdbcType=VARCHAR})</foreach> 
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.SsProductFile">

@@ -149,20 +149,26 @@
 		<if test="product.code != null">
 			and product.code like CONCAT('%',#{product.code},'%')
 		</if>
+		<if test="product.name != null">
+			and product.name like CONCAT('%',#{product.name},'%')
+		</if>
+		<if test="product.codeAndName != null">
+			and (product.code like CONCAT('%',#{product.code},'%') or product.name like CONCAT('%',#{product.codeAndName},'%'))
+		</if>
 		<if test="product.productTypeArray != null">
 			and productType.cateName in
-			<foreach collection="product.productTypeArray" item="item"
-				index="index" open="(" separator="," close=")"> #{item}</foreach>
+			<foreach collection="product.productTypeArray" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
 		</if>
 		<if test="product.idArray != null">
-			and product.id in
+			and product.id in 
 			<foreach collection="product.idArray" item="item"
-				index="index" open="(" separator="," close=")"> #{item}</foreach>
+				index="index" open="(" separator="," close=")">#{item}</foreach>
+		
 		</if>
 		<if test="product.productBrandArray != null">
 			and brand.brandName in
 			<foreach collection="product.productBrandArray" item="item"
-				index="index" open="(" separator="," close=")"> #{item}</foreach>
+				index="index" open="(" separator="," close=")">#{item}</foreach>
 		</if>
 		<if test="product.productSeasonArray != null">
 			and product.season in
@@ -227,9 +233,9 @@
 		<if test="product.saleOp == 'desc'">
 			order by product.saleNum desc
 		</if>
-
+		<if test="page != null">
 		LIMIT #{page.startRow},#{page.pageSize}
-
+		</if>
 
 	</select>
 	<select id="selectProduct" parameterType="costumetrade.order.query.ProductQuery"
