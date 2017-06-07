@@ -3,6 +3,7 @@
 <mapper namespace="costumetrade.order.mapper.SpPCateMapper">
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.SpPCate">
     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="status" jdbcType="INTEGER" property="status" />
     <result column="cateName" jdbcType="VARCHAR" property="catename" />
     <result column="storeId" jdbcType="INTEGER" property="storeId" />
     <result column="fastcode" jdbcType="VARCHAR" property="fastcode" />
@@ -12,7 +13,7 @@
     <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, cateName, storeId, fastcode, create_time, create_by, modify_time, modify_by
+    id, cateName,status, storeId, fastcode, create_time, create_by, modify_time, modify_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -41,19 +42,19 @@
   	id, cateName, storeId
     from sp_product_type
     where storeId = #{storeId,jdbcType=INTEGER}
-
+	and status = 0
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="List">
-    delete from sp_product_type
+  <update id="deleteByPrimaryKey" parameterType="List">
+    update  sp_product_type set status=1
     where id in <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
-  </delete>
+  </update>
   <insert id="insert" parameterType="costumetrade.order.domain.SpPCate" useGeneratedKeys="true" keyProperty="id">
-    insert into sp_product_type ( cateName, storeId, 
+    insert into sp_product_type ( cateName, storeId,status, 
       fastcode, create_time, create_by, 
       modify_time, modify_by)
-    values ( #{catename,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER}, 
-      #{fastcode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
-      #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
+    values ( #{catename,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER}, 0,
+      #{fastcode,jdbcType=VARCHAR}, NOW(), #{createBy,jdbcType=VARCHAR}, 
+      NOW(), #{modifyBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.SpPCate">
    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
@@ -70,18 +71,15 @@
       <if test="storeId != null">
         storeId,
       </if>
+      status,
       <if test="fastcode != null">
         fastcode,
       </if>
-      <if test="createTime != null">
         create_time,
-      </if>
       <if test="createBy != null">
         create_by,
       </if>
-      <if test="modifyTime != null">
         modify_time,
-      </if>
       <if test="modifyBy != null">
         modify_by,
       </if>
@@ -96,18 +94,15 @@
       <if test="storeId != null">
         #{storeId,jdbcType=INTEGER},
       </if>
+      0,
       <if test="fastcode != null">
         #{fastcode,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+      NOW(),
       <if test="createBy != null">
         #{createBy,jdbcType=VARCHAR},
       </if>
-      <if test="modifyTime != null">
-        #{modifyTime,jdbcType=TIMESTAMP},
-      </if>
+     NOW(),
       <if test="modifyBy != null">
         #{modifyBy,jdbcType=VARCHAR},
       </if>
@@ -122,6 +117,9 @@
       <if test="storeId != null">
         storeId = #{storeId,jdbcType=INTEGER},
       </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
       <if test="fastcode != null">
         fastcode = #{fastcode,jdbcType=VARCHAR},
       </if>
@@ -131,9 +129,7 @@
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=VARCHAR},
       </if>
-      <if test="modifyTime != null">
-        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
-      </if>
+        modify_time = NOW(),
       <if test="modifyBy != null">
         modify_by = #{modifyBy,jdbcType=VARCHAR},
       </if>
@@ -144,10 +140,11 @@
     update sp_product_type
     set cateName = #{catename,jdbcType=VARCHAR},
       storeId = #{storeId,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
       fastcode = #{fastcode,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
-      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      modify_time = NOW(),
       modify_by = #{modifyBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>

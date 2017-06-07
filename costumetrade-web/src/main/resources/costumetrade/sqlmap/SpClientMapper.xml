@@ -6,6 +6,7 @@
 		<result column="storeId" jdbcType="INTEGER" property="storeid" />
 		<result column="otherStoreId" jdbcType="INTEGER" property="otherStoreId" />
 		<result column="userId" jdbcType="INTEGER" property="userId" />
+		<result column="openid" jdbcType="VARCHAR" property="openid" />
 		<result column="prodLevels" jdbcType="VARCHAR" property="prodlevels" />
 		<result column="type" jdbcType="VARCHAR" property="type" />
 		<result column="cate" jdbcType="VARCHAR" property="cate" />
@@ -32,7 +33,7 @@
 		<result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, storeId,otherStoreId,userId, prodLevels,
+		id, storeId,otherStoreId,userId,openid, prodLevels,
 		type, cate,
 		fastcode,
 		vipcard, contact, image,
@@ -76,11 +77,14 @@
 		<if test="userId != null">
 			and userId = #{userId,jdbcType=INTEGER}
 		</if>
+		<if test="openid != null">
+			and openid = #{openid,jdbcType=INTEGER}
+		</if>
 	</select>
 
 	<insert id="insert" parameterType="costumetrade.order.domain.SpClient">
 		insert into sp_client (id,
-		storeId,otherStoreId,userId, prodLevels,
+		storeId,otherStoreId,userId,openid, prodLevels,
 		type, cate, fastcode,
 		vipcard,
 		contact, image,
@@ -96,6 +100,7 @@
 		#{storeid,jdbcType=INTEGER},
 		#{otherStoreId,jdbcType=INTEGER},
 		#{userId,jdbcType=INTEGER},
+		#{openid,jdbcType=INTEGER},
 		#{prodlevels,jdbcType=VARCHAR},
 		#{type,jdbcType=VARCHAR}, #{cate,jdbcType=VARCHAR},
 		#{fastcode,jdbcType=VARCHAR},
@@ -129,6 +134,9 @@
 			</if>
 			<if test="userId != null">
 				userId,
+			</if>
+			<if test="openid != null">
+				openid,
 			</if>
 			<if test="prodlevels != null">
 				prodLevels,
@@ -213,6 +221,9 @@
 			</if>
 			<if test="userId != null">
 				#{userId,jdbcType=INTEGER},
+			</if>
+			<if test="openid != null">
+				#{openid,jdbcType=INTEGER},
 			</if>
 			<if test="prodlevels != null">
 				#{prodlevels,jdbcType=VARCHAR},
@@ -300,6 +311,9 @@
 			</if>
 			<if test="userId != null">
 				userId = #{userId,jdbcType=INTEGER},
+			</if>
+			<if test="openid != null">
+				openid = #{openid,jdbcType=INTEGER},
 			</if>
 			<if test="prodlevels != null">
 				prodLevels =#{prodlevels,jdbcType=VARCHAR},

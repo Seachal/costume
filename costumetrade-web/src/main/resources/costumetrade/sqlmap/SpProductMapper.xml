@@ -146,14 +146,16 @@
 		<if test="product.status != null">
 			and product.status =#{product.status}
 		</if>
-		<if test="product.code != null">
-			and product.code like CONCAT('%',#{product.code},'%')
-		</if>
-		<if test="product.name != null">
-			and product.name like CONCAT('%',#{product.name},'%')
+		<if test="product.codeAndName == null">
+			<if test="product.code != null">
+				and product.code like CONCAT('%',#{product.code},'%')
+			</if>
+			<if test="product.name != null">
+				and product.name like CONCAT('%',#{product.name},'%')
+			</if>
 		</if>
 		<if test="product.codeAndName != null">
-			and (product.code like CONCAT('%',#{product.code},'%') or product.name like CONCAT('%',#{product.codeAndName},'%'))
+			and (product.code like CONCAT('%',#{product.code},'%') or product.name like CONCAT('%',#{product.name},'%'))
 		</if>
 		<if test="product.productTypeArray != null">
 			and productType.cateName in

@@ -5,6 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="parentId" jdbcType="INTEGER" property="parentid" />
     <result column="storeType" jdbcType="INTEGER" property="storeType" />
+    <result column="status" jdbcType="INTEGER" property="status" />
     <result column="storePhoto" jdbcType="VARCHAR" property="storephoto" />
     <result column="inventoryShare" jdbcType="INTEGER" property="inventoryShare" />
     <result column="name" jdbcType="VARCHAR" property="name" />
@@ -25,7 +26,7 @@
     <result column="description" jdbcType="VARCHAR" property="description" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, parentId, storePhoto, name,storeType, inventoryShare,server, contact, phone, cphone, address, create_time, 
+    id, parentId, storePhoto, status,name,storeType, inventoryShare,server, contact, phone, cphone, address, create_time, 
     create_by, modify_time, modify_by, we_ticket, we_url, region, wechat, birthday, description
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -38,6 +39,7 @@
     select id, parentId, storePhoto, name,storeType, inventoryShare
     from sp_store
     where 1=1
+    and status =0
      <if test="store.parentid != null">
        and parentId = #{store.parentid,jdbcType=INTEGER}
       </if>
@@ -60,22 +62,22 @@
       LIMIT #{page.startRow},#{page.pageSize}
       </if>
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from sp_store
+  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    update  sp_store set status = 1
     where id = #{id,jdbcType=INTEGER}
-  </delete>
+  </update>
   <insert id="insert" parameterType="costumetrade.user.domain.SpStore">
-    insert into sp_store (id, parentId, storePhoto,storeType,inventoryShare, 
+    insert into sp_store (id, parentId, storePhoto,status,storeType,inventoryShare, 
       name, server, contact, 
       phone, cphone, address, 
       create_time, create_by, modify_time, 
       modify_by, we_ticket, we_url, 
       region, wechat, birthday, 
       description)
-    values (#{id,jdbcType=INTEGER}, #{parentid,jdbcType=INTEGER}, #{storephoto,jdbcType=VARCHAR}, #{storeType,jdbcType=INTEGER},#{inventoryShare,jdbcType=INTEGER},
+    values (#{id,jdbcType=INTEGER}, #{parentid,jdbcType=INTEGER}, #{storephoto,jdbcType=VARCHAR},0, #{storeType,jdbcType=INTEGER},#{inventoryShare,jdbcType=INTEGER},
       #{name,jdbcType=VARCHAR}, #{server,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{cphone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, 
+      NOW(), #{createBy,jdbcType=VARCHAR}, NOW(), 
       #{modifyBy,jdbcType=VARCHAR}, #{weTicket,jdbcType=VARCHAR}, #{weUrl,jdbcType=VARCHAR}, 
       #{region,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, #{birthday,jdbcType=TIMESTAMP}, 
       #{description,jdbcType=VARCHAR})
@@ -92,12 +94,14 @@
       <if test="storephoto != null">
         storePhoto,
       </if>
+      status,
       <if test="storeType != null">
         storeType,
       </if>
       <if test="inventoryShare != null">
         inventoryShare,
       </if>
+      
       <if test="name != null">
         name,
       </if>
@@ -116,15 +120,15 @@
       <if test="address != null">
         address,
       </if>
-      <if test="createTime != null">
+     
         create_time,
-      </if>
+     
       <if test="createBy != null">
         create_by,
       </if>
-      <if test="modifyTime != null">
+     
         modify_time,
-      </if>
+     
       <if test="modifyBy != null">
         modify_by,
       </if>
@@ -157,6 +161,7 @@
       <if test="storephoto != null">
         #{storephoto,jdbcType=VARCHAR},
       </if>
+      0,
       <if test="storeType != null">
         #{storeType,jdbcType=INTEGER},
       </if>
@@ -181,15 +186,11 @@
       <if test="address != null">
         #{address,jdbcType=VARCHAR},
       </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
+    	NOW(),
       <if test="createBy != null">
         #{createBy,jdbcType=VARCHAR},
       </if>
-      <if test="modifyTime != null">
-        #{modifyTime,jdbcType=TIMESTAMP},
-      </if>
+     	NOW(),
       <if test="modifyBy != null">
         #{modifyBy,jdbcType=VARCHAR},
       </if>
@@ -225,6 +226,9 @@
       <if test="storeType != null">
         storeType = #{storeType,jdbcType=INTEGER},
       </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
       <if test="inventoryShare != null">
         inventoryShare = #{inventoryShare,jdbcType=INTEGER},
       </if>
@@ -252,9 +256,7 @@
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=VARCHAR},
       </if>
-      <if test="modifyTime != null">
-        modify_time = #{modifyTime,jdbcType=TIMESTAMP},
-      </if>
+        modify_time = NOW(),
       <if test="modifyBy != null">
         modify_by = #{modifyBy,jdbcType=VARCHAR},
       </if>
@@ -284,6 +286,7 @@
     set parentId = #{parentid,jdbcType=INTEGER},
       storePhoto = #{storephoto,jdbcType=VARCHAR},
       storeType = #{storeType,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
       inventoryShare = #{inventoryShare,jdbcType=INTEGER},
       name = #{name,jdbcType=VARCHAR},
       server = #{server,jdbcType=VARCHAR},
@@ -293,7 +296,7 @@
       address = #{address,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
-      modify_time = #{modifyTime,jdbcType=TIMESTAMP},
+      modify_time = NOW(),
       modify_by = #{modifyBy,jdbcType=VARCHAR},
       we_ticket = #{weTicket,jdbcType=VARCHAR},
       we_url = #{weUrl,jdbcType=VARCHAR},

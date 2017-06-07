@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.SpPSize">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="storeId" jdbcType="INTEGER" property="storeId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
     <result column="sizeName" jdbcType="VARCHAR" property="sizename" />
     <result column="barcode" jdbcType="VARCHAR" property="barcode" />
     <result column="price_raise" jdbcType="DECIMAL" property="priceRaise" />
@@ -13,7 +14,7 @@
     <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, storeId, sizeName,price_raise, barcode, create_time, create_by, modify_time, modify_by
+    id, storeId, sizeName,price_raise,status, barcode, create_time, create_by, modify_time, modify_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -33,17 +34,17 @@
     <include refid="Base_Column_List" />
     from sp_psize
     where storeId = #{storeId,jdbcType=INTEGER}
-    
+    and status =0
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="List">
-    delete from sp_psize
+  <update id="deleteByPrimaryKey" parameterType="List">
+    update  sp_psize set status =1
     where id in <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
-  </delete>
+  </update>
   <insert id="insert" parameterType="costumetrade.order.domain.SpPSize" useGeneratedKeys="true" keyProperty="id">
-    insert into sp_psize (storeId, sizeName, price_raise,
+    insert into sp_psize (storeId, sizeName, price_raise,status,
       barcode, create_time, create_by, 
       modify_time, modify_by)
-    values (#{storeId,jdbcType=INTEGER}, #{sizename,jdbcType=VARCHAR}, #{priceRaise,jdbcType=DECIMAL},
+    values (#{storeId,jdbcType=INTEGER}, #{sizename,jdbcType=VARCHAR}, #{priceRaise,jdbcType=DECIMAL},0,
       #{barcode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
   </insert>
@@ -59,6 +60,7 @@
       <if test="sizename != null">
         sizeName,
       </if>
+      status,
       <if test="priceRaise != null">
         price_raise,
       </if>
@@ -88,6 +90,7 @@
       <if test="sizename != null">
         #{sizename,jdbcType=VARCHAR},
       </if>
+      0,
       <if test="priceRaise != null">
         #{priceRaise,jdbcType=DECIMAL},
       </if>
@@ -113,6 +116,9 @@
     <set>
       <if test="storeId != null">
         storeId = #{storeId,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
       </if>
       <if test="sizename != null">
         sizeName = #{sizename,jdbcType=VARCHAR},
@@ -141,6 +147,7 @@
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SpPSize">
     update sp_psize
     set storeId = #{storeId,jdbcType=INTEGER},
+    status = #{status,jdbcType=INTEGER},
       sizeName = #{sizename,jdbcType=VARCHAR},
       price_raise = #{priceRaise,jdbcType=DECIMAL},
       barcode = #{barcode,jdbcType=VARCHAR},

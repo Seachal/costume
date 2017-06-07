@@ -12,7 +12,7 @@
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
     <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="openid" jdbcType="VARCHAR" property="openid" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="cphone" jdbcType="VARCHAR" property="cphone" />
     <result column="address" jdbcType="VARCHAR" property="address" />
@@ -26,7 +26,7 @@
   </resultMap>
   <sql id="Base_Column_List">
     storeId, id, status, subbelong, create_time, create_by, modify_time, modify_by, 
-    name, password, phone, cphone, address, email, birthdate, card_id,discount,zeroPrice,weChatNo,modifyPrice
+    name, openid, phone, cphone, address, email, birthdate, card_id,discount,zeroPrice,weChatNo,modifyPrice
   </sql>
   <select id="selectByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployee" resultMap="BaseResultMap">
     select 
@@ -59,13 +59,13 @@
     insert into sp_employee (storeId, status, 
       subbelong, create_time, create_by, 
       modify_time, modify_by, 
-      name, password, phone, 
+      name, openid, phone, 
       cphone, address, email, 
       birthdate, card_id,discount,zeroPrice,weChatNo,modifyPrice)
     values (#{storeId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
       #{subbelong,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR}, 
-      #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
       #{cphone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
       #{birthdate,jdbcType=TIMESTAMP}, #{cardId,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, #{zeroPrice,jdbcType=DECIMAL}, #{weChatNo,jdbcType=VARCHAR},
       #{modifyPrice,jdbcType=VARCHAR})
@@ -100,8 +100,8 @@
       <if test="name != null">
         name,
       </if>
-      <if test="password != null">
-        password,
+      <if test="openid != null">
+        openid,
       </if>
       <if test="phone != null">
         phone,
@@ -162,8 +162,8 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="password != null">
-        #{password,jdbcType=VARCHAR},
+      <if test="openid != null">
+        #{openid,jdbcType=VARCHAR},
       </if>
       <if test="phone != null">
         #{phone,jdbcType=VARCHAR},
@@ -221,8 +221,8 @@
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="password != null">
-        password = #{password,jdbcType=VARCHAR},
+      <if test="openid != null">
+        openid = #{openid,jdbcType=VARCHAR},
       </if>
       <if test="phone != null">
         phone = #{phone,jdbcType=VARCHAR},
@@ -267,7 +267,7 @@
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       modify_by = #{modifyBy,jdbcType=VARCHAR},
       name = #{name,jdbcType=VARCHAR},
-      password = #{password,jdbcType=VARCHAR},
+      openid = #{openid,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       cphone = #{cphone,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
