@@ -3,7 +3,6 @@ package costumetrade.order.domain;
 import java.util.Date;
 
 import costumetrade.common.Entity;
-import costumetrade.common.page.Page;
 
 public class SsProductFile extends Entity {
     /**

@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 import com.httpclient.HttpClientUtils;
-import com.mysql.fabric.Response;
 
 import costumetrade.common.util.HttpPostUtil;
 import costumetrade.order.service.WeChatService;
@@ -22,8 +21,10 @@ import costumetrade.order.service.WeChatService;
 @Service
 @Transactional
 public class WeChatServiceImpl implements WeChatService {
-	private final static String APP_ID="wx0f02d5eacaf954e7";
-	private final static String APP_SECRET="8d7f55d6a5008b7f8efead72672008a6";
+//	private final static String APP_ID="wx0f02d5eacaf954e7";
+//	private final static String APP_SECRET="8d7f55d6a5008b7f8efead72672008a6";
+	private final static String APP_ID="wxf3b0d53cdb909d00";
+	private final static String APP_SECRET="a8cbc70d8ae728dea2a4f00f0dcd9410";
 //	private final static String APP_ID="wx82428b2ac752c6a3";
 //	private final static String APP_SECRET="ed8c5aa16cf56f66339fcb4be3377e30";
 //	private final static String APP_ID="wx5f22c054831a13c1";

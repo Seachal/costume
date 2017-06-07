@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import costumetrade.common.page.Page;
+import costumetrade.common.util.StringUtil;
 import costumetrade.order.domain.SpClient;
 import costumetrade.order.domain.SpPBrand;
 import costumetrade.order.domain.SpPCate;
@@ -113,6 +114,8 @@ public class SpProductServiceImpl implements SpProductService{
 					productQuery.setProductBrandArray(rules.get(i).getValue());
 				}if("productSeasonArray".equals(rules.get(i).getFiled())&&(rules.get(i).getValue() !=null&&rules.get(i).getValue().size()>0)){
 					productQuery.setProductSeasonArray(rules.get(i).getValue());
+				}if("status".equals(rules.get(i).getFiled())&&(rules.get(i).getValue() !=null&&rules.get(i).getValue().size()>0)){
+					productQuery.setStatus(Integer.parseInt(rules.get(i).getValue().get(0)));
 				}
 			}
 		}
@@ -586,40 +589,55 @@ public class SpProductServiceImpl implements SpProductService{
 	@Override
 	public List<ProductQuery> getShareProduct(ProductQuery productQuery) {
 		String openIdAndKey= null;
-		if(!"".equals(productQuery.getCode())){//这是code指小程序加载时传的code，不是商品code，用来获取openid
+		boolean skipShare = false;
+		if(!StringUtil.isBlank(productQuery.getCode())){//这是code指小程序加载时传的code，不是商品code，用来获取openid !"".equals(productQuery.getCode())
 			try {
 				openIdAndKey = weChatService.getOpenIdAndKey(productQuery.getCode(), productQuery.getAppid(), productQuery.getAppSecret());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+			skipShare = true;
 		}
-		JSONObject json = JSON.parseObject(openIdAndKey);
-		String openid = json.getString("openid");
-		ScWeChat chat = null;
-		if(openid!=null){//进入小程序认证，
-			chat = spUserService.login(openid);
-		}
-		//查询分享到对方的用户在商铺里面是什么客户级别，根据客户级别显示销售价，如果不属于客户，就默认最低客户级别，显示最高销售价
-		SpClient client = new SpClient();
-		client.setStoreid(productQuery.getStoreId());
-		client.setType(1+"");
-		client.setUserId(chat.getUserid());
-		List<SpClient> clients = spClientMapper.select(client);
 		Integer custTypeCode =1;
-		if(clients.size()>0){
-			client = clients.get(0);
-			custTypeCode = Integer.parseInt(client.getCate());
+		if(skipShare){
+			JSONObject json = JSON.parseObject(openIdAndKey);
+			String openid = json.getString("openid");
+			ScWeChat chat = null;
+			if(openid!=null){//进入小程序认证，
+				chat = spUserService.login(openid);
+			}
+			//查询分享到对方的用户在商铺里面是什么客户级别，根据客户级别显示销售价，如果不属于客户，就默认最低客户级别，显示最高销售价
+			SpClient client = new SpClient();
+			client.setStoreid(productQuery.getStoreId());
+			client.setType(1+"");
+			client.setUserId(chat.getUserid());
+			List<SpClient> clients = spClientMapper.select(client);
+			
+			if(clients.size()>0){
+				client = clients.get(0);
+				custTypeCode = Integer.parseInt(client.getCate());
+			}
 		}
+		
 		
 		List<ProductQuery> products = spProductMapper.selectProducts(productQuery,null);
 		//商城商品列表设置销售价
 		List<ProductQuery> productList = new ArrayList<ProductQuery>();
 		if(products.size() >0){
 			for(ProductQuery product : products){
-				if(custTypeCode >0){
+				if(custTypeCode > 0 && skipShare){
 					BigDecimal salePrice = setPrice(product, custTypeCode);
 					product.setSalePrice(salePrice);
+				}else{
+					product.setSalePrice(product.getTagprice());
 				}
+				product.setFifthPrice(null);
+				product.setFirsthPrice(null);
+				product.setSecondPrice(null);
+				product.setThirdPrice(null);
+				product.setFourthPrice(null);
+				product.setTagprice(null);
+				product.setPurchaseprice(null);
 				productList.add(product);
 			}
 		}

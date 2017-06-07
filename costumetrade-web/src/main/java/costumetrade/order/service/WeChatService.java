@@ -2,11 +2,6 @@ package costumetrade.order.service;
 
 import java.io.IOException;
 
-
-
-
-
-
 import org.apache.http.client.ClientProtocolException;
 
 

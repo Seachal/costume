@@ -1,8 +1,8 @@
 package costumetrade.user.domain;
 
-import costumetrade.common.Entity;
-
 import java.util.Date;
+
+import costumetrade.common.Entity;
 
 public class SpUser extends Entity {
     /**

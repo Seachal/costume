@@ -7,9 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alibaba.fastjson.JSONArray;
-
-import costumetrade.user.domain.PriceJson;
 import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.domain.SpPrivilege;

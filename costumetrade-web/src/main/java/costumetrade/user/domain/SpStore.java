@@ -1,7 +1,6 @@
 package costumetrade.user.domain;
 
 import java.util.Date;
-import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 

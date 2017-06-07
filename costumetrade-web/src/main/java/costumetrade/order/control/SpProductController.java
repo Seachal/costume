@@ -1,6 +1,5 @@
 package costumetrade.order.control;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -9,9 +8,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.zip.ZipInputStream;
-
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.lang.StringUtils;
@@ -34,7 +30,6 @@ import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStock;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.service.SpProductService;
-import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.service.SsDataDictionaryService;
 
 /**
@@ -65,6 +60,10 @@ public class SpProductController {
 		}
 		if(paramProduct.getStatus() == null){
 			paramProduct.setStatus(0);
+		}
+		if(StringUtils.isNotBlank(paramProduct.getCode())&&StringUtils.isNotBlank(paramProduct.getName())
+				&&paramProduct.getCode().equals(paramProduct.getName())){
+			paramProduct.setCodeAndName("true");
 		}
 		List<ProductQuery> productLists = spProductService.selectProducts(paramProduct);
 	

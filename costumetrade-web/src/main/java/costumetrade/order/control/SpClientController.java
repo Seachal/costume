@@ -1,14 +1,11 @@
 package costumetrade.order.control;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,7 +23,6 @@ import costumetrade.order.domain.SpClient;
 import costumetrade.order.service.SpClientService;
 import costumetrade.order.service.WeChatService;
 import costumetrade.user.domain.SpCustProdPrice;
-import costumetrade.user.domain.SsDataDictionary;
 import costumetrade.user.mapper.SpCustProdPriceMapper;
 import costumetrade.user.service.SsDataDictionaryService;
 

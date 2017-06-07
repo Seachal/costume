@@ -18,7 +18,6 @@ import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.domain.ScStoreAddr;
-import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SsFinancial;
 import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStoDetail;

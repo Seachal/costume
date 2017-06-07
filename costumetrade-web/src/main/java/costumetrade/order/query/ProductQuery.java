@@ -269,6 +269,8 @@ public class ProductQuery extends Entity{
 	
 	private String appSecret;
 	
+	private String codeAndName;
+	
 	public BigDecimal getPrice() {
 		return price;
 	}
@@ -861,6 +863,14 @@ public class ProductQuery extends Entity{
 
 	public void setProductReviews(List<SsProductReview> productReviews) {
 		this.productReviews = productReviews;
+	}
+
+	public String getCodeAndName() {
+		return codeAndName;
+	}
+
+	public void setCodeAndName(String codeAndName) {
+		this.codeAndName = codeAndName;
 	}
 
 	

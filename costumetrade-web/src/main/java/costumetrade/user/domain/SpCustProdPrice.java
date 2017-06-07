@@ -3,8 +3,6 @@ package costumetrade.user.domain;
 import java.util.Date;
 import java.util.List;
 
-import com.alibaba.fastjson.JSONArray;
-
 import costumetrade.common.Entity;
 
 public class SpCustProdPrice extends Entity {

@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import costumetrade.user.domain.SpMenuEmployee;
 import costumetrade.user.domain.SpPrivilegeEmployee;
 @Mapper
 public interface SpPrivilegeEmployeeMapper {

@@ -10,12 +10,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import costumetrade.cache.Cache;
-import costumetrade.cache.CacheableLong;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.domain.SpPrivilegeEmployee;
-import costumetrade.user.mapper.SpPrivilegeMapper;
 import costumetrade.user.service.ISpPrivilegeService;
 import costumetrade.user.service.SpEmployeeService;
 

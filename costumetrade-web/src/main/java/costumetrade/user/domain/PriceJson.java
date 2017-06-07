@@ -1,8 +1,8 @@
 package costumetrade.user.domain;
 
-import costumetrade.common.Entity;
-
 import java.math.BigDecimal;
+
+import costumetrade.common.Entity;
 
 public class PriceJson extends Entity {
 

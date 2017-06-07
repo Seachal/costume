@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import costumetrade.common.Entity;
-import costumetrade.common.page.Page;
 
 public class SpProduct extends Entity {
     /**
