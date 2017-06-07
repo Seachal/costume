@@ -83,6 +83,8 @@ public class SsFinancial extends Entity {
     private Integer operate;//订单状态  1：新增   2、已付款  3、审核  4、发货  5、收货  6、已取消
     
     private Integer clientId;
+    
+    private String openid;
 
     private static final long serialVersionUID = 1L;
     
@@ -222,6 +224,14 @@ public class SsFinancial extends Entity {
 
 	public void setRelaNo(String relaNo) {
 		this.relaNo = relaNo;
+	}
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
 	}
     
     

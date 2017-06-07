@@ -342,8 +342,10 @@ public class SpOrderServiceImpl implements SpOrderService{
 		spStoOrder.setPayorderno(ssFinancial.getOrderno());
 		spStoOrder.setBuyerstoreid(ssFinancial.getBuyerid());
 		spStoOrder.setOrderstatus(ssFinancial.getOperate());
-		SpClient client = spClientMapper.selectByPrimaryKey(ssFinancial.getClientId());
-		if(client.getStoreid() == null){
+		
+		ScWeChat wechat = scWeChatMapper.selectByOpenId(ssFinancial.getOpenid());
+		
+		if(wechat.getStoreid() == null){
 			operate = ssStoOrderMapper.updateByPrimaryKeySelective(spStoOrder);
 		}else{
 			operate = ssStoOrderMapper.updateByPrimaryKeySelectiveStore(spStoOrder);
@@ -351,9 +353,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 		if(operate <= 0){
 			return 0;
 		}
-		//if(ssFinancial.getPayType() == 1){ //1:现金支付，2：支付宝支付，3：银行卡支付，4：微信支付，5：票据支付
 		operate = ssFinancialMapper.insertSelective(ssFinancial);
-		//}	
 		return operate;
 	}
 	@Override

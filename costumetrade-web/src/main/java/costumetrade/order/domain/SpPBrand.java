@@ -20,6 +20,8 @@ public class SpPBrand extends Entity {
      *  品牌名称
      */
     private String brandname;
+    
+    private Integer status;
 
     /**
      *  助记简码
@@ -219,6 +221,14 @@ public class SpPBrand extends Entity {
 		this.pageNum = pageNum;
 	}
 
+	public Integer getStatus() {
+		return status;
+	}
 
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	
     
 }

@@ -30,8 +30,6 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.servlet.http.HttpServletRequest;
 
-import net.sf.json.JSONObject;
-
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
@@ -45,6 +43,7 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
 import com.sf.openapi.common.utils.MyX509TrustManager;
 
 import costumetrade.common.param.ResponseInfo;
@@ -147,7 +146,7 @@ public class HttpPostUtil implements Serializable {
          inputStream.close();
          inputStream=null;
          conn.disconnect();
-         jsonObject = JSONObject.fromObject(buffer.toString());
+         jsonObject = JSONObject.parseObject(buffer.toString());
          
          return jsonObject;
          
@@ -170,7 +169,7 @@ public class HttpPostUtil implements Serializable {
           if (res.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
               HttpEntity entity = res.getEntity();
               String result = EntityUtils.toString(entity);
-              response = JSONObject.fromObject(result);
+              response = JSONObject.parseObject(result);
           }else{
               response = new JSONObject();
               try {

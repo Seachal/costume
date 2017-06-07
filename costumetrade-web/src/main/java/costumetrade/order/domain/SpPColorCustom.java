@@ -19,6 +19,8 @@ public class SpPColorCustom extends Entity {
      *  自定义名称
      */
     private String customname;
+    
+    private Integer status;
 
     /**
      *  值
@@ -112,4 +114,14 @@ public class SpPColorCustom extends Entity {
     public void setModifyBy(String modifyBy) {
         this.modifyBy = modifyBy == null ? null : modifyBy.trim();
     }
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+    
+    
 }

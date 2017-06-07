@@ -27,6 +27,8 @@ public class SpStore extends Entity {
      * */
     private Integer storeType;
     
+    private Integer status;
+    
     private Integer inventoryShare;
     /**
      *  分店名称:
@@ -301,7 +303,15 @@ public class SpStore extends Entity {
 		this.inventoryShare = inventoryShare ;
 	}
 
+	public Integer getStatus() {
+		return status;
+	}
 
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	
 	
     
 }

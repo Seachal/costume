@@ -23,6 +23,8 @@ public class SpClient extends Entity {
      *  普通用户ID：针对普通消费者
      */
     private Integer userId;
+    
+    private String openid;
 
     /**
      *  货品级别
@@ -378,6 +380,14 @@ public class SpClient extends Entity {
 
 	public void setUserId(Integer userId) {
 		this.userId = userId;
+	}
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
 	}
     
     

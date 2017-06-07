@@ -29,6 +29,7 @@ public enum ResponseInfo {
 	FILE_FORMAT(1011,"文件格式错误"),
 	UPLOAD_EXCEPTION(1012,"上传失败"),
 	NO_STOCK(1013,"缺少库存"),
+	DATA_EXCEPTION(1014,"数据已存在"),
 	;
 
 	public final int code;

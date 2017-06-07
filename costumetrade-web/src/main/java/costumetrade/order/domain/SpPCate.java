@@ -19,6 +19,8 @@ public class SpPCate extends Entity {
      *  企业ID
      */
     private Integer storeId;
+    
+    private Integer stauts;
 
     /**
      *  助记简码
@@ -135,6 +137,14 @@ public class SpPCate extends Entity {
 
 	public void setPageNum(Integer pageNum) {
 		this.pageNum = pageNum;
+	}
+
+	public Integer getStauts() {
+		return stauts;
+	}
+
+	public void setStauts(Integer stauts) {
+		this.stauts = stauts;
 	}
     
     

@@ -20,6 +20,8 @@ public class SpUnit extends Entity {
      *  创建时间
      */
     private Date createTime;
+    
+    private Integer status;
 
     /**
      *  店铺ID
@@ -81,6 +83,14 @@ public class SpUnit extends Entity {
 
 	public void setPage(Page page) {
 		this.page = page;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
     
     

@@ -109,6 +109,8 @@ public class SpEmployee extends Entity implements Serializable{
     
     List<SpCustProdPrice> customerTypeList;
     
+    private String openid ;
+    
     public Integer getStoreId() {
 		return storeId;
 	}
@@ -301,6 +303,14 @@ public class SpEmployee extends Entity implements Serializable{
 
 	public void setCustomerTypeList(List<SpCustProdPrice> customerTypeList) {
 		this.customerTypeList = customerTypeList;
+	}
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
 	}
 
 	

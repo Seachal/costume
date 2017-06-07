@@ -20,6 +20,8 @@ public class SpPColor extends Entity {
      *  颜色名称
      */
     private String colorname;
+    
+    private Integer status;
 
     /**
      *  条形编码
@@ -150,6 +152,14 @@ public class SpPColor extends Entity {
 
 	public void setPageNum(Integer pageNum) {
 		this.pageNum = pageNum;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 	
 	

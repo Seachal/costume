@@ -13,7 +13,7 @@ public class ScFocusShop extends Entity {
     /**
      *  用户ID主键:客户ID  客户关注者
      */
-    private Integer clientid;
+    private String openid;
 
     /**
      *  店铺ID主键店铺ID   店铺被关注者
@@ -50,12 +50,12 @@ public class ScFocusShop extends Entity {
         this.id = id;
     }
 
-    public Integer getClientid() {
-        return clientid;
+    public String getOpenid() {
+        return openid;
     }
 
-    public void setClientid(Integer clientid) {
-        this.clientid = clientid;
+    public void setOpenid(String openid) {
+        this.openid = openid;
     }
 
     public Integer getShopid() {

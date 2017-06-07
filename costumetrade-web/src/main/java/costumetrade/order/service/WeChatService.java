@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
 
+import costumetrade.user.domain.InputMessage;
+
 
 
 
@@ -33,4 +35,8 @@ public interface WeChatService  {
 	public String getOpenIdAndKey(String Code,String appId,String appSecret) throws Exception;
 	
 	public String getWechatTwoCode() throws Exception;
+	/**
+	 * 扫描二维码绑定客户/供应商、朋友 员工 
+	 * */
+	public int bindOpenidScan(InputMessage message);
 }

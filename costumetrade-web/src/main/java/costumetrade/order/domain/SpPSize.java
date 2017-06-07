@@ -20,6 +20,7 @@ public class SpPSize extends Entity {
      *  识别编码:尺码名称，字符类型，允许1-10个字符（最多5个汉字）
      */
     private String sizename;
+    private Integer status;
 
     /**
      *  条码编码:用于生成商品条码
@@ -128,6 +129,14 @@ public class SpPSize extends Entity {
 
 	public void setPriceRaise(BigDecimal priceRaise) {
 		this.priceRaise = priceRaise;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
     

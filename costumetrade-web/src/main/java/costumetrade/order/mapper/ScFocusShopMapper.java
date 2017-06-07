@@ -1,5 +1,7 @@
 package costumetrade.order.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import costumetrade.order.domain.ScFocusShop;
@@ -12,6 +14,8 @@ public interface ScFocusShopMapper {
     int insertSelective(ScFocusShop record);
 
     ScFocusShop selectByPrimaryKey(Integer id);
+    
+    List<ScFocusShop> select(ScFocusShop record);
 
     int updateByPrimaryKeySelective(ScFocusShop record);
 

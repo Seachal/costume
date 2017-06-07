@@ -7,11 +7,15 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
@@ -22,6 +26,7 @@ import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.domain.SpClient;
 import costumetrade.order.service.SpClientService;
 import costumetrade.order.service.WeChatService;
+import costumetrade.user.domain.QRCodeScanParam;
 import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.mapper.SpCustProdPriceMapper;
 import costumetrade.user.service.SsDataDictionaryService;
@@ -162,11 +167,21 @@ public class SpClientController {
 	}*/
 	@RequestMapping("/scanQRCode")
 	@ResponseBody
-	public ApiResponse scanQRCode(String sceneStr) throws Exception {
+	public ApiResponse scanQRCode(@RequestBody QRCodeScanParam param) throws Exception {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		String object = weChatService.getTwoCode(sceneStr);
+		
+		String scene = (String) JSONObject.toJSON(param);
+		String object =null;
+		if(StringUtils.isNotBlank(scene)){
+			object = weChatService.getTwoCode(scene);
+		}else{
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		
 		if(object == null){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
