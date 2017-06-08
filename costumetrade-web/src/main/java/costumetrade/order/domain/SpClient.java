@@ -1,8 +1,12 @@
 package costumetrade.order.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import costumetrade.common.Entity;
+import costumetrade.order.query.Rules;
+import costumetrade.order.query.Sort;
 import costumetrade.user.domain.SpCustProdPrice;
 
 public class SpClient extends Entity {
@@ -14,7 +18,7 @@ public class SpClient extends Entity {
     /**
      *  当前店铺ID
      */
-    private Integer storeid;
+    private Integer storeId;
     /**
      *  对方店铺ID：针对店员
      */
@@ -54,7 +58,7 @@ public class SpClient extends Entity {
     /**
      *  联系名称
      */
-    private String contact;
+    private String nickName;
 
     /**
      *  头像信息
@@ -64,7 +68,7 @@ public class SpClient extends Entity {
     /**
      *  身份证号
      */
-    private String cardid;
+    private String addressBack;
 
     /**
      *  生日信息
@@ -72,9 +76,9 @@ public class SpClient extends Entity {
     private Date birthdate;
 
     /**
-     *  移动电话
+     *  备用电话
      */
-    private String phone;
+    private String phoneBack;
 
     /**
      *  联系电话
@@ -87,9 +91,9 @@ public class SpClient extends Entity {
     private String fax;
 
     /**
-     *  邮箱地址
+     *  备注名称
      */
-    private String email;
+    private String remarkName;
 
     /**
      *  区域
@@ -119,7 +123,7 @@ public class SpClient extends Entity {
     /**
      *  开户银行
      */
-    private String blank;
+    private String reallyName;
 
     /**
      *  银行账号
@@ -140,6 +144,8 @@ public class SpClient extends Entity {
      *  修改时间
      */
     private Date modifyTime;
+    
+    private BigDecimal points;
 
     /**
      *  修改人
@@ -147,10 +153,41 @@ public class SpClient extends Entity {
     private String modifyBy;
     
     private SpCustProdPrice prodPrice;
+    
+    private List<SpCustProdPrice> custProdPriceList;
+    
+    private Sort sort;
+    private List<Rules>  rules;
+    
+    private List<String> districtList;
+    
+    private List<String> cateList;
+    
+    private String nameOp;
+    
+    private String timeOp;
+    
+    private String pointsOp;
+    
+    private Integer pageNum;
+    
+    private String name;
+    
+    private List<Integer> idArray;
 
     private static final long serialVersionUID = 1L;
+    
+    
 
-    public Integer getId() {
+    public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getId() {
         return id;
     }
 
@@ -158,15 +195,17 @@ public class SpClient extends Entity {
         this.id = id;
     }
 
-    public Integer getStoreid() {
-        return storeid;
-    }
+  
 
-    public void setStoreid(Integer storeid) {
-        this.storeid = storeid;
-    }
+    public Integer getStoreId() {
+		return storeId;
+	}
 
-    public String getProdlevels() {
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
+	}
+
+	public String getProdlevels() {
         return prodlevels;
     }
 
@@ -206,13 +245,6 @@ public class SpClient extends Entity {
         this.vipcard = vipcard == null ? null : vipcard.trim();
     }
 
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact == null ? null : contact.trim();
-    }
 
     public String getImage() {
         return image;
@@ -222,15 +254,16 @@ public class SpClient extends Entity {
         this.image = image == null ? null : image.trim();
     }
 
-    public String getCardid() {
-        return cardid;
-    }
 
-    public void setCardid(String cardid) {
-        this.cardid = cardid == null ? null : cardid.trim();
-    }
+    public String getAddressBack() {
+		return addressBack;
+	}
 
-    public Date getBirthdate() {
+	public void setAddressBack(String addressBack) {
+		this.addressBack = addressBack;
+	}
+
+	public Date getBirthdate() {
         return birthdate;
     }
 
@@ -238,15 +271,17 @@ public class SpClient extends Entity {
         this.birthdate = birthdate;
     }
 
-    public String getPhone() {
-        return phone;
-    }
+  
 
-    public void setPhone(String phone) {
-        this.phone = phone == null ? null : phone.trim();
-    }
+    public String getPhoneBack() {
+		return phoneBack;
+	}
 
-    public String getTelephone() {
+	public void setPhoneBack(String phoneBack) {
+		this.phoneBack = phoneBack;
+	}
+
+	public String getTelephone() {
         return telephone;
     }
 
@@ -262,13 +297,7 @@ public class SpClient extends Entity {
         this.fax = fax == null ? null : fax.trim();
     }
 
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email == null ? null : email.trim();
-    }
 
     public String getRegion() {
         return region;
@@ -310,13 +339,7 @@ public class SpClient extends Entity {
         this.address = address == null ? null : address.trim();
     }
 
-    public String getBlank() {
-        return blank;
-    }
 
-    public void setBlank(String blank) {
-        this.blank = blank == null ? null : blank.trim();
-    }
 
     public String getBlankId() {
         return blankId;
@@ -388,6 +411,120 @@ public class SpClient extends Entity {
 
 	public void setOpenid(String openid) {
 		this.openid = openid;
+	}
+
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+
+
+
+	public String getRemarkName() {
+		return remarkName;
+	}
+
+	public void setRemarkName(String remarkName) {
+		this.remarkName = remarkName;
+	}
+
+	public String getReallyName() {
+		return reallyName;
+	}
+
+	public void setReallyName(String reallyName) {
+		this.reallyName = reallyName;
+	}
+
+	public Sort getSort() {
+		return sort;
+	}
+
+	public void setSort(Sort sort) {
+		this.sort = sort;
+	}
+
+	public List<Rules> getRules() {
+		return rules;
+	}
+
+	public void setRules(List<Rules> rules) {
+		this.rules = rules;
+	}
+
+	public String getNameOp() {
+		return nameOp;
+	}
+
+	public void setNameOp(String nameOp) {
+		this.nameOp = nameOp;
+	}
+
+	public String getTimeOp() {
+		return timeOp;
+	}
+
+	public void setTimeOp(String timeOp) {
+		this.timeOp = timeOp;
+	}
+
+	public String getPointsOp() {
+		return pointsOp;
+	}
+
+	public void setPointsOp(String pointsOp) {
+		this.pointsOp = pointsOp;
+	}
+
+	public List<String> getDistrictList() {
+		return districtList;
+	}
+
+	public void setDistrictList(List<String> districtList) {
+		this.districtList = districtList;
+	}
+
+	public List<String> getCateList() {
+		return cateList;
+	}
+
+	public void setCateList(List<String> cateList) {
+		this.cateList = cateList;
+	}
+
+	public Integer getPageNum() {
+		return pageNum;
+	}
+
+	public void setPageNum(Integer pageNum) {
+		this.pageNum = pageNum;
+	}
+
+	public List<SpCustProdPrice> getCustProdPriceList() {
+		return custProdPriceList;
+	}
+
+	public void setCustProdPriceList(List<SpCustProdPrice> custProdPriceList) {
+		this.custProdPriceList = custProdPriceList;
+	}
+
+	public List<Integer> getIdArray() {
+		return idArray;
+	}
+
+	public void setIdArray(List<Integer> idArray) {
+		this.idArray = idArray;
+	}
+
+	public BigDecimal getPoints() {
+		return points;
+	}
+
+	public void setPoints(BigDecimal points) {
+		this.points = points;
 	}
     
     

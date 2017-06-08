@@ -39,4 +39,9 @@ public interface WeChatService  {
 	 * 扫描二维码绑定客户/供应商、朋友 员工 
 	 * */
 	public int bindOpenidScan(InputMessage message);
+	
+	/**
+	 * 获取微信用户信息
+	 * */
+	public String getWeChatUserInfo(String openid)throws Exception;
 }

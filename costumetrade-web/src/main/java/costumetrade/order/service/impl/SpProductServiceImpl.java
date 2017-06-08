@@ -225,9 +225,9 @@ public class SpProductServiceImpl implements SpProductService{
 				client.setUserId(weChat.getUserid());
 				mallProList =true ;
 			}
-			client.setStoreid(productQuery.getStoreId());
+			client.setStoreId(productQuery.getStoreId());
 			client.setType(1+"");
-			clients = spClientMapper.select(client);
+			clients = spClientMapper.select(client,null);
 		}else{
 			return null;
 		}
@@ -608,10 +608,10 @@ public class SpProductServiceImpl implements SpProductService{
 			}
 			//查询分享到对方的用户在商铺里面是什么客户级别，根据客户级别显示销售价，如果不属于客户，就默认最低客户级别，显示最高销售价
 			SpClient client = new SpClient();
-			client.setStoreid(productQuery.getStoreId());
+			client.setStoreId(productQuery.getStoreId());
 			client.setType(1+"");
 			client.setUserId(chat.getUserid());
-			List<SpClient> clients = spClientMapper.select(client);
+			List<SpClient> clients = spClientMapper.select(client,null);
 			
 			if(clients.size()>0){
 				client = clients.get(0);

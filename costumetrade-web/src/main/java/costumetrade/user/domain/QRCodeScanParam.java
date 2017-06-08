@@ -9,6 +9,8 @@ public class QRCodeScanParam extends Entity {
     private static final long serialVersionUID = 1L;
 
     private Integer storeId;
+    
+    private Integer id;
     /**
      * 扫描类型 1：加客户，2.加供应商 3.加朋友 4、加员工
      * */
@@ -25,6 +27,13 @@ public class QRCodeScanParam extends Entity {
 	public void setType(Integer type) {
 		this.type = type;
 	}
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
     
+	
     
 }

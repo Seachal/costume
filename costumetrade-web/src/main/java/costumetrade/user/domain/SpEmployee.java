@@ -17,7 +17,7 @@ public class SpEmployee extends Entity implements Serializable{
     /**
      *  所属分店:
      */
-    private String subbelong;
+    private String nickName;
 
     /**
      *  创建时间
@@ -57,12 +57,12 @@ public class SpEmployee extends Entity implements Serializable{
     /**
      *  联系电话
      */
-    private String phone;
+    private String phoneBack;
 
     /**
      *  移动电话
      */
-    private String cphone;
+    private String telephone;
 
     /**
      *  地址
@@ -72,7 +72,7 @@ public class SpEmployee extends Entity implements Serializable{
     /**
      *  邮箱
      */
-    private String email;
+    private String addressBack;
 
     /**
      *  生日
@@ -82,7 +82,9 @@ public class SpEmployee extends Entity implements Serializable{
     /**
      *  身份证
      */
-    private String cardId;
+    private String reallyName;
+    
+    private String image ;
     
     /**
      *  
@@ -137,13 +139,6 @@ public class SpEmployee extends Entity implements Serializable{
         this.status = status;
     }
 
-    public String getSubbelong() {
-        return subbelong;
-    }
-
-    public void setSubbelong(String subbelong) {
-        this.subbelong = subbelong == null ? null : subbelong.trim();
-    }
 
     public Date getCreateTime() {
         return createTime;
@@ -201,23 +196,18 @@ public class SpEmployee extends Entity implements Serializable{
         this.password = password == null ? null : password.trim();
     }
 
-    public String getPhone() {
-        return phone;
-    }
 
-    public void setPhone(String phone) {
-        this.phone = phone == null ? null : phone.trim();
-    }
+    
 
-    public String getCphone() {
-        return cphone;
-    }
+    public String getTelephone() {
+		return telephone;
+	}
 
-    public void setCphone(String cphone) {
-        this.cphone = cphone == null ? null : cphone.trim();
-    }
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
 
-    public String getAddress() {
+	public String getAddress() {
         return address;
     }
 
@@ -225,13 +215,7 @@ public class SpEmployee extends Entity implements Serializable{
         this.address = address == null ? null : address.trim();
     }
 
-    public String getEmail() {
-        return email;
-    }
 
-    public void setEmail(String email) {
-        this.email = email == null ? null : email.trim();
-    }
 
     public Date getBirthdate() {
         return birthdate;
@@ -239,14 +223,6 @@ public class SpEmployee extends Entity implements Serializable{
 
     public void setBirthdate(Date birthdate) {
         this.birthdate = birthdate;
-    }
-
-    public String getCardId() {
-        return cardId;
-    }
-
-    public void setCardId(String cardId) {
-        this.cardId = cardId == null ? null : cardId.trim();
     }
 
 	public String getWeChatNo() {
@@ -311,6 +287,46 @@ public class SpEmployee extends Entity implements Serializable{
 
 	public void setOpenid(String openid) {
 		this.openid = openid;
+	}
+
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+
+	public String getPhoneBack() {
+		return phoneBack;
+	}
+
+	public void setPhoneBack(String phoneBack) {
+		this.phoneBack = phoneBack;
+	}
+
+	public String getAddressBack() {
+		return addressBack;
+	}
+
+	public void setAddressBack(String addressBack) {
+		this.addressBack = addressBack;
+	}
+
+	public String getReallyName() {
+		return reallyName;
+	}
+
+	public void setReallyName(String reallyName) {
+		this.reallyName = reallyName;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	

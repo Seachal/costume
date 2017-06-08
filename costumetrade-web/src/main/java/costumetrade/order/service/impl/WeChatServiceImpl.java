@@ -23,8 +23,12 @@ import costumetrade.order.mapper.SpClientMapper;
 import costumetrade.order.service.WeChatService;
 import costumetrade.user.domain.InputMessage;
 import costumetrade.user.domain.QRCodeScanParam;
+import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpEmployee;
+import costumetrade.user.domain.SpUser;
+import costumetrade.user.mapper.ScWeChatMapper;
 import costumetrade.user.mapper.SpEmployeeMapper;
+import costumetrade.user.mapper.SpUserMapper;
 
 
 
@@ -48,6 +52,11 @@ public class WeChatServiceImpl implements WeChatService {
 	private SpEmployeeMapper spEmployeeMapper;
 	@Autowired
 	private ScFocusShopMapper scFocusShopMapper;
+	@Autowired
+	private ScWeChatMapper scWeChatMapper;
+	@Autowired
+	private SpUserMapper spUserMapper;
+
 	/**
 	 * 获取access
 	 * @throws IOException 
@@ -67,9 +76,9 @@ public class WeChatServiceImpl implements WeChatService {
 	public String getTwoCode(String sceneStr) throws Exception{
 		String chat = getAccessToken();
 		JSONObject json = JSON.parseObject(chat);
-		
+		//sceneStr ="123,23,34";
 		String url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token="+json.getString("access_token");
-		String param ="{'action_name': 'QR_LIMIT_STR_SCENE', 'action_info': {'scene': {'scene_str': "+sceneStr+"}}}";
+		String param ="{'action_name': 'QR_LIMIT_STR_SCENE', 'action_info': {'scene': {'scene_str': '"+sceneStr+"'}}}";//
 		JSONObject jsonObject = HttpPostUtil.sendHTTPSPostRequestJSON(url, JSONObject.parseObject(param));
 		
 		String ticketUrl ="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket="+jsonObject.getString("ticket");
@@ -122,6 +131,22 @@ public class WeChatServiceImpl implements WeChatService {
 		String eventKey = message.getEventKey();
     	JSONObject object = JSONObject.parseObject(eventKey);
     	QRCodeScanParam param = JSONObject.toJavaObject(object, QRCodeScanParam.class);//获取二维码中的参数值
+    	String userInfo =null;
+    	
+    	try {
+    		userInfo = getWeChatUserInfo(message.getFromUserName());
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+    	JSONObject json = JSON.parseObject(userInfo);
+    	String nickName = json.getString("nickName"); 
+    	String headimgurl = json.getString("headimgurl");
+    	
+    	ScWeChat wechat = scWeChatMapper.selectByOpenId(message.getFromUserName());
+    	SpUser user = new SpUser();
+    	if(wechat !=null && wechat.getUserid()!=null){
+    		user = spUserMapper.selectByPrimaryKey(wechat.getUserid());
+    	}
     	 /**
          * 扫描类型 1：加客户，2.加供应商 3.加朋友 4、加员工
          * */
@@ -129,12 +154,20 @@ public class WeChatServiceImpl implements WeChatService {
     	if(param != null&&param.getStoreId()!=null){
     		if(param.getType()==1||param.getType()==2||param.getType()==3){
     			SpClient client = new SpClient();
+    			client.setId(param.getId());
     			client.setType(param.getType()+"");
     			client.setOpenid(message.getFromUserName());
-    			client.setStoreid(param.getStoreId());
+    			client.setStoreId(param.getStoreId());
     			client.setCreateTime(new Date());
     			client.setModifyTime(new Date());
-    			save =spClientMapper.insertSelective(client);
+    			client.setImage(headimgurl);
+    			client.setNickName(nickName);
+    			client.setAddress(user.getAddress());
+    			client.setTelephone(user.getPhone());
+    			SpClient c = spClientMapper.selectByPrimaryKey(param.getId());
+    			if(c == null){//重复扫只保存一次
+    				save =spClientMapper.insertSelective(client);
+    			}
     			//加关注
     			ScFocusShop focusShop = new ScFocusShop();
     			focusShop.setOpenid(message.getFromUserName());
@@ -147,13 +180,32 @@ public class WeChatServiceImpl implements WeChatService {
     			}
     		}else if(param.getType()==4){
     			SpEmployee employee = new SpEmployee();
+    			employee.setId(param.getId());
     			employee.setOpenid(message.getFromUserName());
+    			employee.setStoreId(param.getStoreId());
     			employee.setWeChatNo(message.getToUserName());
     			employee.setCreateTime(new Date());
     			employee.setModifyTime(new Date());
-    			save =spEmployeeMapper.insertSelective(employee);
+    			employee.setImage(headimgurl);
+    			employee.setNickName(nickName);
+    			employee.setAddress(user.getAddress());
+    			employee.setTelephone(user.getPhone());
+    			SpEmployee e = spEmployeeMapper.selectByPrimaryKey(employee);
+    			if(e == null){//重复扫只保存一次
+    				save =spEmployeeMapper.insertSelective(employee);
+    			}
+    			
     		}
     	}
 		return save;
+	}
+
+	@Override
+	public String getWeChatUserInfo(String openid) throws Exception {
+		String chat = getAccessToken();
+		JSONObject json = JSON.parseObject(chat);
+		String url ="https://api.weixin.qq.com/cgi-bin/user/info?access_token="+json.getString("access_token")+"&openid="+openid+"&lang=zh_CN";
+		String response = HttpClientUtils.get(url, "utf-8");
+		return response;
 	}
 }

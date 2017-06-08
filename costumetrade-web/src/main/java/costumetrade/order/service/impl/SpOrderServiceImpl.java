@@ -174,9 +174,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 	
 		if(param.getOperate() == 3){ //审核  配货
 			boolean operatestock =orderStock(param,null);
-			if(operatestock){
-				return 1;
-			}else{
+			if(!operatestock){
 				return 2;
 			}
 		}
@@ -324,6 +322,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 					}
 				}
 			}
+		
 		
 		}else{
 			operate =false;

@@ -73,7 +73,7 @@ public class WeiXinCallBackAttentionController {
 			        Long returnTime = Calendar.getInstance().getTimeInMillis() / 1000;// 返回时间  
 			        // 取得消息类型  
 			        String msgType = inputMsg.getMsgType();  
-			        System.out.println("msgType:"+msgType);
+			        System.out.println("inputMsg.getEvent():"+inputMsg.getEvent());
 			        // 根据消息类型获取对应的消息内容  
 			        if (msgType.equals("event")) {  // 文本消息  
 			            if("SCAN".equals(inputMsg.getEvent())||"subscribe".equals(inputMsg.getEvent())){//已关注事件推送，未关注公众号事件推送

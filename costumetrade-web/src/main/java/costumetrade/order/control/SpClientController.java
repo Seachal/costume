@@ -24,6 +24,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.domain.SpClient;
+import costumetrade.order.query.ClientQuery;
 import costumetrade.order.service.SpClientService;
 import costumetrade.order.service.WeChatService;
 import costumetrade.user.domain.QRCodeScanParam;
@@ -48,43 +49,6 @@ public class SpClientController {
 	private WeChatService weChatService;
 	@Autowired
 	private SpCustProdPriceMapper custProdPriceMapper;
-	
-	
-	@RequestMapping("/getTwoDimension")
-	@ResponseBody
-	public void getTwoDimension(HttpServletRequest req,HttpServletResponse resp) {
-		
-		//spClientService.getTwoDimension1("http://www.baidu.com",resp, 200, 200);
-		 String url="www.baidu.com";
-		         if(url!=null&&!"".equals(url)){
-		             ServletOutputStream stream=null;
-		             try {
-		                 int width=200;
-		                int height=200;
-		                 stream=resp.getOutputStream();
-		                QRCodeWriter writer=new QRCodeWriter();
-		                BitMatrix m=writer.encode(url, BarcodeFormat.QR_CODE, height,width);
-		                MatrixToImageWriter.writeToStream(m, "png", stream);
-		             } catch (Exception e) {
-		                 // TODO: handle exception
-		                 e.printStackTrace();
-		             }finally{
-		                if(stream!=null){
-		                    try {
-		                        stream.flush();
-		                        stream.close();
-		                     } catch (IOException e) {
-		                         // TODO Auto-generated catch block
-		                        e.printStackTrace();
-		                    }
-		                    
-		                 }
-		           }
-		}
-
-		
-	}
-	
 
 	@RequestMapping("/saveClient")
 	@ResponseBody
@@ -103,7 +67,7 @@ public class SpClientController {
 	
 	@RequestMapping("/getClients")
 	@ResponseBody
-	public ApiResponse getClients(SpClient spClient) {
+	public ApiResponse getClients(@RequestBody SpClient spClient) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
@@ -134,12 +98,12 @@ public class SpClientController {
 	}
 	@RequestMapping("/initCustomer")
 	@ResponseBody
-	public ApiResponse initCustomer(Integer storeId) {
+	public ApiResponse initCustomer(ClientQuery query) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 
-		List<SpCustProdPrice> data = spClientService.initCustomer(storeId);
+		ClientQuery data = spClientService.initCustomer(query);
 		if(data == null){
 			result.setCode(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
@@ -148,6 +112,25 @@ public class SpClientController {
 			result.setData(data);
 		}
 
+		return result;
+	}
+	@RequestMapping("/updateClients")
+	@ResponseBody
+	public ApiResponse updateClients(SpClient spClient) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(spClient == null ){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		Integer save = spClientService.updateClients(spClient);
+		if(save == null){
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			return result;
+		}
 		return result;
 	}
 /*	@RequestMapping("/deleteClient")
@@ -172,10 +155,10 @@ public class SpClientController {
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		
-		String scene = (String) JSONObject.toJSON(param);
+		JSONObject  scene = (JSONObject) JSONObject.toJSON(param);
 		String object =null;
-		if(StringUtils.isNotBlank(scene)){
-			object = weChatService.getTwoCode(scene);
+		if(StringUtils.isNotBlank(scene.toJSONString())){
+			object = weChatService.getTwoCode(scene.toJSONString());
 		}else{
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
@@ -190,6 +173,31 @@ public class SpClientController {
 			result.setData(object);
 		}
 		
+		return result;
+	}
+	@RequestMapping("/scanQRCodeOk")
+	@ResponseBody
+	public ApiResponse scanQRCodeOk(@RequestBody QRCodeScanParam param) throws Exception {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		Object object = null;
+		if(param !=null){
+			object = spClientService.scanQRCodeOk(param);
+		}else{
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		if(object == null){
+			result.setCode(ResponseInfo.SUCCESS.code);
+			result.setData(ResponseInfo.SCAN_EXCEPTION.code);
+			result.setMsg(ResponseInfo.SCAN_EXCEPTION.msg);
+			return result;
+		}else{
+			result.setData(object);
+		}
 		return result;
 	}
 	@RequestMapping("/getWechatTwoCode")

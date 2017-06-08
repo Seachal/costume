@@ -3,7 +3,9 @@ package costumetrade.order.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
+import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpClient;
 @Mapper
 public interface SpClientMapper {
@@ -18,5 +20,8 @@ public interface SpClientMapper {
     int updateByPrimaryKeySelective(SpClient record);
     
     
-    List<SpClient> select(SpClient record);
+    List<SpClient> select(@Param("client")SpClient client,@Param("page") Page page);
+    
+    List<SpClient> selectDistincts(@Param("client")SpClient client
+);
 }

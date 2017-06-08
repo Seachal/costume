@@ -9,7 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import costumetrade.order.domain.SpClient;
-import costumetrade.user.domain.SpCustProdPrice;
+import costumetrade.order.query.ClientQuery;
+import costumetrade.user.domain.QRCodeScanParam;
 
 @Service
 @Transactional
@@ -28,10 +29,16 @@ public interface SpClientService {
 	
 	public SpClient getClient(Integer clientId);
 	
-	public int deleteClient(Integer clientId);
+	public int updateClients(SpClient spClient);
 	
 	/**
-	 * 新增跳转初始化
+	 * 查询初始化
 	 * */
-	public List<SpCustProdPrice> initCustomer(Integer storeId);
+	public ClientQuery initCustomer(ClientQuery clientQuery);
+	
+	/**
+	 * 扫描二维码 扫好了
+	 * 
+	 * */
+	public Object scanQRCodeOk(QRCodeScanParam param);
 }
