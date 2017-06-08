@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.order.mapper.SpClientMapper">
 	<resultMap id="BaseResultMap" type="costumetrade.order.domain.SpClient">
 		<result column="id" jdbcType="INTEGER" property="id" />
-		<result column="storeId" jdbcType="INTEGER" property="storeid" />
+		<result column="storeId" jdbcType="INTEGER" property="storeId" />
 		<result column="otherStoreId" jdbcType="INTEGER" property="otherStoreId" />
 		<result column="userId" jdbcType="INTEGER" property="userId" />
 		<result column="openid" jdbcType="VARCHAR" property="openid" />
@@ -11,21 +11,21 @@
 		<result column="type" jdbcType="VARCHAR" property="type" />
 		<result column="cate" jdbcType="VARCHAR" property="cate" />
 		<result column="fastcode" jdbcType="VARCHAR" property="fastcode" />
-		<result column="vipcard" jdbcType="VARCHAR" property="vipcard" />
-		<result column="contact" jdbcType="VARCHAR" property="contact" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="nickName" jdbcType="VARCHAR" property="nickName" />
 		<result column="image" jdbcType="VARCHAR" property="image" />
-		<result column="cardid" jdbcType="VARCHAR" property="cardid" />
+		<result column="addressBack" jdbcType="VARCHAR" property="addressBack" />
 		<result column="birthdate" jdbcType="TIMESTAMP" property="birthdate" />
-		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="phoneBack" jdbcType="VARCHAR" property="phoneBack" />
 		<result column="telephone" jdbcType="VARCHAR" property="telephone" />
-		<result column="fax" jdbcType="VARCHAR" property="fax" />
-		<result column="email" jdbcType="VARCHAR" property="email" />
+		<result column="points" jdbcType="DECIMAL" property="points" />
+		<result column="remarkName" jdbcType="VARCHAR" property="remarkName" />
 		<result column="region" jdbcType="VARCHAR" property="region" />
 		<result column="province" jdbcType="VARCHAR" property="province" />
 		<result column="city" jdbcType="VARCHAR" property="city" />
 		<result column="district" jdbcType="VARCHAR" property="district" />
 		<result column="address" jdbcType="VARCHAR" property="address" />
-		<result column="blank" jdbcType="VARCHAR" property="blank" />
+		<result column="reallyName" jdbcType="VARCHAR" property="reallyName" />
 		<result column="blank_id" jdbcType="VARCHAR" property="blankId" />
 		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
 		<result column="create_by" jdbcType="VARCHAR" property="createBy" />
@@ -36,12 +36,12 @@
 		id, storeId,otherStoreId,userId,openid, prodLevels,
 		type, cate,
 		fastcode,
-		vipcard, contact, image,
-		cardid, birthdate, phone,
+		status, nickName, image,
+		addressBack, birthdate, phoneBack,
 		telephone,
-		fax, email,
+		points, remarkName,
 		region, province, city,
-		district, address, blank,
+		district, address, reallyName,
 		blank_id,
 		create_time, create_by,
 		modify_time, modify_by
@@ -59,64 +59,121 @@
 		where id = #{clientId,jdbcType=INTEGER}
 	</select>
 
-	<select id="select" parameterType="costumetrade.order.domain.SpClient"
+	<select id="select" 
 		resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List" />
+		id, storeId,
+		type, cate,
+		fastcode,
+		 image,
+		telephone,
+		points, 
+		remarkName, nickName,reallyName
+		
 		from sp_client
 		where 1=1
-		<if test="storeid !=null">
-			and storeId = #{storeid,jdbcType=INTEGER}
+		and status ='0'
+		<if test="client.storeId !=null">
+			and storeId = #{client.storeId,jdbcType=INTEGER}
 		</if>
-		<if test="type!=null">
-			and type = #{type,jdbcType=VARCHAR}
+		<if test="client.type!=null">
+			and type = #{client.type,jdbcType=VARCHAR}
 		</if>
-		<if test="otherStoreId != null">
-			and otherStoreId = #{otherStoreId,jdbcType=INTEGER}
+		<if test="client.otherStoreId != null">
+			and otherStoreId = #{client.otherStoreId,jdbcType=INTEGER}
 		</if>
-		<if test="userId != null">
-			and userId = #{userId,jdbcType=INTEGER}
+		<if test="client.userId != null">
+			and userId = #{client.userId,jdbcType=INTEGER}
 		</if>
-		<if test="openid != null">
-			and openid = #{openid,jdbcType=INTEGER}
+		<if test="client.openid != null">
+			and openid = #{client.openid,jdbcType=INTEGER}
 		</if>
+		<if test="client.name != null">
+			and (remarkName like CONCAT('%',#{client.name},'%') or nickName like CONCAT('%',#{client.name},'%') or reallyName like CONCAT('%',#{client.name},'%'))
+		</if>
+		<if test="client.districtList != null">
+			and district in
+			<foreach collection="client.districtList" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		<if test="client.cateList != null">
+			and cate in
+			<foreach collection="client.cateList" item="item" index="index"
+				open="(" separator="," close=")"> #{item}</foreach>
+			
+		</if>
+		<if test="client.nameOp == 'asc'">
+			order by reallyName asc
+		</if>
+		<if test="client.nameOp == 'desc'">
+			order by reallyName desc
+		</if>
+		<if test="client.timeOp == 'asc'">
+			order by create_time asc
+		</if>
+		<if test="client.timeOp == 'desc'">
+			order by create_time desc
+		</if>
+		<if test="client.pointsOp == 'asc'">
+			order by points asc
+		</if>
+		<if test="client.pointsOp == 'desc'">
+			order by points desc
+		</if>
+		<if test="page !=null">
+		LIMIT #{page.startRow},#{page.pageSize}
+		</if>
+	</select>
+	
+	<select id="selectDistincts" 
+		resultMap="BaseResultMap">
+		select distinct(district)
+		from sp_client
+		where 1=1
+		<if test="client.storeId !=null">
+			and storeId = #{client.storeId,jdbcType=INTEGER}
+		</if>
+		<if test="client.type!=null">
+			and type = #{client.type,jdbcType=VARCHAR}
+		</if>
+		and status ='0'
 	</select>
 
 	<insert id="insert" parameterType="costumetrade.order.domain.SpClient">
 		insert into sp_client (id,
 		storeId,otherStoreId,userId,openid, prodLevels,
 		type, cate, fastcode,
-		vipcard,
-		contact, image,
-		cardid, birthdate, phone,
-		telephone, fax, email,
+		status,
+		nickName, image,
+		addressBack, birthdate, phoneBack,
+		telephone, points, remarkName,
 		region,
 		province, city,
-		district, address, blank,
+		district, address, reallyName,
 		blank_id, create_time,
 		create_by,
 		modify_time, modify_by)
 		values (#{id,jdbcType=INTEGER},
-		#{storeid,jdbcType=INTEGER},
+		#{storeId,jdbcType=INTEGER},
 		#{otherStoreId,jdbcType=INTEGER},
 		#{userId,jdbcType=INTEGER},
 		#{openid,jdbcType=INTEGER},
 		#{prodlevels,jdbcType=VARCHAR},
 		#{type,jdbcType=VARCHAR}, #{cate,jdbcType=VARCHAR},
 		#{fastcode,jdbcType=VARCHAR},
-		#{vipcard,jdbcType=VARCHAR},
-		#{contact,jdbcType=VARCHAR},
+		#{status,jdbcType=VARCHAR},
+		#{nickName,jdbcType=VARCHAR},
 		#{image,jdbcType=VARCHAR},
-		#{cardid,jdbcType=VARCHAR}, #{birthdate,jdbcType=TIMESTAMP},
-		#{phone,jdbcType=VARCHAR},
+		#{addressBack,jdbcType=VARCHAR}, #{birthdate,jdbcType=TIMESTAMP},
+		#{phoneBack,jdbcType=VARCHAR},
 		#{telephone,jdbcType=VARCHAR},
-		#{fax,jdbcType=VARCHAR},
-		#{email,jdbcType=VARCHAR},
+		#{points,jdbcType=DECIMAL},
+		#{remarkName,jdbcType=VARCHAR},
 		#{region,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR},
 		#{city,jdbcType=VARCHAR},
 		#{district,jdbcType=VARCHAR},
 		#{address,jdbcType=VARCHAR},
-		#{blank,jdbcType=VARCHAR},
+		#{reallyName,jdbcType=VARCHAR},
 		#{blankId,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
 		#{createBy,jdbcType=VARCHAR},
 		#{modifyTime,jdbcType=TIMESTAMP},
@@ -126,7 +183,7 @@
 		insert into sp_client
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 
-			<if test="storeid != null">
+			<if test="storeId != null">
 				storeId,
 			</if>
 			<if test="otherStoreId != null">
@@ -150,32 +207,32 @@
 			<if test="fastcode != null">
 				fastcode,
 			</if>
-			<if test="vipcard != null">
-				vipcard,
-			</if>
-			<if test="contact != null">
-				contact,
+			
+				status,
+			
+			<if test="nickName != null">
+				nickName,
 			</if>
 			<if test="image != null">
 				image,
 			</if>
-			<if test="cardid != null">
-				cardid,
+			<if test="addressBack != null">
+				addressBack,
 			</if>
 			<if test="birthdate != null">
 				birthdate,
 			</if>
-			<if test="phone != null">
-				phone,
+			<if test="phoneBack != null">
+				phoneBack,
 			</if>
 			<if test="telephone != null">
 				telephone,
 			</if>
-			<if test="fax != null">
-				fax,
+			<if test="points != null">
+				points,
 			</if>
-			<if test="email != null">
-				email,
+			<if test="remarkName != null">
+				remarkName,
 			</if>
 			<if test="region != null">
 				region,
@@ -192,8 +249,8 @@
 			<if test="address != null">
 				address,
 			</if>
-			<if test="blank != null">
-				blank,
+			<if test="reallyName != null">
+				reallyName,
 			</if>
 			<if test="blankId != null">
 				blank_id,
@@ -213,8 +270,8 @@
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 
-			<if test="storeid != null">
-				#{storeid,jdbcType=INTEGER},
+			<if test="storeId != null">
+				#{storeId,jdbcType=INTEGER},
 			</if>
 			<if test="otherStoreId != null">
 				#{otherStoreId,jdbcType=INTEGER},
@@ -237,32 +294,30 @@
 			<if test="fastcode != null">
 				#{fastcode,jdbcType=VARCHAR},
 			</if>
-			<if test="vipcard != null">
-				#{vipcard,jdbcType=VARCHAR},
-			</if>
-			<if test="contact != null">
-				#{contact,jdbcType=VARCHAR},
+			'0',
+			<if test="nickName != null">
+				#{nickName,jdbcType=VARCHAR},
 			</if>
 			<if test="image != null">
 				#{image,jdbcType=VARCHAR},
 			</if>
-			<if test="cardid != null">
-				#{cardid,jdbcType=VARCHAR},
+			<if test="addressBack != null">
+				#{addressBack,jdbcType=VARCHAR},
 			</if>
 			<if test="birthdate != null">
 				#{birthdate,jdbcType=TIMESTAMP},
 			</if>
-			<if test="phone != null">
-				#{phone,jdbcType=VARCHAR},
+			<if test="phoneBack != null">
+				#{phoneBack,jdbcType=VARCHAR},
 			</if>
 			<if test="telephone != null">
 				#{telephone,jdbcType=VARCHAR},
 			</if>
-			<if test="fax != null">
-				#{fax,jdbcType=VARCHAR},
+			<if test="points != null">
+				#{points,jdbcType=DECIMAL},
 			</if>
-			<if test="email != null">
-				#{email,jdbcType=VARCHAR},
+			<if test="remarkName != null">
+				#{remarkName,jdbcType=VARCHAR},
 			</if>
 			<if test="region != null">
 				#{region,jdbcType=VARCHAR},
@@ -279,8 +334,8 @@
 			<if test="address != null">
 				#{address,jdbcType=VARCHAR},
 			</if>
-			<if test="blank != null">
-				#{blank,jdbcType=VARCHAR},
+			<if test="reallyName != null">
+				#{reallyName,jdbcType=VARCHAR},
 			</if>
 			<if test="blankId != null">
 				#{blankId,jdbcType=VARCHAR},
@@ -303,8 +358,8 @@
 	<update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SpCart">
 		update sp_client
 		<set>
-			<if test="storeid != null">
-				storeId = #{storeid,jdbcType=INTEGER},
+			<if test="storeId != null">
+				storeId = #{storeId,jdbcType=INTEGER},
 			</if>
 			<if test="otherStoreId != null">
 				otherStoreId = #{otherStoreId,jdbcType=INTEGER},
@@ -324,14 +379,14 @@
 			<if test="cate != null">
 				cate =#{cate,jdbcType=VARCHAR},
 			</if>
-			<if test="contact != null">
-				contact =#{contact,jdbcType=VARCHAR},
+			<if test="nickName != null">
+				nickName =#{nickName,jdbcType=VARCHAR},
 			</if>
 			<if test="image != null">
 				image =#{image,jdbcType=VARCHAR},
 			</if>
-			<if test="phone != null">
-				phone =#{phone,jdbcType=VARCHAR},
+			<if test="phoneBack != null">
+				phoneBack =#{phoneBack,jdbcType=VARCHAR},
 			</if>
 			<if test="telephone != null">
 				telephone = #{telephone,jdbcType=VARCHAR},
@@ -341,6 +396,9 @@
 			</if>
 			<if test="city != null">
 				city =#{city,jdbcType=VARCHAR},
+			</if>
+			<if test="points != null">
+				points =#{points,jdbcType=DECIMAL},
 			</if>
 			<if test="district != null">
 				district = #{district,jdbcType=VARCHAR},
@@ -361,6 +419,14 @@
 				modify_by = #{modifyBy,jdbcType=VARCHAR},
 			</if>
 		</set>
-		where id = #{id,jdbcType=INTEGER}
+		where 1=1
+		<if test="id !=null">
+		and id = #{id,jdbcType=INTEGER}
+		</if>
+		<if test="idArray !=null">
+		 and  id  in <foreach collection="idArray" item="item" index="index" open="("
+			separator="," close=")">#{item}</foreach>
+		</if>
+		
 	</update>
 </mapper>

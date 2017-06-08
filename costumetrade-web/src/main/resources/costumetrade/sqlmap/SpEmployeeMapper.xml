@@ -4,29 +4,28 @@
   <resultMap id="BaseResultMap" type="costumetrade.user.domain.SpEmployee">
   	<id column="id" jdbcType="INTEGER" property="id" />
     <result column="storeId" jdbcType="INTEGER" property="storeId" />
-    
     <result column="status" jdbcType="INTEGER" property="status" />
-    <result column="subbelong" jdbcType="VARCHAR" property="subbelong" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
     <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="reallyName" jdbcType="VARCHAR" property="reallyName" />
     <result column="openid" jdbcType="VARCHAR" property="openid" />
-    <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="cphone" jdbcType="VARCHAR" property="cphone" />
+    <result column="phoneBack" jdbcType="VARCHAR" property="phoneBack" />
+    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
     <result column="address" jdbcType="VARCHAR" property="address" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="addressBack" jdbcType="VARCHAR" property="addressBack" />
     <result column="birthdate" jdbcType="TIMESTAMP" property="birthdate" />
-    <result column="card_id" jdbcType="VARCHAR" property="cardId" />
+    <result column="nickName" jdbcType="VARCHAR" property="nickName" />
+    <result column="image" jdbcType="VARCHAR" property="image" />
     <result column="weChatNo" jdbcType="VARCHAR" property="weChatNo" />
     <result column="discount" jdbcType="DECIMAL" property="discount" />
     <result column="zeroPrice" jdbcType="DECIMAL" property="zeroPrice" />
     <result column="modifyPrice" jdbcType="VARCHAR" property="modifyPrice" />
   </resultMap>
   <sql id="Base_Column_List">
-    storeId, id, status, subbelong, create_time, create_by, modify_time, modify_by, 
-    name, openid, phone, cphone, address, email, birthdate, card_id,discount,zeroPrice,weChatNo,modifyPrice
+    storeId, id, status,  create_time, create_by, modify_time, modify_by,image, 
+    reallyName, openid, phoneBack, telephone, address, addressBack, birthdate, nickName,discount,zeroPrice,weChatNo,modifyPrice
   </sql>
   <select id="selectByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployee" resultMap="BaseResultMap">
     select 
@@ -57,17 +56,17 @@
   </delete>
   <insert id="insert" parameterType="costumetrade.user.domain.SpEmployee"  useGeneratedKeys="true" keyProperty="id">
     insert into sp_employee (storeId, status, 
-      subbelong, create_time, create_by, 
+       create_time, create_by, 
       modify_time, modify_by, 
-      name, openid, phone, 
-      cphone, address, email, 
-      birthdate, card_id,discount,zeroPrice,weChatNo,modifyPrice)
+      reallyName, openid, phoneBack, 
+      telephone, address, addressBack, 
+      birthdate, nickName,discount,zeroPrice,weChatNo,modifyPrice)
     values (#{storeId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
-      #{subbelong,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR}, 
-      #{name,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, 
-      #{cphone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{email,jdbcType=VARCHAR}, 
-      #{birthdate,jdbcType=TIMESTAMP}, #{cardId,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, #{zeroPrice,jdbcType=DECIMAL}, #{weChatNo,jdbcType=VARCHAR},
+      #{reallyName,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, #{phoneBack,jdbcType=VARCHAR}, 
+      #{telephone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{addressBack,jdbcType=VARCHAR}, 
+      #{birthdate,jdbcType=TIMESTAMP}, #{nickName,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, #{zeroPrice,jdbcType=DECIMAL}, #{weChatNo,jdbcType=VARCHAR},
       #{modifyPrice,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.user.domain.SpEmployee" useGeneratedKeys="true" keyProperty="id">
@@ -82,9 +81,8 @@
       <if test="status != null">
         status,
       </if>
-      <if test="subbelong != null">
-        subbelong,
-      </if>
+    
+   
       <if test="createTime != null">
         create_time,
       </if>
@@ -97,29 +95,32 @@
       <if test="modifyBy != null">
         modify_by,
       </if>
-      <if test="name != null">
-        name,
+      <if test="reallyName != null">
+        reallyName,
+      </if>
+      <if test="image != null">
+        image,
       </if>
       <if test="openid != null">
         openid,
       </if>
-      <if test="phone != null">
-        phone,
+      <if test="phoneBack != null">
+        phoneBack,
       </if>
-      <if test="cphone != null">
-        cphone,
+      <if test="telephone != null">
+        telephone,
       </if>
       <if test="address != null">
         address,
       </if>
-      <if test="email != null">
-        email,
+      <if test="addressBack != null">
+        addressBack,
       </if>
       <if test="birthdate != null">
         birthdate,
       </if>
-      <if test="cardId != null">
-        card_id,
+      <if test="nickName != null">
+        nickName,
       </if>
       <if test="discount != null">
         discount,
@@ -144,9 +145,7 @@
       <if test="status != null">
         #{status,jdbcType=INTEGER},
       </if>
-      <if test="subbelong != null">
-        #{subbelong,jdbcType=VARCHAR},
-      </if>
+    
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -159,29 +158,32 @@
       <if test="modifyBy != null">
         #{modifyBy,jdbcType=VARCHAR},
       </if>
-      <if test="name != null">
-        #{name,jdbcType=VARCHAR},
+      <if test="reallyName != null">
+        #{reallyName,jdbcType=VARCHAR},
+      </if>
+      <if test="image != null">
+        #{image,jdbcType=VARCHAR},
       </if>
       <if test="openid != null">
         #{openid,jdbcType=VARCHAR},
       </if>
-      <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
+      <if test="phoneBack != null">
+        #{phoneBack,jdbcType=VARCHAR},
       </if>
-      <if test="cphone != null">
-        #{cphone,jdbcType=VARCHAR},
+      <if test="telephone != null">
+        #{telephone,jdbcType=VARCHAR},
       </if>
       <if test="address != null">
         #{address,jdbcType=VARCHAR},
       </if>
-      <if test="email != null">
-        #{email,jdbcType=VARCHAR},
+      <if test="addressBack != null">
+        #{addressBack,jdbcType=VARCHAR},
       </if>
       <if test="birthdate != null">
         #{birthdate,jdbcType=TIMESTAMP},
       </if>
-      <if test="cardId != null">
-        #{cardId,jdbcType=VARCHAR},
+      <if test="nickName != null">
+        #{nickName,jdbcType=VARCHAR},
       </if>
       <if test="discount != null">
         #{discount,jdbcType=DECIMAL},
@@ -203,9 +205,7 @@
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
       </if>
-      <if test="subbelong != null">
-        subbelong = #{subbelong,jdbcType=VARCHAR},
-      </if>
+     
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -218,29 +218,32 @@
       <if test="modifyBy != null">
         modify_by = #{modifyBy,jdbcType=VARCHAR},
       </if>
-      <if test="name != null">
-        name = #{name,jdbcType=VARCHAR},
+      <if test="reallyName != null">
+        reallyName = #{reallyName,jdbcType=VARCHAR},
+      </if>
+      <if test="image != null">
+        image = #{image,jdbcType=VARCHAR},
       </if>
       <if test="openid != null">
         openid = #{openid,jdbcType=VARCHAR},
       </if>
-      <if test="phone != null">
-        phone = #{phone,jdbcType=VARCHAR},
+      <if test="phoneBack != null">
+        phoneBack = #{phoneBack,jdbcType=VARCHAR},
       </if>
-      <if test="cphone != null">
-        cphone = #{cphone,jdbcType=VARCHAR},
+      <if test="telephone != null">
+        telephone = #{telephone,jdbcType=VARCHAR},
       </if>
       <if test="address != null">
         address = #{address,jdbcType=VARCHAR},
       </if>
-      <if test="email != null">
-        email = #{email,jdbcType=VARCHAR},
+      <if test="addressBack != null">
+        addressBack = #{addressBack,jdbcType=VARCHAR},
       </if>
       <if test="birthdate != null">
         birthdate = #{birthdate,jdbcType=TIMESTAMP},
       </if>
-      <if test="cardId != null">
-        card_id = #{cardId,jdbcType=VARCHAR},
+      <if test="nickName != null">
+        nickName = #{nickName,jdbcType=VARCHAR},
       </if>
         <if test="discount != null">
        discount = #{discount,jdbcType=DECIMAL},
@@ -258,26 +261,27 @@
     where storeId = #{storeId,jdbcType=INTEGER}
       and id = #{id,jdbcType=INTEGER}
   </update>
+  
   <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployee">
     update sp_employee
     set status = #{status,jdbcType=INTEGER},
-      subbelong = #{subbelong,jdbcType=VARCHAR},
+     
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},
       modify_by = #{modifyBy,jdbcType=VARCHAR},
-      name = #{name,jdbcType=VARCHAR},
+      reallyName = #{reallyName,jdbcType=VARCHAR},
       openid = #{openid,jdbcType=VARCHAR},
-      phone = #{phone,jdbcType=VARCHAR},
-      cphone = #{cphone,jdbcType=VARCHAR},
+      phoneBack = #{phoneBack,jdbcType=VARCHAR},
+      telephone = #{telephone,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
-      email = #{email,jdbcType=VARCHAR},
+      addressBack = #{addressBack,jdbcType=VARCHAR},
       birthdate = #{birthdate,jdbcType=TIMESTAMP},
       modifyPrice =#{modifyPrice,jdbcType=VARCHAR},
       weChatNo =#{weChatNo,jdbcType=VARCHAR},
       zeroPrice =#{zeroPrice,jdbcType=DECIMAL},
       discount = #{discount,jdbcType=DECIMAL},
-      card_id = #{cardId,jdbcType=VARCHAR}
+      nickName = #{nickName,jdbcType=VARCHAR}
       
     where storeId = #{storeId,jdbcType=INTEGER}
       and id = #{id,jdbcType=INTEGER}

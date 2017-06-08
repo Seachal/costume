@@ -55,7 +55,7 @@
       #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.ScLogistics">
-    insert into sc_logistics_#{storeid,jdbcType=INTEGER}
+    insert into sc_logistics
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
