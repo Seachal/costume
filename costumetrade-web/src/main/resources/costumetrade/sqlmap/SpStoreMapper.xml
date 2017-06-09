@@ -58,6 +58,11 @@
       <if test="store.id != null">
   	   and id = #{store.id,jdbcType=INTEGER}
       </if>
+      <if test="store.idArray != null">
+  	   and id in 
+  	   <foreach collection="store.idArray" item="item" index="index"
+				open="(" separator="," close=")"> #{item}</foreach>
+      </if>
       <if test="page != null">
       LIMIT #{page.startRow},#{page.pageSize}
       </if>
@@ -82,7 +87,7 @@
       #{region,jdbcType=VARCHAR}, #{wechat,jdbcType=VARCHAR}, #{birthday,jdbcType=TIMESTAMP}, 
       #{description,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="costumetrade.user.domain.SpStore">
+  <insert id="insertSelective" parameterType="costumetrade.user.domain.SpStore" keyProperty="id" useGeneratedKeys="true">
     insert into sp_store
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">

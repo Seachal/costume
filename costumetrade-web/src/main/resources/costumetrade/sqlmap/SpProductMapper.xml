@@ -6,7 +6,7 @@
 		<result column="storeId" jdbcType="INTEGER" property="storeId" />
 		<result column="status" jdbcType="INTEGER" property="status" />
 		<result column="code" jdbcType="VARCHAR" property="code" />
-		<result column="levelType" jdbcType="INTEGER" property="levelType" />
+		<result column="popularize" jdbcType="INTEGER" property="popularize" />
 		<result column="brandId" jdbcType="INTEGER" property="brandid" />
 		<result column="productType" jdbcType="INTEGER" property="producttype" />
 		<result column="name" jdbcType="VARCHAR" property="name" />
@@ -101,7 +101,7 @@
 
 	<sql id="Base_Column_List">
 		id, storeId, status, code, brandId, productType,
-		name,isDiscount,isModify, fastcode, barcode, barcodes, levelType,
+		name,isDiscount,isModify, fastcode, barcode, barcodes, popularize,
 		grade, unit, colors, sizes, handcount, year, season, salTag,
 		salMonth,saleNum, image, image1,video1,video2,video3,
 		image2, image3, image4, description, warn_low, warn_high, time_up, time_down,
@@ -120,6 +120,25 @@
 
 		where id = #{id,jdbcType=VARCHAR}
 	</select>
+	
+	<select id="selectPopulars" parameterType="costumetrade.order.domain.SpProduct" resultMap="BaseResultMap">
+		select id,storeId,
+		 image,
+		iamge1,image2,image3,image4
+		from sp_product_#{storeId,jdbcType=INTEGER}
+		where 
+		<if test="id !=null">
+		and  id = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="storeId !=null">
+		and  storeId = #{storeId,jdbcType=VARCHAR}
+		</if>
+		<if test="popularize !=null">
+		and  popularize = #{popularize,jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	
 	<select id="selectById" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
@@ -131,7 +150,12 @@
 
 	<select id="selectProducts" resultMap="ProductsResultMap">
 		SELECT
-		product.id,product.storeId,product.code,product.name,product.image,product.time_up,
+		product.id,product.storeId,product.code,product.name,product.time_up,
+		(CASE WHEN product.image IS NOT NULL THEN product.image
+			WHEN product.image1 IS NOT NULL THEN product.image1
+			WHEN product.image2 IS NOT NULL THEN product.image2
+			WHEN product.image3 IS NOT NULL THEN product.image3
+			WHEN product.image4 IS NOT NULL THEN product.image4 ELSE product.image END) as image,
 		price.purchasePrice, price.tagPrice, price.firsthPrice,
 		price.secondPrice, price.thirdPrice,
 		price.fourthPrice,price.fifthPrice,product.saleNum
@@ -367,7 +391,7 @@
 			separator="," close=")">#{item,jdbcType=VARCHAR}</foreach>
 	</update>
 	<insert id="insert" parameterType="costumetrade.order.domain.SpProduct">
-		insert into sp_product (id, storeId, status,levelType,
+		insert into sp_product (id, storeId, status,popularize,
 		code, brandId, productType,
 		name, fastcode, barcode,
 		barcodes, grade, unit, isModify,isDiscount,
@@ -379,7 +403,7 @@
 		time_up, time_down, create_time,
 		create_by, modify_time, modify_by)
 		values (#{id,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER},
-		#{status,jdbcType=INTEGER}, #{levelType,jdbcType=INTEGER},
+		#{status,jdbcType=INTEGER}, #{popularize,jdbcType=INTEGER},
 		#{code,jdbcType=VARCHAR}, #{brandid,jdbcType=INTEGER},
 		#{producttype,jdbcType=INTEGER},
 		#{name,jdbcType=VARCHAR}, #{fastcode,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR},
@@ -405,8 +429,8 @@
 			<if test="id != null">
 				id,
 			</if>
-			<if test="levelType != null">
-				levelType,
+			<if test="popularize != null">
+				popularize,
 			</if>
 			<if test="storeId != null">
 				storeId,
@@ -528,8 +552,8 @@
 			<if test="id != null">
 				#{id,jdbcType=INTEGER},
 			</if>
-			<if test="levelType != null">
-				#{levelType,jdbcType=INTEGER},
+			<if test="popularize != null">
+				#{popularize,jdbcType=INTEGER},
 			</if>
 			<if test="storeId != null">
 				#{storeId,jdbcType=INTEGER},

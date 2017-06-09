@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="costumetrade.order.mapper.SpClientMapper">
 	<resultMap id="BaseResultMap" type="costumetrade.order.domain.SpClient">
-		<result column="id" jdbcType="INTEGER" property="id" />
+		<result column="id" jdbcType="VARCHAR" property="id" />
 		<result column="storeId" jdbcType="INTEGER" property="storeId" />
 		<result column="otherStoreId" jdbcType="INTEGER" property="otherStoreId" />
 		<result column="userId" jdbcType="INTEGER" property="userId" />
@@ -46,17 +46,17 @@
 		create_time, create_by,
 		modify_time, modify_by
 	</sql>
-	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+	<select id="selectByPrimaryKey" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from sp_client
-		where id = #{clientId,jdbcType=INTEGER}
+		where id = #{clientId,jdbcType=VARCHAR}
 	</select>
-	<select id="deleteById" parameterType="java.lang.Integer"
+	<select id="deleteById" parameterType="java.lang.String"
 		resultMap="BaseResultMap">
 		delete from sp_client
-		where id = #{clientId,jdbcType=INTEGER}
+		where id = #{clientId,jdbcType=VARCHAR}
 	</select>
 
 	<select id="select" 
@@ -99,6 +99,12 @@
 		<if test="client.cateList != null">
 			and cate in
 			<foreach collection="client.cateList" item="item" index="index"
+				open="(" separator="," close=")"> #{item}</foreach>
+			
+		</if>
+		<if test="client.idArray != null">
+			and id in
+			<foreach collection="client.idArray" item="item" index="index"
 				open="(" separator="," close=")"> #{item}</foreach>
 			
 		</if>
@@ -153,7 +159,7 @@
 		blank_id, create_time,
 		create_by,
 		modify_time, modify_by)
-		values (#{id,jdbcType=INTEGER},
+		values (#{id,jdbcType=VARCHAR},
 		#{storeId,jdbcType=INTEGER},
 		#{otherStoreId,jdbcType=INTEGER},
 		#{userId,jdbcType=INTEGER},
@@ -182,7 +188,9 @@
 	<insert id="insertSelective" parameterType="costumetrade.order.domain.SpClient">
 		insert into sp_client
 		<trim prefix="(" suffix=")" suffixOverrides=",">
-
+			<if test="id != null">
+			    id,
+			</if>
 			<if test="storeId != null">
 				storeId,
 			</if>
@@ -269,7 +277,9 @@
 			</if>
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
-
+			<if test="id != null">
+				#{id},
+			</if>
 			<if test="storeId != null">
 				#{storeId,jdbcType=INTEGER},
 			</if>
@@ -294,7 +304,7 @@
 			<if test="fastcode != null">
 				#{fastcode,jdbcType=VARCHAR},
 			</if>
-			'0',
+			0,
 			<if test="nickName != null">
 				#{nickName,jdbcType=VARCHAR},
 			</if>
@@ -370,6 +380,9 @@
 			<if test="openid != null">
 				openid = #{openid,jdbcType=INTEGER},
 			</if>
+			<if test="status != null">
+				status = #{status,jdbcType=INTEGER},
+			</if>
 			<if test="prodlevels != null">
 				prodLevels =#{prodlevels,jdbcType=VARCHAR},
 			</if>
@@ -421,7 +434,7 @@
 		</set>
 		where 1=1
 		<if test="id !=null">
-		and id = #{id,jdbcType=INTEGER}
+		and id = #{id,jdbcType=VARCHAR}
 		</if>
 		<if test="idArray !=null">
 		 and  id  in <foreach collection="idArray" item="item" index="index" open="("
