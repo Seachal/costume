@@ -25,9 +25,11 @@ import costumetrade.user.domain.InputMessage;
 import costumetrade.user.domain.QRCodeScanParam;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpEmployee;
+import costumetrade.user.domain.SpStore;
 import costumetrade.user.domain.SpUser;
 import costumetrade.user.mapper.ScWeChatMapper;
 import costumetrade.user.mapper.SpEmployeeMapper;
+import costumetrade.user.mapper.SpStoreMapper;
 import costumetrade.user.mapper.SpUserMapper;
 
 
@@ -56,7 +58,8 @@ public class WeChatServiceImpl implements WeChatService {
 	private ScWeChatMapper scWeChatMapper;
 	@Autowired
 	private SpUserMapper spUserMapper;
-
+	@Autowired
+	private SpStoreMapper  spStoreMapper;
 	/**
 	 * 获取access
 	 * @throws IOException 
@@ -139,20 +142,44 @@ public class WeChatServiceImpl implements WeChatService {
 			e1.printStackTrace();
 		}
     	JSONObject json = JSON.parseObject(userInfo);
-    	String nickName = json.getString("nickName"); 
+    	String nickName = json.getString("nickname"); 
     	String headimgurl = json.getString("headimgurl");
     	
     	ScWeChat wechat = scWeChatMapper.selectByOpenId(message.getFromUserName());
     	SpUser user = new SpUser();
-    	if(wechat !=null && wechat.getUserid()!=null){
-    		user = spUserMapper.selectByPrimaryKey(wechat.getUserid());
+    	SpStore store = new SpStore();
+    	boolean enableBeCustomer = true;
+    	boolean enableBeSupplier = true;
+    	boolean enableBeFriend = true;
+    	if(wechat !=null&& wechat.getId() !=null){
+    		
+    		if(wechat.getStoreid() != null){
+    			store = spStoreMapper.selectByPrimaryKey(wechat.getStoreid());
+    		}else if(wechat.getUserid()!=null){
+    			user = spUserMapper.selectByPrimaryKey(wechat.getUserid());
+    		}
+    		
+    		if(wechat.getUserid() !=null&&(param.getType()==2||param.getType()==3)){
+    			enableBeSupplier =false;
+    			enableBeFriend =false;
+    		}else if(wechat.getEmpid()!=null &&(param.getType()==2||param.getType()==3||param.getType()==1)){
+    			enableBeCustomer =false;
+    			enableBeSupplier =false;
+    			enableBeFriend =false;
+    		}
     	}
     	 /**
          * 扫描类型 1：加客户，2.加供应商 3.加朋友 4、加员工
          * */
     	int save =0;
+    	/**
+    	 * 控制店员不能加客户/供应商、朋友
+    	 * 控制普通消费者不能加 供应商、朋友
+    	 * */
     	if(param != null&&param.getStoreId()!=null){
-    		if(param.getType()==1||param.getType()==2||param.getType()==3){
+    		if((param.getType()==1&&enableBeCustomer)
+    				||(param.getType()==2&&enableBeSupplier)
+    				||(param.getType()==3&&enableBeFriend)){
     			SpClient client = new SpClient();
     			client.setId(param.getId());
     			client.setType(param.getType()+"");
@@ -162,8 +189,16 @@ public class WeChatServiceImpl implements WeChatService {
     			client.setModifyTime(new Date());
     			client.setImage(headimgurl);
     			client.setNickName(nickName);
-    			client.setAddress(user.getAddress());
-    			client.setTelephone(user.getPhone());
+    			if(store != null && store.getId() !=null){
+    				client.setAddress(store.getAddress());
+        			client.setTelephone(store.getPhone());
+        			client.setReallyName(store.getName());
+    			}else if(user != null && user.getId() !=null){
+    				client.setAddress(user.getAddress());
+        			client.setTelephone(user.getPhone());
+        			client.setReallyName(user.getName());
+    			}
+    			
     			SpClient c = spClientMapper.selectByPrimaryKey(param.getId());
     			if(c == null){//重复扫只保存一次
     				save =spClientMapper.insertSelective(client);
@@ -180,7 +215,7 @@ public class WeChatServiceImpl implements WeChatService {
     			}
     		}else if(param.getType()==4){
     			SpEmployee employee = new SpEmployee();
-    			employee.setId(param.getId());
+    			employee.setId(Integer.parseInt(param.getId()));
     			employee.setOpenid(message.getFromUserName());
     			employee.setStoreId(param.getStoreId());
     			employee.setWeChatNo(message.getToUserName());

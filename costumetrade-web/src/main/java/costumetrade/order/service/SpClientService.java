@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import costumetrade.order.domain.ScFocusShop;
 import costumetrade.order.domain.SpClient;
 import costumetrade.order.query.ClientQuery;
 import costumetrade.user.domain.QRCodeScanParam;
@@ -23,13 +24,17 @@ public interface SpClientService {
 	void getTwoDimension1(String url, HttpServletResponse resp, int width,
 			int height);
 	
-	public int saveClient(SpClient client);
+	public String saveClient(SpClient client);
 	
 	public List<SpClient> getClients(SpClient spClient);
 	
-	public SpClient getClient(Integer clientId);
+	public SpClient getClient(String clientId);
 	
 	public int updateClients(SpClient spClient);
+	/**
+	 * 取消关注
+	 * */
+	public int cancelFocus(ScFocusShop focusShop);
 	
 	/**
 	 * 查询初始化

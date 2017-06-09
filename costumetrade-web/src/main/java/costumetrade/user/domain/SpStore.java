@@ -1,6 +1,7 @@
 package costumetrade.user.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -114,9 +115,10 @@ public class SpStore extends Entity {
     
     private Integer userId;
     
+    private List<String> images;
     
+    private List<Integer > idArray;
     
-
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -309,6 +311,23 @@ public class SpStore extends Entity {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+
+	public List<Integer> getIdArray() {
+		return idArray;
+	}
+
+	public void setIdArray(List<Integer> idArray) {
+		this.idArray = idArray;
+	}
+
+	public List<String> getImages() {
+		return images;
+	}
+
+	public void setImages(List<String> images) {
+		this.images = images;
 	}
 
 	

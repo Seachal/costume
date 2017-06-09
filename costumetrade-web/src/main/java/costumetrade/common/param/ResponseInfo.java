@@ -30,7 +30,9 @@ public enum ResponseInfo {
 	UPLOAD_EXCEPTION(1012,"上传失败"),
 	NO_STOCK(1013,"缺少库存"),
 	DATA_EXCEPTION(1014,"数据已存在"),
-	SCAN_EXCEPTION(1014,"未扫描二维码"),
+	SCAN_CUSTOMER_EXCEPTION(1015,"未扫描二维码或者店员不能加客户"),
+	SCAN_SUPPLIER_EXCEPTION(1016,"未扫描二维码或者普通用户和店员不能加供应商"),
+	SCAN_FRIEND_EXCEPTION(1017,"未扫描二维码或者普通用户和店员不能朋友"),
 	;
 
 	public final int code;

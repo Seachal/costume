@@ -121,6 +121,28 @@ public class SpProductController {
 		return  ApiResponse.getInstance(q);
 	}
 	
+	@RequestMapping("/makePopularize")
+	@ResponseBody
+	public ApiResponse makePopularize(ProductQuery query) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(query == null){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		Integer  q= spProductService.makePopularize(query);
+		if(q == null){
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
+			return result;
+		}
+		return  result;
+	}
+	
+	
+	
 	@RequestMapping("/updateProductInit")
 	@ResponseBody
 	public ApiResponse updateProductInit(ProductQuery  productQuery ) {

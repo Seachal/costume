@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSON;
@@ -23,6 +24,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
+import costumetrade.order.domain.ScFocusShop;
 import costumetrade.order.domain.SpClient;
 import costumetrade.order.query.ClientQuery;
 import costumetrade.order.service.SpClientService;
@@ -52,15 +54,17 @@ public class SpClientController {
 
 	@RequestMapping("/saveClient")
 	@ResponseBody
-	public ApiResponse saveClient(SpClient client) {
+	public ApiResponse saveClient(@RequestBody SpClient client) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		int save = spClientService.saveClient(client);
-		if(save<=0){
+		String save = spClientService.saveClient(client);
+		if(save==null){
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
+		}else {
+			result.setData(save);
 		}
 		return result;
 	}
@@ -77,13 +81,15 @@ public class SpClientController {
 			result.setCode(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
+		}else{
+			result.setData(client);
 		}
 		return result;
 	}
 	
 	@RequestMapping("/getClient")
 	@ResponseBody
-	public ApiResponse getClient(Integer clientId) {
+	public ApiResponse getClient(String clientId) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
@@ -93,6 +99,8 @@ public class SpClientController {
 			result.setCode(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
+		}else{
+			result.setData(client);
 		}
 		return result;
 	}
@@ -133,21 +141,27 @@ public class SpClientController {
 		}
 		return result;
 	}
-/*	@RequestMapping("/deleteClient")
+	@RequestMapping("/cancelFocus")
 	@ResponseBody
-	public ApiResponse deleteClient(SpClient client) {
+	public ApiResponse cancelFocus(ScFocusShop focusShop) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		Integer clientId = client.getId();
-		int delete = spClientService.deleteClient(clientId);
+		if(StringUtils.isBlank(focusShop.getOpenid())
+				|| focusShop.getShopid()==null
+				){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		int delete = spClientService.cancelFocus(focusShop);
 		if(delete <= 0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
 			return result;
 		}
 		return result;
-	}*/
+	}
 	@RequestMapping("/scanQRCode")
 	@ResponseBody
 	public ApiResponse scanQRCode(@RequestBody QRCodeScanParam param) throws Exception {
@@ -190,12 +204,22 @@ public class SpClientController {
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		if(object == null){
+		if(object == null&&param.getType()==1){
 			result.setCode(ResponseInfo.SUCCESS.code);
-			result.setData(ResponseInfo.SCAN_EXCEPTION.code);
-			result.setMsg(ResponseInfo.SCAN_EXCEPTION.msg);
+			result.setData(ResponseInfo.SCAN_CUSTOMER_EXCEPTION.code);
+			result.setMsg(ResponseInfo.SCAN_CUSTOMER_EXCEPTION.msg);
 			return result;
-		}else{
+		}else if(object == null&&param.getType()==2){
+			result.setCode(ResponseInfo.SUCCESS.code);
+			result.setData(ResponseInfo.SCAN_SUPPLIER_EXCEPTION.code);
+			result.setMsg(ResponseInfo.SCAN_SUPPLIER_EXCEPTION.msg);
+			return result;
+		}else if(object == null&&param.getType()==3){
+			result.setCode(ResponseInfo.SUCCESS.code);
+			result.setData(ResponseInfo.SCAN_FRIEND_EXCEPTION.code);
+			result.setMsg(ResponseInfo.SCAN_FRIEND_EXCEPTION.msg);
+			return result;
+		}else {
 			result.setData(object);
 		}
 		return result;

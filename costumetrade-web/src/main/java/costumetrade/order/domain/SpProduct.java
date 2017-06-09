@@ -151,6 +151,8 @@ public class SpProduct extends Entity {
     private String video2;
     
     private String video3;
+    
+    private Integer popularize;
 
     /**
      *  商品描述
@@ -247,6 +249,9 @@ public class SpProduct extends Entity {
 	private List<SsProductFile> fileList;
 	
 	private Integer pageNum;
+	
+	private List<String> idArray;
+	
 	
     private static final long serialVersionUID = 1L;
     
@@ -679,6 +684,22 @@ public class SpProduct extends Entity {
 
 	public void setPageNum(Integer pageNum) {
 		this.pageNum = pageNum;
+	}
+
+	public List<String> getIdArray() {
+		return idArray;
+	}
+
+	public void setIdArray(List<String> idArray) {
+		this.idArray = idArray;
+	}
+
+	public Integer getPopularize() {
+		return popularize;
+	}
+
+	public void setPopularize(Integer popularize) {
+		this.popularize = popularize;
 	}
 	
 	

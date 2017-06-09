@@ -8,6 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
+import costumetrade.order.service.WeChatService;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpStore;
 import costumetrade.user.domain.SpUser;
@@ -25,6 +29,8 @@ public class SpStoreServiceImpl implements SpStoreService{
 	private SpUserMapper spUserMapper;
 	@Autowired
 	private SpStoreMapper spStoreMapper;
+	@Autowired
+	private WeChatService WeChatService;
 	@Override
 	public List<SpStore> getChainStore(Integer storeId) {
 		SpStore store = new SpStore();
@@ -55,6 +61,34 @@ public class SpStoreServiceImpl implements SpStoreService{
 	@Override
 	public int deleteChainStore(Integer storeId) {
 		return spStoreMapper.deleteByPrimaryKey(storeId);
+	}
+	@Override
+	public int insertStore(String openid) {
+		String  userInfo=null;
+		try {
+			userInfo =WeChatService.getWeChatUserInfo(openid);
+			if(userInfo !=null){
+				JSONObject json = JSON.parseObject(userInfo);
+		    	String nickName = json.getString("nickname"); 
+		    	String headimgurl = json.getString("headimgurl");
+		    	SpStore store = new SpStore();
+		    	store.setCreateTime(new Date());
+		    	store.setName(nickName);
+		    	store.setStorephoto(headimgurl);
+		    	store.setStatus(0);
+		    	spStoreMapper.insertSelective(store);
+		    	
+		    	//初始化高级设置数据
+		    	if(store.getId()!=null){
+		    		
+		    	}
+		    	return store.getId();
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0;
 	}
 	
 	

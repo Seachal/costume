@@ -2,6 +2,7 @@ package costumetrade.user.service;
 
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpStore;
+import costumetrade.user.query.StoreQuery;
 
 
 public interface SpUserService {
@@ -13,4 +14,8 @@ public interface SpUserService {
 	 * 保存个人中心信息
 	 * */
 	public int saveUserOrStore(SpStore spStore);
+	/**
+	 * 加载页面
+	 * */
+	public StoreQuery getStores(StoreQuery query);
 }

@@ -25,6 +25,7 @@ import costumetrade.common.util.MD5Util;
 import costumetrade.common.util.OrderNoGenerator;
 import costumetrade.common.util.ServiceUtil;
 import costumetrade.common.util.Sha1Util;
+import costumetrade.order.service.WeChatService;
 import costumetrade.pay.common.WxPayConfig;
 import costumetrade.pay.domain.TradeInfo;
 import costumetrade.pay.enums.EnumResultCode;
@@ -36,6 +37,7 @@ import costumetrade.pay.res.ResCloseOrder;
 import costumetrade.pay.service.impl.TradeInfoService;
 import costumetrade.pay.utils.IpUtils;
 import costumetrade.pay.utils.WxPayPubHelper;
+import costumetrade.user.service.SpStoreService;
 
 
 /*******************************************************************************
@@ -57,7 +59,8 @@ public class WxPayAction  {
 	
 	@Autowired
 	private TradeInfoService tradeInfoService;
-	
+	@Autowired
+	private SpStoreService spStoreService;
 
 	@RequestMapping("/orderInput")
 	public String orderInput(HttpServletRequest request,String code) throws Exception {
@@ -120,6 +123,22 @@ public class WxPayAction  {
 	@RequestMapping("/payRedirect")
 	public ApiResponse payRedirect(PayParam param){
 		return ApiResponse.getInstance(param);
+	}
+	/**
+	 * 支付成功跳转
+	 * */
+	@RequestMapping("/paySuccess")
+	public ApiResponse paySuccess(String openid){
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(openid == null){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		result.setData(spStoreService.insertStore(openid));
+		return result;
 	}
 	/**
 	 * 微信关闭订单

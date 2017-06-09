@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import costumetrade.order.domain.ScFocusShop;
 @Mapper
 public interface ScFocusShopMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(ScFocusShop record);
 
     int insert(ScFocusShop record);
 

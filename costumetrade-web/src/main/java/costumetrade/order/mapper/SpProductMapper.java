@@ -29,4 +29,6 @@ public interface SpProductMapper {
     List<ProductQuery> selectProducts(@Param("product")ProductQuery product , @Param("page")Page page);
     
     ProductQuery selectProduct(ProductQuery param);
+    
+    List<SpProduct> selectPopulars(SpProduct record);
 }

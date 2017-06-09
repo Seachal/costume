@@ -7,6 +7,7 @@ import java.util.List;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,13 +21,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 
+
+
+
 import costumetrade.common.page.Page;
 import costumetrade.common.util.PingyinUtil;
+import costumetrade.order.domain.ScFocusShop;
 /*import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;*/
 import costumetrade.order.domain.SpClient;
+import costumetrade.order.mapper.ScFocusShopMapper;
 import costumetrade.order.mapper.SpClientMapper;
 import costumetrade.order.query.ClientQuery;
 import costumetrade.order.query.Rules;
@@ -48,6 +54,8 @@ public class SpClientServiceImpl implements SpClientService{
 	private SpCustProdPriceMapper spCustProdPriceMapper;
 	@Autowired
 	private SpEmployeeMapper spEmployeeMapper;
+	@Autowired
+	private ScFocusShopMapper scFocusShopMapper;
 
 	/** 
 	 *  生成web版本二维码 
@@ -115,7 +123,7 @@ public class SpClientServiceImpl implements SpClientService{
 		  return image;
 	}*/
 	@Override
-	public int saveClient(SpClient client) {
+	public String saveClient(SpClient client) {
 		int operate = 0;
 		String name = getName(client);
 		String code = PingyinUtil.getPinYinHeadChar(name);
@@ -165,13 +173,29 @@ public class SpClientServiceImpl implements SpClientService{
 	
 	
 	@Override
-	public SpClient getClient(Integer clientId) {
+	public SpClient getClient(String clientId) {
 		return spClientMapper.selectByPrimaryKey(clientId);
 	}
 	@Override
 	public int updateClients(SpClient spClient) {
+		int save = spClientMapper.updateByPrimaryKeySelective(spClient);
 		
-		return spClientMapper.updateByPrimaryKeySelective(spClient);
+		List<String> openids = new ArrayList<String>();
+		if(save>0&&spClient.getStatus()==1){//批量删除，删除关注
+			ScFocusShop shop = new ScFocusShop();
+			List<SpClient> clients = spClientMapper.select(spClient,null);
+			for(SpClient client : clients){
+				openids.add(client.getOpenid());
+			}
+			if(openids.size()>0){
+				shop.setOpenids(openids);
+			}else{
+				shop.setOpenids(null);
+			}
+			shop.setShopid(spClient.getStoreId());
+			scFocusShopMapper.deleteByPrimaryKey(shop);
+		}
+		return save;
 	}
 	@Override
 	public ClientQuery initCustomer(ClientQuery clientQuery) {
@@ -204,8 +228,11 @@ public class SpClientServiceImpl implements SpClientService{
 		List<String> distinctList = new ArrayList<String>();
 		
 		if(clients !=null && clients.size()>0){
-			for(SpClient c : clients){
-				distinctList.add(c.getDistrict());
+			for(SpClient c:clients){
+				if(c!=null && StringUtils.isNotBlank(c.getDistrict())){
+					distinctList.add(c.getDistrict());
+				}
+				
 			}
 			query.setDistrictList(distinctList);
 		}
@@ -248,10 +275,14 @@ public class SpClientServiceImpl implements SpClientService{
 		}else if(param.getType()==4){
 			SpEmployee employee = new SpEmployee();
 			employee.setStoreId(param.getStoreId());
-			employee.setId(param.getId());
+			employee.setId(Integer.parseInt(param.getId()));
 			object = spEmployeeMapper.selectByPrimaryKey(employee);
 		}
 		return object;
+	}
+	@Override
+	public int cancelFocus(ScFocusShop focusShop) {
+		return scFocusShopMapper.deleteByPrimaryKey(focusShop);
 	}
 	
 }

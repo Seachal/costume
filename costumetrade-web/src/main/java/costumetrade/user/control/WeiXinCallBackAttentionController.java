@@ -84,7 +84,7 @@ public class WeiXinCallBackAttentionController {
 			            outputMsg.setToUserName(inputMsg.getFromUserName());  
 			            outputMsg.setCreateTime(returnTime);  
 			            outputMsg.setMsgType("text");  
-			            outputMsg.setContent("欢迎来到公众号！您的openID："+inputMsg.getToUserName());
+			            outputMsg.setContent("欢迎来到公众号！");
 
 			            System.out.println("xml转换：/n" + xs.toXML(outputMsg));  
 			            response.getWriter().write(xs.toXML(outputMsg)); 

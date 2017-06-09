@@ -13,9 +13,9 @@ public interface SpClientMapper {
 
     int insertSelective(SpClient record);
    
-    int deleteById(Integer clientId);
+    int deleteById(String clientId);
     
-    SpClient selectByPrimaryKey(Integer clientId);
+    SpClient selectByPrimaryKey(String clientId);
     
     int updateByPrimaryKeySelective(SpClient record);
     

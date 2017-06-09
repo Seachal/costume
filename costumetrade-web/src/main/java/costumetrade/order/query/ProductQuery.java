@@ -84,7 +84,7 @@ public class ProductQuery extends Entity{
      */
     private List<String> seasonList;
     
-
+    private Integer popularize;
 
     
     /**
@@ -270,6 +270,8 @@ public class ProductQuery extends Entity{
 	private String appSecret;
 	
 	private String codeAndName;
+	
+
 	
 	public BigDecimal getPrice() {
 		return price;
@@ -871,6 +873,14 @@ public class ProductQuery extends Entity{
 
 	public void setCodeAndName(String codeAndName) {
 		this.codeAndName = codeAndName;
+	}
+
+	public Integer getPopularize() {
+		return popularize;
+	}
+
+	public void setPopularize(Integer popularize) {
+		this.popularize = popularize;
 	}
 
 	

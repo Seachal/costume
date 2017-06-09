@@ -13,7 +13,7 @@ public class SpClient extends Entity {
     /**
      *  
      */
-    private Integer id;
+    private String id;
 
     /**
      *  当前店铺ID
@@ -53,7 +53,7 @@ public class SpClient extends Entity {
     /**
      *  客户卡号
      */
-    private String vipcard;
+    private Integer status;
 
     /**
      *  联系名称
@@ -173,7 +173,7 @@ public class SpClient extends Entity {
     
     private String name;
     
-    private List<Integer> idArray;
+    private List<String> idArray;
 
     private static final long serialVersionUID = 1L;
     
@@ -187,11 +187,11 @@ public class SpClient extends Entity {
 		this.name = name;
 	}
 
-	public Integer getId() {
+	public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -237,16 +237,17 @@ public class SpClient extends Entity {
         this.fastcode = fastcode == null ? null : fastcode.trim();
     }
 
-    public String getVipcard() {
-        return vipcard;
-    }
+  
 
-    public void setVipcard(String vipcard) {
-        this.vipcard = vipcard == null ? null : vipcard.trim();
-    }
+    public Integer getStatus() {
+		return status;
+	}
 
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
-    public String getImage() {
+	public String getImage() {
         return image;
     }
 
@@ -511,11 +512,11 @@ public class SpClient extends Entity {
 		this.custProdPriceList = custProdPriceList;
 	}
 
-	public List<Integer> getIdArray() {
+	public List<String> getIdArray() {
 		return idArray;
 	}
 
-	public void setIdArray(List<Integer> idArray) {
+	public void setIdArray(List<String> idArray) {
 		this.idArray = idArray;
 	}
 

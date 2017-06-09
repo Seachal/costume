@@ -15,6 +15,7 @@ import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.service.WeChatService;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpStore;
+import costumetrade.user.query.StoreQuery;
 import costumetrade.user.service.SpUserService;
 
 
@@ -48,16 +49,20 @@ public class SpUserController {
 		JSONObject json = JSON.parseObject(openIdAndKey);
 		String openid = json.getString("openid");
 		ScWeChat chat = null;
+		StoreQuery query = new StoreQuery();
 		if(openid!=null){
 			chat = spUserService.login(openid);
+			query.setOpenid(openid);
+			query = spUserService.getStores(query);
 		}
 		if(chat == null){
 			result.setCode(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
+		}else{
+			result.setData(query);
 		}
-
-		return  ApiResponse.getInstance(chat);
+		return  result;
 	}
 	@RequestMapping("/saveUserOrStore")
 	@ResponseBody
@@ -73,5 +78,7 @@ public class SpUserController {
 		Integer obj = spUserService.saveUserOrStore(store);
 		return  ApiResponse.getInstance(obj);
 	}
+
+	
 	
 }

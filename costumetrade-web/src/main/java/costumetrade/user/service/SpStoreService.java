@@ -22,4 +22,7 @@ public interface SpStoreService {
 	 * 删除店铺信息
 	 * */
 	public int deleteChainStore(Integer storeId);
+	
+	
+	public int insertStore(String openid);
 }

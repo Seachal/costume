@@ -19,6 +19,7 @@ public interface SpProductService {
 	 * 分享链接查询商品
 	 * */
 	public List<ProductQuery> getShareProduct(ProductQuery productQuery);
+	public int makePopularize(ProductQuery productQuery);
 	/**
 	 * 获取商品詳情
 	 * 

@@ -1,6 +1,7 @@
 package costumetrade.order.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import costumetrade.common.Entity;
 
@@ -39,6 +40,8 @@ public class ScFocusShop extends Entity {
      *  修改人
      */
     private String modifyBy;
+    
+    private List<String> openids;
 
     private static final long serialVersionUID = 1L;
 
@@ -97,4 +100,13 @@ public class ScFocusShop extends Entity {
     public void setModifyBy(String modifyBy) {
         this.modifyBy = modifyBy == null ? null : modifyBy.trim();
     }
+
+	public List<String> getOpenids() {
+		return openids;
+	}
+
+	public void setOpenids(List<String> openids) {
+		this.openids = openids;
+	}
+    
 }

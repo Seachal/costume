@@ -99,6 +99,30 @@ public class SpStoreController {
 		return result;
 
 	}
+	@RequestMapping("/getStore")
+	@ResponseBody
+	public ApiResponse getStore(Integer storeId) {
+		
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(storeId==null){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.name());
+			return result;
+		}
+		SpStore store = spStoreService.getStore(storeId);
+		
+		if(store== null){
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
+			return result;
+		}else{
+			result.setData(store);
+		}
+		return result;
+		
+	}
 
 
 }

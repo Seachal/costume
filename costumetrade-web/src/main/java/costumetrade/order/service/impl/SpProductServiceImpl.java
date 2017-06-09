@@ -644,4 +644,9 @@ public class SpProductServiceImpl implements SpProductService{
 		
 		return productList;
 	}
+	@Override
+	public int makePopularize(ProductQuery productQuery) {
+		productQuery.setPopularize(1);//推广商品
+		return spProductMapper.updateByIds(productQuery);
+	}
 }
