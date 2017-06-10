@@ -44,6 +44,7 @@ import org.apache.http.util.EntityUtils;
 
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.sf.openapi.common.utils.MyX509TrustManager;
 
 import costumetrade.common.param.ResponseInfo;
 
