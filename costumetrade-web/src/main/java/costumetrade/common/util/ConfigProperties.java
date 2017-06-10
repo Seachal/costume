@@ -21,7 +21,7 @@ public class ConfigProperties {
 	public static String getProperty(String key){
 		if(null==properties){
 			 Map<String, String> map = System.getenv();  
-			 String fileName = "config.properties";
+			 String fileName = "dbconfig.properties";
 			 properties = PropertiesUtils.getProperties(fileName);
 		}
 
