@@ -34,17 +34,15 @@ public class GenenatorTableService {
 
     private static void createTableSql(StringBuffer sb,String tableName,TableInfoVo tableInfoVo,String storeId){
 			sb.append("\t\tcreate table `"+tableName+"_"+storeId+"` (\n");
-			int i=0;
+
 	   		for(ColumnInfoVo columnInfoVo:tableInfoVo.getColumnVoList()){
 	   			if(tableInfoVo.getPrimaryKey().equalsIgnoreCase(columnInfoVo.getColumnName())){
 	   				sb.append("\t\t\t"+columnInfoVo.getColumnName().toUpperCase() +" "+columnInfoVo.getColumnType()+"("+columnInfoVo.getLength()+") NOT NULL  auto_increment,");
-	   				i++;
 	   				continue;
 	   			}
 	   				sb.append("\t\t\t"+columnInfoVo.getColumnName().toUpperCase() +" "+columnInfoVo.getColumnType()+"("+columnInfoVo.getLength()+"),");
-				    i++;
 	   		}
 			sb.append("\t\t primary key ("+tableInfoVo.getPrimaryKey()+"))"); 
-			System.out.println("===="+sb.toString());	
+			//System.out.println("===="+sb.toString());	
     }
 }
