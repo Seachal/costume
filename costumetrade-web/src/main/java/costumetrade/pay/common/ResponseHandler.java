@@ -3,6 +3,7 @@ package costumetrade.pay.common;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -11,8 +12,6 @@ import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.sun.org.apache.xalan.internal.xsltc.runtime.Hashtable;
 
 import costumetrade.common.util.ConfigProperties;
 import costumetrade.common.util.MD5Util;
