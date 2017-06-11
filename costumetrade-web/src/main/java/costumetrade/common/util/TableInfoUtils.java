@@ -94,7 +94,40 @@ public class TableInfoUtils {
 	    return tableInfoVo;
 	    
     }
-    
+  public static boolean isTableExist(String tableName) throws Exception{
+    	
+    	Connection conn = null;
+    	 ResultSet tableSet = null;
+		try {
+	        conn = DBHelper.getConnection();
+	        DatabaseMetaData  metaData = conn.getMetaData();
+		    tableSet = metaData.getTables(null, "%",tableName,new String[]{"TABLE"});
+		    if(StringUtils.isNullOrEmpty(getTableName(tableSet))){
+		    	return false;
+		    }
+		   
+		} catch (Exception e) {
+			loger.error("异常："+e.getMessage());
+			try {
+				tableSet.close();
+				conn.close();
+				
+				throw e;
+			} catch (SQLException e1) {
+			}
+		}finally{
+			try {
+				tableSet.close();
+				conn.close();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+		
+	    return true;
+	    
+    }
     public static String getTableName(ResultSet tableSet) throws SQLException {
     	if(null==tableSet){
     		return "";
