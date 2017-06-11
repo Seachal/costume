@@ -29,16 +29,16 @@
     from ss_data_dictionary
     where 1=1
       <if test="storeId != null">
-       and storeId = #{storeId,jdbcType=INTEGER},
+       and storeId = #{storeId,jdbcType=INTEGER}
       </if>
       <if test="dictGroupName != null">
-       and dict_group_name = #{dictGroupName,jdbcType=VARCHAR},
+       and dict_group_name = #{dictGroupName,jdbcType=VARCHAR}
       </if>
       <if test="dictGroup != null">
-       and dict_group = #{dictGroup,jdbcType=VARCHAR},
+       and dict_group = #{dictGroup,jdbcType=VARCHAR}
       </if>
       <if test="dictText != null">
-       and dict_text = #{dictText,jdbcType=VARCHAR},
+       and dict_text = #{dictText,jdbcType=VARCHAR}
       </if>
      
   </select>

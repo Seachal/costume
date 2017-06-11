@@ -32,8 +32,8 @@
 		<result column="video2" jdbcType="VARCHAR" property="video2" />
 		<result column="video3" jdbcType="VARCHAR" property="video3" />
 		<result column="description" jdbcType="VARCHAR" property="description" />
-		<result column="warn_low" jdbcType="DOUBLE" property="warnLow" />
-		<result column="warn_high" jdbcType="DOUBLE" property="warnHigh" />
+		<result column="warn_low" jdbcType="DECIMAL" property="warnLow" />
+		<result column="warn_high" jdbcType="DECIMAL" property="warnHigh" />
 		<result column="time_up" jdbcType="TIMESTAMP" property="timeUp" />
 		<result column="time_down" jdbcType="TIMESTAMP" property="timeDown" />
 		<result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -373,10 +373,10 @@
 				description = #{description,jdbcType=VARCHAR},
 			</if>
 			<if test="warnLow != null">
-				warn_low = #{warnLow,jdbcType=DOUBLE},
+				warn_low = #{warnLow,jdbcType=DECIMAL},
 			</if>
 			<if test="warnHigh != null">
-				warn_high = #{warnHigh,jdbcType=DOUBLE},
+				warn_high = #{warnHigh,jdbcType=DECIMAL},
 			</if>
 			<if test="timeUp != null">
 				time_up = #{timeUp,jdbcType=TIMESTAMP},
@@ -417,7 +417,7 @@
 		#{image,jdbcType=VARCHAR}, #{image1,jdbcType=VARCHAR},
 		#{image2,jdbcType=VARCHAR}, #{image3,jdbcType=VARCHAR},
 		#{image4,jdbcType=VARCHAR},#{video1,jdbcType=VARCHAR},#{video2,jdbcType=VARCHAR},#{video3,jdbcType=VARCHAR},
-		#{description,jdbcType=VARCHAR}, #{warnLow,jdbcType=DOUBLE}, #{warnHigh,jdbcType=DOUBLE},
+		#{description,jdbcType=VARCHAR}, #{warnLow,jdbcType=DECIMAL}, #{warnHigh,jdbcType=DECIMAL},
 		#{timeUp,jdbcType=TIMESTAMP}, #{timeDown,jdbcType=TIMESTAMP},
 		#{createTime,jdbcType=TIMESTAMP},
 		#{createBy,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
@@ -646,10 +646,10 @@
 				#{description,jdbcType=VARCHAR},
 			</if>
 			<if test="warnLow != null">
-				#{warnLow,jdbcType=DOUBLE},
+				#{warnLow,jdbcType=DECIMAL},
 			</if>
 			<if test="warnHigh != null">
-				#{warnHigh,jdbcType=DOUBLE},
+				#{warnHigh,jdbcType=DECIMAL},
 			</if>
 			<if test="timeUp != null">
 				#{timeUp,jdbcType=TIMESTAMP},
@@ -766,10 +766,10 @@
 				description = #{description,jdbcType=VARCHAR},
 			</if>
 			<if test="warnLow != null">
-				warn_low = #{warnLow,jdbcType=DOUBLE},
+				warn_low = #{warnLow,jdbcType=DECIMAL},
 			</if>
 			<if test="warnHigh != null">
-				warn_high = #{warnHigh,jdbcType=DOUBLE},
+				warn_high = #{warnHigh,jdbcType=DECIMAL},
 			</if>
 			<if test="timeUp != null">
 				time_up = #{timeUp,jdbcType=TIMESTAMP},
@@ -823,8 +823,8 @@
 		video2 = #{video2,jdbcType=VARCHAR},
 		video3 = #{video3,jdbcType=VARCHAR},
 		description = #{description,jdbcType=VARCHAR},
-		warn_low = #{warnLow,jdbcType=DOUBLE},
-		warn_high = #{warnHigh,jdbcType=DOUBLE},
+		warn_low = #{warnLow,jdbcType=DECIMAL},
+		warn_high = #{warnHigh,jdbcType=DECIMAL},
 		time_up = #{timeUp,jdbcType=TIMESTAMP},
 		time_down = #{timeDown,jdbcType=TIMESTAMP},
 		create_time = #{createTime,jdbcType=TIMESTAMP},

@@ -9,7 +9,7 @@
 		<result column="productSize" jdbcType="VARCHAR" property="productsize" />
 		<result column="code" jdbcType="VARCHAR" property="code" />
 		<result column="name" jdbcType="VARCHAR" property="name" />
-		<result column="stockNum" jdbcType="DOUBLE" property="stocknum" />
+		<result column="stockNum" jdbcType="DECIMAL" property="stocknum" />
 		<result column="productPrice" jdbcType="DECIMAL" property="productPrice" />
 		<result column="modifyTime" jdbcType="TIMESTAMP" property="modifytime" />
 		<result column="modifyBy" jdbcType="VARCHAR" property="modifyby" />
@@ -45,7 +45,7 @@
 			and stock.productSize = #{productsize,jdbcType=VARCHAR}
 		</if>
 		<if test="stocknum != null">
-			and stock.stockNum &gt;= #{stocknum,jdbcType=DOUBLE}
+			and stock.stockNum &gt;= #{stocknum,jdbcType=DECIMAL}
 		</if>
 		<if test="otherStoreIds != null">
 			<foreach collection="otherStoreIds" item="item" index="index">
@@ -88,7 +88,7 @@
 		createTime, createBy)
 		values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER},
 		#{productid,jdbcType=VARCHAR},
-		#{productcolor,jdbcType=VARCHAR}, #{productsize,jdbcType=VARCHAR}, #{stocknum,jdbcType=DOUBLE},
+		#{productcolor,jdbcType=VARCHAR}, #{productsize,jdbcType=VARCHAR}, #{stocknum,jdbcType=DECIMAL},
 		#{productPrice,jdbcType=DECIMAL}, #{modifytime,jdbcType=TIMESTAMP},
 		#{modifyby,jdbcType=VARCHAR},
 		#{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR})
@@ -147,7 +147,7 @@
 				#{productsize,jdbcType=VARCHAR},
 			</if>
 			<if test="stocknum != null">
-				#{stocknum,jdbcType=DOUBLE},
+				#{stocknum,jdbcType=DECIMAL},
 			</if>
 			<if test="productPrice != null">
 				#{productPrice,jdbcType=DECIMAL},
@@ -170,7 +170,7 @@
 		update ss_stock_#{storeid,jdbcType=INTEGER}
 		<set>
 			<if test="stocknum != null">
-				stockNum = #{stocknum,jdbcType=DOUBLE},
+				stockNum = #{stocknum,jdbcType=DECIMAL},
 			</if>
 			<if test="productPrice != null">
 				productPrice = #{productPrice,jdbcType=DECIMAL},
@@ -209,7 +209,7 @@
 		productId = #{productid,jdbcType=VARCHAR},
 		productColor = #{productcolor,jdbcType=VARCHAR},
 		productSize = #{productsize,jdbcType=VARCHAR},
-		stockNum = #{stocknum,jdbcType=DOUBLE},
+		stockNum = #{stocknum,jdbcType=DECIMAL},
 		productPrice = #{productPrice,jdbcType=DECIMAL},
 		modifyTime = #{modifytime,jdbcType=TIMESTAMP},
 		modifyBy = #{modifyby,jdbcType=VARCHAR},
@@ -224,7 +224,7 @@
 			update ss_stock_#{item.storeid,jdbcType=INTEGER}
 			<set>
 				<if test="item.stocknum != null">
-				stockNum = #{item.stocknum,jdbcType=DOUBLE},
+				stockNum = #{item.stocknum,jdbcType=DECIMAL},
 				</if>
 				<if test="item.modifytime != null">
 				modifyTime = #{item.modifytime,jdbcType=TIMESTAMP},
