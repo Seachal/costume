@@ -463,6 +463,16 @@
 			<artifactId>javase</artifactId>
 			<version>3.2.0</version>
 		</dependency>
+		<dependency>
+		    <groupId>commons-codec</groupId>
+		    <artifactId>commons-codec</artifactId>
+		    <version>1.9</version>
+		</dependency>
+		<dependency>
+			<groupId>me.chanjar</groupId>
+			<artifactId>weixin-java-cp</artifactId>
+			<version>1.3.3</version>
+		</dependency>		
     </dependencies>
 
     <build>
