@@ -148,9 +148,9 @@
 			separator="," close=")">#{item,jdbcType=VARCHAR}</foreach>
 	</select>
 
-	<select id="selectProducts" resultMap="ProductsResultMap">
+	<select id="selectProducts" resultType="java.util.HashMap">
 		SELECT
-		product.id,product.storeId,product.code,product.name,product.time_up,
+		product.id,product.storeId,product.code,product.name,product.time_up,product.barcode, product.barcodes,
 		(CASE WHEN product.image IS NOT NULL THEN product.image
 			WHEN product.image1 IS NOT NULL THEN product.image1
 			WHEN product.image2 IS NOT NULL THEN product.image2

@@ -26,6 +26,7 @@
     from sp_privilege
   </select> 
 
+
   <select id="isPrivilegeExsist" parameterType="java.util.Map" resultMap="BaseResultMap">
      SELECT  a.id FROM   sp_privilege_employee  a JOIN sp_privilege b ON a.privilege_id=b.id 
       WHERE 1=1

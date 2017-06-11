@@ -63,6 +63,17 @@
 		#{createby,jdbcType=VARCHAR}
 		)
 	</insert>
+	<insert id="saveTypeOrGradeRates" >
+		insert into sp_cust_prod_price ( storeId, type,custTypeCode,
+		custTypeName, prodGrade, custPriceJson,
+		discPriceJson, createTime, createBy
+		)
+		values <foreach collection="custProdPrices" item="item" index="index" separator=",">( #{item.storeId}, #{item.type}, #{item.custTypeCode}, 
+      #{item.custTypeName}, #{item.prodGrade}, #{item.custPriceJson}, 
+      #{item.discPriceJson}, #{item.createTime}, #{item.createBy}
+      )</foreach>;
+		
+	</insert>
 	<insert id="insertSelective" parameterType="costumetrade.user.domain.SpCustProdPrice">
 		insert into sp_cust_prod_price
 		<trim prefix="(" suffix=")" suffixOverrides=",">

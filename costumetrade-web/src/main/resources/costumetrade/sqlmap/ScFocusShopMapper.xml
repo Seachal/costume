@@ -25,10 +25,10 @@
     from sc_focus_shop
     where 1=1
      <if test="openid != null">
-       and openid = #{openid,jdbcType=VARCHAR},
+       and openid = #{openid,jdbcType=VARCHAR}
       </if>
       <if test="shopid != null">
-       and shopId = #{shopid,jdbcType=INTEGER},
+       and shopId = #{shopid,jdbcType=INTEGER}
       </if>
       <if test="id !=null">
        and id = #{id,jdbcType=INTEGER}
@@ -48,10 +48,10 @@
 			
 	</if>
 	<if test="openid != null">
-       and openid = #{openid,jdbcType=VARCHAR},
+       and openid = #{openid,jdbcType=VARCHAR}
       </if>
 	<if test="shopid != null">
-       and shopId = #{shopid,jdbcType=INTEGER},
+       and shopId = #{shopid,jdbcType=INTEGER}
       </if>
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.ScFocusShop">

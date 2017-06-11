@@ -223,7 +223,12 @@
 			close="" separator=";">
 			update ss_stock_#{item.storeid,jdbcType=INTEGER}
 			<set>
-				stockNum = #{item.stocknum,jdbcType=DOUBLE}
+				<if test="item.stocknum != null">
+				stockNum = #{item.stocknum,jdbcType=DOUBLE},
+				</if>
+				<if test="item.modifytime != null">
+				modifyTime = #{item.modifytime,jdbcType=TIMESTAMP},
+				</if>
 			</set>
 			where id = ${item.id}
 		</foreach>

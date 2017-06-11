@@ -395,11 +395,17 @@
 			<if test="nickName != null">
 				nickName =#{nickName,jdbcType=VARCHAR},
 			</if>
+			<if test="remarkName != null">
+				remarkName =#{remarkName,jdbcType=VARCHAR},
+			</if>
 			<if test="image != null">
 				image =#{image,jdbcType=VARCHAR},
 			</if>
 			<if test="phoneBack != null">
 				phoneBack =#{phoneBack,jdbcType=VARCHAR},
+			</if>
+			<if test="addressBack != null">
+				addressBack =#{addressBack,jdbcType=VARCHAR},
 			</if>
 			<if test="telephone != null">
 				telephone = #{telephone,jdbcType=VARCHAR},
