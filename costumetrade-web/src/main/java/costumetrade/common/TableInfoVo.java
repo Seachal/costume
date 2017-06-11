@@ -8,7 +8,7 @@ public class TableInfoVo {
 	private String tableName;
 	private String catalog;
 	private String primaryKey;
-	
+	private Boolean isAutoIncrement=false;
 	private List<ColumnInfoVo> columnVoList;
 	
 	private  Map<String,String> commnetMap;
@@ -51,6 +51,14 @@ public class TableInfoVo {
 
 	public void setCommnetMap(Map<String, String> commnetMap) {
 		this.commnetMap = commnetMap;
+	}
+
+	public Boolean getIsAutoIncrement() {
+		return isAutoIncrement;
+	}
+
+	public void setIsAutoIncrement(Boolean isAutoIncrement) {
+		this.isAutoIncrement = isAutoIncrement;
 	}
 	
 	
