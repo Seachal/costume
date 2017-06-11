@@ -7,6 +7,7 @@ import com.sf.openapi.express.sample.route.dto.RouteRespDto;
 
 import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.domain.ScStoreAddr;
+import costumetrade.order.domain.SsCgsorder;
 import costumetrade.order.domain.SsFinancial;
 import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStoDetail;
@@ -14,6 +15,7 @@ import costumetrade.order.domain.SsStoOrder;
 import costumetrade.order.query.OrderCountQuery;
 import costumetrade.order.query.OrderDetailQuery;
 import costumetrade.order.query.OrderQuery;
+import costumetrade.user.domain.SsDataDictionary;
 
 
 public interface SpOrderService {
@@ -51,6 +53,11 @@ public interface SpOrderService {
 	 * 根据订单号 查询订单
 	 * */
 	public SsStoOrder order(String orderNo , Integer storeId);
+	
+	public List<SsDataDictionary> orderFeeInit(Integer storeId);
+	
+	
+	public int saveOrderFee(List<SsCgsorder> orders);
 	/**
 	 * 确定物流  绑定订单号到物流
 	 * */

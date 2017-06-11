@@ -69,6 +69,7 @@ public class ProductQuery extends Entity{
      */
     private Integer handcount;
 
+
     /**
      *  商品年份
      */
@@ -271,8 +272,18 @@ public class ProductQuery extends Entity{
 	
 	private String codeAndName;
 	
-
+	private String fields;
 	
+	
+	
+	public String getFields() {
+		return fields;
+	}
+
+	public void setFields(String fields) {
+		this.fields = fields;
+	}
+
 	public BigDecimal getPrice() {
 		return price;
 	}

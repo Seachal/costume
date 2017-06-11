@@ -14,16 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-
-
-
-
-
-
-
-
-
 import costumetrade.common.page.Page;
 import costumetrade.common.util.PingyinUtil;
 import costumetrade.order.domain.ScFocusShop;
@@ -42,6 +32,7 @@ import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.mapper.SpCustProdPriceMapper;
 import costumetrade.user.mapper.SpEmployeeMapper;
+import costumetrade.user.service.SpEmployeeService;
 
 
 @Transactional
@@ -56,6 +47,8 @@ public class SpClientServiceImpl implements SpClientService{
 	private SpEmployeeMapper spEmployeeMapper;
 	@Autowired
 	private ScFocusShopMapper scFocusShopMapper;
+	@Autowired
+	private SpEmployeeService spEmployeeService;
 
 	/** 
 	 *  生成web版本二维码 
@@ -254,13 +247,13 @@ public class SpClientServiceImpl implements SpClientService{
 	
 	public String getName(SpClient client){
 		String name = null;
-		if(client.getRemarkName() != null){
+		if(StringUtils.isNotBlank(client.getRemarkName())){
 			name = client.getRemarkName();
 		}else {
-			if(client.getReallyName() !=null){
+			if(StringUtils.isNotBlank(client.getReallyName() )){
 				name = client.getReallyName();
 			}else{
-				if(client.getNickName() !=null){
+				if(StringUtils.isNotBlank(client.getNickName())){
 					name = client.getNickName();
 				}
 			}
@@ -274,6 +267,7 @@ public class SpClientServiceImpl implements SpClientService{
 			object = spClientMapper.selectByPrimaryKey(param.getId());
 		}else if(param.getType()==4){
 			SpEmployee employee = new SpEmployee();
+			employee = spEmployeeService.employeeInit(param.getId());
 			employee.setStoreId(param.getStoreId());
 			employee.setId(Integer.parseInt(param.getId()));
 			object = spEmployeeMapper.selectByPrimaryKey(employee);

@@ -24,4 +24,6 @@ public interface SpEmployeeService {
 	public int deleteEmployee(SpEmployee spEmployee);
 	
 	public SpEmployee employeeInit(String storeId);
+	
+	public SpEmployee getEmployee(String empId);
 }

@@ -10,9 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.domain.SpPrivilege;
+import costumetrade.user.domain.SpPrivilegeEmployee;
+import costumetrade.user.domain.SpStore;
 import costumetrade.user.mapper.SpCustProdPriceMapper;
 import costumetrade.user.mapper.SpEmployeeMapper;
+import costumetrade.user.mapper.SpPrivilegeEmployeeMapper;
 import costumetrade.user.mapper.SpPrivilegeMapper;
+import costumetrade.user.mapper.SpStoreMapper;
 import costumetrade.user.service.SpEmployeeService;
 
 @Transactional
@@ -24,6 +28,10 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 	private SpPrivilegeMapper spPrivilegeMapper;
 	@Autowired
 	private SpCustProdPriceMapper spCustProdPriceMapper;
+	@Autowired
+	private SpStoreMapper spStoreMapper;
+	@Autowired 
+	private SpPrivilegeEmployeeMapper spPrivilegeEmployeeMapper;
 	
 	public SpEmployee employeeInit(String storeId){
 		
@@ -45,9 +53,25 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 				customerTypeList.add(prodPrice);
 			}
 		}
+		//获取分店，保存时可以选择加入某个分店中去
+		
+		SpStore store = new SpStore();
+		store.setParentid(Integer.parseInt(storeId));
+		List<SpStore> stores = spStoreMapper.selectStores(store, null);
+		List<SpStore> storeList = new ArrayList<SpStore>();
+		//查询员工时过滤信息
+		if(stores !=null && stores.size()>0){
+			for(SpStore s : stores){
+				SpStore sp = new SpStore();
+				sp.setId(s.getId());
+				sp.setName(s.getName());
+				storeList.add(sp);
+			}
+		}
 		SpEmployee spEmployee = new SpEmployee();
 		spEmployee.setSpPrivileges(spPrivileges);
 		spEmployee.setCustomerTypeList(customerTypeList);
+		spEmployee.setChainStores(storeList);
 		return spEmployee;
 	}
 	@Override
@@ -80,6 +104,18 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 		
 		
 		return spEmployeeMapper.deleteByPrimaryKey(spEmployee);
+	}
+	@Override
+	public SpEmployee getEmployee(String empId) {
+
+		SpPrivilegeEmployee employee = new SpPrivilegeEmployee();
+		employee.setEmployeeId(Long.parseLong(empId));
+		List<SpPrivilegeEmployee> privilegeEmployees = spPrivilegeEmployeeMapper.getEmployeeSpPrivilegeList(employee);
+		SpEmployee emp =new SpEmployee();
+		emp.setId(Integer.parseInt(empId));
+		emp = spEmployeeMapper.selectByPrimaryKey(emp);
+		emp.setPrivilegeEmployees(privilegeEmployees);
+		return emp;
 	}
 	
 	

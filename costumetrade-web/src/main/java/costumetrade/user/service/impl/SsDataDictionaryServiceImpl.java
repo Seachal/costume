@@ -138,6 +138,10 @@ public class SsDataDictionaryServiceImpl implements SsDataDictionaryService{
 		custProdPrice.setDiscpricejson(null);
 		return custProdPrice;
 	}
+	public int saveTypeOrGradeRates(List<SpCustProdPrice> spCustProdPrice) {
+		
+		return spCustProdPriceMapper.saveTypeOrGradeRates(spCustProdPrice);
+	}
 	
 
 }

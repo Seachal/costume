@@ -17,8 +17,8 @@ import costumetrade.common.page.Page;
 import costumetrade.common.util.OrderNoGenerator;
 import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.domain.ScStoreAddr;
-import costumetrade.order.domain.SpClient;
 import costumetrade.order.domain.SpProduct;
+import costumetrade.order.domain.SsCgsorder;
 import costumetrade.order.domain.SsFinancial;
 import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStoDetail;
@@ -30,6 +30,7 @@ import costumetrade.order.mapper.ScStoreAddrMapper;
 import costumetrade.order.mapper.SpCartMapper;
 import costumetrade.order.mapper.SpClientMapper;
 import costumetrade.order.mapper.SpProductMapper;
+import costumetrade.order.mapper.SsCgsorderMapper;
 import costumetrade.order.mapper.SsFinancialMapper;
 import costumetrade.order.mapper.SsProductReviewMapper;
 import costumetrade.order.mapper.SsStoDetailMapper;
@@ -44,8 +45,10 @@ import costumetrade.order.service.SpOrderService;
 import costumetrade.order.service.SpProductService;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpUser;
+import costumetrade.user.domain.SsDataDictionary;
 import costumetrade.user.mapper.ScWeChatMapper;
 import costumetrade.user.mapper.SpUserMapper;
+import costumetrade.user.mapper.SsDataDictionaryMapper;
 
 @Transactional
 @Service
@@ -80,6 +83,10 @@ public class SpOrderServiceImpl implements SpOrderService{
 	private ScWeChatMapper scWeChatMapper;
 	@Autowired
 	private SpUserMapper spUserMapper;
+	@Autowired
+	private SsDataDictionaryMapper ssDataDictionaryMapper;
+	@Autowired
+	private SsCgsorderMapper ssCgsorderMapper;
 	@Override
 	public Integer saveOrders(List<SsStoDetail> details,SsStoOrder order,String openid) {
 
@@ -178,6 +185,13 @@ public class SpOrderServiceImpl implements SpOrderService{
 				return 2;
 			}
 		}
+		/**
+		 * 只对当日订单允许作废
+		 * */
+		if(param.getOperate() == 7){
+			orderCancellation(param);
+		}
+		
 		if(wechat.getStoreid() == null){
 			operate = ssStoOrderMapper.updateByPrimaryKeySelective(spStoOrder);
 		}else{
@@ -329,6 +343,70 @@ public class SpOrderServiceImpl implements SpOrderService{
 		}
 		return operate;
 	}
+	
+	
+	public Boolean orderCancellation(OrderQuery param){
+		/**
+		 * 判断用户身份  店家/普通消费者
+		 * 普通消费者   修改卖家库存  加
+		 * 店家   修改买方库存 减  修改卖方库存  加
+		 * */
+		List<SsStoDetail> ssStoDetails = ssStoDetailMapper.selectByOrderId(param.getOrderNo(),param.getSellerstoreid());
+		
+		List<SsStock> ssStockSellers = new ArrayList<SsStock>();
+		List<SsStock> ssStockBuyers = new ArrayList<SsStock>();
+		
+		boolean operate =true;
+		Boolean isStore =false;
+		ScWeChat wechat = scWeChatMapper.selectByOpenId(param.getOpenid());
+		if(wechat != null){
+			if(wechat.getStoreid() != null){
+				isStore =true;
+			}
+		}
+		if(ssStoDetails!=null && ssStoDetails.size()>0){
+			for(SsStoDetail detail : ssStoDetails){
+				SsStock stock = new SsStock();
+				stock.setProductid(detail.getProductid());
+				stock.setProductcolor(detail.getProductcolor());
+				stock.setProductsize(detail.getProductsize());
+				stock.setStoreid(param.getSellerstoreid());
+				
+				List<SsStock> ssStockSeller = ssStockMapper.select(stock);
+				List<SsStock> ssStockBuyer = null;
+				if(isStore){//修改卖家库存  加  修改买方库存 减  修改卖方库存  加
+					stock.setStoreid(param.getBuyerstoreid());
+					ssStockBuyer = ssStockMapper.select(stock);
+				}
+				if(ssStockSeller!=null&& ssStockSeller.size()>0){
+					stock.setStocknum(ssStockSeller.get(0).getStocknum()+Double.parseDouble(detail.getCount().toString()));
+					stock.setModifytime(new Date());
+					ssStockSellers.add(stock);
+				}
+				if(ssStockBuyer!=null&& ssStockBuyer.size()>0){
+					stock.setStocknum(ssStockSeller.get(0).getStocknum()-Double.parseDouble(detail.getCount().toString()));
+					stock.setModifytime(new Date());
+					ssStockBuyers.add(stock);
+				}
+			
+
+			}
+		}
+		int update =0 ;
+		if(ssStockSellers!=null&& ssStockSellers.size()>0){
+			update = ssStockMapper.batchUpdate(ssStockSellers);
+		}
+		if(ssStockBuyers!=null&& ssStockBuyers.size()>0){
+			update = ssStockMapper.batchUpdate(ssStockBuyers);
+		}
+		if(update >0){
+			operate =true;
+		}else{
+			operate =false;
+		}
+		return operate;
+	}
+	
 	
 	@Override
 	public int orderPay(SsFinancial ssFinancial) {
@@ -576,6 +654,29 @@ public class SpOrderServiceImpl implements SpOrderService{
 		query.setsNoPayCount(sNoPayCount);
 		query.setsNoShipCount(sNoShipCount);
 		return query;
+	}
+	@Override
+	public List<SsDataDictionary> orderFeeInit(Integer storeId) {
+		List<SsDataDictionary> dicts = new ArrayList<SsDataDictionary>();
+		List<SsDataDictionary> dictList = new ArrayList<SsDataDictionary>();
+		SsDataDictionary dict = new SsDataDictionary();
+		dict.setStoreId(storeId);
+		dict.setDictGroup("FEE_TYPE");
+		dicts = ssDataDictionaryMapper.select(dict);
+		if(dicts.size()>0){
+			for(SsDataDictionary d:dicts){
+				SsDataDictionary dictionary = new SsDataDictionary();
+				dictionary.setDictValue(d.getDictValue());
+				dictionary.setId(d.getSortNum());
+				dictList.add(d);
+			}
+		}
+		return dictList;
+	}
+	@Override
+	public int saveOrderFee(List<SsCgsorder> orders) {
+
+		return ssCgsorderMapper.saveFeeOrders(orders);
 	}
 	
 	

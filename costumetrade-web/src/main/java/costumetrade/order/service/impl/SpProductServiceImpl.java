@@ -3,12 +3,18 @@ package costumetrade.order.service.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
+import me.chanjar.weixin.common.util.StringUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import aj.org.objectweb.asm.Type;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -152,21 +158,73 @@ public class SpProductServiceImpl implements SpProductService{
 		page.setPageNum(productQuery.getPageNum());
 		
 		
-		List<ProductQuery> products = spProductMapper.selectProducts(productQuery,page);
+		List<Map<String,Object>> list = spProductMapper.selectProducts(productQuery,page);
 		//商城商品列表设置销售价
 		List<ProductQuery> productList = new ArrayList<ProductQuery>();
-		if(products.size() >0){
-			for(ProductQuery product : products){
-				if(custTypeCode >0){
-					BigDecimal salePrice = setPrice(product, custTypeCode);
-					product.setSalePrice(salePrice);
-				}
-				productList.add(product);
-			}
-		}
 		
+		List<Map<String,Object>> listMap = new ArrayList<Map<String,Object>>();
+		List<Map<String,Object>> listMapFiled = new ArrayList<Map<String,Object>>();
+		
+		
+		
+		if(list!=null&&list.size() >0){
+			int size = list.size();
+			if(StringUtils.isNotBlank(productQuery.getFields())){
+				String[] filed =productQuery.getFields().split(",");
+				for(int i=0;i<size;i++){
+					Map<String,Object> mapField = new HashMap<String, Object>();
+					Map<String,Object> map = list.get(i);
+					for(int j=0;j<filed.length-1;j++){
+						
+						ProductQuery product = new ProductQuery();
+						product.setThirdPrice(new BigDecimal(map.get("thirdPrice").toString()));
+						product.setFifthPrice(new BigDecimal(map.get("fifthPrice").toString()));
+						product.setSecondPrice(new BigDecimal(map.get("secondPrice").toString()));
+						product.setFourthPrice(new BigDecimal(map.get("fourthPrice").toString()));
+						product.setFirsthPrice(new BigDecimal(map.get("firsthPrice").toString()));
+						if(custTypeCode >0){
+							BigDecimal salePrice = setPrice(product, custTypeCode);
+							map.put("salePrice", salePrice.toString());
+						}
+						
+						mapField.put(filed[j], map.get(filed[j]));
+					}
+					listMapFiled.add(mapField);
+				}
+				
+			}else{
+				for(int i=0;i<size;i++){
+					Map<String,Object> map = list.get(i);
+					ProductQuery product = new ProductQuery();
+				
+					product.setThirdPrice(new BigDecimal(map.get("thirdPrice").toString()));
+					product.setFifthPrice(new BigDecimal(map.get("fifthPrice").toString()));
+					product.setSecondPrice(new BigDecimal(map.get("secondPrice").toString()));
+					product.setFourthPrice(new BigDecimal(map.get("fourthPrice").toString()));
+					product.setFirsthPrice(new BigDecimal(map.get("firsthPrice").toString()));
+					if(custTypeCode >0){
+						BigDecimal salePrice = setPrice(product, custTypeCode);
+						map.put("salePrice", salePrice.toString());
+					}
+					listMap.add(map);
+				}
+				
+			}
+			
+		}
+		JSONArray jsonArray = null;
+		if(StringUtils.isNotBlank(productQuery.getFields())){
+			jsonArray = (JSONArray) JSONArray.toJSON(listMapFiled);
+
+		}else{
+			jsonArray = (JSONArray) JSONArray.toJSON(listMap);
+			
+		}
+		productList = JSONArray.parseArray(jsonArray.toJSONString(), ProductQuery.class);
+	
 		return productList;
 	}
+
 	/**
 	 * 商城商品列表，设置客户可见商品等级控制
 	 * */
@@ -618,9 +676,14 @@ public class SpProductServiceImpl implements SpProductService{
 				custTypeCode = Integer.parseInt(client.getCate());
 			}
 		}
+		List<ProductQuery> products = new ArrayList<ProductQuery>();
+		List<Map<String,Object>> maps = spProductMapper.selectProducts(productQuery,null);
+		if(maps!=null && maps.size()>0){
+			JSONArray jsonArray = (JSONArray) JSONArray.toJSON(maps);
+
+			products = JSONArray.parseArray(jsonArray.toJSONString(), ProductQuery.class);
+		}
 		
-		
-		List<ProductQuery> products = spProductMapper.selectProducts(productQuery,null);
 		//商城商品列表设置销售价
 		List<ProductQuery> productList = new ArrayList<ProductQuery>();
 		if(products.size() >0){

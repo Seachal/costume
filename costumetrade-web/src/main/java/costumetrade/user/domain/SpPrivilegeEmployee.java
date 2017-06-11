@@ -29,6 +29,8 @@ public class SpPrivilegeEmployee extends Entity {
      *  修改时间
      */
     private Date modifyDate;
+    
+    private String operateName;
 
     private static final long serialVersionUID = 1L;
 
@@ -71,4 +73,14 @@ public class SpPrivilegeEmployee extends Entity {
     public void setModifyDate(Date modifyDate) {
         this.modifyDate = modifyDate;
     }
+
+	public String getOperateName() {
+		return operateName;
+	}
+
+	public void setOperateName(String operateName) {
+		this.operateName = operateName;
+	}
+    
+    
 }

@@ -1,6 +1,7 @@
 package costumetrade.order.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -26,7 +27,7 @@ public interface SpProductMapper {
 
     int updateByPrimaryKey(SpProduct record);
     
-    List<ProductQuery> selectProducts(@Param("product")ProductQuery product , @Param("page")Page page);
+    List<Map<String,Object>> selectProducts(@Param("product")ProductQuery product , @Param("page")Page page);
     
     ProductQuery selectProduct(ProductQuery param);
     

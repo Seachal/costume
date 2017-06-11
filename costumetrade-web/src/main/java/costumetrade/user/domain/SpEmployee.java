@@ -109,7 +109,11 @@ public class SpEmployee extends Entity implements Serializable{
     
     private List<SpPrivilege> spPrivileges;
     
-    List<SpCustProdPrice> customerTypeList;
+    private List<SpCustProdPrice> customerTypeList;
+    
+    private List<SpStore> chainStores;
+    
+    private List<SpPrivilegeEmployee> privilegeEmployees;
     
     private String openid ;
     
@@ -327,6 +331,22 @@ public class SpEmployee extends Entity implements Serializable{
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public List<SpStore> getChainStores() {
+		return chainStores;
+	}
+
+	public void setChainStores(List<SpStore> chainStores) {
+		this.chainStores = chainStores;
+	}
+
+	public List<SpPrivilegeEmployee> getPrivilegeEmployees() {
+		return privilegeEmployees;
+	}
+
+	public void setPrivilegeEmployees(List<SpPrivilegeEmployee> privilegeEmployees) {
+		this.privilegeEmployees = privilegeEmployees;
 	}
 
 	

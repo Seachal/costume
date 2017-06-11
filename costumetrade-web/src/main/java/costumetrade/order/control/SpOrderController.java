@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.domain.ScStoreAddr;
+import costumetrade.order.domain.SsCgsorder;
 import costumetrade.order.domain.SsFinancial;
 import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStoDetail;
@@ -27,6 +29,7 @@ import costumetrade.order.query.OrderDetailQuery;
 import costumetrade.order.query.OrderQuery;
 import costumetrade.order.service.SpOrderService;
 import costumetrade.order.service.SpProductService;
+import costumetrade.user.domain.SsDataDictionary;
 
 /**
  *
@@ -56,19 +59,7 @@ public class SpOrderController {
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		
-		//获取货品单位
-		//List<SpProduct> products = spProductService.selectProductById(param.getProductIdArray(),order.getSellerstoreid());
-//		if(null!=param.getStoreId()){
-//			param.setClientId(param.getStoreId());
-//		}else if(null!=param.getUserId()){
-//			param.setClientId(param.getUserId());
-//		}
-//		
 		order.setOpenid(param.getOpenid());
-//		order.setCreateby(param.getClientId()+"");
-//		order.setModifyby(param.getClientId()+"");
-
 		List<SsStoDetail> details = new ArrayList<SsStoDetail>();
 		if(param.getProductIdArray().size()>0){
 			for(int i=0 ;i<param.getProductIdArray().size();i++){
@@ -103,6 +94,48 @@ public class SpOrderController {
 		ApiResponse result = new ApiResponse();
 		ScStoreAddr addr = spOrderService.orderInit(openid);
 		return result.getInstance(addr);
+		
+	}
+	
+	@RequestMapping("/orderFeeInit")
+	@ResponseBody
+	public ApiResponse orderFeeInit(String openid) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(StringUtils.isBlank(openid)){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		List<SsDataDictionary> dicts = spOrderService.orderFeeInit(Integer.parseInt(openid));
+		if(dicts == null){
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+		}else{
+			result.setData(dicts);
+		}
+		return result;
+		
+	}
+	@RequestMapping("/saveOrderFee")
+	@ResponseBody
+	public ApiResponse saveOrderFee(List<SsCgsorder> orders) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(orders == null){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		int save = spOrderService.saveOrderFee(orders);
+		if(save <=0){
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
+		}
+
+		return result;
 		
 	}
 	@RequestMapping("/countOrders")

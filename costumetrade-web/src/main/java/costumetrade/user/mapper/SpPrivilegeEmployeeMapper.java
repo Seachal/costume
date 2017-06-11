@@ -15,6 +15,8 @@ public interface SpPrivilegeEmployeeMapper {
     int insertSelective(SpPrivilegeEmployee record);
 
     SpPrivilegeEmployee selectByPrimaryKey(Long id);
+    
+    List<SpPrivilegeEmployee> getEmployeeSpPrivilegeList(SpPrivilegeEmployee record);
 
     int updateByPrimaryKeySelective(SpPrivilegeEmployee record);
 

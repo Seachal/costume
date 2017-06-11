@@ -19,7 +19,7 @@ public class SpPrivilegeService implements ISpPrivilegeService {
 	@Autowired
 	private SpPrivilegeMapper spPrivilegeMapper;
 	@Autowired
-	private SpPrivilegeEmployeeMapper SpPrivilegeEmployeeMapper;
+	private SpPrivilegeEmployeeMapper spPrivilegeEmployeeMapper;
 	
 	@Override
 	public List<SpPrivilege> getSpPrivilegeList() {
@@ -41,7 +41,7 @@ public class SpPrivilegeService implements ISpPrivilegeService {
 		deleteByEmployeeId(privilegeEmployees.get(0).getEmployeeId());
 		int saveMenu = 0;
 
-		saveMenu = SpPrivilegeEmployeeMapper.saveSpPrivilegeEmployees(privilegeEmployees);
+		saveMenu = spPrivilegeEmployeeMapper.saveSpPrivilegeEmployees(privilegeEmployees);
 		if(saveMenu > 0){
 			return 1;
 		}else{
@@ -51,6 +51,13 @@ public class SpPrivilegeService implements ISpPrivilegeService {
 	
 	public int deleteByEmployeeId(Long employeeId) {
 		
-		return  SpPrivilegeEmployeeMapper.deleteByPrimaryKey(employeeId);
+		return  spPrivilegeEmployeeMapper.deleteByPrimaryKey(employeeId);
+	}
+
+	@Override
+	public List<SpPrivilegeEmployee> getEmployeeSpPrivilegeList(String empId) {
+		SpPrivilegeEmployee record =new SpPrivilegeEmployee();
+		record.setEmployeeId(Long.parseLong(empId));
+		return spPrivilegeEmployeeMapper.getEmployeeSpPrivilegeList(record);
 	}
 }

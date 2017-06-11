@@ -12,12 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 import costumetrade.order.domain.ScFocusShop;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.mapper.ScFocusShopMapper;
 import costumetrade.order.mapper.SpProductMapper;
 import costumetrade.order.query.OrderCountQuery;
 import costumetrade.order.service.SpOrderService;
+import costumetrade.order.service.WeChatService;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.domain.SpStore;
@@ -46,6 +50,8 @@ public class SpUserServiceImpl implements SpUserService{
 	private SpProductMapper spProductMapper;
 	@Autowired
 	private SpOrderService spOrderService;
+	@Autowired
+	private WeChatService weChatService;
 	
 	@Override
 	public ScWeChat login(String openId) {
@@ -64,6 +70,20 @@ public class SpUserServiceImpl implements SpUserService{
 			we.setCreatetime(new Date());
 			
 			if(semployee == null){//不存在店员，就保存新增用户信息
+				String userInfo;
+				try {
+					userInfo = weChatService.getWeChatUserInfo(openId);
+					if(userInfo !=null){
+						JSONObject json = JSON.parseObject(userInfo);
+				    	String nickName = json.getString("nickname"); 
+				    	String headimgurl = json.getString("headimgurl");
+				    	user.setName(nickName);
+				    	user.setPhoto(headimgurl);
+				    }
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
 				user.setCreateTime(new Date());
 				we.setUserid(user.getId());
 				userid = spUserMapper.insertSelective(user);
