@@ -37,6 +37,9 @@ public class GeneratorBaseTable {
 		    if(null!=tableSplit && tableSplit.length>0){
 		    	for(String tableName:tableSplit){
 		    		TableInfoVo tableInfoVo = TableInfoUtils.getTableInfoVo(tableName);
+		    		if(TableInfoUtils.isTableExist(tableName+"_"+storeId)){
+		    			continue;
+		    		}
 		    		if(null!=tableInfoVo && null!=tableInfoVo.getColumnVoList()
 		    				&& tableInfoVo.getColumnVoList().size()>0){
 			    		String tableSQL = GenenatorTableService.generatorSQL(tableName,tableInfoVo,storeId);
