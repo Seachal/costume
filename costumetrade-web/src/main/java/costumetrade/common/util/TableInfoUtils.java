@@ -3,6 +3,7 @@ package costumetrade.common.util;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -35,9 +36,10 @@ public class TableInfoUtils {
 		    tableSet = metaData.getTables(null, "%",tableName,new String[]{"TABLE"});
 		    tableInfoVo.setTableName(getTableName(tableSet));
 		    tableInfoVo.setCatalog(catalog);
-		    
+		   
 		    ResultSet colRet = metaData.getColumns(null,"%",tableName,"%");
 		    List<ColumnInfoVo> columnInfoLisst = new ArrayList<ColumnInfoVo>();
+		    
 		    while(colRet.next()) {
 		    	ColumnInfoVo columnVo = new ColumnInfoVo();
 		    	columnVo.setColumnName(colRet.getString("COLUMN_NAME"));
@@ -53,10 +55,23 @@ public class TableInfoUtils {
 		    	columnInfoLisst.add(columnVo);
 	        }
 		    
+		    Statement stmt = conn.createStatement(); 
+		    ResultSet  results = stmt.executeQuery("select * from "+tableName); 
+		    ResultSetMetaData resultMetaData = results.getMetaData(); 
+		    int columnCount = resultMetaData.getColumnCount();
+		    
+		    for(int i=1;i<=columnCount;i++){
+		    	if(resultMetaData.isAutoIncrement(i)){
+		    		tableInfoVo.setIsAutoIncrement(true);
+		    		break;
+		    	}
+		    }
 		    tableInfoVo.setColumnVoList(columnInfoLisst);
 			tableInfoVo.setCommnetMap(getColumnCommentByTableName(conn,tableName));
 			String primaryKey = getPrimaryKey(conn,tableName);
 			tableInfoVo.setPrimaryKey(primaryKey);
+			
+
 		} catch (Exception e) {
 			loger.error("异常："+e.getMessage());
 			try {
