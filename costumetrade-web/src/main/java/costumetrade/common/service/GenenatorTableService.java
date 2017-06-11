@@ -18,11 +18,7 @@ public class GenenatorTableService {
         StringBuffer sb = new StringBuffer();
         try {
           
-           
-            sb.append(""); 
             createTableSql(sb,tableName,tableInfoVo,storeId);
-            sb.append("");
-
             
         } catch (Exception e) {
             e.printStackTrace(System.out);
@@ -37,7 +33,13 @@ public class GenenatorTableService {
 
 	   		for(ColumnInfoVo columnInfoVo:tableInfoVo.getColumnVoList()){
 	   			if(tableInfoVo.getPrimaryKey().equalsIgnoreCase(columnInfoVo.getColumnName())){
-	   				sb.append("\t\t\t"+columnInfoVo.getColumnName().toUpperCase() +" "+columnInfoVo.getColumnType()+"("+columnInfoVo.getLength()+") NOT NULL  auto_increment,");
+	   				sb.append("\t\t\t"+columnInfoVo.getColumnName().toUpperCase() +" "+columnInfoVo.getColumnType()+"("+columnInfoVo.getLength()+") NOT NULL  ");
+	   				if(tableInfoVo.getIsAutoIncrement()){
+	   					sb.append("auto_increment,");
+	   				}else{
+	   					sb.append(",");
+	   				}
+	   				
 	   				continue;
 	   			}
 	   				sb.append("\t\t\t"+columnInfoVo.getColumnName().toUpperCase() +" "+columnInfoVo.getColumnType()+"("+columnInfoVo.getLength()+"),");
