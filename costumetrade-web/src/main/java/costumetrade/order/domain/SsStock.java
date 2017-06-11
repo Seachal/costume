@@ -35,7 +35,7 @@ public class SsStock extends Entity {
     /**
      *  入库数量
      */
-    private Double stocknum;
+    private BigDecimal stocknum;
 
     /**
      *  入库金额
@@ -120,11 +120,11 @@ public class SsStock extends Entity {
         this.productsize = productsize == null ? null : productsize.trim();
     }
 
-    public Double getStocknum() {
+    public BigDecimal getStocknum() {
         return stocknum;
     }
 
-    public void setStocknum(Double stocknum) {
+    public void setStocknum(BigDecimal stocknum) {
         this.stocknum = stocknum;
     }
 

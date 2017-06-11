@@ -232,7 +232,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 			stock.setProductid(detail.getProductid());
 			stock.setProductcolor(detail.getProductcolor());
 			stock.setProductsize(detail.getProductsize());
-			stock.setStocknum(Double.parseDouble(detail.getCount().toString()));
+			stock.setStocknum(detail.getCount());
 			stock.setProductPrice(detail.getPrice());
 			stock.setStoreid(param.getSellerstoreid());
 			ssStocks.add(stock);
@@ -284,18 +284,18 @@ public class SpOrderServiceImpl implements SpOrderService{
 						//库存不存在时，在库存记录中保存一条负库存记录
 						stock = ssStock.get(i);
 						if(stock.getId() == null){
-							stock.setStocknum(0-stock.getStocknum());
+							stock.setStocknum(new BigDecimal(0).subtract(stock.getStocknum()));
 							updateSellerStock = ssStockMapper.insertSelective(stock);
 						}else{
 							stock.setStoreid(param.getSellerstoreid());
-							stock.setStocknum(ssStock.get(i).getStocknum()-ssStocks.get(i).getStocknum());
+							stock.setStocknum(ssStock.get(i).getStocknum().subtract(ssStocks.get(i).getStocknum()));
 							updateSellerStock = ssStockMapper.updateByPrimaryKeySelective(stock); //更新卖家库存
 						}
 						
 						
 						//更新卖家的商品销量
 						SpProduct p = spProductMapper.selectByPrimaryKey(ids.get(i), param.getSellerstoreid());
-						p.setSaleNum(p.getSaleNum().add(BigDecimal.valueOf(ssStocks.get(i).getStocknum())));
+						p.setSaleNum(p.getSaleNum().add(ssStocks.get(i).getStocknum()));
 						spProductMapper.updateByPrimaryKeySelective(p);
 					}
 				}
@@ -331,7 +331,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 						}
 						ssStockMapper.insertSelective(stock);
 					}else{
-						stock.setStocknum(stockBuyyer.getStocknum()+ssStocks.get(i).getStocknum());
+						stock.setStocknum(stockBuyyer.getStocknum().add(ssStocks.get(i).getStocknum()));
 						updateSellerStock = ssStockMapper.updateByPrimaryKeySelective(stock); //更新买家库存
 					}
 				}
@@ -379,12 +379,12 @@ public class SpOrderServiceImpl implements SpOrderService{
 					ssStockBuyer = ssStockMapper.select(stock);
 				}
 				if(ssStockSeller!=null&& ssStockSeller.size()>0){
-					stock.setStocknum(ssStockSeller.get(0).getStocknum()+Double.parseDouble(detail.getCount().toString()));
+					stock.setStocknum(ssStockSeller.get(0).getStocknum().add(detail.getCount()));
 					stock.setModifytime(new Date());
 					ssStockSellers.add(stock);
 				}
 				if(ssStockBuyer!=null&& ssStockBuyer.size()>0){
-					stock.setStocknum(ssStockSeller.get(0).getStocknum()-Double.parseDouble(detail.getCount().toString()));
+					stock.setStocknum(ssStockSeller.get(0).getStocknum().subtract(detail.getCount()));
 					stock.setModifytime(new Date());
 					ssStockBuyers.add(stock);
 				}

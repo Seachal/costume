@@ -156,7 +156,7 @@ public class SpProductServiceImpl implements SpProductService{
 	
 		Page page = new Page();
 		page.setPageNum(productQuery.getPageNum());
-		
+		page.setPageSize(productQuery.getPageSize());
 		
 		List<Map<String,Object>> list = spProductMapper.selectProducts(productQuery,page);
 		//商城商品列表设置销售价

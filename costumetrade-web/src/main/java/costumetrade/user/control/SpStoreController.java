@@ -3,6 +3,8 @@ package costumetrade.user.control;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.chanjar.weixin.common.util.StringUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -114,6 +116,30 @@ public class SpStoreController {
 		SpStore store = spStoreService.getStore(storeId);
 		
 		if(store== null){
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
+			return result;
+		}else{
+			result.setData(store);
+		}
+		return result;
+		
+	}
+	@RequestMapping("/insertStore")
+	@ResponseBody
+	public ApiResponse insertStore(String openid) {
+		
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(StringUtils.isBlank(openid)){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.name());
+			return result;
+		}
+		Integer store = spStoreService.insertStore(openid);
+		
+		if(store == null){
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;

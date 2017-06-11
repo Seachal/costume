@@ -185,12 +185,12 @@ public class ProductQuery extends Entity{
     /**
      *  预警下线
      */
-    private Double warnLow;
+    private BigDecimal warnLow;
 
     /**
      *  预警上线
      */
-    private Double warnHigh;
+    private BigDecimal warnHigh;
     
     /**
      *  商品条码
@@ -620,19 +620,19 @@ public class ProductQuery extends Entity{
 
 
 
-	public Double getWarnLow() {
+	public BigDecimal getWarnLow() {
 		return warnLow;
 	}
 
-	public void setWarnLow(Double warnLow) {
+	public void setWarnLow(BigDecimal warnLow) {
 		this.warnLow = warnLow;
 	}
 
-	public Double getWarnHigh() {
+	public BigDecimal getWarnHigh() {
 		return warnHigh;
 	}
 
-	public void setWarnHigh(Double warnHigh) {
+	public void setWarnHigh(BigDecimal warnHigh) {
 		this.warnHigh = warnHigh;
 	}
 
