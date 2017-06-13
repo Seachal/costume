@@ -1,6 +1,8 @@
 package costumetrade.order.service.impl;
 
 import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -90,7 +92,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 	@Override
 	public Integer saveOrders(List<SsStoDetail> details,SsStoOrder order,String openid) {
 
-		String orderNo = OrderNoGenerator.generate("O");
+		String orderNo = OrderNoGenerator.generate("");
 		List<SsStoDetail> detail = new ArrayList<SsStoDetail>();
 		int save = 0;
 		BigDecimal count = new BigDecimal(0.0);
@@ -111,7 +113,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 			order.setOrderstatus(1);
 			order.setOrdertime(new Date());
 		}
-		if("2".equals(order.getOrdertype())){//线下单据，一旦提交，就是完成状态，库存会相应扣减
+		if("2".equals(order.getOrdertype())){//线下单据，一旦提交，就是完成状态，库存会相应扣减   2、添加金额交易记录
 			order.setOrderstatus(5);
 			OrderQuery param = new OrderQuery();
 			//param.setClientId(clientId);
@@ -189,7 +191,10 @@ public class SpOrderServiceImpl implements SpOrderService{
 		 * 只对当日订单允许作废
 		 * */
 		if(param.getOperate() == 7){
-			orderCancellation(param);
+			boolean o = orderCancellation(param);
+			if(!o){
+				return 3;
+			}
 		}
 		
 		if(wechat.getStoreid() == null){
@@ -350,7 +355,28 @@ public class SpOrderServiceImpl implements SpOrderService{
 		 * 判断用户身份  店家/普通消费者
 		 * 普通消费者   修改卖家库存  加
 		 * 店家   修改买方库存 减  修改卖方库存  加
+		 * 
+		 * 只允许当天的订单允许作废
 		 * */
+		
+		SimpleDateFormat formater = new SimpleDateFormat("yyyy/MM/dd");
+	    SimpleDateFormat formater2 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	     
+	    //start = formater2.parse(formater.format(new Date())+ " 00:00:00");
+	    SsStoOrder order = ssStoOrderMapper.selectByOrderNo(param.getOrderNo(), param.getSellerstoreid());
+	    boolean canCancellation =true;
+	    Date currentDayEnd = null;
+	    try {
+	    	currentDayEnd = formater2.parse(formater.format(new Date())+ " 23:59:59");
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    //只允许当天的订单 允许作废
+	    if(order.getOrdertime().getTime()>currentDayEnd.getTime()){
+	    	canCancellation =false;
+	    	return false;
+	    }
 		List<SsStoDetail> ssStoDetails = ssStoDetailMapper.selectByOrderId(param.getOrderNo(),param.getSellerstoreid());
 		
 		List<SsStock> ssStockSellers = new ArrayList<SsStock>();
@@ -411,7 +437,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 	@Override
 	public int orderPay(SsFinancial ssFinancial) {
 		int operate = 0 ;
-		ssFinancial.setTradeno(OrderNoGenerator.generate("P"));
+		ssFinancial.setTradeno(OrderNoGenerator.generate(""));
 		ssFinancial.setPaydate(new Date());
 		
 		SsStoOrder spStoOrder = new SsStoOrder();

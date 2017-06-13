@@ -1,10 +1,12 @@
 package costumetrade.order.query;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import costumetrade.common.Entity;
 import costumetrade.order.domain.SsStoOrder;
+import costumetrade.user.domain.SsPayment;
 
 public class OrderQuery extends Entity {
 	  /**
@@ -34,6 +36,38 @@ public class OrderQuery extends Entity {
     private Integer operate;//订单状态  1：新增   2、已付款  3、审核  4、发货  5、收货  6、已取消
     
     private Boolean isContinue = false;//默认库存缺少时，不继续操作
+    
+    
+    /***
+     * 
+     * 对账 期初 期末查询 开始
+     * 
+     * */
+    private String begining;//期初、期末
+    private BigDecimal receivable;//应收
+    private BigDecimal payable;//应付
+    
+    private Date timeFrom;//期初时间到
+    
+    private Date timeTo;//期末时间到
+    
+    private List<SsStoOrder> orders;//销售单或者采购单
+    
+    private List<SsPayment> payments;//还款单
+    
+    private Integer clientType;//对账人身份，是客户还是供应商
+    
+    private String clientId;//对账人
+    
+    private  BigDecimal receivableTotalAmount;//应收总计
+    
+    private BigDecimal payableTotalAmount;//应付总计
+   
+    /***
+     * 
+     * 对账 期初 期末查询 结束
+     * 
+     * */
 	/*
 	 * 下单参数  开始
 	 * */
@@ -220,6 +254,100 @@ public class OrderQuery extends Entity {
 	public void setIsContinue(Boolean isContinue) {
 		this.isContinue = isContinue;
 	}
+
+	public String getBegining() {
+		return begining;
+	}
+
+	public void setBegining(String begining) {
+		this.begining = begining;
+	}
+
+	public BigDecimal getReceivable() {
+		return receivable;
+	}
+
+	public void setReceivable(BigDecimal receivable) {
+		this.receivable = receivable ==null?BigDecimal.ZERO:receivable;
+	}
+
+	public BigDecimal getPayable() {
+		return payable;
+	}
+
+	public void setPayable(BigDecimal payable) {
+		this.payable = payable==null?BigDecimal.ZERO:payable;
+	}
+
+	public List<SsStoOrder> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<SsStoOrder> orders) {
+		this.orders = orders;
+	}
+
+	public List<SsPayment> getPayments() {
+		return payments;
+	}
+
+	public void setPayments(List<SsPayment> payments) {
+		this.payments = payments;
+	}
+
+	public Date getTimeFrom() {
+		return timeFrom;
+	}
+
+	public void setTimeFrom(Date timeFrom) {
+		this.timeFrom = timeFrom;
+	}
+
+	public Date getTimeTo() {
+		return timeTo;
+	}
+
+	public void setTimeTo(Date timeTo) {
+		this.timeTo = timeTo;
+	}
+
+	public Integer getClientType() {
+		return clientType;
+	}
+
+	public void setClientType(Integer clientType) {
+		this.clientType = clientType;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
+	}
+
+	public BigDecimal getReceivableTotalAmount() {
+		if(receivable.compareTo(payable)==1){
+			receivableTotalAmount =receivable.subtract(payable);
+		}
+		return receivableTotalAmount;
+	}
+
+	public void setReceivableTotalAmount(BigDecimal receivableTotalAmount) {
+		this.receivableTotalAmount = receivableTotalAmount;
+	}
+
+	public BigDecimal getPayableTotalAmount() {
+		if(payable.compareTo(receivable)==1){
+			payableTotalAmount =payable.subtract(receivable);
+		}
+		return payableTotalAmount;
+	}
+
+	public void setPayableTotalAmount(BigDecimal payableTotalAmount) {
+		this.payableTotalAmount = payableTotalAmount;
+	}
 	
-   
+	
 }

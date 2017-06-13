@@ -22,5 +22,5 @@ public interface SpCustProdPriceMapper {
 
     int updateByPrimaryKey(SpCustProdPrice record);
     
-    int saveTypeOrGradeRates(@Param("custProdPrices")List<SpCustProdPrice> custProdPrices);
+    int saveTypeOrGradeRates(@Param("custProdPrices") List<SpCustProdPrice> custProdPrices);
 }

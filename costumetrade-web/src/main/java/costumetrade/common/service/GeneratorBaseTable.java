@@ -20,7 +20,7 @@ public class GeneratorBaseTable {
 	    
 	    
 		try {
-			generatorTable("8");
+			generatorTable("9");
 		} catch (Exception e) {
 			loger.error("异常 "+e.getMessage());
 		}	 

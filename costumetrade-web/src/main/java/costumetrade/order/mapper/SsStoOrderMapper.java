@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SsStoOrder;
+import costumetrade.order.query.OrderQuery;
 
 @Mapper
 public interface SsStoOrderMapper {
@@ -42,4 +43,8 @@ public interface SsStoOrderMapper {
     List<SsStoOrder> selectByOrderMemberCount();
     
     List<SsStoOrder> selectByOrderStoreCount(@Param("storeId")Integer storeId);
+    
+    List<SsStoOrder> financialCountingOrders(OrderQuery query);
+    
+    List<OrderQuery> financialCounting(OrderQuery query);
 }

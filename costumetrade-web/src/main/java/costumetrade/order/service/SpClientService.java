@@ -11,7 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import costumetrade.order.domain.ScFocusShop;
 import costumetrade.order.domain.SpClient;
 import costumetrade.order.query.ClientQuery;
+import costumetrade.order.query.OrderQuery;
 import costumetrade.user.domain.QRCodeScanParam;
+import costumetrade.user.domain.SsPayment;
 
 @Service
 @Transactional
@@ -46,4 +48,14 @@ public interface SpClientService {
 	 * 
 	 * */
 	public Object scanQRCodeOk(QRCodeScanParam param);
+	
+	public List<OrderQuery> financialCounting(OrderQuery query);
+	/**
+	 * 弹出客户 供应还款页面初始化
+	 * **/
+	public SsPayment initAccountInfo(OrderQuery query);
+	/**
+	 * 保存还款单
+	 * */
+	public Integer saveAccountInfo(SsPayment pay);
 }

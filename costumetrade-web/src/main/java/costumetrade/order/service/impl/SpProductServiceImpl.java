@@ -174,7 +174,7 @@ public class SpProductServiceImpl implements SpProductService{
 				for(int i=0;i<size;i++){
 					Map<String,Object> mapField = new HashMap<String, Object>();
 					Map<String,Object> map = list.get(i);
-					for(int j=0;j<filed.length-1;j++){
+					for(int j=0;j<filed.length;j++){
 						
 						ProductQuery product = new ProductQuery();
 						product.setThirdPrice(new BigDecimal(map.get("thirdPrice").toString()));

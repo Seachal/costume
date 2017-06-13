@@ -15,5 +15,5 @@ import org.apache.commons.lang3.time.FastDateFormat;
 public class DateFormatUtils extends org.apache.commons.lang3.time.DateFormatUtils{
 	
 	public static final FastDateFormat yyyyMMddHHmmss_FORMAT
-    = FastDateFormat.getInstance("yyyyMMddHHmmss");
+    = FastDateFormat.getInstance("yyMMddHHmmss");
 }

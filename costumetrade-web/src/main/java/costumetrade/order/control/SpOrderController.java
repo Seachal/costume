@@ -229,6 +229,11 @@ public class SpOrderController {
 			result.setMsg(ResponseInfo.NO_STOCK.msg);
 			result.setData(ResponseInfo.NO_STOCK.code);
 			return result;
+		}else if(operate == 3){//不允许作废
+			result.setCode(ResponseInfo.SUCCESS.code);
+			result.setMsg(ResponseInfo.RETURN_EXCEPTION.msg);
+			result.setData(ResponseInfo.RETURN_EXCEPTION.code);
+			return result;
 		}else{
 			return result;
 		}
@@ -246,7 +251,7 @@ public class SpOrderController {
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		ssFinancial.setClientId((Integer) httpSession.getAttribute("clientId"));
+		
 		int operate = spOrderService.orderPay(ssFinancial);
 		
 		if(operate <= 0){

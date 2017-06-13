@@ -2,6 +2,8 @@ package costumetrade.order.service.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletOutputStream;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import costumetrade.common.page.Page;
+import costumetrade.common.util.OrderNoGenerator;
 import costumetrade.common.util.PingyinUtil;
 import costumetrade.order.domain.ScFocusShop;
 /*import com.google.zxing.BarcodeFormat;
@@ -22,16 +25,25 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.QRCodeWriter;*/
 import costumetrade.order.domain.SpClient;
+import costumetrade.order.domain.SsStoOrder;
 import costumetrade.order.mapper.ScFocusShopMapper;
 import costumetrade.order.mapper.SpClientMapper;
+import costumetrade.order.mapper.SsStoOrderMapper;
 import costumetrade.order.query.ClientQuery;
+import costumetrade.order.query.OrderQuery;
 import costumetrade.order.query.Rules;
 import costumetrade.order.service.SpClientService;
 import costumetrade.user.domain.QRCodeScanParam;
+import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpEmployee;
+import costumetrade.user.domain.SsDataDictionary;
+import costumetrade.user.domain.SsPayment;
+import costumetrade.user.mapper.ScWeChatMapper;
 import costumetrade.user.mapper.SpCustProdPriceMapper;
 import costumetrade.user.mapper.SpEmployeeMapper;
+import costumetrade.user.mapper.SsDataDictionaryMapper;
+import costumetrade.user.mapper.SsPaymentMapper;
 import costumetrade.user.service.SpEmployeeService;
 
 
@@ -49,6 +61,14 @@ public class SpClientServiceImpl implements SpClientService{
 	private ScFocusShopMapper scFocusShopMapper;
 	@Autowired
 	private SpEmployeeService spEmployeeService;
+	@Autowired
+	private ScWeChatMapper scWeChatMapper;
+	@Autowired
+	private SsStoOrderMapper ssStoOrderMapper;
+	@Autowired 
+	private SsPaymentMapper ssPaymentMapper;
+	@Autowired
+	private SsDataDictionaryMapper ssDataDictionaryMapper;
 
 	/** 
 	 *  生成web版本二维码 
@@ -277,6 +297,95 @@ public class SpClientServiceImpl implements SpClientService{
 	@Override
 	public int cancelFocus(ScFocusShop focusShop) {
 		return scFocusShopMapper.deleteByPrimaryKey(focusShop);
+	}
+	@Override
+	public List<OrderQuery> financialCounting(OrderQuery query) {
+		//设置卖家 买家
+		OrderQuery q = setSellerAndBuyer(query);
+		//默认时间从 当月第一天 到当天时间
+		Calendar cale = null;
+		if(query.getTimeFrom() == null||StringUtils.isBlank(query.getTimeFrom().toString())){
+			 // 获取前月的第一天  
+	        cale = Calendar.getInstance();  
+	        cale.add(Calendar.MONTH, 0);  
+	        cale.set(Calendar.DAY_OF_MONTH, 1);  
+	        q.setTimeFrom(cale.getTime());
+		}
+		if(query.getTimeTo() == null||StringUtils.isBlank(query.getTimeTo().toString())){
+			q.setTimeTo(new Date());
+		}
+	
+		List<OrderQuery> querys = ssStoOrderMapper.financialCounting(query);
+		List<SsStoOrder> orders = ssStoOrderMapper.financialCountingOrders(query);
+		
+		OrderQuery orderQuery = new OrderQuery();
+		orderQuery.setBegining("期中");
+		orderQuery.setOrders(orders);
+		orderQuery.setIsContinue(null);
+		querys.add(orderQuery);
+		return querys;
+	}
+	@Override
+	public SsPayment initAccountInfo(OrderQuery query) {
+		//设置卖家 买家
+		OrderQuery q = setSellerAndBuyer(query);
+		if(query.getTimeFrom() == null||StringUtils.isBlank(query.getTimeFrom().toString())){
+			
+	        q.setTimeFrom(new Date());
+		}
+		SpClient client = spClientMapper.selectByPrimaryKey(query.getClientId());
+		
+		//获取截止到时间的收款，欠款总数
+		List<OrderQuery> querys = ssStoOrderMapper.financialCounting(query);
+		OrderQuery orderQuery = querys.get(0);
+		
+		SsPayment pay = new SsPayment();
+		pay.setReceivable(orderQuery.getReceivable());
+		pay.setPayable(orderQuery.getPayable());
+		pay.setPaytime(new Date());
+		pay.setPayno(OrderNoGenerator.generate(""));
+		pay.setPayobjtype(query.getClientType()+"");
+		pay.setName(getName(client));	
+		
+		SsDataDictionary dict = new SsDataDictionary();
+		dict.setDictGroup("PAY_TYPE");
+		dict.setStoreId(client.getStoreId());
+		List<SsDataDictionary> dicts = ssDataDictionaryMapper.select(dict);
+		
+		pay.setStoreid(client.getStoreId());
+		pay.setDictionarys(dicts);
+		return pay;
+	}
+	
+	public OrderQuery setSellerAndBuyer(OrderQuery query){
+		//根据clientType 确定卖家  买家，以及是供应商对账还是客户对账
+		SpClient client = spClientMapper.selectByPrimaryKey(query.getClientId());
+		ScWeChat wechat1 = scWeChatMapper.selectByOpenId(client.getOpenid());//
+		
+		ScWeChat wechat = scWeChatMapper.selectByOpenId(query.getOpenid());//根据当前操作者的openid 获取当前店铺storeId
+		if(query.getClientType()==1){//客户对账
+			
+			if(wechat1.getStoreid()!=null){
+				query.setBuyerstoreid(wechat1.getStoreid());
+			}else{
+				query.setBuyerstoreid(wechat1.getUserid());
+			}
+			
+			query.setSellerstoreid(wechat.getStoreid());
+		}else if(query.getClientType()==2){//供应商对账
+			if(wechat1.getStoreid()!=null){
+				query.setSellerstoreid(wechat1.getStoreid());
+			}
+			query.setBuyerstoreid(wechat.getStoreid());
+		}
+		query.setStoreId(wechat.getStoreid());
+		
+		return query;
+	}
+	@Override
+	public Integer saveAccountInfo(SsPayment pay) {
+		pay.setUpdatetime(new Date());
+		return ssPaymentMapper.insertSelective(pay);
 	}
 	
 }
