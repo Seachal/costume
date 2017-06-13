@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="costumetrade.user.mapper.SsPaymentMapper">
+  <resultMap id="BaseResultMap" type="costumetrade.user.domain.SsPayment">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="storeId" jdbcType="INTEGER" property="storeid" />
+    <result column="payObjType" jdbcType="VARCHAR" property="payobjtype" />
+    <result column="payNo" jdbcType="VARCHAR" property="payno" />
+    <result column="uuid" jdbcType="VARCHAR" property="uuid" />
+    <result column="clientId" jdbcType="VARCHAR" property="clientid" />
+    <result column="payType" jdbcType="VARCHAR" property="paytype" />
+    <result column="payAmt" jdbcType="DECIMAL" property="payamt" />
+    <result column="billType" jdbcType="VARCHAR" property="billtype" />
+    <result column="payTime" jdbcType="TIMESTAMP" property="paytime" />
+    <result column="updateTime" jdbcType="TIMESTAMP" property="updatetime" />
+    <result column="updateBy" jdbcType="VARCHAR" property="updateby" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, storeId, payObjType, payNo, uuid, clientId, payType, payAmt, billType, payTime, 
+    updateTime, updateBy
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ss_payment
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from ss_payment
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="costumetrade.user.domain.SsPayment">
+    insert into ss_payment (id, storeId, payObjType, 
+      payNo, uuid, clientId, 
+      payType, payAmt, billType, 
+      payTime, updateTime, updateBy
+      )
+    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{payobjtype,jdbcType=VARCHAR}, 
+      #{payno,jdbcType=VARCHAR}, #{uuid,jdbcType=VARCHAR}, #{clientid,jdbcType=VARCHAR}, 
+      #{paytype,jdbcType=VARCHAR}, #{payamt,jdbcType=DECIMAL}, #{billtype,jdbcType=VARCHAR}, 
+      #{paytime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, #{updateby,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="costumetrade.user.domain.SsPayment">
+    insert into ss_payment
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="storeid != null">
+        storeId,
+      </if>
+      <if test="payobjtype != null">
+        payObjType,
+      </if>
+      <if test="payno != null">
+        payNo,
+      </if>
+      <if test="uuid != null">
+        uuid,
+      </if>
+      <if test="clientid != null">
+        clientId,
+      </if>
+      <if test="paytype != null">
+        payType,
+      </if>
+      <if test="payamt != null">
+        payAmt,
+      </if>
+      <if test="billtype != null">
+        billType,
+      </if>
+      <if test="paytime != null">
+        payTime,
+      </if>
+      <if test="updatetime != null">
+        updateTime,
+      </if>
+      <if test="updateby != null">
+        updateBy,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="storeid != null">
+        #{storeid,jdbcType=INTEGER},
+      </if>
+      <if test="payobjtype != null">
+        #{payobjtype,jdbcType=VARCHAR},
+      </if>
+      <if test="payno != null">
+        #{payno,jdbcType=VARCHAR},
+      </if>
+      <if test="uuid != null">
+        #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="clientid != null">
+        #{clientid,jdbcType=VARCHAR},
+      </if>
+      <if test="paytype != null">
+        #{paytype,jdbcType=VARCHAR},
+      </if>
+      <if test="payamt != null">
+        #{payamt,jdbcType=DECIMAL},
+      </if>
+      <if test="billtype != null">
+        #{billtype,jdbcType=VARCHAR},
+      </if>
+      <if test="paytime != null">
+        #{paytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateby != null">
+        #{updateby,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.user.domain.SsPayment">
+    update ss_payment
+    <set>
+      <if test="storeid != null">
+        storeId = #{storeid,jdbcType=INTEGER},
+      </if>
+      <if test="payobjtype != null">
+        payObjType = #{payobjtype,jdbcType=VARCHAR},
+      </if>
+      <if test="payno != null">
+        payNo = #{payno,jdbcType=VARCHAR},
+      </if>
+      <if test="uuid != null">
+        uuid = #{uuid,jdbcType=VARCHAR},
+      </if>
+      <if test="clientid != null">
+        clientId = #{clientid,jdbcType=VARCHAR},
+      </if>
+      <if test="paytype != null">
+        payType = #{paytype,jdbcType=VARCHAR},
+      </if>
+      <if test="payamt != null">
+        payAmt = #{payamt,jdbcType=DECIMAL},
+      </if>
+      <if test="billtype != null">
+        billType = #{billtype,jdbcType=VARCHAR},
+      </if>
+      <if test="paytime != null">
+        payTime = #{paytime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatetime != null">
+        updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateby != null">
+        updateBy = #{updateby,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SsPayment">
+    update ss_payment
+    set storeId = #{storeid,jdbcType=INTEGER},
+      payObjType = #{payobjtype,jdbcType=VARCHAR},
+      payNo = #{payno,jdbcType=VARCHAR},
+      uuid = #{uuid,jdbcType=VARCHAR},
+      clientId = #{clientid,jdbcType=VARCHAR},
+      payType = #{paytype,jdbcType=VARCHAR},
+      payAmt = #{payamt,jdbcType=DECIMAL},
+      billType = #{billtype,jdbcType=VARCHAR},
+      payTime = #{paytime,jdbcType=TIMESTAMP},
+      updateTime = #{updatetime,jdbcType=TIMESTAMP},
+      updateBy = #{updateby,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

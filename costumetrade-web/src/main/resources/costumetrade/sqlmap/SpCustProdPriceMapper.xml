@@ -28,7 +28,7 @@
 	<select id="select" parameterType="costumetrade.user.domain.SpCustProdPrice"
 		resultMap="BaseResultMap">
 		select
-		id, storeId,custTypeName,custTypeCode,custPriceJson, discPriceJson,prodGrade
+		id, storeId,type,custTypeName,custTypeCode,custPriceJson, discPriceJson,prodGrade
 		from sp_cust_prod_price
 		where 1=1
 		<if test="id != null">
@@ -63,14 +63,14 @@
 		#{createby,jdbcType=VARCHAR}
 		)
 	</insert>
-	<insert id="saveTypeOrGradeRates" >
+	<insert id="saveTypeOrGradeRates" parameterType="List">
 		insert into sp_cust_prod_price ( storeId, type,custTypeCode,
 		custTypeName, prodGrade, custPriceJson,
 		discPriceJson, createTime, createBy
 		)
-		values <foreach collection="custProdPrices" item="item" index="index" separator=",">( #{item.storeId}, #{item.type}, #{item.custTypeCode}, 
-      #{item.custTypeName}, #{item.prodGrade}, #{item.custPriceJson}, 
-      #{item.discPriceJson}, #{item.createTime}, #{item.createBy}
+		values <foreach collection="custProdPrices" item="item" index="index" separator=",">( #{item.storeid}, #{item.type}, #{item.custTypeCode}, 
+      #{item.custtypename}, #{item.prodgrade}, #{item.custpricejson}, 
+      #{item.discpricejson}, #{item.createtime}, #{item.createby}
       )</foreach>;
 		
 	</insert>

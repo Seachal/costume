@@ -25,7 +25,7 @@
   </select>
   <select id="select" parameterType="costumetrade.user.domain.SsDataDictionary" resultMap="BaseResultMap">
     select 
-    <include refid="Base_Column_List" />
+    dict_value, dict_text
     from ss_data_dictionary
     where 1=1
       <if test="storeId != null">

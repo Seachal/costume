@@ -45,6 +45,11 @@
 		<result column="buyerStoreId" jdbcType="INTEGER" property="buyerstoreid" />
 		<result column="orderStatus" jdbcType="INTEGER" property="orderstatus" />
 	</resultMap>
+	<resultMap id="AccountResultMap" type="costumetrade.order.query.OrderQuery">
+		<result column="begining" jdbcType="VARCHAR" property="begining" />
+		<result column="receivable" jdbcType="DECIMAL" property="receivable" />
+		<result column="payable" jdbcType="DECIMAL" property="payable" />
+	</resultMap>
 	<sql id="Base_Column_List">
 		id, sellerStoreId, buyerStoreId,seller,buyer, operator,
 		payOrderNo, refundDate,
@@ -67,18 +72,25 @@
 		where id = #{id,jdbcType=INTEGER}
 	</select>
 
-	<select id="selectSupplierByProduct" parameterType="costumetrade.order.domain.SpProduct" resultType="costumetrade.order.domain.SsStoOrder">
-		SELECT MAX(d.createTime) as createTime,s.sellerStoreId,s.buyerStoreId 
-		FROM ss_stodetail_#{storeId} d
-		LEFT JOIN ss_stoorder_#{storeId} s ON s.payOrderNo = d.orderId
-		WHERE d.productId=#{id}
+	<select id="selectSupplierByProduct" parameterType="costumetrade.order.domain.SpProduct"
+		resultType="costumetrade.order.domain.SsStoOrder">
+		SELECT MAX(d.createTime) as
+		createTime,s.sellerStoreId,s.buyerStoreId
+		FROM ss_stodetail_#{storeId}
+		d
+		LEFT JOIN ss_stoorder_#{storeId} s ON
+		s.payOrderNo = d.orderId
+		WHERE
+		d.productId=#{id}
 	</select>
 	<!-- 查询普通用户的采购单 -->
 	<select id="selectByOrderMemberCount" resultMap="CountResultMap">
 		SELECT COUNT(1)
 		as count,s.orderStatus,s.buyerStoreId,s.sellerStoreId
-		FROM ss_member_stoorder s
-		GROUP BY s.orderStatus,s.buyerStoreId,s.sellerStoreId
+		FROM
+		ss_member_stoorder s
+		GROUP BY
+		s.orderStatus,s.buyerStoreId,s.sellerStoreId
 	</select>
 	<select id="selectByOrderMember" resultMap="BaseResultMap">
 		select
@@ -88,19 +100,27 @@
 		stoorder.relatedOutTradeNo,
 		stoorder.refundStatus, stoorder.orderType,
 		stoorder.orderStatus,
-		stoorder.contactStoreId, stoorder.remarks, stoorder.totalNum, stoorder.totalAmt,
-		stoorder.discountRatio, stoorder.discount,
+		stoorder.contactStoreId, stoorder.remarks,
+		stoorder.totalNum, stoorder.totalAmt,
+		stoorder.discountRatio,
+		stoorder.discount,
 		stoorder.mchange,
-		stoorder.tax, stoorder.realcost, stoorder.payCate1, stoorder.payCost1,
-		stoorder.payCate2, stoorder.payCost2, stoorder.debetAmt,
+		stoorder.tax, stoorder.realcost,
+		stoorder.payCate1, stoorder.payCost1,
+		stoorder.payCate2,
+		stoorder.payCost2, stoorder.debetAmt,
 		stoorder.orderTime
-		from ss_member_stoorder stoorder
+		from
+		ss_member_stoorder stoorder
 		LEFT JOIN
-		sc_wechat_bind wechat ON wechat.userId = stoorder.buyerStoreId
+		sc_wechat_bind wechat ON
+		wechat.userId = stoorder.buyerStoreId
 		LEFT
-		JOIN sp_user u ON u.id=wechat.userId
+		JOIN sp_user u ON
+		u.id=wechat.userId
 		LEFT JOIN sp_store store ON
-		store.id = stoorder.sellerStoreId
+		store.id =
+		stoorder.sellerStoreId
 		where 1=1
 		<if test="spStoOrder.ordertype != null">
 			and stoorder.orderType =
@@ -128,8 +148,10 @@
 		resultMap="CountResultMap">
 		SELECT COUNT(1) as
 		count,s.orderStatus,s.buyerStoreId,s.sellerStoreId
-		FROM ss_stoorder_#{storeId,jdbcType=INTEGER} s
-		GROUP BY s.orderStatus,s.buyerStoreId,s.sellerStoreId
+		FROM
+		ss_stoorder_#{storeId,jdbcType=INTEGER} s
+		GROUP BY
+		s.orderStatus,s.buyerStoreId,s.sellerStoreId
 	</select>
 
 	<select id="selectByOrderStore" resultMap="BaseResultMap">
@@ -137,14 +159,18 @@
 		stoorder.id, stoorder.sellerStoreId,
 		stoorder.buyerStoreId,store.name AS seller,store1.name AS buyer,
 		stoorder.operator, stoorder.payOrderNo, stoorder.refundDate,
-		stoorder.relatedOutTradeNo,
-		stoorder.refundStatus, stoorder.orderType,
+		stoorder.orderType,
 		stoorder.orderStatus,
-		stoorder.contactStoreId, stoorder.remarks, stoorder.totalNum, stoorder.totalAmt,
-		stoorder.discountRatio, stoorder.discount,
+		stoorder.contactStoreId,
+		stoorder.remarks,
+		stoorder.totalNum, stoorder.totalAmt,
+		stoorder.discountRatio,
+		stoorder.discount,
 		stoorder.mchange,
-		stoorder.tax, stoorder.realcost, stoorder.payCate1, stoorder.payCost1,
-		stoorder.payCate2, stoorder.payCost2, stoorder.debetAmt,
+		stoorder.tax, stoorder.realcost,
+		stoorder.payCate1, stoorder.payCost1,
+		stoorder.payCate2,
+		stoorder.payCost2, stoorder.debetAmt,
 		stoorder.orderTime
 		from
 		ss_stoorder_#{spStoOrder.storeId,jdbcType=INTEGER} stoorder
@@ -183,20 +209,22 @@
 		select
 		a.id,
 		a.sellerStoreId, a.buyerStoreId, a.operator, a.payOrderNo,
-		a.refundDate, a.relatedOutTradeNo,
-		a.refundStatus, a.orderType,
-		a.orderStatus, a.shipType, a.shipStatus, a.shipContact,
-		a.shipPhone,
+		a.orderType,
+		a.orderStatus,
+
 		a.shipAddress, a.contactStoreId, a.remarks, a.totalNum, a.totalAmt,
 		a.discountRatio,
 		a.discount,
 		a.mchange, a.tax, a.realcost, a.payCate1,
-		a.payCost1, a.payCate2, a.payCost2
+		a.payCost1,
+		a.payCate2, a.payCost2
 		from
-		ss_stoorder_#{storeId,jdbcType=INTEGER} a left join sc_trade_info
+		ss_stoorder_#{storeId,jdbcType=INTEGER} a
+		left join sc_trade_info
 		b on
 		a.payOrderNo = b.payOrderNo
-		where b.tradeNo =
+		where b.tradeNo
+		=
 		#{tradeNo,jdbcType=VARCHAR}
 	</select>
 	<select id="selectByTradeNo" resultMap="BaseResultMap">
@@ -207,6 +235,89 @@
 		#{orderNo,jdbcType=VARCHAR}
 	</select>
 
+	<select id="financialCounting" parameterType="costumetrade.order.query.OrderQuery" resultMap="AccountResultMap">
+		SELECT
+		'期初' begining,
+		SUM(CASE WHEN sto.orderStatus =6 THEN sto.totalAmt - sto.realcost ELSE 0 END) AS receivable ,
+		SUM(CASE WHEN sto.orderStatus =7 THEN sto.realcost ELSE 0 END) AS payable
+		FROM
+		ss_stoorder_#{storeId} sto
+		LEFT JOIN ss_financial ssf ON ssf.orderNo =
+		sto.payOrderNo AND
+		ssf.buyerId=sto.buyerStoreId
+		AND ssf.sellerId=sto.sellerStoreId
+		WHERE 1=1
+		AND ssf.orderNo IS NOT NULL
+		<if test="timeFrom !=null">
+		AND UNIX_TIMESTAMP(sto.orderTime) &lt;= UNIX_TIMESTAMP(#{timeFrom})
+		</if>
+		and sto.sellerStoreId = #{sellerstoreid}
+		and sto.buyerStoreId =#{buyerstoreid}
+		AND ((sto.totalAmt>sto.realcost AND sto.orderStatus=6) OR STO.orderStatus=7)
+		
+		<if test="timeTo !=null">
+		UNION
+		ALL
+		SELECT
+		'期末' begining,
+		SUM(CASE WHEN sto.orderStatus =6 THEN sto.totalAmt - sto.realcost ELSE 0 END) AS receivable ,
+		SUM(CASE WHEN sto.orderStatus =7 THEN sto.realcost ELSE 0 END) AS payable
+		FROM
+		ss_stoorder_#{storeId} sto
+		LEFT JOIN ss_financial ssf ON
+		ssf.orderNo = sto.payOrderNo AND
+		ssf.buyerId=sto.buyerStoreId AND
+		ssf.sellerId=sto.sellerStoreId
+		WHERE 1=1
+		AND ssf.orderNo IS NOT NULL
+		AND UNIX_TIMESTAMP(sto.orderTime) &lt;=UNIX_TIMESTAMP(#{timeTo})
+		and sto.sellerStoreId = #{sellerstoreid}
+		and sto.buyerStoreId =#{buyerstoreid}
+		AND ((sto.totalAmt>sto.realcost AND sto.orderStatus=6) OR STO.orderStatus=7)
+		</if>
+	</select>
+	<select id="financialCountingOrders" parameterType="costumetrade.order.query.OrderQuery"  resultMap="BaseResultMap">
+	SELECT
+		sto.id, 
+		NULL AS orderType,
+		sto.sellerStoreId,
+		sto.buyerStoreId,
+		sto.payOrderNo,
+		sto.totalAmt,
+		sto.realcost,
+		sto.payCate1,
+		sto.payCost1,
+		sto.orderTime
+		FROM
+		ss_stoorder_1 sto
+		LEFT JOIN ss_financial ssf ON ssf.orderNo = sto.payOrderNo AND ssf.buyerId=sto.buyerStoreId AND ssf.sellerId=sto.sellerStoreId
+		WHERE 1=1
+		AND ssf.orderNo IS NOT NULL
+		AND UNIX_TIMESTAMP(sto.orderTime) &gt;= UNIX_TIMESTAMP(#{timeFrom})
+		AND UNIX_TIMESTAMP(sto.orderTime) &lt;= UNIX_TIMESTAMP(#{timeTo})
+		AND ((sto.totalAmt>sto.realcost AND sto.orderStatus=6) OR STO.orderStatus=7)
+		
+		UNION ALL
+		SELECT
+		pay.id, 
+		(CASE WHEN pay.billType =1 THEN '收客户欠款' 
+		  WHEN pay.billType =2 THEN '还供应商欠款' ELSE NULL END) AS  orderType,
+		NULL AS sellerStoreId,
+		NULL AS buyerStoreId,
+		pay.payNo AS payOrderNo,
+		NULL AS totalAmt,
+		NULL AS realcost,
+		da.dict_text AS payCate1,
+		pay.payAmt AS payCost1,
+		pay.payTime AS orderTime
+		FROM
+		ss_payment pay
+		LEFT JOIN ss_data_dictionary da ON da.storeId = pay.storeId AND da.dict_value = pay.payType
+		AND UNIX_TIMESTAMP(pay.payTime) &gt;= UNIX_TIMESTAMP(#{timeFrom})
+		AND UNIX_TIMESTAMP(pay.payTime) &lt;= UNIX_TIMESTAMP(#{timeTo})
+		and pay.clientId = #{clientId}
+		and pay.payObjType =#{clientType}
+	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
 		delete from
 		ss_stoorder
