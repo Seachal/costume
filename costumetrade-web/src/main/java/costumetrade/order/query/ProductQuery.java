@@ -227,6 +227,8 @@ public class ProductQuery extends Entity{
     private List<SpCustProdPrice> custProdPrice;
     
     private List<SpCustProdPrice>  gradeList;
+    
+    private List<SpCustProdPrice>  customerTypeList;
 
     private List<String> idArray;
     
@@ -892,6 +894,14 @@ public class ProductQuery extends Entity{
 
 	public void setPopularize(Integer popularize) {
 		this.popularize = popularize;
+	}
+
+	public List<SpCustProdPrice> getCustomerTypeList() {
+		return customerTypeList;
+	}
+
+	public void setCustomerTypeList(List<SpCustProdPrice> customerTypeList) {
+		this.customerTypeList = customerTypeList;
 	}
 
 	

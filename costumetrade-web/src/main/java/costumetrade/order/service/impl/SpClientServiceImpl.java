@@ -309,10 +309,19 @@ public class SpClientServiceImpl implements SpClientService{
 	        cale = Calendar.getInstance();  
 	        cale.add(Calendar.MONTH, 0);  
 	        cale.set(Calendar.DAY_OF_MONTH, 1);  
+	        cale.set(Calendar.HOUR_OF_DAY,0);
+	        cale.set(Calendar.MINUTE,0);
+	        cale.set(Calendar.SECOND, 0);
+	        cale.set(Calendar.MILLISECOND,0);
 	        q.setTimeFrom(cale.getTime());
 		}
 		if(query.getTimeTo() == null||StringUtils.isBlank(query.getTimeTo().toString())){
-			q.setTimeTo(new Date());
+			cale = Calendar.getInstance();  
+	        cale.set(Calendar.HOUR_OF_DAY,23);
+	        cale.set(Calendar.MINUTE,59);
+	        cale.set(Calendar.SECOND, 59);
+	        
+			q.setTimeTo(cale.getTime());
 		}
 	
 		List<OrderQuery> querys = ssStoOrderMapper.financialCounting(query);

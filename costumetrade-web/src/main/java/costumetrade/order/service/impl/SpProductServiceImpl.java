@@ -351,11 +351,11 @@ public class SpProductServiceImpl implements SpProductService{
 		//获取商品等级对应的折扣率和毛利率
 		List<SpCustProdPrice> custProdPrice = new ArrayList<SpCustProdPrice>();
 		SpCustProdPrice spCustProdPrice = new SpCustProdPrice();
-		spCustProdPrice.setType(1+"");
 		spCustProdPrice.setStoreid(storeId);
 		custProdPrice = spCustProdPriceMapper.select(spCustProdPrice);
 		
 		List<SpCustProdPrice> gradeList = new ArrayList<SpCustProdPrice>();
+		List<SpCustProdPrice> customTypeList = new ArrayList<SpCustProdPrice>();
 		List<SpCustProdPrice> custProdList = new ArrayList<SpCustProdPrice>();
 		if(custProdPrice.size()>0){
 			for(SpCustProdPrice price : custProdPrice){
@@ -363,16 +363,20 @@ public class SpProductServiceImpl implements SpProductService{
 				price.setDiscPriceJson((List<PriceJson>) JSONArray.parse(price.getDiscpricejson()));
 				
 				SpCustProdPrice prodPrice = new SpCustProdPrice();
-				prodPrice.setId(Integer.parseInt(price.getProdgrade()));
+				prodPrice.setId(Integer.parseInt(price.getCustTypeCode()));
 				prodPrice.setCusttypename(price.getCusttypename());
-				gradeList.add(prodPrice);
+				if("1".equals(price.getType())){
+					gradeList.add(prodPrice);
+				}else if("2".equals(price.getType())){
+					customTypeList.add(prodPrice);
+				}
 				
 				price.setCustpricejson(null);
 				price.setDiscpricejson(null);
 				custProdList.add(price);
 			}
 		}
-		
+		queryResult.setCustomerTypeList(customTypeList);
 		queryResult.setGradeList(gradeList);
 		queryResult.setCustProdPrice(custProdList);
 		queryResult.setCustOrDiscTag(custOrDiscTag);
@@ -423,6 +427,7 @@ public class SpProductServiceImpl implements SpProductService{
 			queryResult.setProductTypeList(null);
 			queryResult.setUnitList(null);
 			queryResult.setCustProdPrice(null);
+			queryResult.setCustomerTypeList(null);
 		}
 		return queryResult;
 	}

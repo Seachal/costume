@@ -102,6 +102,7 @@ public class SpStoreServiceImpl implements SpStoreService{
 		    		record = scWeChatMapper.selectByOpenId(openid);
 		    		if(record !=null){
 		    			record.setUserid(null);
+		    			record.setStoreid(store.getId());
 		    			scWeChatMapper.updateByPrimaryKeySelective(record);
 		    		}
 		    		

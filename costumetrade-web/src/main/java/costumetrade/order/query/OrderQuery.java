@@ -94,6 +94,8 @@ public class OrderQuery extends Entity {
     
 	private List<SsStoOrder> ssStoOrder;
 	
+	private SsPayment pay;
+	
     private static final long serialVersionUID = 1L;
 
 
@@ -359,6 +361,14 @@ public class OrderQuery extends Entity {
 
 	public void setPayableTotalAmount(BigDecimal payableTotalAmount) {
 		this.payableTotalAmount = payableTotalAmount;
+	}
+
+	public SsPayment getPay() {
+		return pay;
+	}
+
+	public void setPay(SsPayment pay) {
+		this.pay = pay;
 	}
 	
 	
