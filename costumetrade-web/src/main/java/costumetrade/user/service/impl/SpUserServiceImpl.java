@@ -150,8 +150,11 @@ public class SpUserServiceImpl implements SpUserService{
 		}
 		
 		StoreQuery resultQuery = new StoreQuery();
-		
 		List<SpStore> storeList = spStoreMapper.selectStores(store, null);
+		if(store.getIdArray() == null){
+			storeList =null;
+		}
+		
 		List<SpStore> stores = new ArrayList<SpStore>();
 		if(storeList !=null && storeList.size()>0 ){
 			for(SpStore spStore :storeList){

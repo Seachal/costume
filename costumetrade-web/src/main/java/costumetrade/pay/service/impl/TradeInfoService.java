@@ -64,7 +64,7 @@ public class TradeInfoService implements ITradeInfoService {
 		   ssFinancial.setTradeno(tradeOutNo);
 		   ssFinancial.setRelaNo(transactionId);
 		   ssFinancial.setIncome(order.getTotalamt());
-		   ssFinancial.setPayType(Short.valueOf(PayTypeEnum.PAY_WEIXIN.getKey()));
+		   ssFinancial.setPayType(PayTypeEnum.PAY_WEIXIN.getKey());
 		   ssFinancial.setBuyerid(order.getBuyerstoreid());
 		   ssFinancial.setSellerid(order.getSellerstoreid());
 		   ssFinancial.setPay(order.getRealcost());

@@ -199,9 +199,17 @@ public class WeChatServiceImpl implements WeChatService {
         			client.setReallyName(user.getName());
     			}
     			
-    			SpClient c = spClientMapper.selectByPrimaryKey(param.getId());
-    			if(c == null){//重复扫只保存一次
+    			
+    			SpClient clientCheck = new SpClient();//同一个店铺加客户或者供应商 朋友，只能存在一个openid
+    			clientCheck.setStoreId(param.getStoreId());
+    			clientCheck.setOpenid(message.getFromUserName());
+    			clientCheck.setType(param.getType()+"");
+    			List<SpClient> clients = spClientMapper.select(clientCheck, null);
+    			
+    			if(clients ==null){//重复扫只保存一次
     				save =spClientMapper.insertSelective(client);
+    			}else{
+    				return -1;
     			}
     			//加关注
     			ScFocusShop focusShop = new ScFocusShop();
@@ -215,7 +223,7 @@ public class WeChatServiceImpl implements WeChatService {
     			}
     		}else if(param.getType()==4){
     			SpEmployee employee = new SpEmployee();
-    			employee.setId(Integer.parseInt(param.getId()));
+    			
     			employee.setOpenid(message.getFromUserName());
     			employee.setStoreId(param.getStoreId());
     			employee.setWeChatNo(message.getToUserName());
@@ -227,7 +235,10 @@ public class WeChatServiceImpl implements WeChatService {
     			employee.setTelephone(user.getPhone());
     			SpEmployee e = spEmployeeMapper.selectByPrimaryKey(employee);
     			if(e == null){//重复扫只保存一次
+    				employee.setId(Integer.parseInt(param.getId()));
     				save =spEmployeeMapper.insertSelective(employee);
+    			}else{
+    				return -1;
     			}
     			
     		}

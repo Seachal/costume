@@ -98,6 +98,13 @@ public class SpStoreServiceImpl implements SpStoreService{
 		    	//初始化高级设置数据
 		    	GeneratorBaseTable.generatorTable(store.getId()+"");
 		    	if(store.getId()!=null){
+		    		ScWeChat record = new ScWeChat();
+		    		record = scWeChatMapper.selectByOpenId(openid);
+		    		if(record !=null){
+		    			record.setUserid(null);
+		    			scWeChatMapper.updateByPrimaryKeySelective(record);
+		    		}
+		    		
 		    		//保存高级设置中的客户类型
 		    		insertCustPrice(store.getId());
 		    		//保存数据字段信息

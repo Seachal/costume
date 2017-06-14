@@ -50,7 +50,7 @@ public class SsStoOrder extends Entity {
      */
     private String refundstatus;
 
-    /**
+    /**	
      *  订单类型 1：线上订单，2：线下订单
      */
     private String ordertype;
@@ -189,6 +189,8 @@ public class SsStoOrder extends Entity {
     private Integer pageNum;
     
     private Integer count;
+    
+    private String clientId;
     
     private static final long serialVersionUID = 1L;
     
@@ -349,11 +351,11 @@ public class SsStoOrder extends Entity {
     }
 
     public BigDecimal getTotalamt() {
-        return totalamt;
+        return totalamt==null?BigDecimal.ZERO:totalamt;
     }
 
     public void setTotalamt(BigDecimal totalamt) {
-        this.totalamt = totalamt;
+        this.totalamt = totalamt==null?BigDecimal.ZERO:totalamt;
     }
 
     public Integer getDiscountratio() {
@@ -389,11 +391,11 @@ public class SsStoOrder extends Entity {
     }
 
     public BigDecimal getRealcost() {
-        return realcost;
+        return realcost==null?BigDecimal.ZERO:realcost;
     }
 
     public void setRealcost(BigDecimal realcost) {
-        this.realcost = realcost;
+        this.realcost = realcost==null?BigDecimal.ZERO:realcost;
     }
 
     public String getPaycate1() {
@@ -401,7 +403,9 @@ public class SsStoOrder extends Entity {
     }
 
     public void setPaycate1(String paycate1) {
-        this.paycate1 = paycate1 == null ? null : paycate1.trim();
+    	
+        this.paycate1 =paycate1 ;
+      
     }
 
     public BigDecimal getPaycost1() {
@@ -501,6 +505,12 @@ public class SsStoOrder extends Entity {
 	}
 
 	public BigDecimal getUnPay() {
+		if(totalamt ==null){
+			totalamt = BigDecimal.ZERO;
+		}
+		if(realcost == null){
+			realcost = BigDecimal.ZERO;
+		}
 		return unPay = totalamt.subtract(realcost);
 	}
 
@@ -530,6 +540,14 @@ public class SsStoOrder extends Entity {
 
 	public void setCount(Integer count) {
 		this.count = count;
+	}
+
+	public String getClientId() {
+		return clientId;
+	}
+
+	public void setClientId(String clientId) {
+		this.clientId = clientId;
 	}
     
     

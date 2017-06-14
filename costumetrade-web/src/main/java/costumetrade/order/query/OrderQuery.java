@@ -328,6 +328,12 @@ public class OrderQuery extends Entity {
 	}
 
 	public BigDecimal getReceivableTotalAmount() {
+		if(receivable == null){
+			receivable = BigDecimal.ZERO;
+		}
+		if(payable == null){
+			payable = BigDecimal.ZERO;
+		}
 		if(receivable.compareTo(payable)==1){
 			receivableTotalAmount =receivable.subtract(payable);
 		}
@@ -339,6 +345,12 @@ public class OrderQuery extends Entity {
 	}
 
 	public BigDecimal getPayableTotalAmount() {
+		if(receivable == null){
+			receivable = BigDecimal.ZERO;
+		}
+		if(payable == null){
+			payable = BigDecimal.ZERO;
+		}
 		if(payable.compareTo(receivable)==1){
 			payableTotalAmount =payable.subtract(receivable);
 		}

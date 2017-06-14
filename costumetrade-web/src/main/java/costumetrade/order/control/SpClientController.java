@@ -209,6 +209,11 @@ public class SpClientController {
 			result.setData(ResponseInfo.SCAN_FRIEND_EXCEPTION.code);
 			result.setMsg(ResponseInfo.SCAN_FRIEND_EXCEPTION.msg);
 			return result;
+		}else if(object == null&&param.getType()==4){
+			result.setCode(ResponseInfo.SUCCESS.code);
+			result.setData(ResponseInfo.SCAN_EMP_EXCEPTION.code);
+			result.setMsg(ResponseInfo.SCAN_EMP_EXCEPTION.msg);
+			return result;
 		}else {
 			result.setData(object);
 		}

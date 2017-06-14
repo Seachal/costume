@@ -19,6 +19,7 @@ import costumetrade.common.page.Page;
 import costumetrade.common.util.OrderNoGenerator;
 import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.domain.ScStoreAddr;
+import costumetrade.order.domain.SpClient;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SsCgsorder;
 import costumetrade.order.domain.SsFinancial;
@@ -114,21 +115,52 @@ public class SpOrderServiceImpl implements SpOrderService{
 			order.setOrdertime(new Date());
 		}
 		if("2".equals(order.getOrdertype())){//线下单据，一旦提交，就是完成状态，库存会相应扣减   2、添加金额交易记录
-			order.setOrderstatus(5);
 			OrderQuery param = new OrderQuery();
+			//根据clientId 设置卖家 买家
+			SpClient client = spClientMapper.selectByPrimaryKey(order.getClientId());
+			ScWeChat wechat = scWeChatMapper.selectByOpenId(client.getOpenid());
+			if("1".equals(client.getType())){//开销售单
+				if(wechat.getStoreid()!=null){
+					param.setBuyerstoreid(wechat.getStoreid());
+				}else if(wechat.getUserid()!=null){
+					param.setBuyerstoreid(wechat.getUserid());
+				}
+				param.setSellerstoreid(order.getSellerstoreid());
+			}else if("2".equals(client.getType())){//开采购单
+				if(wechat.getStoreid()!=null){
+					param.setSellerstoreid(wechat.getStoreid());
+				}
+				param.setBuyerstoreid(order.getBuyerstoreid());
+			}
+			order.setOrderstatus(5);
+			order.setOrdertype(2+"");
+			
 			//param.setClientId(clientId);
 			param.setOpenid(openid);
-			param.setBuyerstoreid(order.getBuyerstoreid());
-			param.setSellerstoreid(order.getSellerstoreid());
+			
+			
 			param.setOperate(5);
 			orderStock(param,detail);
+			
+			
+			SsFinancial record = new SsFinancial();
+			record.setOrderno(orderNo);
+			record.setPay(order.getRealcost());
+			record.setPaydate(new Date());
+			record.setBuyerid(order.getBuyerstoreid());
+			record.setSellerid(order.getSellerstoreid());
+			record.setTradeno(OrderNoGenerator.generate(""));
+			record.setPayType(order.getPaycate1());
+			ssFinancialMapper.insertSelective(record );
 		}
 		
 		ScWeChat wechat = scWeChatMapper.selectByOpenId(openid);
 		if(wechat.getStoreid() == null){ //普通会员
+			order.setBuyerstoreid(wechat.getUserid());
 			ssStoDetailMapper.saveDetail(detail,order.getSellerstoreid());
 			save = ssStoOrderMapper.insert(order,order.getSellerstoreid());
 		}else{
+			order.setBuyerstoreid(wechat.getStoreid());
 			//买家保存采购单
 			ssStoDetailMapper.saveDetailStore(detail,order.getBuyerstoreid());
 			save = ssStoOrderMapper.insertStore(order,order.getBuyerstoreid());
@@ -445,6 +477,9 @@ public class SpOrderServiceImpl implements SpOrderService{
 		spStoOrder.setPayorderno(ssFinancial.getOrderno());
 		spStoOrder.setBuyerstoreid(ssFinancial.getBuyerid());
 		spStoOrder.setOrderstatus(ssFinancial.getOperate());
+		spStoOrder.setPaycate1(ssFinancial.getPayType());
+		spStoOrder.setPaycost1(ssFinancial.getPay());
+		spStoOrder.setRealcost(ssFinancial.getPay());
 		
 		ScWeChat wechat = scWeChatMapper.selectByOpenId(ssFinancial.getOpenid());
 		

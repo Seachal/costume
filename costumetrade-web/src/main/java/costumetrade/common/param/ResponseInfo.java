@@ -33,6 +33,7 @@ public enum ResponseInfo {
 	SCAN_CUSTOMER_EXCEPTION(1015,"未扫描二维码或者店员不能加客户"),
 	SCAN_SUPPLIER_EXCEPTION(1016,"未扫描二维码或者普通用户和店员不能加供应商"),
 	SCAN_FRIEND_EXCEPTION(1017,"未扫描二维码或者普通用户和店员不能朋友"),
+	SCAN_EMP_EXCEPTION(1019,"未扫描二维码或者该员工已存在"),
 	RETURN_EXCEPTION(1018,"不允许作废"),
 	;
 

@@ -58,7 +58,7 @@ public class SsFinancial extends Entity {
     /**
      *  支付类型  1:现金支付，2：支付宝支付，3：银行卡支付，4：微信支付，5：票据支付
      */
-    private Short payType;
+    private String payType;
 
     /**
      *  付款日期
@@ -73,12 +73,12 @@ public class SsFinancial extends Entity {
     /**
      *  付款银行：使用标准码，可以是支付宝等，使用标准码bankname
      */
-    private Short payBank;
+    private String payBank;
 
     /**
      *  业务类型:使用标准表，0 初始数据
      */
-    private Short bussiType;
+    private String bussiType;
     
     private Integer operate;//订单状态  1：新增   2、已付款  3、审核  4、发货  5、收货  6、已取消
     
@@ -170,11 +170,11 @@ public class SsFinancial extends Entity {
         this.incomedate = incomedate;
     }
 
-    public Short getPayType() {
+    public String getPayType() {
         return payType;
     }
 
-    public void setPayType(Short payType) {
+    public void setPayType(String payType) {
         this.payType = payType;
     }
 
@@ -194,19 +194,19 @@ public class SsFinancial extends Entity {
         this.cardno = cardno == null ? null : cardno.trim();
     }
 
-    public Short getPayBank() {
+    public String getPayBank() {
         return payBank;
     }
 
-    public void setPayBank(Short payBank) {
+    public void setPayBank(String payBank) {
         this.payBank = payBank;
     }
 
-    public Short getBussiType() {
+    public String getBussiType() {
         return bussiType;
     }
 
-    public void setBussiType(Short bussiType) {
+    public void setBussiType(String bussiType) {
         this.bussiType = bussiType;
     }
 
