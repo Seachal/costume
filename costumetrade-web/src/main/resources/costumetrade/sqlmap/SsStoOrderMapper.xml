@@ -277,15 +277,13 @@
 		</if>
 	</select>
 	<select id="financialCountingOrders" parameterType="costumetrade.order.query.OrderQuery"  resultMap="BaseResultMap">
-	SELECT
-		sto.id, 
-		NULL AS orderType,
+	SELECT * FROM (SELECT
+		sto.orderType ,
 		sto.sellerStoreId,
 		sto.buyerStoreId,
-		sto.payOrderNo,
 		sto.totalAmt,
 		sto.realcost,
-		da.dict_text as payCate1,
+		sto.payCate1 as payCate1,
 		sto.payCost1,
 		sto.orderTime
 		FROM
@@ -300,19 +298,16 @@
 		AND UNIX_TIMESTAMP(sto.orderTime) &gt;= UNIX_TIMESTAMP(#{timeFrom})
 		AND UNIX_TIMESTAMP(sto.orderTime) &lt;= UNIX_TIMESTAMP(#{timeTo})
 		AND ((sto.totalAmt>sto.realcost AND sto.orderStatus=6) OR STO.orderStatus=7)
-		
 		UNION ALL
 		SELECT
-		pay.id, 
 		(CASE WHEN pay.billType =1 THEN '收客户欠款' 
 		  WHEN pay.billType =2 THEN '还供应商欠款' ELSE NULL END) AS  orderType,
-		NULL AS sellerStoreId,
-		NULL AS buyerStoreId,
-		pay.payNo AS payOrderNo,
-		NULL AS totalAmt,
+		0 AS sellerStoreId,
+		0 AS buyerStoreId,
+		0 AS totalAmt,
 		pay.payAmt AS realcost,
 		
-		da.dict_text AS payCate1,
+		pay.payType AS payCate1,
 		
 		pay.payAmt AS payCost1,
 		pay.payTime AS orderTime
@@ -322,7 +317,7 @@
 		AND UNIX_TIMESTAMP(pay.payTime) &gt;= UNIX_TIMESTAMP(#{timeFrom})
 		AND UNIX_TIMESTAMP(pay.payTime) &lt;= UNIX_TIMESTAMP(#{timeTo})
 		and pay.clientId = #{clientId}
-		and pay.payObjType =#{clientType}
+		and pay.payObjType =#{clientType})a
 		
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
