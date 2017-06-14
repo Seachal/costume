@@ -38,6 +38,9 @@
      <if test="id != null">
       and id = #{id,jdbcType=INTEGER}
       </if>
+     <if test="openid != null">
+      and openid = #{openid,jdbcType=INTEGER}
+      </if>
   </select>
   <select id="getAllEmployees" parameterType="String"  resultMap="BaseResultMap">
     select 

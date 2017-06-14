@@ -124,9 +124,9 @@
 	<select id="selectPopulars" parameterType="costumetrade.order.domain.SpProduct" resultMap="BaseResultMap">
 		select id,storeId,
 		 image,
-		iamge1,image2,image3,image4
+		image1,image2,image3,image4
 		from sp_product_#{storeId,jdbcType=INTEGER}
-		where 
+		where 1=1
 		<if test="id !=null">
 		and  id = #{id,jdbcType=VARCHAR}
 		</if>

@@ -12,11 +12,11 @@
     <result column="income" jdbcType="DECIMAL" property="income" />
     <result column="pay" jdbcType="DECIMAL" property="pay" />
     <result column="incomeDate" jdbcType="DECIMAL" property="incomedate" />
-    <result column="pay_type" jdbcType="SMALLINT" property="payType" />
+    <result column="pay_type" jdbcType="VARCHAR" property="payType" />
     <result column="payDate" jdbcType="TIMESTAMP" property="paydate" />
     <result column="cardno" jdbcType="VARCHAR" property="cardno" />
-    <result column="pay_bank" jdbcType="SMALLINT" property="payBank" />
-    <result column="bussi_type" jdbcType="SMALLINT" property="bussiType" />
+    <result column="pay_bank" jdbcType="VARCHAR" property="payBank" />
+    <result column="bussi_type" jdbcType="VARCHAR" property="bussiType" />
   </resultMap>
   <sql id="Base_Column_List">
     id, tradeNo, orderNo, buyerId, sellerId, remark, income, pay, incomeDate, pay_type, 
@@ -41,8 +41,8 @@
     values (#{id,jdbcType=INTEGER}, #{tradeno,jdbcType=VARCHAR}, #{orderno,jdbcType=VARCHAR}, #{relaNo,jdbcType=VARCHAR}, 
       #{buyerid,jdbcType=INTEGER}, #{sellerid,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
       #{income,jdbcType=DECIMAL}, #{pay,jdbcType=DECIMAL}, #{incomedate,jdbcType=DECIMAL}, 
-      #{payType,jdbcType=SMALLINT}, #{paydate,jdbcType=TIMESTAMP}, #{cardno,jdbcType=VARCHAR}, 
-      #{payBank,jdbcType=SMALLINT}, #{bussiType,jdbcType=SMALLINT})
+      #{payType,jdbcType=VARCHAR}, #{paydate,jdbcType=TIMESTAMP}, #{cardno,jdbcType=VARCHAR}, 
+      #{payBank,jdbcType=VARCHAR}, #{bussiType,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.SsFinancial">
     insert into ss_financial
@@ -125,7 +125,7 @@
         #{incomedate,jdbcType=DECIMAL},
       </if>
       <if test="payType != null">
-        #{payType,jdbcType=SMALLINT},
+        #{payType,jdbcType=VARCHAR},
       </if>
       <if test="paydate != null">
         #{paydate,jdbcType=TIMESTAMP},
@@ -134,10 +134,10 @@
         #{cardno,jdbcType=VARCHAR},
       </if>
       <if test="payBank != null">
-        #{payBank,jdbcType=SMALLINT},
+        #{payBank,jdbcType=VARCHAR},
       </if>
       <if test="bussiType != null">
-        #{bussiType,jdbcType=SMALLINT},
+        #{bussiType,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -172,7 +172,7 @@
         incomeDate = #{incomedate,jdbcType=DECIMAL},
       </if>
       <if test="payType != null">
-        pay_type = #{payType,jdbcType=SMALLINT},
+        pay_type = #{payType,jdbcType=VARCHAR},
       </if>
       <if test="paydate != null">
         payDate = #{paydate,jdbcType=TIMESTAMP},
@@ -181,10 +181,10 @@
         cardno = #{cardno,jdbcType=VARCHAR},
       </if>
       <if test="payBank != null">
-        pay_bank = #{payBank,jdbcType=SMALLINT},
+        pay_bank = #{payBank,jdbcType=VARCHAR},
       </if>
       <if test="bussiType != null">
-        bussi_type = #{bussiType,jdbcType=SMALLINT},
+        bussi_type = #{bussiType,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -200,11 +200,11 @@
       income = #{income,jdbcType=DECIMAL},
       pay = #{pay,jdbcType=DECIMAL},
       incomeDate = #{incomedate,jdbcType=DECIMAL},
-      pay_type = #{payType,jdbcType=SMALLINT},
+      pay_type = #{payType,jdbcType=VARCHAR},
       payDate = #{paydate,jdbcType=TIMESTAMP},
       cardno = #{cardno,jdbcType=VARCHAR},
-      pay_bank = #{payBank,jdbcType=SMALLINT},
-      bussi_type = #{bussiType,jdbcType=SMALLINT}
+      pay_bank = #{payBank,jdbcType=VARCHAR},
+      bussi_type = #{bussiType,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

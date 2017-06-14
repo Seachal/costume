@@ -285,14 +285,18 @@
 		sto.payOrderNo,
 		sto.totalAmt,
 		sto.realcost,
-		sto.payCate1,
+		da.dict_text as payCate1,
 		sto.payCost1,
 		sto.orderTime
 		FROM
-		ss_stoorder_1 sto
+		ss_stoorder_#{storeId} sto
 		LEFT JOIN ss_financial ssf ON ssf.orderNo = sto.payOrderNo AND ssf.buyerId=sto.buyerStoreId AND ssf.sellerId=sto.sellerStoreId
+		LEFT JOIN ss_data_dictionary da ON  da.dict_value = sto.payCate1
 		WHERE 1=1
+		and da.storeId = #{storeId}
 		AND ssf.orderNo IS NOT NULL
+		and sto.sellerStoreId = #{sellerstoreid}
+		and sto.buyerStoreId =#{buyerstoreid}
 		AND UNIX_TIMESTAMP(sto.orderTime) &gt;= UNIX_TIMESTAMP(#{timeFrom})
 		AND UNIX_TIMESTAMP(sto.orderTime) &lt;= UNIX_TIMESTAMP(#{timeTo})
 		AND ((sto.totalAmt>sto.realcost AND sto.orderStatus=6) OR STO.orderStatus=7)
@@ -306,8 +310,10 @@
 		NULL AS buyerStoreId,
 		pay.payNo AS payOrderNo,
 		NULL AS totalAmt,
-		NULL AS realcost,
+		pay.payAmt AS realcost,
+		
 		da.dict_text AS payCate1,
+		
 		pay.payAmt AS payCost1,
 		pay.payTime AS orderTime
 		FROM
@@ -317,6 +323,7 @@
 		AND UNIX_TIMESTAMP(pay.payTime) &lt;= UNIX_TIMESTAMP(#{timeTo})
 		and pay.clientId = #{clientId}
 		and pay.payObjType =#{clientType}
+		
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
 		delete from
