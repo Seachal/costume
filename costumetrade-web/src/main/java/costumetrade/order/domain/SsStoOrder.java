@@ -397,18 +397,15 @@ public class SsStoOrder extends Entity {
     public void setRealcost(BigDecimal realcost) {
         this.realcost = realcost==null?BigDecimal.ZERO:realcost;
     }
-
     public String getPaycate1() {
-        return paycate1;
-    }
+		return paycate1;
+	}
 
-    public void setPaycate1(String paycate1) {
-    	
-        this.paycate1 =paycate1 ;
-      
-    }
+	public void setPaycate1(String paycate1) {
+		this.paycate1 = paycate1;
+	}
 
-    public BigDecimal getPaycost1() {
+	public BigDecimal getPaycost1() {
         return paycost1;
     }
 
