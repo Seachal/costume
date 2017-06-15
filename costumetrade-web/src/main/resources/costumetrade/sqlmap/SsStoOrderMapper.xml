@@ -238,7 +238,7 @@
 	<select id="financialCounting" parameterType="costumetrade.order.query.OrderQuery" resultMap="AccountResultMap">
 		SELECT
 		'期初' begining,
-		SUM(CASE WHEN sto.orderStatus =6 THEN sto.totalAmt - sto.realcost ELSE 0 END) AS receivable ,
+		SUM(CASE WHEN sto.orderStatus =6 THEN sto.debetAmt  ELSE 0 END) AS receivable ,
 		SUM(CASE WHEN sto.orderStatus =7 THEN sto.realcost ELSE 0 END) AS payable
 		FROM
 		ss_stoorder_#{storeId} sto
@@ -249,18 +249,18 @@
 		WHERE 1=1
 		AND ssf.orderNo IS NOT NULL
 		<if test="timeFrom !=null">
-		AND UNIX_TIMESTAMP(sto.orderTime) &lt;= UNIX_TIMESTAMP(#{timeFrom})
+		AND sto.orderTime &lt;= str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
 		</if>
 		and sto.sellerStoreId = #{sellerstoreid}
 		and sto.buyerStoreId =#{buyerstoreid}
-		AND ((sto.totalAmt>sto.realcost AND sto.orderStatus=6) OR STO.orderStatus=7)
+		AND ((sto.debetAmt >0 AND sto.orderStatus=6) OR STO.orderStatus=7)
 		
 		<if test="timeTo !=null">
 		UNION
 		ALL
 		SELECT
 		'期末' begining,
-		SUM(CASE WHEN sto.orderStatus =6 THEN sto.totalAmt - sto.realcost ELSE 0 END) AS receivable ,
+		SUM(CASE WHEN sto.orderStatus =6 THEN sto.debetAmt  ELSE 0 END) AS receivable ,
 		SUM(CASE WHEN sto.orderStatus =7 THEN sto.realcost ELSE 0 END) AS payable
 		FROM
 		ss_stoorder_#{storeId} sto
@@ -270,33 +270,34 @@
 		ssf.sellerId=sto.sellerStoreId
 		WHERE 1=1
 		AND ssf.orderNo IS NOT NULL
-		AND UNIX_TIMESTAMP(sto.orderTime) &lt;=UNIX_TIMESTAMP(#{timeTo})
+		AND sto.orderTime &lt;=str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
 		and sto.sellerStoreId = #{sellerstoreid}
 		and sto.buyerStoreId =#{buyerstoreid}
-		AND ((sto.totalAmt>sto.realcost AND sto.orderStatus=6) OR STO.orderStatus=7)
+		AND ((sto.debetAmt >0  AND sto.orderStatus=6) OR STO.orderStatus=7)
 		</if>
 	</select>
 	<select id="financialCountingOrders" parameterType="costumetrade.order.query.OrderQuery"  resultMap="BaseResultMap">
-	SELECT * FROM (SELECT
+	SELECT
 		sto.orderType ,
 		sto.sellerStoreId,
 		sto.buyerStoreId,
 		sto.totalAmt,
 		sto.realcost,
-		sto.payCate1 as payCate1,
+		da.dict_text as payCate1,
 		sto.payCost1,
+		sto.debetAmt,
 		sto.orderTime
 		FROM
 		ss_stoorder_#{storeId} sto
 		LEFT JOIN ss_financial ssf ON ssf.orderNo = sto.payOrderNo AND ssf.buyerId=sto.buyerStoreId AND ssf.sellerId=sto.sellerStoreId
-		LEFT JOIN ss_data_dictionary da ON  da.dict_value = sto.payCate1
+		LEFT JOIN ss_data_dictionary da ON  da.dict_value = sto.payCate1 AND da.storeId = #{storeId}
 		WHERE 1=1
 		and da.storeId = #{storeId}
 		AND ssf.orderNo IS NOT NULL
 		and sto.sellerStoreId = #{sellerstoreid}
 		and sto.buyerStoreId =#{buyerstoreid}
-		AND UNIX_TIMESTAMP(sto.orderTime) &gt;= UNIX_TIMESTAMP(#{timeFrom})
-		AND UNIX_TIMESTAMP(sto.orderTime) &lt;= UNIX_TIMESTAMP(#{timeTo})
+		AND sto.orderTime &gt;= str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND sto.orderTime &lt;= str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
 		AND ((sto.totalAmt>sto.realcost AND sto.orderStatus=6) OR STO.orderStatus=7)
 		UNION ALL
 		SELECT
@@ -306,18 +307,18 @@
 		0 AS buyerStoreId,
 		0 AS totalAmt,
 		pay.payAmt AS realcost,
-		
-		pay.payType AS payCate1,
-		
+		da.dict_text AS payCate1,
 		pay.payAmt AS payCost1,
+		0 as debetAmt,
 		pay.payTime AS orderTime
 		FROM
 		ss_payment pay
 		LEFT JOIN ss_data_dictionary da ON da.storeId = pay.storeId AND da.dict_value = pay.payType
-		AND UNIX_TIMESTAMP(pay.payTime) &gt;= UNIX_TIMESTAMP(#{timeFrom})
-		AND UNIX_TIMESTAMP(pay.payTime) &lt;= UNIX_TIMESTAMP(#{timeTo})
+		where 1=1
+		AND pay.payTime &gt;= str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND pay.payTime &lt;= str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
 		and pay.clientId = #{clientId}
-		and pay.payObjType =#{clientType})a
+		and pay.payObjType =#{clientType}
 		
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">

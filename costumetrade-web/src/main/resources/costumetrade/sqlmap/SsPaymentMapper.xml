@@ -7,7 +7,7 @@
     <result column="payObjType" jdbcType="VARCHAR" property="payobjtype" />
     <result column="payNo" jdbcType="VARCHAR" property="payno" />
     <result column="uuid" jdbcType="VARCHAR" property="uuid" />
-    <result column="clientId" jdbcType="VARCHAR" property="clientid" />
+    <result column="clientId" jdbcType="VARCHAR" property="clientId" />
     <result column="payType" jdbcType="VARCHAR" property="paytype" />
     <result column="payAmt" jdbcType="DECIMAL" property="payamt" />
     <result column="billType" jdbcType="VARCHAR" property="billtype" />
@@ -19,6 +19,28 @@
     id, storeId, payObjType, payNo, uuid, clientId, payType, payAmt, billType, payTime, 
     updateTime, updateBy
   </sql>
+  <select id="countRepay" parameterType="costumetrade.user.domain.SsPayment" resultMap="BaseResultMap">
+    select  storeId, payObjType,billType,sum(payAmt) as payAmt
+    
+    from ss_payment pay
+    where 1=1
+    <if test="storeid!=null">
+    and pay.storeId =#{storeid}
+    </if>
+    <if test="billtype!=null">
+    and pay.billType =#{billtype}
+    </if>
+    <if test="payobjtype!=null">
+    and pay.payObjType =#{payobjtype}
+    </if>
+    <if test="clientId!=null">
+    and pay.clientId =#{clientId}
+    </if>
+    <if test="paytime!=null">
+    AND pay.payTime &lt;= str_to_date(#{paytime},'%Y-%m-%d %H:%i:%s')
+    </if>
+	
+  </select>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -36,7 +58,7 @@
       payTime, updateTime, updateBy
       )
     values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{payobjtype,jdbcType=VARCHAR}, 
-      #{payno,jdbcType=VARCHAR}, #{uuid,jdbcType=VARCHAR}, #{clientid,jdbcType=VARCHAR}, 
+      #{payno,jdbcType=VARCHAR}, #{uuid,jdbcType=VARCHAR}, #{clientId,jdbcType=VARCHAR}, 
       #{paytype,jdbcType=VARCHAR}, #{payamt,jdbcType=DECIMAL}, #{billtype,jdbcType=VARCHAR}, 
       #{paytime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, #{updateby,jdbcType=VARCHAR}
       )
@@ -59,7 +81,7 @@
       <if test="uuid != null">
         uuid,
       </if>
-      <if test="clientid != null">
+      <if test="clientId != null">
         clientId,
       </if>
       <if test="paytype != null">
@@ -97,8 +119,8 @@
       <if test="uuid != null">
         #{uuid,jdbcType=VARCHAR},
       </if>
-      <if test="clientid != null">
-        #{clientid,jdbcType=VARCHAR},
+      <if test="clientId != null">
+        #{clientId,jdbcType=VARCHAR},
       </if>
       <if test="paytype != null">
         #{paytype,jdbcType=VARCHAR},
@@ -135,8 +157,8 @@
       <if test="uuid != null">
         uuid = #{uuid,jdbcType=VARCHAR},
       </if>
-      <if test="clientid != null">
-        clientId = #{clientid,jdbcType=VARCHAR},
+      <if test="clientId != null">
+        clientId = #{clientId,jdbcType=VARCHAR},
       </if>
       <if test="paytype != null">
         payType = #{paytype,jdbcType=VARCHAR},
@@ -165,7 +187,7 @@
       payObjType = #{payobjtype,jdbcType=VARCHAR},
       payNo = #{payno,jdbcType=VARCHAR},
       uuid = #{uuid,jdbcType=VARCHAR},
-      clientId = #{clientid,jdbcType=VARCHAR},
+      clientId = #{clientId,jdbcType=VARCHAR},
       payType = #{paytype,jdbcType=VARCHAR},
       payAmt = #{payamt,jdbcType=DECIMAL},
       billType = #{billtype,jdbcType=VARCHAR},

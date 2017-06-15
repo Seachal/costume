@@ -1,59 +1,126 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="costumetrade.order.mapper.SpReportMapper">
-  <resultMap id="BaseResultMap" type="costumetrade.order.query.FinanceReportQuery">
-    <result column="saleIncome" jdbcType="DECIMAL" property="saleIncome" />
-    <result column="salePay" jdbcType="DECIMAL" property="salePay" />
-    <result column="purchaseIncome" jdbcType="DECIMAL" property="purchaseIncome" />
-    <result column="purchasePay" jdbcType="DECIMAL" property="purchasePay" />
-    <result column="customerRepay" jdbcType="DECIMAL" property="customerRepay" />
-    <result column="suppierRepay" jdbcType="DECIMAL" property="suppierRepay" />
-    <result column="feeIncome" jdbcType="DECIMAL" property="feeIncome" />
-    <result column="feePay" jdbcType="DECIMAL" property="feePay" />
-    <result column="payCate" jdbcType="VARCHAR" property="payCate" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    saleIncome, salePay,purchaseIncome, purchasePay, customerRepay, suppierRepay, feeIncome, feePay
-  </sql>
-  <select id="financeReport" parameterType="costumetrade.order.query.FinanceReportQuery" resultMap="BaseResultMap">
-    SELECT
-    	da.dict_text AS payCate,
-		SUM(CASE WHEN sto.orderStatus =6 AND sto.sellerStoreId=#{storeId} THEN sto.totalAmt - sto.realcost ELSE 0 END) AS saleIncome ,
-		SUM(CASE WHEN sto.orderStatus =7 AND sto.sellerStoreId=#{storeId} THEN sto.realcost ELSE 0 END) AS salePay,
-		SUM(CASE WHEN sto.orderStatus =6 AND sto.buyerStoreId=#{storeId} THEN sto.totalAmt - sto.realcost ELSE 0 END) AS  purchasePay,
-		SUM(CASE WHEN sto.orderStatus =7 AND sto.buyerStoreId=#{storeId} THEN sto.realcost ELSE 0 END) AS purchaseIncome,
-		(CASE WHEN p.customerRepay IS NOT NULL THEN p.customerRepay ELSE 0 END )AS customerRepay ,
-		(CASE WHEN p.suppierRepay IS NOT NULL THEN p.suppierRepay ELSE 0 END ) AS suppierRepay,
-		(CASE WHEN c.feeIncome IS NOT NULL THEN c.feeIncome ELSE 0 END ) AS feeIncome ,
-		(CASE WHEN c.feePay IS NOT NULL THEN c.feePay ELSE 0 END ) AS feePay
+	<resultMap id="BaseResultMap" type="costumetrade.order.query.FinanceReportQuery">
+		<result column="saleIncome" jdbcType="DECIMAL" property="saleIncome" />
+		<result column="salePay" jdbcType="DECIMAL" property="salePay" />
+		<result column="purchaseIncome" jdbcType="DECIMAL" property="purchaseIncome" />
+		<result column="purchasePay" jdbcType="DECIMAL" property="purchasePay" />
+		<result column="customerRepay" jdbcType="DECIMAL" property="customerRepay" />
+		<result column="suppierRepay" jdbcType="DECIMAL" property="suppierRepay" />
+		<result column="feeIncome" jdbcType="DECIMAL" property="feeIncome" />
+		<result column="feePay" jdbcType="DECIMAL" property="feePay" />
+		<result column="payCate" jdbcType="VARCHAR" property="payCate" />
+	</resultMap>
+	<resultMap id="PurchaseResultMap" type="costumetrade.order.query.PurchaseReportQuery">
+		<result column="quantity" jdbcType="DECIMAL" property="quantity" />
+		<result column="amount" jdbcType="DECIMAL" property="amount" />
+		<result column="productName" jdbcType="DECIMAL" property="productName" />
+		<result column="productColor" jdbcType="DECIMAL" property="productColor" />
+		<result column="productSize" jdbcType="DECIMAL" property="productSize" />
+		<result column="brandName" jdbcType="DECIMAL" property="brandName" />
+		<result column="gradeName" jdbcType="DECIMAL" property="gradeName" />
+		<result column="storeName" jdbcType="DECIMAL" property="storeName" />
+		
+	</resultMap>
+	<sql id="Base_Column_List">
+		saleIncome, salePay,purchaseIncome, purchasePay, customerRepay, suppierRepay,
+		feeIncome, feePay
+	</sql>
+	<select id="financeReport" parameterType="costumetrade.order.query.FinanceReportQuery"
+		resultMap="BaseResultMap">
+		SELECT
+		da.dict_text AS payCate,
+		SUM(CASE WHEN sto.orderStatus =6 AND
+		sto.sellerStoreId=#{storeId} THEN sto.debetAmt ELSE 0 END) AS
+		saleIncome ,
+		SUM(CASE WHEN sto.orderStatus =7 AND
+		sto.sellerStoreId=#{storeId} THEN sto.payCost1 ELSE 0 END) AS salePay,
+		SUM(CASE WHEN sto.orderStatus =6 AND sto.buyerStoreId=#{storeId} THEN
+		sto.debetAmt ELSE 0 END) AS purchasePay,
+		SUM(CASE WHEN sto.orderStatus
+		=7 AND sto.buyerStoreId=#{storeId} THEN sto.payCost1 ELSE 0 END) AS
+		purchaseIncome,
+		(CASE WHEN p.customerRepay IS NOT NULL THEN
+		p.customerRepay ELSE 0 END )AS customerRepay ,
+		(CASE WHEN
+		p.suppierRepay IS NOT NULL THEN p.suppierRepay ELSE 0 END ) AS
+		suppierRepay,
+		(CASE WHEN c.feeIncome IS NOT NULL THEN c.feeIncome ELSE
+		0 END ) AS feeIncome ,
+		(CASE WHEN c.feePay IS NOT NULL THEN c.feePay
+		ELSE 0 END ) AS feePay
 		FROM
 		ss_stoorder_#{storeId} sto
-		LEFT JOIN ss_financial ssf ON ssf.orderNo =sto.payOrderNo AND ssf.buyerId=sto.buyerStoreId AND ssf.sellerId=sto.sellerStoreId
-		LEFT JOIN ss_data_dictionary da ON da.storeId = #{storeId} AND da.dict_value = sto.payCate1
-		LEFT JOIN (SELECT 0 AS feeIncome ,cgs.storeId,
-		        SUM(cgs.payCost ) AS feePay,
-		        cgs.payCate
-		        FROM ss_cgsorder cgs
-		        WHERE cgs.storeId = #{storeId} 
-		        AND UNIX_TIMESTAMP(cgs.order_time) &gt;= UNIX_TIMESTAMP(#{timeFrom})
-				AND UNIX_TIMESTAMP(cgs.order_time) &lt;= UNIX_TIMESTAMP(#{timeTo})
-		        )c ON c.storeId=#{storeId}  AND c.payCate = sto.payCate1
-		LEFT JOIN (SELECT 
-			SUM(CASE WHEN pay.payObjType =1 THEN pay.payAmt ELSE 0 END) AS customerRepay ,
-			SUM(CASE WHEN pay.payObjType =2 THEN pay.payAmt ELSE 0 END) AS suppierRepay,
-			pay.payType,
-			pay.storeId
-			FROM ss_payment pay WHERE pay.storeId=#{storeId} 
-			AND UNIX_TIMESTAMP(pay.payTime) &gt;= UNIX_TIMESTAMP(#{timeFrom})
-			AND UNIX_TIMESTAMP(pay.payTime) &lt;= UNIX_TIMESTAMP(#{timeTo})
-		)p ON p.storeId=#{storeId}  AND p.payType=sto.payCate1
+		LEFT JOIN
+		ss_financial ssf ON ssf.orderNo =sto.payOrderNo AND
+		ssf.buyerId=sto.buyerStoreId AND ssf.sellerId=sto.sellerStoreId
+		LEFT
+		JOIN ss_data_dictionary da ON da.storeId = #{storeId} AND
+		da.dict_value = sto.payCate1
+		LEFT JOIN (SELECT 0 AS feeIncome
+		,cgs.storeId,
+		SUM(cgs.payCost ) AS feePay,
+		cgs.payCate
+		FROM ss_cgsorder cgs
+		WHERE cgs.storeId = #{storeId}
+		AND cgs.order_time &gt;= str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND cgs.order_time &lt;= str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
+		)c ON c.storeId=#{storeId} AND c.payCate = sto.payCate1
+		LEFT JOIN (SELECT
+		SUM(CASE WHEN pay.payObjType =1 THEN pay.payAmt ELSE 0 END) AS
+		customerRepay ,
+		SUM(CASE WHEN pay.payObjType =2 THEN pay.payAmt ELSE 0 END) AS suppierRepay,
+		pay.payType,
+		pay.storeId
+		FROM ss_payment pay WHERE pay.storeId=#{storeId}
+		AND pay.payTime &gt;= str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND pay.payTime &lt;= str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
+		)p ON
+		p.storeId=#{storeId} AND p.payType=sto.payCate1
 		WHERE 1=1
-		AND ssf.orderNo IS NOT NULL
-		AND ((sto.totalAmt>sto.realcost AND sto.orderStatus=6) OR STO.orderStatus=7)
-		AND UNIX_TIMESTAMP(sto.orderTime) &gt;= UNIX_TIMESTAMP(#{timeFrom})
-		AND UNIX_TIMESTAMP(sto.orderTime) &lt;= UNIX_TIMESTAMP(#{timeTo})
+		AND
+		ssf.orderNo IS NOT NULL
+		AND ((sto.debetAmt>0 AND sto.orderStatus=6) OR
+		STO.orderStatus=7)
+		AND sto.orderTime &gt;=
+		str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND sto.orderTime &lt;=
+		str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
 		AND sto.payCate1=#{payCate}
-  </select>
-  
-  
+	</select>
+	<select id="purchaseSortReport" parameterType="costumetrade.order.query.PurchaseReportQuery"
+		resultMap="PurchaseResultMap">
+		SELECT
+		sum(detail.count) as quantity,
+		SUM(detail.price*detail.count) AS amount,
+		detail.productName as productName,
+		detail.productColor as productColor,
+		detail.productSize as productSize,
+		brand.brandName as brandName,
+		grade.custTypeName as gradeName,
+		store.name as storeName
+		FROM
+		ss_stodetail_1 detail
+		LEFT JOIN ss_stoorder_#{storeId} sto
+		ON sto.payOrderNo = detail.orderId
+		left join sp_product_1 product
+		on product.id=detail.productId
+		left join sp_pbrand brand
+		on brand.id = product.brandId and brand.storeId =detail.storeId
+		left join sp_cust_prod_price grade
+		on grade.type=1 and grade.storeId=detail.storeId and grade.custTypeCode = product.grade
+		left join sp_store store
+		on store.id = sto.sellerStoreId
+		where 1=1
+		and sto.buyerStoreId=#{storeId}
+		AND sto.orderTime &gt;=str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND sto.orderTime &lt;=str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
+		<if test="filter.value !=null">
+			and ${filter.field} like CONCAT('%',#{filter.value},'%')
+		</if>
+		group by ${filter.field}
+	</select>
+
+
 </mapper>
