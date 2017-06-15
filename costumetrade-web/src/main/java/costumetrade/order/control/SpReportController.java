@@ -2,6 +2,7 @@ package costumetrade.order.control;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,7 @@ import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.domain.SpPSize;
 import costumetrade.order.domain.SpPSizeCustom;
 import costumetrade.order.query.FinanceReportQuery;
+import costumetrade.order.query.PurchaseReportQuery;
 import costumetrade.order.service.SpReportService;
 
 /**
@@ -36,6 +38,15 @@ public class SpReportController {
 		FinanceReportQuery report = spReportService.financeReport(query);
 
 		return  ApiResponse.getInstance(report);
+	}
+	@RequestMapping("/purchaseSortReport")
+	@ResponseBody
+	public ApiResponse purchaseSortReport(PurchaseReportQuery query) {
+		
+		
+		List<Map<String,Object>> reports = spReportService.purchaseSortReport(query);
+		
+		return  ApiResponse.getInstance(reports);
 	}
 
 	

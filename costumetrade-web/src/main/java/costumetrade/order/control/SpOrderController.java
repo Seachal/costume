@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -50,36 +51,19 @@ public class SpOrderController {
 	
 	@RequestMapping("/saveOrders")
 	@ResponseBody
-	public ApiResponse saveOrders(OrderQuery param,SsStoOrder order) {
+	public ApiResponse saveOrders(@RequestBody OrderQuery param) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		if(order == null || param == null){
+		if( param == null ||param.getOrder() == null || param.getStoDetails() == null||StringUtils.isBlank(param.getOpenid())){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
+		SsStoOrder order = param.getOrder();
 		order.setOpenid(param.getOpenid());
-		List<SsStoDetail> details = new ArrayList<SsStoDetail>();
-		if(param.getProductIdArray().size()>0){
-			for(int i=0 ;i<param.getProductIdArray().size();i++){
-				SsStoDetail detail = new SsStoDetail();
-				detail.setCount(param.getCountArray().get(i));
-				detail.setProductsize(param.getSizeArray().get(i));
-				detail.setProductcolor(param.getColorArray().get(i));
-				detail.setPrice(param.getPriceArray().get(i));
-				detail.setProductid(param.getProductIdArray().get(i)+"");
-				detail.setProductname(param.getProductNameArray().get(i));
-				detail.setProductunit(param.getProductUnitArray().get(i));
+		List<SsStoDetail> details = param.getStoDetails();
 
-				detail.setCreateby(order.getCreateby());
-				detail.setCreatetime(new Date());
-				detail.setModifyby(order.getModifyby());
-				detail.setModifytime(new Date());
-				detail.setStoreid(order.getSellerstoreid()+"");
-				details.add(detail);
-			}
-		}
 		Integer save = spOrderService.saveOrders(details,order,param.getOpenid());
 		if(save <=0){
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
@@ -108,7 +92,7 @@ public class SpOrderController {
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		List<SsDataDictionary> dicts = spOrderService.orderFeeInit(Integer.parseInt(openid));
+		List<SsDataDictionary> dicts = spOrderService.orderFeeInit(openid);
 		if(dicts == null){
 			result.setCode(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);

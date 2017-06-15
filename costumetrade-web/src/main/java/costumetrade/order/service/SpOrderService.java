@@ -54,7 +54,7 @@ public interface SpOrderService {
 	 * */
 	public SsStoOrder order(String orderNo , Integer storeId);
 	
-	public List<SsDataDictionary> orderFeeInit(Integer storeId);
+	public List<SsDataDictionary> orderFeeInit(String  openid);
 	
 	
 	public int saveOrderFee(List<SsCgsorder> orders);

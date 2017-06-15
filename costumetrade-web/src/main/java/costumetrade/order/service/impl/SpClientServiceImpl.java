@@ -350,18 +350,27 @@ public class SpClientServiceImpl implements SpClientService{
 		
 		SsPayment pay = new SsPayment();
 		pay.setReceivable(orderQuery.getReceivable());
-		pay.setPayable(orderQuery.getPayable());
+		
 		pay.setPaytime(new Date());
 		pay.setPayno(OrderNoGenerator.generate(""));
 		pay.setPayobjtype(query.getClientType()+"");
 		pay.setName(getName(client));	
+		pay.setStoreid(client.getStoreId());
+		pay.setClientId(query.getClientId());
+		pay.setBilltype(query.getClientType()+"");
+		SsPayment repay = ssPaymentMapper.countRepay(pay);
+		if(repay !=null){
+			pay.setPayable(orderQuery.getPayable().subtract(repay.getPayamt()));
+		}else{
+			pay.setPayable(orderQuery.getPayable());
+		}
 		
 		SsDataDictionary dict = new SsDataDictionary();
 		dict.setDictGroup("PAY_TYPE");
 		dict.setStoreId(client.getStoreId());
 		List<SsDataDictionary> dicts = ssDataDictionaryMapper.select(dict);
 		
-		pay.setStoreid(client.getStoreId());
+		
 		pay.setDictionarys(dicts);
 		return pay;
 	}

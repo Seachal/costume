@@ -35,7 +35,7 @@ public class SsPayment extends Entity {
     /**
      *  对账对象ID号
      */
-    private String clientid;
+    private String clientId;
 
     /**
      *  付款方式 1：现金，2：微信，3：支付宝，4：银行卡
@@ -116,12 +116,12 @@ public class SsPayment extends Entity {
         this.uuid = uuid == null ? null : uuid.trim();
     }
 
-    public String getClientid() {
-        return clientid;
+    public String getClientId() {
+        return clientId;
     }
 
-    public void setClientid(String clientid) {
-        this.clientid = clientid == null ? null : clientid.trim();
+    public void setClientId(String clientId) {
+        this.clientId = clientId == null ? null : clientId.trim();
     }
 
     public String getPaytype() {

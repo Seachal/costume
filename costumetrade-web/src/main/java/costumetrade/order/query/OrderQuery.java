@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import costumetrade.common.Entity;
+import costumetrade.order.domain.SsStoDetail;
 import costumetrade.order.domain.SsStoOrder;
 import costumetrade.user.domain.SsPayment;
 
@@ -94,7 +95,9 @@ public class OrderQuery extends Entity {
     
 	private List<SsStoOrder> ssStoOrder;
 	
-	private SsPayment pay;
+	private List<SsStoDetail> stoDetails;
+	
+	private SsStoOrder order;
 	
     private static final long serialVersionUID = 1L;
 
@@ -363,13 +366,22 @@ public class OrderQuery extends Entity {
 		this.payableTotalAmount = payableTotalAmount;
 	}
 
-	public SsPayment getPay() {
-		return pay;
+	public List<SsStoDetail> getStoDetails() {
+		return stoDetails;
 	}
 
-	public void setPay(SsPayment pay) {
-		this.pay = pay;
+	public void setStoDetails(List<SsStoDetail> stoDetails) {
+		this.stoDetails = stoDetails;
 	}
+
+	public SsStoOrder getOrder() {
+		return order;
+	}
+
+	public void setOrder(SsStoOrder order) {
+		this.order = order;
+	}
+
 	
 	
 }

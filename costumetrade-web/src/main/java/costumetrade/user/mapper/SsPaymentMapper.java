@@ -16,4 +16,6 @@ public interface SsPaymentMapper {
     int updateByPrimaryKeySelective(SsPayment record);
 
     int updateByPrimaryKey(SsPayment record);
+    
+    SsPayment countRepay(SsPayment record);
 }

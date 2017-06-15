@@ -98,6 +98,35 @@ public class SpOrderServiceImpl implements SpOrderService{
 		int save = 0;
 		BigDecimal count = new BigDecimal(0.0);
 		BigDecimal cost =   new BigDecimal(0.0);
+		OrderQuery param = new OrderQuery();
+		//根据clientId 设置卖家 买家
+		SpClient client = spClientMapper.selectByPrimaryKey(order.getClientId());
+		if(client !=null){
+			ScWeChat wechat = scWeChatMapper.selectByOpenId(client.getOpenid());
+			if("1".equals(client.getType())){//开销售单
+				if(wechat.getStoreid()!=null){
+					param.setBuyerstoreid(wechat.getStoreid());
+					order.setBuyerstoreid(wechat.getStoreid());
+				}else if(wechat.getUserid()!=null){
+					param.setBuyerstoreid(wechat.getUserid());
+					order.setBuyerstoreid(wechat.getUserid());
+				}
+				param.setSellerstoreid(order.getSellerstoreid());
+				
+			}else if("2".equals(client.getType())){//开采购单
+				if(wechat.getStoreid()!=null){
+					param.setSellerstoreid(wechat.getStoreid());
+					order.setSellerstoreid(wechat.getStoreid());
+				}
+				param.setBuyerstoreid(order.getBuyerstoreid());
+				
+			}
+			
+		}else{
+			param.setBuyerstoreid(order.getBuyerstoreid());
+			param.setSellerstoreid(order.getSellerstoreid());
+		}
+		
 		
 		//订单状态 1：新增  2、已付款 3、审核 4、发货 5、收货 6、已取消
 		if(details.size() > 0){
@@ -115,33 +144,14 @@ public class SpOrderServiceImpl implements SpOrderService{
 			order.setOrdertime(new Date());
 		}
 		if("2".equals(order.getOrdertype())){//线下单据，一旦提交，就是完成状态，库存会相应扣减   2、添加金额交易记录
-			OrderQuery param = new OrderQuery();
-			//根据clientId 设置卖家 买家
-			SpClient client = spClientMapper.selectByPrimaryKey(order.getClientId());
-			ScWeChat wechat = scWeChatMapper.selectByOpenId(client.getOpenid());
-			if("1".equals(client.getType())){//开销售单
-				if(wechat.getStoreid()!=null){
-					param.setBuyerstoreid(wechat.getStoreid());
-				}else if(wechat.getUserid()!=null){
-					param.setBuyerstoreid(wechat.getUserid());
-				}
-				param.setSellerstoreid(order.getSellerstoreid());
-			}else if("2".equals(client.getType())){//开采购单
-				if(wechat.getStoreid()!=null){
-					param.setSellerstoreid(wechat.getStoreid());
-				}
-				param.setBuyerstoreid(order.getBuyerstoreid());
-			}
+			
 			order.setOrderstatus(5);
 			order.setOrdertype(2+"");
 			
 			//param.setClientId(clientId);
 			param.setOpenid(openid);
-			
-			
 			param.setOperate(5);
 			orderStock(param,detail);
-			
 			
 			SsFinancial record = new SsFinancial();
 			record.setOrderno(orderNo);
@@ -154,13 +164,13 @@ public class SpOrderServiceImpl implements SpOrderService{
 			ssFinancialMapper.insertSelective(record );
 		}
 		
-		ScWeChat wechat = scWeChatMapper.selectByOpenId(openid);
-		if(wechat.getStoreid() == null){ //普通会员
-			order.setBuyerstoreid(wechat.getUserid());
+		ScWeChat wechat1 = scWeChatMapper.selectByOpenId(openid);
+		if(wechat1.getStoreid() == null){ //普通会员
+			order.setBuyerstoreid(wechat1.getUserid());
 			ssStoDetailMapper.saveDetail(detail,order.getSellerstoreid());
 			save = ssStoOrderMapper.insert(order,order.getSellerstoreid());
 		}else{
-			order.setBuyerstoreid(wechat.getStoreid());
+			order.setBuyerstoreid(wechat1.getStoreid());
 			//买家保存采购单
 			ssStoDetailMapper.saveDetailStore(detail,order.getBuyerstoreid());
 			save = ssStoOrderMapper.insertStore(order,order.getBuyerstoreid());
@@ -717,11 +727,17 @@ public class SpOrderServiceImpl implements SpOrderService{
 		return query;
 	}
 	@Override
-	public List<SsDataDictionary> orderFeeInit(Integer storeId) {
+	public List<SsDataDictionary> orderFeeInit(String openid) {
 		List<SsDataDictionary> dicts = new ArrayList<SsDataDictionary>();
 		List<SsDataDictionary> dictList = new ArrayList<SsDataDictionary>();
 		SsDataDictionary dict = new SsDataDictionary();
-		dict.setStoreId(storeId);
+		ScWeChat wechat = scWeChatMapper.selectByOpenId(openid);
+		if(wechat!=null){
+			dict.setStoreId(wechat.getStoreid());
+		}else{
+			dict.setStoreId(-1);
+		}
+		
 		dict.setDictGroup("FEE_TYPE");
 		dicts = ssDataDictionaryMapper.select(dict);
 		if(dicts.size()>0){

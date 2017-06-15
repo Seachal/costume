@@ -194,7 +194,7 @@ public class SsStoOrder extends Entity {
     
     private static final long serialVersionUID = 1L;
     
-    private BigDecimal unPay;
+   
     
     
 
@@ -501,19 +501,6 @@ public class SsStoOrder extends Entity {
 		this.pageNum = pageNum;
 	}
 
-	public BigDecimal getUnPay() {
-		if(totalamt ==null){
-			totalamt = BigDecimal.ZERO;
-		}
-		if(realcost == null){
-			realcost = BigDecimal.ZERO;
-		}
-		return unPay = totalamt.subtract(realcost);
-	}
-
-	public void setUnPay(BigDecimal unPay) {
-		this.unPay = unPay;
-	}
 
 	public String getBuyer() {
 		return buyer;
