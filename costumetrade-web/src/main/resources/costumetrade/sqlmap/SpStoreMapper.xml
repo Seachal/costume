@@ -36,7 +36,7 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="selectStores"  resultMap="BaseResultMap">
-    select id, parentId, storePhoto, name,storeType, inventoryShare
+    select id, parentId, storePhoto, name,storeType, inventoryShare,address
     from sp_store
     where 1=1
     and status =0

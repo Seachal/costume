@@ -24,7 +24,7 @@
 		resultMap="BaseResultMap">
 		SELECT
 		e.employee_id,
-		p。operate_name,
+		p.operate_name,
 		e.privilege_id
 		FROM
 		sp_privilege_employee e

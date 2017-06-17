@@ -1,270 +1,346 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="costumetrade.order.mapper.SsStoDetailMapper">
-  <resultMap id="BaseResultMap" type="costumetrade.order.domain.SsStoDetail">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="orderId" jdbcType="VARCHAR" property="orderid" />
-    <result column="storeId" jdbcType="VARCHAR" property="storeid" />
-    <result column="handtag" jdbcType="INTEGER" property="handtag" />
-    <result column="productId" jdbcType="VARCHAR" property="productid" />
-    <result column="productName" jdbcType="VARCHAR" property="productname" />
-    <result column="productUnit" jdbcType="VARCHAR" property="productunit" />
-    <result column="productColor" jdbcType="VARCHAR" property="productcolor" />
-    <result column="productSize" jdbcType="VARCHAR" property="productsize" />
-    <result column="count" jdbcType="DECIMAL" property="count" />
-    <result column="price" jdbcType="DECIMAL" property="price" />
-    <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
-    <result column="createBy" jdbcType="VARCHAR" property="createby" />
-    <result column="modifyTime" jdbcType="TIMESTAMP" property="modifytime" />
-    <result column="modifyBy" jdbcType="VARCHAR" property="modifyby" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, orderId, storeId, handtag, productId, productName, productUnit, productColor, 
-    productSize, count, price, createTime, createBy, modifyTime, modifyBy
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from ss_stodetail
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <select id="selectByOrderId" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from ss_stodetail_#{storeId,jdbcType=INTEGER}
-    where orderId = #{orderNo,jdbcType=VARCHAR}
-  </select>
-  <select id="selectByOrderIdMember" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from ss_member_stodetail
-    where orderId = #{orderNo,jdbcType=VARCHAR}
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from ss_stodetail
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="costumetrade.order.domain.SsStoDetail">
-    insert into ss_stodetail (id, orderId, storeId, 
-      handtag, productId, productName, 
-      productUnit, productColor, productSize, 
-      count, price, createTime, 
-      createBy, modifyTime, modifyBy
-      )
-    values (#{id,jdbcType=INTEGER}, #{orderid,jdbcType=VARCHAR}, #{storeid,jdbcType=VARCHAR}, 
-      #{handtag,jdbcType=INTEGER}, #{productid,jdbcType=VARCHAR}, #{productname,jdbcType=VARCHAR}, 
-      #{productunit,jdbcType=VARCHAR}, #{productcolor,jdbcType=VARCHAR}, #{productsize,jdbcType=VARCHAR}, 
-      #{count,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, #{createtime,jdbcType=TIMESTAMP}, 
-      #{createby,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP}, #{modifyby,jdbcType=VARCHAR}
-      )
-  </insert>
-  <insert id="saveDetail" >
-    insert into ss_stodetail_#{sellerStoreId,jdbcType=INTEGER} (orderId, storeId, 
-      handtag, productId, productName, 
-      productUnit, productColor, productSize, 
-      count, price, createTime, 
-      createBy, modifyTime, modifyBy
-      )
-    values <foreach collection="detail" item="item" index="index" separator=",">( #{item.orderid,jdbcType=VARCHAR}, #{item.storeid,jdbcType=VARCHAR}, 
-      #{item.handtag,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR}, #{item.productname,jdbcType=VARCHAR}, 
-      #{item.productunit,jdbcType=VARCHAR}, #{item.productcolor,jdbcType=VARCHAR}, #{item.productsize,jdbcType=VARCHAR}, 
-      #{item.count,jdbcType=DECIMAL}, #{item.price,jdbcType=DECIMAL}, #{item.createtime,jdbcType=TIMESTAMP}, 
-      #{item.createby,jdbcType=VARCHAR}, #{item.modifytime,jdbcType=TIMESTAMP}, #{item.modifyby,jdbcType=VARCHAR}
-      )</foreach>;
-      
-    insert into ss_member_stodetail (orderId, storeId, 
-      handtag, productId, productName, 
-      productUnit, productColor, productSize, 
-      count, price, createTime, 
-      createBy, modifyTime, modifyBy
-      )
-    values <foreach collection="detail" item="item" index="index" separator=",">( #{item.orderid,jdbcType=VARCHAR}, #{sellerStoreId,jdbcType=INTEGER}, 
-      #{item.handtag,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR}, #{item.productname,jdbcType=VARCHAR}, 
-      #{item.productunit,jdbcType=VARCHAR}, #{item.productcolor,jdbcType=VARCHAR}, #{item.productsize,jdbcType=VARCHAR}, 
-      #{item.count,jdbcType=DECIMAL}, #{item.price,jdbcType=DECIMAL}, #{item.createtime,jdbcType=TIMESTAMP}, 
-      #{item.createby,jdbcType=VARCHAR}, #{item.modifytime,jdbcType=TIMESTAMP}, #{item.modifyby,jdbcType=VARCHAR}
-      )</foreach>; 
-   
-  </insert>
+	<resultMap id="BaseResultMap" type="costumetrade.order.domain.SsStoDetail">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="orderId" jdbcType="VARCHAR" property="orderid" />
+		<result column="storeId" jdbcType="VARCHAR" property="storeid" />
+		<result column="handtag" jdbcType="INTEGER" property="handtag" />
+		<result column="productId" jdbcType="VARCHAR" property="productid" />
+		<result column="productName" jdbcType="VARCHAR" property="productname" />
+		<result column="productUnit" jdbcType="VARCHAR" property="productunit" />
+		<result column="productColor" jdbcType="VARCHAR" property="productcolor" />
+		<result column="productSize" jdbcType="VARCHAR" property="productsize" />
+		<result column="count" jdbcType="DECIMAL" property="count" />
+		<result column="price" jdbcType="DECIMAL" property="price" />
+		<result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+		<result column="createBy" jdbcType="VARCHAR" property="createby" />
+		<result column="modifyTime" jdbcType="TIMESTAMP" property="modifytime" />
+		<result column="modifyBy" jdbcType="VARCHAR" property="modifyby" />
+	</resultMap>
+	<resultMap type="costumetrade.order.query.ProductQuery" id="ProductsResult">
+		<result column="id" jdbcType="VARCHAR" property="id" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="image" jdbcType="VARCHAR" property="image" />
+		<result column="count" jdbcType="DECIMAL" property="count" />
+		<result column="colors" jdbcType="VARCHAR" property="colors" />
+		<result column="sizes" jdbcType="VARCHAR" property="sizes" />
+		<result column="unit" jdbcType="VARCHAR" property="unit" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, orderId, storeId, handtag, productId, productName, productUnit,
+		productColor,
+		productSize, count, price, createTime, createBy, modifyTime, modifyBy
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from ss_stodetail
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectByOrderId" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from ss_stodetail_#{storeId,jdbcType=INTEGER}
+		where orderId = #{orderNo,jdbcType=VARCHAR}
+	</select>
+	<select id="selectByOrderIdMember" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from ss_member_stodetail
+		where orderId = #{orderNo,jdbcType=VARCHAR}
+	</select>
+	<select id="selectProductsByClient" parameterType="costumetrade.order.query.OrderQuery"
+		resultMap="ProductsResult">
+		SELECT DISTINCT
+		detail.productId as id,
+		detail.productColor as colors,
+		detail.count,
+		detail.price,
+		detail.productName as name,
+		detail.productSize as sizes,
+		detail.productUnit as unit,
+		(CASE WHEN product.image IS NOT NULL THEN product.image
+			WHEN product.image1 IS NOT NULL THEN product.image1
+			WHEN product.image2 IS NOT NULL THEN product.image2
+			WHEN product.image3 IS NOT NULL THEN product.image3
+			WHEN product.image4 IS NOT NULL THEN product.image4 ELSE product.image END) as image
+		FROM
+		ss_stodetail_#{storeId} detail
+		LEFT JOIN ss_stoorder_#{storeId} sto
+		ON sto.payOrderNo = detail.orderId
+		LEFT JOIN sp_product_#{storeId} product 
+		ON product.id = detail.productId
+		WHERE 1 = 1
+		AND sto.buyerStoreId = #{buyerstoreid}
+		AND sto.sellerStoreId = #{sellerstoreid}
+		ORDER BY detail.createTime DESC
 
-  <insert id="saveDetailStore" >
-  
-    insert into ss_stodetail_#{storeId,jdbcType=INTEGER} (orderId, storeId, 
-      handtag, productId, productName, 
-      productUnit, productColor, productSize, 
-      count, price, createTime, 
-      createBy, modifyTime, modifyBy
-      )
-    values <foreach collection="detail" item="item" index="index" separator=",">( #{item.orderid,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER}, 
-      #{item.handtag,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR}, #{item.productname,jdbcType=VARCHAR}, 
-      #{item.productunit,jdbcType=VARCHAR}, #{item.productcolor,jdbcType=VARCHAR}, #{item.productsize,jdbcType=VARCHAR}, 
-      #{item.count,jdbcType=DECIMAL}, #{item.price,jdbcType=DECIMAL}, #{item.createtime,jdbcType=TIMESTAMP}, 
-      #{item.createby,jdbcType=VARCHAR}, #{item.modifytime,jdbcType=TIMESTAMP}, #{item.modifyby,jdbcType=VARCHAR}
-      )</foreach>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from ss_stodetail
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="costumetrade.order.domain.SsStoDetail">
+		insert into ss_stodetail (id, orderId, storeId,
+		handtag, productId, productName,
+		productUnit, productColor, productSize,
+		count, price, createTime,
+		createBy, modifyTime, modifyBy
+		)
+		values (#{id,jdbcType=INTEGER}, #{orderid,jdbcType=VARCHAR},
+		#{storeid,jdbcType=VARCHAR},
+		#{handtag,jdbcType=INTEGER}, #{productid,jdbcType=VARCHAR}, #{productname,jdbcType=VARCHAR},
+		#{productunit,jdbcType=VARCHAR}, #{productcolor,jdbcType=VARCHAR},
+		#{productsize,jdbcType=VARCHAR},
+		#{count,jdbcType=DECIMAL}, #{price,jdbcType=DECIMAL}, #{createtime,jdbcType=TIMESTAMP},
+		#{createby,jdbcType=VARCHAR}, #{modifytime,jdbcType=TIMESTAMP},
+		#{modifyby,jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="saveDetail">
+		insert into ss_stodetail_#{sellerStoreId,jdbcType=INTEGER} (orderId,
+		storeId,
+		handtag, productId, productName,
+		productUnit, productColor, productSize,
+		count, price, createTime,
+		createBy, modifyTime, modifyBy
+		)
+		values
+		<foreach collection="detail" item="item" index="index"
+			separator=",">( #{item.orderid,jdbcType=VARCHAR},
+			#{item.storeid,jdbcType=VARCHAR},
+			#{item.handtag,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR},
+			#{item.productname,jdbcType=VARCHAR},
+			#{item.productunit,jdbcType=VARCHAR},
+			#{item.productcolor,jdbcType=VARCHAR},
+			#{item.productsize,jdbcType=VARCHAR},
+			#{item.count,jdbcType=DECIMAL}, #{item.price,jdbcType=DECIMAL},
+			#{item.createtime,jdbcType=TIMESTAMP},
+			#{item.createby,jdbcType=VARCHAR},
+			#{item.modifytime,jdbcType=TIMESTAMP},
+			#{item.modifyby,jdbcType=VARCHAR}
+			)
+		</foreach>
+		;
 
-  </insert>
-  <insert id="insertSelective" parameterType="costumetrade.order.domain.SsStoDetail">
-    insert into ss_stodetail
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="orderid != null">
-        orderId,
-      </if>
-      <if test="storeid != null">
-        storeId,
-      </if>
-      <if test="handtag != null">
-        handtag,
-      </if>
-      <if test="productid != null">
-        productId,
-      </if>
-      <if test="productname != null">
-        productName,
-      </if>
-      <if test="productunit != null">
-        productUnit,
-      </if>
-      <if test="productcolor != null">
-        productColor,
-      </if>
-      <if test="productsize != null">
-        productSize,
-      </if>
-      <if test="count != null">
-        count,
-      </if>
-      <if test="price != null">
-        price,
-      </if>
-      <if test="createtime != null">
-        createTime,
-      </if>
-      <if test="createby != null">
-        createBy,
-      </if>
-      <if test="modifytime != null">
-        modifyTime,
-      </if>
-      <if test="modifyby != null">
-        modifyBy,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="orderid != null">
-        #{orderid,jdbcType=VARCHAR},
-      </if>
-      <if test="storeid != null">
-        #{storeid,jdbcType=VARCHAR},
-      </if>
-      <if test="handtag != null">
-        #{handtag,jdbcType=INTEGER},
-      </if>
-      <if test="productid != null">
-        #{productid,jdbcType=VARCHAR},
-      </if>
-      <if test="productname != null">
-        #{productname,jdbcType=VARCHAR},
-      </if>
-      <if test="productunit != null">
-        #{productunit,jdbcType=VARCHAR},
-      </if>
-      <if test="productcolor != null">
-        #{productcolor,jdbcType=VARCHAR},
-      </if>
-      <if test="productsize != null">
-        #{productsize,jdbcType=VARCHAR},
-      </if>
-      <if test="count != null">
-        #{count,jdbcType=DECIMAL},
-      </if>
-      <if test="price != null">
-        #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="createtime != null">
-        #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createby != null">
-        #{createby,jdbcType=VARCHAR},
-      </if>
-      <if test="modifytime != null">
-        #{modifytime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyby != null">
-        #{modifyby,jdbcType=VARCHAR},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SsStoDetail">
-    update ss_stodetail
-    <set>
-      <if test="orderid != null">
-        orderId = #{orderid,jdbcType=VARCHAR},
-      </if>
-      <if test="storeid != null">
-        storeId = #{storeid,jdbcType=VARCHAR},
-      </if>
-      <if test="handtag != null">
-        handtag = #{handtag,jdbcType=INTEGER},
-      </if>
-      <if test="productid != null">
-        productId = #{productid,jdbcType=VARCHAR},
-      </if>
-      <if test="productname != null">
-        productName = #{productname,jdbcType=VARCHAR},
-      </if>
-      <if test="productunit != null">
-        productUnit = #{productunit,jdbcType=VARCHAR},
-      </if>
-      <if test="productcolor != null">
-        productColor = #{productcolor,jdbcType=VARCHAR},
-      </if>
-      <if test="productsize != null">
-        productSize = #{productsize,jdbcType=VARCHAR},
-      </if>
-      <if test="count != null">
-        count = #{count,jdbcType=DECIMAL},
-      </if>
-      <if test="price != null">
-        price = #{price,jdbcType=DECIMAL},
-      </if>
-      <if test="createtime != null">
-        createTime = #{createtime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createby != null">
-        createBy = #{createby,jdbcType=VARCHAR},
-      </if>
-      <if test="modifytime != null">
-        modifyTime = #{modifytime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="modifyby != null">
-        modifyBy = #{modifyby,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsStoDetail">
-    update ss_stodetail
-    set orderId = #{orderid,jdbcType=VARCHAR},
-      storeId = #{storeid,jdbcType=VARCHAR},
-      handtag = #{handtag,jdbcType=INTEGER},
-      productId = #{productid,jdbcType=VARCHAR},
-      productName = #{productname,jdbcType=VARCHAR},
-      productUnit = #{productunit,jdbcType=VARCHAR},
-      productColor = #{productcolor,jdbcType=VARCHAR},
-      productSize = #{productsize,jdbcType=VARCHAR},
-      count = #{count,jdbcType=DECIMAL},
-      price = #{price,jdbcType=DECIMAL},
-      createTime = #{createtime,jdbcType=TIMESTAMP},
-      createBy = #{createby,jdbcType=VARCHAR},
-      modifyTime = #{modifytime,jdbcType=TIMESTAMP},
-      modifyBy = #{modifyby,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+		insert into ss_member_stodetail (orderId, storeId,
+		handtag, productId, productName,
+		productUnit, productColor, productSize,
+		count, price, createTime,
+		createBy, modifyTime, modifyBy
+		)
+		values
+		<foreach collection="detail" item="item" index="index"
+			separator=",">( #{item.orderid,jdbcType=VARCHAR},
+			#{sellerStoreId,jdbcType=INTEGER},
+			#{item.handtag,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR},
+			#{item.productname,jdbcType=VARCHAR},
+			#{item.productunit,jdbcType=VARCHAR},
+			#{item.productcolor,jdbcType=VARCHAR},
+			#{item.productsize,jdbcType=VARCHAR},
+			#{item.count,jdbcType=DECIMAL}, #{item.price,jdbcType=DECIMAL},
+			#{item.createtime,jdbcType=TIMESTAMP},
+			#{item.createby,jdbcType=VARCHAR},
+			#{item.modifytime,jdbcType=TIMESTAMP},
+			#{item.modifyby,jdbcType=VARCHAR}
+			)
+		</foreach>
+		;
+
+	</insert>
+
+	<insert id="saveDetailStore">
+
+		insert into ss_stodetail_#{storeId,jdbcType=INTEGER} (orderId,
+		storeId,
+		handtag, productId, productName,
+		productUnit, productColor, productSize,
+		count, price, createTime,
+		createBy, modifyTime, modifyBy
+		)
+		values
+		<foreach collection="detail" item="item" index="index"
+			separator=",">( #{item.orderid,jdbcType=VARCHAR},
+			#{storeId,jdbcType=INTEGER},
+			#{item.handtag,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR},
+			#{item.productname,jdbcType=VARCHAR},
+			#{item.productunit,jdbcType=VARCHAR},
+			#{item.productcolor,jdbcType=VARCHAR},
+			#{item.productsize,jdbcType=VARCHAR},
+			#{item.count,jdbcType=DECIMAL}, #{item.price,jdbcType=DECIMAL},
+			#{item.createtime,jdbcType=TIMESTAMP},
+			#{item.createby,jdbcType=VARCHAR},
+			#{item.modifytime,jdbcType=TIMESTAMP},
+			#{item.modifyby,jdbcType=VARCHAR}
+			)
+		</foreach>
+
+	</insert>
+	<insert id="insertSelective" parameterType="costumetrade.order.domain.SsStoDetail">
+		insert into ss_stodetail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="orderid != null">
+				orderId,
+			</if>
+			<if test="storeid != null">
+				storeId,
+			</if>
+			<if test="handtag != null">
+				handtag,
+			</if>
+			<if test="productid != null">
+				productId,
+			</if>
+			<if test="productname != null">
+				productName,
+			</if>
+			<if test="productunit != null">
+				productUnit,
+			</if>
+			<if test="productcolor != null">
+				productColor,
+			</if>
+			<if test="productsize != null">
+				productSize,
+			</if>
+			<if test="count != null">
+				count,
+			</if>
+			<if test="price != null">
+				price,
+			</if>
+			<if test="createtime != null">
+				createTime,
+			</if>
+			<if test="createby != null">
+				createBy,
+			</if>
+			<if test="modifytime != null">
+				modifyTime,
+			</if>
+			<if test="modifyby != null">
+				modifyBy,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="orderid != null">
+				#{orderid,jdbcType=VARCHAR},
+			</if>
+			<if test="storeid != null">
+				#{storeid,jdbcType=VARCHAR},
+			</if>
+			<if test="handtag != null">
+				#{handtag,jdbcType=INTEGER},
+			</if>
+			<if test="productid != null">
+				#{productid,jdbcType=VARCHAR},
+			</if>
+			<if test="productname != null">
+				#{productname,jdbcType=VARCHAR},
+			</if>
+			<if test="productunit != null">
+				#{productunit,jdbcType=VARCHAR},
+			</if>
+			<if test="productcolor != null">
+				#{productcolor,jdbcType=VARCHAR},
+			</if>
+			<if test="productsize != null">
+				#{productsize,jdbcType=VARCHAR},
+			</if>
+			<if test="count != null">
+				#{count,jdbcType=DECIMAL},
+			</if>
+			<if test="price != null">
+				#{price,jdbcType=DECIMAL},
+			</if>
+			<if test="createtime != null">
+				#{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createby != null">
+				#{createby,jdbcType=VARCHAR},
+			</if>
+			<if test="modifytime != null">
+				#{modifytime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyby != null">
+				#{modifyby,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SsStoDetail">
+		update ss_stodetail
+		<set>
+			<if test="orderid != null">
+				orderId = #{orderid,jdbcType=VARCHAR},
+			</if>
+			<if test="storeid != null">
+				storeId = #{storeid,jdbcType=VARCHAR},
+			</if>
+			<if test="handtag != null">
+				handtag = #{handtag,jdbcType=INTEGER},
+			</if>
+			<if test="productid != null">
+				productId = #{productid,jdbcType=VARCHAR},
+			</if>
+			<if test="productname != null">
+				productName = #{productname,jdbcType=VARCHAR},
+			</if>
+			<if test="productunit != null">
+				productUnit = #{productunit,jdbcType=VARCHAR},
+			</if>
+			<if test="productcolor != null">
+				productColor = #{productcolor,jdbcType=VARCHAR},
+			</if>
+			<if test="productsize != null">
+				productSize = #{productsize,jdbcType=VARCHAR},
+			</if>
+			<if test="count != null">
+				count = #{count,jdbcType=DECIMAL},
+			</if>
+			<if test="price != null">
+				price = #{price,jdbcType=DECIMAL},
+			</if>
+			<if test="createtime != null">
+				createTime = #{createtime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="createby != null">
+				createBy = #{createby,jdbcType=VARCHAR},
+			</if>
+			<if test="modifytime != null">
+				modifyTime = #{modifytime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="modifyby != null">
+				modifyBy = #{modifyby,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsStoDetail">
+		update ss_stodetail
+		set orderId = #{orderid,jdbcType=VARCHAR},
+		storeId = #{storeid,jdbcType=VARCHAR},
+		handtag = #{handtag,jdbcType=INTEGER},
+		productId = #{productid,jdbcType=VARCHAR},
+		productName = #{productname,jdbcType=VARCHAR},
+		productUnit = #{productunit,jdbcType=VARCHAR},
+		productColor = #{productcolor,jdbcType=VARCHAR},
+		productSize = #{productsize,jdbcType=VARCHAR},
+		count = #{count,jdbcType=DECIMAL},
+		price = #{price,jdbcType=DECIMAL},
+		createTime = #{createtime,jdbcType=TIMESTAMP},
+		createBy = #{createby,jdbcType=VARCHAR},
+		modifyTime = #{modifytime,jdbcType=TIMESTAMP},
+		modifyBy = #{modifyby,jdbcType=VARCHAR}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
 
 </mapper>

@@ -24,6 +24,8 @@
 		<result column="salMonth" jdbcType="DECIMAL" property="salmonth" />
 		<result column="saleNum" jdbcType="DECIMAL" property="saleNum" />
 		<result column="image" jdbcType="VARCHAR" property="image" />
+		<result column="isModify" jdbcType="INTEGER" property="isModify" />
+		<result column="isDiscount" jdbcType="INTEGER" property="isDiscount" />
 		<result column="image1" jdbcType="VARCHAR" property="image1" />
 		<result column="image2" jdbcType="VARCHAR" property="image2" />
 		<result column="image3" jdbcType="VARCHAR" property="image3" />
@@ -149,7 +151,7 @@
 	</select>
 
 	<select id="selectProducts" resultType="java.util.HashMap">
-		SELECT
+		SELECT product.isDiscount,product.isModify,
 		product.id,product.storeId,product.code,product.name,product.time_up,product.barcode, product.barcodes,
 		(CASE WHEN product.image IS NOT NULL THEN product.image
 			WHEN product.image1 IS NOT NULL THEN product.image1

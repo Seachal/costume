@@ -47,7 +47,7 @@
     <include refid="Base_Column_List" />
     from sp_employee
     where 
- 	subbelong = #{storeId,jdbcType=VARCHAR}
+ 	storeId = #{storeId,jdbcType=VARCHAR}
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployee">
