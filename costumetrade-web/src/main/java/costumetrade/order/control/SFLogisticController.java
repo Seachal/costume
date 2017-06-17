@@ -20,6 +20,8 @@ import com.sf.openapi.express.sample.route.dto.RouteRespDto;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.domain.ScLogistics;
+import costumetrade.order.domain.YDLogisticsRequest;
+import costumetrade.order.domain.YDLogisticsResponse;
 import costumetrade.order.service.SFLogisticsService;
 import costumetrade.order.service.SpOrderService;
 
@@ -60,6 +62,34 @@ public class SFLogisticController {
 		}
 		return  ApiResponse.getInstance(response1);
 	}
+	@RequestMapping("/createOrderToYD")
+	@ResponseBody
+	public ApiResponse createOrderToYD(YDLogisticsRequest request) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		YDLogisticsResponse response = sFLogisticsService.createOrderToYD(request);
+		if(response==null){
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
+		}else{
+			if("1".equals(response.getStatus())){//下单成功
+				
+				ScLogistics logistics = new ScLogistics();
+				logistics.setStoreid(1);//storeId createBy  获取session中的值
+				logistics.setLogisticsname("顺丰");
+				logistics.setLogisticsCode("SF");
+				logistics.setCreatetime(new Date());
+				logistics.setCreateby(1+"");
+				logistics.setLogisticsno(response.getMailno());
+				logistics.setOrderno(response.getOrderId());
+				spOrderService.confirmLogistic(logistics);//物流单号，+订单号 绑定
+			}
+			
+			result.setData(response);
+		}
+		return  result;
+	}
 
 	@RequestMapping("/querySF")
 	@ResponseBody
@@ -83,6 +113,24 @@ public class SFLogisticController {
 		}
 		return result;
 
+	}
+	@RequestMapping("/queryOrderYD")
+	@ResponseBody
+	public ApiResponse queryOrderYD(YDLogisticsRequest request) {
+		
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		List<YDLogisticsResponse> response =sFLogisticsService.queryOrderYD( request);
+		if(response==null){
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+		}else{
+			result.setData(response);
+		}
+		return result;
+		
 	}
 
 	@RequestMapping("/queryRouteSF")

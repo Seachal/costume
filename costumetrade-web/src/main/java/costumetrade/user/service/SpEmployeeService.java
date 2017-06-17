@@ -26,4 +26,6 @@ public interface SpEmployeeService {
 	public SpEmployee employeeInit(String storeId);
 	
 	public SpEmployee getEmployee(String empId);
+	
+	public SpEmployee getEmployeePrivilege(String openid);
 }

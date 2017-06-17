@@ -4,7 +4,9 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -28,9 +30,11 @@ import costumetrade.order.domain.SpClient;
 import costumetrade.order.domain.SsStoOrder;
 import costumetrade.order.mapper.ScFocusShopMapper;
 import costumetrade.order.mapper.SpClientMapper;
+import costumetrade.order.mapper.SsStoDetailMapper;
 import costumetrade.order.mapper.SsStoOrderMapper;
 import costumetrade.order.query.ClientQuery;
 import costumetrade.order.query.OrderQuery;
+import costumetrade.order.query.ProductQuery;
 import costumetrade.order.query.Rules;
 import costumetrade.order.service.SpClientService;
 import costumetrade.user.domain.QRCodeScanParam;
@@ -69,6 +73,8 @@ public class SpClientServiceImpl implements SpClientService{
 	private SsPaymentMapper ssPaymentMapper;
 	@Autowired
 	private SsDataDictionaryMapper ssDataDictionaryMapper;
+	@Autowired
+	private SsStoDetailMapper ssStoDetailMapper;
 
 	/** 
 	 *  生成web版本二维码 
@@ -388,15 +394,17 @@ public class SpClientServiceImpl implements SpClientService{
 			}else{
 				query.setBuyerstoreid(wechat1.getUserid());
 			}
-			
+			query.setStoreId(wechat.getStoreid());
 			query.setSellerstoreid(wechat.getStoreid());
 		}else if(query.getClientType()==2){//供应商对账
 			if(wechat1.getStoreid()!=null){
 				query.setSellerstoreid(wechat1.getStoreid());
+				query.setStoreId(wechat1.getStoreid());
 			}
 			query.setBuyerstoreid(wechat.getStoreid());
+			
 		}
-		query.setStoreId(wechat.getStoreid());
+		
 		
 		return query;
 	}
@@ -404,6 +412,25 @@ public class SpClientServiceImpl implements SpClientService{
 	public Integer saveAccountInfo(SsPayment pay) {
 		pay.setUpdatetime(new Date());
 		return ssPaymentMapper.insertSelective(pay);
+	}
+	@Override
+	public List<ProductQuery> clientReplenishment(OrderQuery query) {
+		OrderQuery orderQuery = new OrderQuery();
+		orderQuery = setSellerAndBuyer(query);
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<ProductQuery> querys = ssStoDetailMapper.selectProductsByClient(orderQuery);
+		List<ProductQuery> results = new ArrayList<ProductQuery>();
+		if(querys!=null&& querys.size()>0){
+			for(ProductQuery p : querys){
+				p.setStoreId(orderQuery.getStoreId());
+				map.put(p.getId(), p);
+			}
+			
+			for(String id : map.keySet()){
+				results.add((ProductQuery) map.get(id));
+			}
+		}
+		return results;
 	}
 	
 }

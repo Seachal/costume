@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import costumetrade.order.domain.SsStoDetail;
+import costumetrade.order.query.OrderQuery;
+import costumetrade.order.query.ProductQuery;
 
 
 @Mapper
@@ -29,5 +31,7 @@ public interface SsStoDetailMapper {
     List<SsStoDetail> selectByOrderId(@Param("orderNo")String orderNo,@Param("storeId")Integer storeId);
     
     List<SsStoDetail> selectByOrderIdMember(@Param("orderNo")String orderNo);
+    
+    List<ProductQuery> selectProductsByClient(OrderQuery query);
     
 }

@@ -1,6 +1,7 @@
 package costumetrade.user.query;
 
 import costumetrade.common.Entity;
+import costumetrade.user.domain.SpEmployee;
 
 public class ScUserQuery extends Entity {
     /**
@@ -27,6 +28,10 @@ public class ScUserQuery extends Entity {
      *  
      */
     private String menu;
+    
+    private SpEmployee employee;
+    
+    private StoreQuery query;
 
     private static final long serialVersionUID = 1L;
 
@@ -69,4 +74,22 @@ public class ScUserQuery extends Entity {
     public void setMenu(String menu) {
         this.menu = menu == null ? null : menu.trim();
     }
+
+	public SpEmployee getEmployee() {
+		return employee;
+	}
+
+	public void setEmployee(SpEmployee employee) {
+		this.employee = employee;
+	}
+
+	public StoreQuery getQuery() {
+		return query;
+	}
+
+	public void setQuery(StoreQuery query) {
+		this.query = query;
+	}
+    
+    
 }

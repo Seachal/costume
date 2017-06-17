@@ -17,6 +17,7 @@ import costumetrade.order.domain.ScFocusShop;
 import costumetrade.order.domain.SpClient;
 import costumetrade.order.query.ClientQuery;
 import costumetrade.order.query.OrderQuery;
+import costumetrade.order.query.ProductQuery;
 import costumetrade.order.service.SpClientService;
 import costumetrade.order.service.WeChatService;
 import costumetrade.user.domain.QRCodeScanParam;
@@ -291,6 +292,30 @@ public class SpClientController {
 		
 		return result;
 	}
+	
+	@RequestMapping("/clientReplenishment")
+	@ResponseBody
+	public ApiResponse clientReplenishment(OrderQuery query){
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(query == null){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		List<ProductQuery> querys = spClientService.clientReplenishment(query);
+		if(querys == null){
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			return result;
+		}else{
+			result.setData(querys);
+		}
+		
+		return result;
+	}
+	
 
 	
 }

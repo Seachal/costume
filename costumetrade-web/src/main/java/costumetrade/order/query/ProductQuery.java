@@ -11,6 +11,8 @@ import costumetrade.order.domain.SpPSizeCustom;
 import costumetrade.order.domain.SpUnit;
 import costumetrade.order.domain.SsProductReview;
 import costumetrade.user.domain.SpCustProdPrice;
+import costumetrade.user.domain.SpEmployee;
+import costumetrade.user.domain.SpPrivilege;
 
 public class ProductQuery extends Entity{
 
@@ -276,6 +278,9 @@ public class ProductQuery extends Entity{
 	
 	private String fields;
 	
+	private BigDecimal count ;
+	
+	private List<SpPrivilege> privileges;
 	
 	
 	public String getFields() {
@@ -902,6 +907,22 @@ public class ProductQuery extends Entity{
 
 	public void setCustomerTypeList(List<SpCustProdPrice> customerTypeList) {
 		this.customerTypeList = customerTypeList;
+	}
+
+	public List<SpPrivilege> getPrivileges() {
+		return privileges;
+	}
+
+	public void setPrivileges(List<SpPrivilege> privileges) {
+		this.privileges = privileges;
+	}
+
+	public BigDecimal getCount() {
+		return count;
+	}
+
+	public void setCount(BigDecimal count) {
+		this.count = count;
 	}
 
 	

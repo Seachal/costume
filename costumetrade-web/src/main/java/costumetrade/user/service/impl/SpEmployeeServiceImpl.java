@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.domain.SpPrivilege;
 import costumetrade.user.domain.SpPrivilegeEmployee;
 import costumetrade.user.domain.SpStore;
+import costumetrade.user.mapper.ScWeChatMapper;
 import costumetrade.user.mapper.SpCustProdPriceMapper;
 import costumetrade.user.mapper.SpEmployeeMapper;
 import costumetrade.user.mapper.SpPrivilegeEmployeeMapper;
@@ -32,6 +34,8 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 	private SpStoreMapper spStoreMapper;
 	@Autowired 
 	private SpPrivilegeEmployeeMapper spPrivilegeEmployeeMapper;
+	@Autowired
+	private ScWeChatMapper scWeChatMapper;
 	
 	public SpEmployee employeeInit(String storeId){
 		
@@ -116,6 +120,15 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 		emp = spEmployeeMapper.selectByPrimaryKey(emp);
 		emp.setPrivilegeEmployees(privilegeEmployees);
 		return emp;
+	}
+	@Override
+	public SpEmployee getEmployeePrivilege(String openid) {
+		ScWeChat wechat = scWeChatMapper.selectByOpenId(openid);
+		SpEmployee employee = new SpEmployee();
+		if(wechat!=null){
+			employee = getEmployee(wechat.getEmpid()+"");
+		}
+		return employee;
 	}
 	
 	

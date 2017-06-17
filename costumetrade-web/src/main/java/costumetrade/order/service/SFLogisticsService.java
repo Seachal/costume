@@ -11,6 +11,9 @@ import com.sf.openapi.express.sample.route.dto.RouteReqDto;
 import com.sf.openapi.express.sample.route.dto.RouteRespDto;
 import com.sf.openapi.express.sample.security.dto.TokenRespDto;
 
+import costumetrade.order.domain.YDLogisticsRequest;
+import costumetrade.order.domain.YDLogisticsResponse;
+
 
 public interface SFLogisticsService {
 	/**
@@ -32,4 +35,13 @@ public interface SFLogisticsService {
 	 * 查询物流信息
 	 * */
 	public MessageResp<List<RouteRespDto>> queryRouteSF(RouteReqDto routeReqDto);
+	
+	/**
+	 * 下单值韵达系统
+	 * */
+	public YDLogisticsResponse createOrderToYD(YDLogisticsRequest request);
+	/**
+	 * 查询韵达订单
+	 * */
+	public List<YDLogisticsResponse> queryOrderYD(YDLogisticsRequest request);
 }

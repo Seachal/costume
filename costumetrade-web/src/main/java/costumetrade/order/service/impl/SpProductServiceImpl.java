@@ -52,10 +52,12 @@ import costumetrade.order.service.WeChatService;
 import costumetrade.user.domain.PriceJson;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpCustProdPrice;
+import costumetrade.user.domain.SpPrivilege;
 import costumetrade.user.domain.SpStore;
 import costumetrade.user.domain.SsDataDictionary;
 import costumetrade.user.mapper.ScWeChatMapper;
 import costumetrade.user.mapper.SpCustProdPriceMapper;
+import costumetrade.user.mapper.SpPrivilegeMapper;
 import costumetrade.user.mapper.SpStoreMapper;
 import costumetrade.user.mapper.SsDataDictionaryMapper;
 import costumetrade.user.service.SpUserService;
@@ -99,6 +101,8 @@ public class SpProductServiceImpl implements SpProductService{
 	private SpUserService spUserService;
 	@Autowired
 	private SsStoOrderMapper ssStoOrderMapper;
+	@Autowired
+	private SpPrivilegeMapper spPrivilegeMapper;
 	
 	@Override
 	public List<ProductQuery> selectProducts(ProductQuery productQuery) {
@@ -322,7 +326,7 @@ public class SpProductServiceImpl implements SpProductService{
 		List<SpPCate> productTypes = spPCateMapper.getSpPCates(storeId,null);
 		List<SpPSizeCustom> sizes = spPSizeCustomMapper.getSpPSizeCustoms(storeId,null);
 		List<SpUnit> units = spUnitMapper.getUnits(storeId,null) ;
-		
+		List<SpPrivilege> privileges= spPrivilegeMapper.getSpPrivilegeList();
 		List<String> list = new ArrayList<String>();
 		list.add("SELLING_METHOD");//售价方式
 		List<SsDataDictionary> dict = ssDataDictionaryMapper.selectDictionarys(list,storeId);
@@ -334,6 +338,7 @@ public class SpProductServiceImpl implements SpProductService{
 		queryResult.setProductSize(sizes);
 		queryResult.setProductTypeList(productTypes);
 		queryResult.setUnitList(units);
+		queryResult.setPrivileges(privileges);
 		//获取售价生成方式，value=1表示按照毛利，value=2表示按照折扣
 		//设置生成方式默认值：根据店铺类型
 		SpStore spStore = spStoreMapper.selectByPrimaryKey(storeId);
@@ -428,6 +433,7 @@ public class SpProductServiceImpl implements SpProductService{
 			queryResult.setUnitList(null);
 			queryResult.setCustProdPrice(null);
 			queryResult.setCustomerTypeList(null);
+			queryResult.setPrivileges(null);
 		}
 		return queryResult;
 	}

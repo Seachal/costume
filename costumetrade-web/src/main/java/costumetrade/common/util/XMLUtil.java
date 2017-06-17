@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.dom4j.Attribute;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -120,6 +121,30 @@ public class XMLUtil {
 		}
 		
 		return sb.toString();
+	}
+	public static Map getChildren(Element node) {
+		Map m = new HashMap();
+		
+		//首先获取当前节点的所有属性节点  
+        List<org.jdom2.Attribute> list = node.getAttributes();  
+        //遍历属性节点  
+        for(org.jdom2.Attribute attribute : list){  
+        	m.put(attribute.getName(), attribute.getValue());
+            System.out.println("属性"+attribute.getName() +":" + attribute.getValue());  
+        }  
+        //如果当前节点内容不为空，则输出  
+        if(!(node.getTextTrim().equals(""))){  
+             System.out.println( node.getName() + "：" + node.getText());    
+        }  
+        //同时迭代当前节点下面的所有子节点  
+        //使用递归  
+        Iterator<Element> iterator = (Iterator<Element>) node.getChildren();  
+        while(iterator.hasNext()){  
+            Element e = iterator.next();  
+            getChildren(e);  
+        }  
+	
+		return m;
 	}
 	
 	/**

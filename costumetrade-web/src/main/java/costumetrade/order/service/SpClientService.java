@@ -12,6 +12,7 @@ import costumetrade.order.domain.ScFocusShop;
 import costumetrade.order.domain.SpClient;
 import costumetrade.order.query.ClientQuery;
 import costumetrade.order.query.OrderQuery;
+import costumetrade.order.query.ProductQuery;
 import costumetrade.user.domain.QRCodeScanParam;
 import costumetrade.user.domain.SsPayment;
 
@@ -58,4 +59,9 @@ public interface SpClientService {
 	 * 保存还款单
 	 * */
 	public Integer saveAccountInfo(SsPayment pay);
+	
+	/**
+	 * 客户补货  or 供应商补货
+	 * */
+	public List<ProductQuery> clientReplenishment(OrderQuery query);
 }

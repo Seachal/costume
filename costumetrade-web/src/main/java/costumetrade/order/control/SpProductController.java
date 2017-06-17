@@ -30,6 +30,7 @@ import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStock;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.service.SpProductService;
+import costumetrade.user.service.SpEmployeeService;
 import costumetrade.user.service.SsDataDictionaryService;
 
 /**
@@ -46,6 +47,7 @@ public class SpProductController {
     private SsDataDictionaryService ssDataDictionaryService;
 	@Autowired
 	private SpProductService spProductService;
+	
 
 	@RequestMapping("/getProducts")
 	@ResponseBody
@@ -103,6 +105,8 @@ public class SpProductController {
 			return result;
 		}
 		ProductQuery q = spProductService.productInit(query);
+	
+		
 		return  ApiResponse.getInstance(q);
 	}
 	
@@ -337,9 +341,9 @@ public class SpProductController {
 			boolean upload =false;
 			if(imagePostfix.contains(postfix)){
 				upload = FTPClientUtils.getInstance().uploadFileToFtp(commonUrl+pathOriginal, fileName, input);
-				DiskFileItem fileItem = (DiskFileItem) file.getFileItem();
-				File f = ImageUtils.compressionFile(fileItem.getStoreLocation(),fileName);
-				FTPClientUtils.getInstance().uploadFileToFtp(commonUrl+pathReduce, fileName,new FileInputStream(f));
+//				DiskFileItem fileItem = (DiskFileItem) file.getFileItem();
+//				File f = ImageUtils.compressionFile(fileItem.getStoreLocation(),fileName);
+//				FTPClientUtils.getInstance().uploadFileToFtp(commonUrl+pathReduce, fileName,new FileInputStream(f));
 				
 				image.setFilename(file.getOriginalFilename());
 				image.setUrl(pathOriginal+fileName);

@@ -14,8 +14,11 @@ import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.service.WeChatService;
 import costumetrade.user.domain.ScWeChat;
+import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.domain.SpStore;
+import costumetrade.user.query.ScUserQuery;
 import costumetrade.user.query.StoreQuery;
+import costumetrade.user.service.SpEmployeeService;
 import costumetrade.user.service.SpUserService;
 
 
@@ -33,6 +36,8 @@ public class SpUserController {
 	private SpUserService spUserService;
 	@Autowired
 	private WeChatService weChatService;
+	@Autowired
+	private SpEmployeeService spEmployeeService;
 	
 	@RequestMapping("/login")
 	@ResponseBody
@@ -49,18 +54,30 @@ public class SpUserController {
 		JSONObject json = JSON.parseObject(openIdAndKey);
 		String openid = json.getString("openid");
 		ScWeChat chat = null;
+		ScUserQuery resultQuery = new ScUserQuery();
 		StoreQuery query = new StoreQuery();
 		if(openid!=null){
 			chat = spUserService.login(openid);
 			query.setOpenid(openid);
 			query = spUserService.getStores(query);
+			resultQuery.setQuery(query);
+			SpEmployee employee = spEmployeeService.getEmployeePrivilege(openid);
+			SpEmployee e = new SpEmployee();
+			if(employee!=null){
+				e.setPrivilegeEmployees(employee.getPrivilegeEmployees());
+				e.setZeroPrice(employee.getZeroPrice());
+				e.setDiscount(employee.getDiscount());
+				e.setModifyPrice(employee.getModifyPrice());
+			}
+			resultQuery.setEmployee(e);
+			
 		}
 		if(chat == null){
 			result.setCode(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
-			result.setData(query);
+			result.setData(resultQuery);
 		}
 		return  result;
 	}
