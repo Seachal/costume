@@ -7,6 +7,7 @@ import java.util.List;
 import costumetrade.common.Entity;
 import costumetrade.order.domain.SsStoOrder;
 import costumetrade.order.query.Filter;
+import costumetrade.order.query.Rules;
 import costumetrade.order.query.Sort;
 import costumetrade.user.domain.SsPayment;
 
@@ -48,6 +49,36 @@ public class PurchaseReportQuery extends Entity {
 	private Filter filter;
 	
 	private Integer storeId;
+	
+	private String productId;
+	
+	private Integer pageNum;
+	
+	private List<Rules>  rules;
+	
+	private List<String> productNameArray; // 商品类别
+	
+	private List<String> productTypeArray; // 商品类别
+	
+	private List<String> productBrandArray; // 商品品牌
+	
+	private List<String> productColorArray; //
+	
+	private List<String> productSizeArray; //
+	
+	private List<String> productClientCustomerArray; //
+	
+	private List<String> productClientSuppierArray; //
+	
+	private List<String> operatorArray;
+	
+	private List<String> productSeasonArray;
+	
+	private List<String> clientIdArray;
+	
+	private String quantityOp;
+	
+	private String amountOp;
 
 	public BigDecimal getQuantity() {
 		return quantity;
@@ -167,6 +198,127 @@ public class PurchaseReportQuery extends Entity {
 
 	public void setStoreId(Integer storeId) {
 		this.storeId = storeId;
+	}
+
+	public String getProductId() {
+		return productId;
+	}
+
+	public void setProductId(String productId) {
+		this.productId = productId;
+	}
+
+	public Integer getPageNum() {
+		return pageNum;
+	}
+
+	public void setPageNum(Integer pageNum) {
+		this.pageNum = pageNum;
+	}
+
+	public List<Rules> getRules() {
+		return rules;
+	}
+
+	public void setRules(List<Rules> rules) {
+		this.rules = rules;
+	}
+
+	public List<String> getProductTypeArray() {
+		return productTypeArray;
+	}
+
+	public void setProductTypeArray(List<String> productTypeArray) {
+		this.productTypeArray = productTypeArray;
+	}
+
+	public List<String> getProductBrandArray() {
+		return productBrandArray;
+	}
+
+	public void setProductBrandArray(List<String> productBrandArray) {
+		this.productBrandArray = productBrandArray;
+	}
+
+	public List<String> getProductColorArray() {
+		return productColorArray;
+	}
+
+	public void setProductColorArray(List<String> productColorArray) {
+		this.productColorArray = productColorArray;
+	}
+
+	public List<String> getProductSizeArray() {
+		return productSizeArray;
+	}
+
+	public void setProductSizeArray(List<String> productSizeArray) {
+		this.productSizeArray = productSizeArray;
+	}
+
+	public List<String> getProductClientCustomerArray() {
+		return productClientCustomerArray;
+	}
+
+	public void setProductClientCustomerArray(
+			List<String> productClientCustomerArray) {
+		this.productClientCustomerArray = productClientCustomerArray;
+	}
+
+	public List<String> getProductClientSuppierArray() {
+		return productClientSuppierArray;
+	}
+
+	public void setProductClientSuppierArray(List<String> productClientSuppierArray) {
+		this.productClientSuppierArray = productClientSuppierArray;
+	}
+
+	public List<String> getOperatorArray() {
+		return operatorArray;
+	}
+
+	public void setOperatorArray(List<String> operatorArray) {
+		this.operatorArray = operatorArray;
+	}
+
+	public List<String> getClientIdArray() {
+		return clientIdArray;
+	}
+
+	public void setClientIdArray(List<String> clientIdArray) {
+		this.clientIdArray = clientIdArray;
+	}
+
+	public String getQuantityOp() {
+		return quantityOp;
+	}
+
+	public void setQuantityOp(String quantityOp) {
+		this.quantityOp = quantityOp;
+	}
+
+	public String getAmountOp() {
+		return amountOp;
+	}
+
+	public void setAmountOp(String amountOp) {
+		this.amountOp = amountOp;
+	}
+
+	public List<String> getProductSeasonArray() {
+		return productSeasonArray;
+	}
+
+	public void setProductSeasonArray(List<String> productSeasonArray) {
+		this.productSeasonArray = productSeasonArray;
+	}
+
+	public List<String> getProductNameArray() {
+		return productNameArray;
+	}
+
+	public void setProductNameArray(List<String> productNameArray) {
+		this.productNameArray = productNameArray;
 	}
 	
 	

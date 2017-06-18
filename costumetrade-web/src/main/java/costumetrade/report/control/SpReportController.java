@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import costumetrade.common.param.ApiResponse;
 import costumetrade.report.domain.FinanceReportQuery;
+import costumetrade.report.domain.ProductReportQuery;
 import costumetrade.report.domain.PurchaseReportQuery;
+import costumetrade.report.domain.ReportQuery;
 import costumetrade.report.service.SpReportService;
 
 /**
@@ -42,6 +44,22 @@ public class SpReportController {
 		List<Map<String,Object>> reports = spReportService.purchaseSortReport(query);
 		
 		return  ApiResponse.getInstance(reports);
+	}
+	@RequestMapping("/purchaseReport")
+	@ResponseBody
+	public ApiResponse purchaseReport(PurchaseReportQuery query) {
+		
+		ReportQuery report = spReportService.purchaseReport(query);
+		
+		return  ApiResponse.getInstance(report);
+	}
+	@RequestMapping("/purchaseReportByProductName")
+	@ResponseBody
+	public ApiResponse purchaseReportByProductName(ProductReportQuery query) {
+		
+		ReportQuery report = spReportService.purchaseReportByProductName(query);
+		
+		return  ApiResponse.getInstance(report);
 	}
 
 	
