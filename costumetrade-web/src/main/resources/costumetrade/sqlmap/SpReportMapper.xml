@@ -15,12 +15,13 @@
 	<resultMap id="PurchaseResultMap" type="costumetrade.report.domain.PurchaseReportQuery">
 		<result column="quantity" jdbcType="DECIMAL" property="quantity" />
 		<result column="amount" jdbcType="DECIMAL" property="amount" />
-		<result column="productName" jdbcType="DECIMAL" property="productName" />
-		<result column="productColor" jdbcType="DECIMAL" property="productColor" />
-		<result column="productSize" jdbcType="DECIMAL" property="productSize" />
-		<result column="brandName" jdbcType="DECIMAL" property="brandName" />
-		<result column="gradeName" jdbcType="DECIMAL" property="gradeName" />
-		<result column="storeName" jdbcType="DECIMAL" property="storeName" />
+		<result column="productName" jdbcType="VARCHAR" property="productName" />
+		<result column="productColor" jdbcType="VARCHAR" property="productColor" />
+		<result column="productSize" jdbcType="VARCHAR" property="productSize" />
+		<result column="brandName" jdbcType="VARCHAR" property="brandName" />
+		<result column="gradeName" jdbcType="VARCHAR" property="gradeName" />
+		<result column="storeName" jdbcType="VARCHAR" property="storeName" />
+		<result column="productId" jdbcType="VARCHAR" property="productId" />
 		
 	</resultMap>
 	<sql id="Base_Column_List">
@@ -31,12 +32,12 @@
 		resultMap="BaseResultMap">
 		SELECT
 		da.dict_text AS payCate,
-		SUM(CASE WHEN sto.orderStatus =6 AND
+		SUM(CASE WHEN sto.orderStatus =5 AND
 		sto.sellerStoreId=#{storeId} THEN sto.debetAmt ELSE 0 END) AS
 		saleIncome ,
 		SUM(CASE WHEN sto.orderStatus =7 AND
 		sto.sellerStoreId=#{storeId} THEN sto.payCost1 ELSE 0 END) AS salePay,
-		SUM(CASE WHEN sto.orderStatus =6 AND sto.buyerStoreId=#{storeId} THEN
+		SUM(CASE WHEN sto.orderStatus =5 AND sto.buyerStoreId=#{storeId} THEN
 		sto.debetAmt ELSE 0 END) AS purchasePay,
 		SUM(CASE WHEN sto.orderStatus
 		=7 AND sto.buyerStoreId=#{storeId} THEN sto.payCost1 ELSE 0 END) AS
@@ -81,7 +82,7 @@
 		WHERE 1=1
 		AND
 		ssf.orderNo IS NOT NULL
-		AND ((sto.debetAmt>0 AND sto.orderStatus=6) OR
+		AND ((sto.debetAmt>0 AND sto.orderStatus=5) OR
 		STO.orderStatus=7)
 		AND sto.orderTime &gt;=
 		str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
@@ -94,6 +95,7 @@
 		SELECT
 		sum(detail.count) as quantity,
 		SUM(detail.price*detail.count) AS amount,
+		detail.productId,
 		detail.productName as productName,
 		detail.productColor as productColor,
 		detail.productSize as productSize,
@@ -122,5 +124,155 @@
 		group by ${filter.field}
 	</select>
 
+	<select id="purchaseReport3" 
+		resultMap="PurchaseResultMap">
+		SELECT DISTINCT
+		detail.productName as productName
+		FROM
+		ss_stodetail_#{query.storeId} detail
+		LEFT JOIN ss_stoorder_#{query.storeId} sto
+		ON sto.payOrderNo = detail.orderId
+		left join sp_product_#{query.storeId} product
+		on product.id=detail.productId
+		left join sp_pbrand brand
+		on brand.id = product.brandId and brand.storeId =detail.storeId
+		LEFT JOIN sp_product_type productType ON productType.id =product.productType and productType.storeId =detail.storeId
+		LEFT JOIN sp_client c 
+    	ON c.storeId = sto.buyerStoreId 
+  		LEFT JOIN sc_wechat_bind wechat 
+   		 ON wechat.openId = c.openid 
+    	AND wechat.storeId = sto.sellerStoreId
+		where 1=1
+		AND wechat.storeId IS NOT NULL 
+		AND sto.orderStatus ='5'
+		and sto.buyerStoreId=#{query.storeId}
+		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
+		<if test="query.productName !=null">
+		and productName = #{query.productName}
+		</if>
+		<if test="query.productTypeArray != null">
+			and productType.cateName in
+			<foreach collection="query.productTypeArray" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+		</if>
+		<if test="query.productBrandArray != null">
+			and brand.brandName in
+			<foreach collection="query.productBrandArray" item="item"
+				index="index" open="(" separator="," close=")">#{item}</foreach>
+		</if>
+		<if test="query.productSeasonArray != null">
+			and product.season in
+			<foreach collection="query.productSeasonArray" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		<if test="query.productColorArray != null">
+			and detail.productColor in
+			<foreach collection="query.productColorArray" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		<if test="query.productSizeArray != null">
+			and detail.productSize in
+			<foreach collection="query.productSizeArray" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		<if test="query.clientIdArray != null">
+			and c.id in
+			<foreach collection="query.clientIdArray" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		<if test="query.operatorArray != null">
+			and sto.operator in
+			<foreach collection="query.operatorArray" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
 
+		<if test="page != null">
+		LIMIT #{page.startRow},#{page.pageSize}
+		</if>
+	</select>
+	<select id="purchaseReport1" 
+		resultMap="PurchaseResultMap">
+		SELECT
+		sum(detail.count) as quantity,
+		SUM(detail.price*detail.count) AS amount,
+		detail.productName as productName
+		FROM
+		ss_stodetail_#{query.storeId} detail
+		LEFT JOIN ss_stoorder_#{query.storeId} sto
+		ON sto.payOrderNo = detail.orderId
+		left join sp_product_#{query.storeId} product
+		on product.id=detail.productId
+		left join sp_pbrand brand
+		on brand.id = product.brandId and brand.storeId =detail.storeId
+		LEFT JOIN sp_product_type productType ON productType.id =product.productType and productType.storeId =detail.storeId
+		LEFT JOIN sp_client c 
+    	ON c.storeId = sto.buyerStoreId 
+  		LEFT JOIN sc_wechat_bind wechat 
+   		 ON wechat.openId = c.openid 
+    	AND wechat.storeId = sto.sellerStoreId
+		where 1=1
+		AND wechat.storeId IS NOT NULL 
+		AND sto.orderStatus ='5'
+		and sto.buyerStoreId=#{query.storeId}
+		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
+	
+		<if test="query.productNameArray != null">
+			and productName in
+			<foreach collection="query.productNameArray" item="item" index="index" open="(" separator="," close=")">#{item}</foreach>
+		</if>
+		<if test="query.quantityOp == 'asc'">
+			order by quantity asc
+		</if>
+		<if test="query.quantityOp == 'desc'">
+			order by quantity desc
+		</if>
+		<if test="query.amountOp == 'desc'">
+			order by amount desc
+		</if>
+		<if test="query.amountOp == 'desc'">
+			order by amount desc
+		</if>
+		group by productName
+		
+	</select>
+	
+	<select id="purchaseReport2" 
+		resultMap="PurchaseResultMap">
+		SELECT
+		sum(detail.count) as quantity,
+		#{query.timeFrom} as timeFrom,
+		#{query.timeTo} as timeTo
+		FROM
+		ss_stodetail_#{query.storeId} detail
+		LEFT JOIN ss_stoorder_#{query.storeId} sto
+		ON sto.payOrderNo = detail.orderId
+		where 1=1
+		AND sto.orderStatus ='5'
+		and sto.buyerStoreId=#{query.storeId}
+		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
+		<if test="query.productName !=null">
+		and productName = #{query.productName}
+		</if>
+		<foreach collection="querys" index="index" item="item"  >
+			union all
+			SELECT
+			sum(detail.count) as quantity,
+			#{item.timeFrom} as timeFrom,
+			#{item.timeTo} as timeTo
+			FROM
+			ss_stodetail_#{item.storeId} detail
+			LEFT JOIN ss_stoorder_#{item.storeId} sto
+			ON sto.payOrderNo = detail.orderId
+			where 1=1
+			AND sto.orderStatus ='5'
+			and sto.buyerStoreId=#{item.storeId}
+			AND sto.orderTime &gt;=str_to_date(#{item.timeFrom},'%Y-%m-%d %H:%i:%s')
+			AND sto.orderTime &lt;=str_to_date(#{item.timeTo},'%Y-%m-%d %H:%i:%s')
+			<if test="item.productName !=null">
+			and productName = #{item.productName}
+			</if>
+		</foreach>
+	</select>
 </mapper>
