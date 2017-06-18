@@ -418,7 +418,9 @@ public class SpClientServiceImpl implements SpClientService{
 		OrderQuery orderQuery = new OrderQuery();
 		orderQuery = setSellerAndBuyer(query);
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<ProductQuery> querys = ssStoDetailMapper.selectProductsByClient(orderQuery);
+		Page page = new Page();
+		page.setPageNum(query.getPageNum());
+		List<ProductQuery> querys = ssStoDetailMapper.selectProductsByClient(orderQuery,page);
 		List<ProductQuery> results = new ArrayList<ProductQuery>();
 		if(querys!=null&& querys.size()>0){
 			for(ProductQuery p : querys){

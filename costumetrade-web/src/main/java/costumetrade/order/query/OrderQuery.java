@@ -99,6 +99,8 @@ public class OrderQuery extends Entity {
 	
 	private SsStoOrder order;
 	
+	private Integer pageNum;
+	
     private static final long serialVersionUID = 1L;
 
 
@@ -380,6 +382,14 @@ public class OrderQuery extends Entity {
 
 	public void setOrder(SsStoOrder order) {
 		this.order = order;
+	}
+
+	public Integer getPageNum() {
+		return pageNum;
+	}
+
+	public void setPageNum(Integer pageNum) {
+		this.pageNum = pageNum;
 	}
 
 	
