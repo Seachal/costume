@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="costumetrade.order.mapper.SpReportMapper">
-	<resultMap id="BaseResultMap" type="costumetrade.order.query.FinanceReportQuery">
+<mapper namespace="costumetrade.report.mapper.SpReportMapper">
+	<resultMap id="BaseResultMap" type="costumetrade.report.domain.FinanceReportQuery">
 		<result column="saleIncome" jdbcType="DECIMAL" property="saleIncome" />
 		<result column="salePay" jdbcType="DECIMAL" property="salePay" />
 		<result column="purchaseIncome" jdbcType="DECIMAL" property="purchaseIncome" />
@@ -12,7 +12,7 @@
 		<result column="feePay" jdbcType="DECIMAL" property="feePay" />
 		<result column="payCate" jdbcType="VARCHAR" property="payCate" />
 	</resultMap>
-	<resultMap id="PurchaseResultMap" type="costumetrade.order.query.PurchaseReportQuery">
+	<resultMap id="PurchaseResultMap" type="costumetrade.report.domain.PurchaseReportQuery">
 		<result column="quantity" jdbcType="DECIMAL" property="quantity" />
 		<result column="amount" jdbcType="DECIMAL" property="amount" />
 		<result column="productName" jdbcType="DECIMAL" property="productName" />
@@ -27,7 +27,7 @@
 		saleIncome, salePay,purchaseIncome, purchasePay, customerRepay, suppierRepay,
 		feeIncome, feePay
 	</sql>
-	<select id="financeReport" parameterType="costumetrade.order.query.FinanceReportQuery"
+	<select id="financeReport" parameterType="costumetrade.report.domain.FinanceReportQuery"
 		resultMap="BaseResultMap">
 		SELECT
 		da.dict_text AS payCate,
@@ -89,7 +89,7 @@
 		str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
 		AND sto.payCate1=#{payCate}
 	</select>
-	<select id="purchaseSortReport" parameterType="costumetrade.order.query.PurchaseReportQuery"
+	<select id="purchaseSortReport" parameterType="costumetrade.report.domain.PurchaseReportQuery"
 		resultMap="PurchaseResultMap">
 		SELECT
 		sum(detail.count) as quantity,

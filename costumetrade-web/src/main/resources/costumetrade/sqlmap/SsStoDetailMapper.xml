@@ -52,8 +52,7 @@
 		from ss_member_stodetail
 		where orderId = #{orderNo,jdbcType=VARCHAR}
 	</select>
-	<select id="selectProductsByClient" parameterType="costumetrade.order.query.OrderQuery"
-		resultMap="ProductsResult">
+	<select id="selectProductsByClient" resultMap="ProductsResult">
 		SELECT DISTINCT
 		detail.productId as id,
 		detail.productColor as colors,
@@ -68,16 +67,18 @@
 			WHEN product.image3 IS NOT NULL THEN product.image3
 			WHEN product.image4 IS NOT NULL THEN product.image4 ELSE product.image END) as image
 		FROM
-		ss_stodetail_#{storeId} detail
-		LEFT JOIN ss_stoorder_#{storeId} sto
+		ss_stodetail_#{query.storeId} detail
+		LEFT JOIN ss_stoorder_#{query.storeId} sto
 		ON sto.payOrderNo = detail.orderId
-		LEFT JOIN sp_product_#{storeId} product 
+		LEFT JOIN sp_product_#{query.storeId} product 
 		ON product.id = detail.productId
 		WHERE 1 = 1
-		AND sto.buyerStoreId = #{buyerstoreid}
-		AND sto.sellerStoreId = #{sellerstoreid}
+		AND sto.buyerStoreId = #{query.buyerstoreid}
+		AND sto.sellerStoreId = #{query.sellerstoreid}
 		ORDER BY detail.createTime DESC
-
+		<if test="page != null">
+		LIMIT #{page.startRow},#{page.pageSize}
+		</if>
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
 		delete from ss_stodetail
