@@ -142,10 +142,15 @@ public class SpUserServiceImpl implements SpUserService{
 		
 		SpStore store = new SpStore();
 		List<Integer> idArray = new ArrayList<Integer>();
+		if(query.getStoreId()!=null){
+			idArray.add(query.getStoreId());//商城第一个店铺显示自己的店铺
+		}
+		
 		if(shops != null && shops.size() > 0){
 			for(ScFocusShop s :shops){
 				idArray.add(s.getShopid());
 			}
+			
 			store.setIdArray(idArray);
 		}
 		

@@ -35,6 +35,7 @@ public enum ResponseInfo {
 	SCAN_FRIEND_EXCEPTION(1017,"未扫描二维码或者普通用户和店员不能朋友"),
 	SCAN_EMP_EXCEPTION(1019,"未扫描二维码或者该员工已存在"),
 	RETURN_EXCEPTION(1018,"不允许作废"),
+	ORDER_EXCEPTION(1020,"自家店铺不能下单"),
 	;
 
 	public final int code;

@@ -329,6 +329,7 @@ public class SpProductServiceImpl implements SpProductService{
 		List<SpPrivilege> privileges= spPrivilegeMapper.getSpPrivilegeList();
 		List<String> list = new ArrayList<String>();
 		list.add("SELLING_METHOD");//售价方式
+		list.add("CUSTOMER_TYPE");//获取启用的客户种类
 		List<SsDataDictionary> dict = ssDataDictionaryMapper.selectDictionarys(list,storeId);
 		
 		ProductQuery queryResult = new ProductQuery();
@@ -346,10 +347,14 @@ public class SpProductServiceImpl implements SpProductService{
 		if(spStore != null){
 			custOrDiscTag = spStore.getStoreType()+"";
 		}
+		String[] customs = null;
 		if(dict !=null && dict.size()>0){
 			for(SsDataDictionary dictionary : dict){
 				if("SELLING_METHOD".equals(dictionary.getDictGroup())){
 					custOrDiscTag = dictionary.getDictValue();
+				}if("CUSTOMER_TYPE".equals(dictionary.getDictGroup())){
+					
+					customs=dictionary.getDictValue().split(",");
 				}
 			}
 		}
@@ -361,11 +366,17 @@ public class SpProductServiceImpl implements SpProductService{
 		
 		List<SpCustProdPrice> gradeList = new ArrayList<SpCustProdPrice>();
 		List<SpCustProdPrice> customTypeList = new ArrayList<SpCustProdPrice>();
+		List<SpCustProdPrice> customTypes = new ArrayList<SpCustProdPrice>();
 		List<SpCustProdPrice> custProdList = new ArrayList<SpCustProdPrice>();
 		if(custProdPrice.size()>0){
 			for(SpCustProdPrice price : custProdPrice){
-				price.setCustPriceJson((List<PriceJson>) JSONArray.parse(price.getCustpricejson()));
-				price.setDiscPriceJson((List<PriceJson>) JSONArray.parse(price.getDiscpricejson()));
+				if("1".equals(price.getType())){
+					price.setCustPriceJson(JSONArray.parseArray(price.getCustpricejson(), PriceJson.class));
+					price.setDiscPriceJson(JSONArray.parseArray(price.getDiscpricejson(), PriceJson.class));
+					price.setCustpricejson(null);
+					price.setDiscpricejson(null);
+					custProdList.add(price);
+				}
 				
 				SpCustProdPrice prodPrice = new SpCustProdPrice();
 				prodPrice.setId(Integer.parseInt(price.getCustTypeCode()));
@@ -376,14 +387,45 @@ public class SpProductServiceImpl implements SpProductService{
 					customTypeList.add(prodPrice);
 				}
 				
-				price.setCustpricejson(null);
-				price.setDiscpricejson(null);
-				custProdList.add(price);
+				
 			}
 		}
-		queryResult.setCustomerTypeList(customTypeList);
+		//过滤 启用客户类型
+		for(int i=0;i<customs.length;i++){
+			Integer id = Integer.parseInt(customs[i]);
+			for(int j=0;j<customTypeList.size();j++){
+				
+				if(id == customTypeList.get(j).getId()){
+					customTypes.add(customTypeList.get(j));
+					continue;
+				}
+			}
+		}
+		//根据启用的价格过滤折扣毛利中类型
+		List<SpCustProdPrice> custList = new ArrayList<SpCustProdPrice>();
+		for(int i=0;i<custProdList.size();i++){
+			List<PriceJson> cust = custProdList.get(i).getCustPriceJson();
+			List<PriceJson> dist = custProdList.get(i).getDiscPriceJson();
+			List<PriceJson> custs = new ArrayList<PriceJson>();
+			List<PriceJson> discs = new ArrayList<PriceJson>();
+			SpCustProdPrice p = custProdList.get(i);
+			for(int z=0;z<cust.size();z++){
+				for(int j=0;j<customTypes.size();j++){
+					if(cust.get(z).getName().equals(customTypes.get(j).getCusttypename())){
+						custs.add(cust.get(z));
+						discs.add(dist.get(z));
+						continue;
+					}
+				}
+			}
+			p.setDiscPriceJson(discs);
+			p.setCustPriceJson(custs);
+			custList.add(p);
+			
+		}
+		queryResult.setCustomerTypeList(customTypes);
 		queryResult.setGradeList(gradeList);
-		queryResult.setCustProdPrice(custProdList);
+		queryResult.setCustProdPrice(custList);
 		queryResult.setCustOrDiscTag(custOrDiscTag);
 		
 		if(productId != null ){
@@ -460,7 +502,12 @@ public class SpProductServiceImpl implements SpProductService{
 			
 			//判断是否需保存文件地址
 			if(product.getFileList() != null && product.getFileList().size()>0){
-				ssProductFileMapper.insertFiles(product.getFileList(),null);
+				List<SsProductFile> files = new ArrayList<SsProductFile>();
+				for(SsProductFile file : files){
+					file.setProductid(file.getProductid());
+					files.add(file);
+				}
+				ssProductFileMapper.insertFiles(files,null);
 			}
 			return product.getId();
 		}else{
@@ -494,6 +541,12 @@ public class SpProductServiceImpl implements SpProductService{
 			}
 			List<SsProductFile> files = product.getFileList();
 			if(files !=null && files.size()>0){
+				List<SsProductFile> fileList = new ArrayList<SsProductFile>();
+				for(SsProductFile file : files){
+					file.setProductid(product.getId());
+					file.setProductName(product.getProductName());
+					fileList.add(file);
+				}
 				int op = ssProductFileMapper.insertFiles(files,null);
 				if(op <= 0){
 					return null;

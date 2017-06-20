@@ -94,7 +94,13 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 		}else {
 			save = spEmployeeMapper.insert(spEmployee) ;
 		}
-
+		ScWeChat record = new ScWeChat();
+		record = scWeChatMapper.selectByOpenId(spEmployee.getOpenid());
+		if(record !=null){
+			record.setUserid(null);
+			record.setStoreid(spEmployee.getStoreId());
+			scWeChatMapper.updateByPrimaryKeySelective(record);
+		}
 	
 		return spEmployee.getId();
 		

@@ -68,6 +68,16 @@ public class SpOrderController {
 		if(save <=0){
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
+		}else if(save ==3){//自家店铺不能下单
+			result.setCode(ResponseInfo.SUCCESS.code);
+			result.setMsg(ResponseInfo.ORDER_EXCEPTION.msg);
+			result.setData(ResponseInfo.ORDER_EXCEPTION.code);
+			return result;
+		}else if(save ==2){//库存不够
+			result.setCode(ResponseInfo.SUCCESS.code);
+			result.setMsg(ResponseInfo.NO_STOCK.msg);
+			result.setData(ResponseInfo.NO_STOCK.code);
+			return result;
 		}
 		return result;
 	}

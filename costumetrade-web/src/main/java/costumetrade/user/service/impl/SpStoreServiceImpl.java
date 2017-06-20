@@ -68,6 +68,15 @@ public class SpStoreServiceImpl implements SpStoreService{
 			update = 2;//该分店已经存在
 		}else{
 			update = spStoreMapper.insertSelective(spStore);
+			//初始化高级设置数据
+	    	GeneratorBaseTable.generatorTable(spStore.getId()+"");
+	    	if(spStore.getId()!=null){
+	    	
+	    		//保存高级设置中的客户类型
+	    		insertCustPrice(spStore.getId());
+	    		//保存数据字段信息
+	    		insertDictionarys(spStore.getId());
+	    	}
 		}
 		return update;
 	}

@@ -127,7 +127,9 @@ public class SpOrderServiceImpl implements SpOrderService{
 			param.setSellerstoreid(order.getSellerstoreid());
 		}
 		
-		
+		if(param.getBuyerstoreid()==param.getSellerstoreid()){//自己不能开自家的订单
+			return 3;
+		}
 		//订单状态 1：新增  2、已付款 3、审核 4、发货 5、收货 6、已取消
 		if(details.size() > 0){
 			for(SsStoDetail d : details){
@@ -151,8 +153,11 @@ public class SpOrderServiceImpl implements SpOrderService{
 			//param.setClientId(clientId);
 			param.setOpenid(openid);
 			param.setOperate(5);
-			orderStock(param,detail);
-			
+			order.setOrdertime(new Date());
+			boolean operatestock = orderStock(param,detail);
+			if(!operatestock){
+				return 2;
+			}
 			SsFinancial record = new SsFinancial();
 			record.setOrderno(orderNo);
 			record.setPay(order.getRealcost());
@@ -171,14 +176,20 @@ public class SpOrderServiceImpl implements SpOrderService{
 			save = ssStoOrderMapper.insert(order,order.getSellerstoreid());
 		}else{
 			order.setBuyerstoreid(wechat1.getStoreid());
-			//买家保存采购单
-			ssStoDetailMapper.saveDetailStore(detail,order.getBuyerstoreid());
-			save = ssStoOrderMapper.insertStore(order,order.getBuyerstoreid());
+			if(order.getBuyerstoreid()!=null&&order.getBuyerstoreid()!=order.getSellerstoreid()){
+				//买家保存采购单
+				ssStoDetailMapper.saveDetailStore(detail,order.getBuyerstoreid());
+				save = ssStoOrderMapper.insertStore(order,order.getBuyerstoreid());
+			}else{
+				return 3;
+			}
+			
+		}
+		if(order.getSellerstoreid()!=null){
 			//卖家保存销售单
 			ssStoDetailMapper.saveDetailStore(detail,order.getSellerstoreid());
 			save = ssStoOrderMapper.insertStore(order,order.getSellerstoreid());
 		}
-
 		return save;
 
 	}

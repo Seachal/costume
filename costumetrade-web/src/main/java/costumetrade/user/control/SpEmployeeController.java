@@ -83,16 +83,17 @@ public class SpEmployeeController {
 		}
 		int save = spEmployeeService.saveEmployee(spEmployee);
 		
-		List<SpPrivilegeEmployee> privilegeEmployees = new ArrayList<SpPrivilegeEmployee>();
-		
-		for(Long privilegeId:spEmployee.getPrivilegeIds()){
-			SpPrivilegeEmployee privilegeEmp = new SpPrivilegeEmployee();
-			privilegeEmp.setEmployeeId(Long.valueOf(spEmployee.getId()));
-			privilegeEmp.setPrivilegeId(privilegeId);;
-			privilegeEmployees.add(privilegeEmp);
+		List<SpPrivilegeEmployee> privilegeEmployees = spEmployee.getPrivilegeEmployees();
+		List<SpPrivilegeEmployee> privilegeEmployeeList = new ArrayList<SpPrivilegeEmployee>();
+		if(privilegeEmployees !=null||privilegeEmployees.size()>0){
+			for(SpPrivilegeEmployee privilegeEmp :privilegeEmployees){
+				privilegeEmp.setEmployeeId(Long.valueOf(spEmployee.getId()));
+				privilegeEmp.setPrivilegeId(privilegeEmp.getPrivilegeId());
+				privilegeEmployeeList.add(privilegeEmp);
+			}
+			privilegeService.saveSpPrivilegeEmployees(privilegeEmployeeList);
 		}
-		privilegeService.saveSpPrivilegeEmployees(privilegeEmployees);
-		
+
 		if(save<=0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);

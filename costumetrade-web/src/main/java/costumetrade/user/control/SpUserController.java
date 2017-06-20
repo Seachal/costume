@@ -59,6 +59,9 @@ public class SpUserController {
 		if(openid!=null){
 			chat = spUserService.login(openid);
 			query.setOpenid(openid);
+			if(chat != null){
+				query.setStoreId(chat.getStoreid());
+			}
 			query = spUserService.getStores(query);
 			resultQuery.setQuery(query);
 			SpEmployee employee = spEmployeeService.getEmployeePrivilege(openid);

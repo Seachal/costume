@@ -20,6 +20,8 @@ public class StoreQuery extends Entity {
 	private Integer messageCount;
 	
 	private Integer noticeCount;
+	
+	private Integer storeId;
 
 	public List<SpStore> getStoreList() {
 		return storeList;
@@ -61,5 +63,13 @@ public class StoreQuery extends Entity {
 		this.openid = openid;
 	}
 
+	public Integer getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
+	}
+	
 	
 }
