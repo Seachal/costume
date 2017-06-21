@@ -59,7 +59,7 @@ public class SsDataDictionaryController {
 	}
 	@RequestMapping("/saveTypeOrGradeRate")
 	@ResponseBody
-	public ApiResponse saveTypeOrGradeRate(@RequestBody SpCustProdPrice spCustProdPrice) {
+	public ApiResponse saveTypeOrGradeRate(SpCustProdPrice spCustProdPrice) {
 		
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
@@ -80,7 +80,7 @@ public class SsDataDictionaryController {
 	}
 	@RequestMapping("/getTypeOrGradeRate")
 	@ResponseBody
-	public ApiResponse getTypeOrGradeRate(@RequestBody SpCustProdPrice spCustProdPrice) {
+	public ApiResponse getTypeOrGradeRate(SpCustProdPrice spCustProdPrice) {
 		
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);

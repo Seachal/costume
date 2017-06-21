@@ -5,14 +5,18 @@ import java.util.Date;
 import java.util.List;
 
 import costumetrade.common.Entity;
+import costumetrade.order.domain.ScLogisticFee;
 import costumetrade.order.domain.SpPBrand;
 import costumetrade.order.domain.SpPCate;
+import costumetrade.order.domain.SpPColor;
+import costumetrade.order.domain.SpPSize;
 import costumetrade.order.domain.SpPSizeCustom;
 import costumetrade.order.domain.SpUnit;
 import costumetrade.order.domain.SsProductReview;
 import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.domain.SpPrivilege;
+import costumetrade.user.domain.SsDataDictionary;
 
 public class ProductQuery extends Entity{
 
@@ -224,17 +228,28 @@ public class ProductQuery extends Entity{
      */
     private Integer isDiscount;
     
+    /*
+     * 款式加价
+     * */
+    private String isPattern;
+    
     private String custOrDiscTag;
     
     private List<SpCustProdPrice> custProdPrice;
     
-    private List<SpCustProdPrice>  gradeList;
+   // private List<SpCustProdPrice>  gradeList;
     
     private List<SpCustProdPrice>  customerTypeList;
 
     private List<String> idArray;
     
     private List<SsProductReview> productReviews;
+    
+    private List<SsDataDictionary> gradeList;
+    
+    private List<SsDataDictionary> payTypeList;
+    
+    private List<ScLogisticFee> logisticFees;
 	/**
 	 * 货品列表查询  开始
 	 */
@@ -282,6 +297,9 @@ public class ProductQuery extends Entity{
 	
 	private List<SpPrivilege> privileges;
 	
+	private List<SpPSize> sizeLists;
+	
+	private List<SpPColor> colorLists;
 	
 	public String getFields() {
 		return fields;
@@ -789,11 +807,11 @@ public class ProductQuery extends Entity{
 		this.isDiscount = isDiscount;
 	}
 
-	public List<SpCustProdPrice> getGradeList() {
+	public List<SsDataDictionary> getGradeList() {
 		return gradeList;
 	}
 
-	public void setGradeList(List<SpCustProdPrice> gradeList) {
+	public void setGradeList(List<SsDataDictionary> gradeList) {
 		this.gradeList = gradeList;
 	}
 
@@ -923,6 +941,46 @@ public class ProductQuery extends Entity{
 
 	public void setCount(BigDecimal count) {
 		this.count = count;
+	}
+
+	public List<SsDataDictionary> getPayTypeList() {
+		return payTypeList;
+	}
+
+	public void setPayTypeList(List<SsDataDictionary> payTypeList) {
+		this.payTypeList = payTypeList;
+	}
+
+	public List<ScLogisticFee> getLogisticFees() {
+		return logisticFees;
+	}
+
+	public void setLogisticFees(List<ScLogisticFee> logisticFees) {
+		this.logisticFees = logisticFees;
+	}
+
+	public String getIsPattern() {
+		return isPattern;
+	}
+
+	public void setIsPattern(String isPattern) {
+		this.isPattern = isPattern;
+	}
+
+	public List<SpPSize> getSizeLists() {
+		return sizeLists;
+	}
+
+	public void setSizeLists(List<SpPSize> sizeLists) {
+		this.sizeLists = sizeLists;
+	}
+
+	public List<SpPColor> getColorLists() {
+		return colorLists;
+	}
+
+	public void setColorLists(List<SpPColor> colorLists) {
+		this.colorLists = colorLists;
 	}
 
 	

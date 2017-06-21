@@ -14,17 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import aj.org.objectweb.asm.Type;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import costumetrade.common.page.Page;
 import costumetrade.common.util.StringUtil;
+import costumetrade.order.domain.ScLogisticFee;
 import costumetrade.order.domain.SpClient;
 import costumetrade.order.domain.SpPBrand;
 import costumetrade.order.domain.SpPCate;
+import costumetrade.order.domain.SpPColor;
+import costumetrade.order.domain.SpPSize;
 import costumetrade.order.domain.SpPSizeCustom;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SpUnit;
@@ -33,11 +34,14 @@ import costumetrade.order.domain.SsProductFile;
 import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStoOrder;
 import costumetrade.order.domain.SsStock;
+import costumetrade.order.mapper.ScLogisticFeeMapper;
 import costumetrade.order.mapper.SpClientMapper;
 import costumetrade.order.mapper.SpPBrandMapper;
 import costumetrade.order.mapper.SpPCateMapper;
 import costumetrade.order.mapper.SpPColorCustomMapper;
+import costumetrade.order.mapper.SpPColorMapper;
 import costumetrade.order.mapper.SpPSizeCustomMapper;
+import costumetrade.order.mapper.SpPSizeMapper;
 import costumetrade.order.mapper.SpProductMapper;
 import costumetrade.order.mapper.SpUnitMapper;
 import costumetrade.order.mapper.SsPriceMapper;
@@ -49,7 +53,6 @@ import costumetrade.order.query.ProductQuery;
 import costumetrade.order.query.Rules;
 import costumetrade.order.service.SpProductService;
 import costumetrade.order.service.WeChatService;
-import costumetrade.user.domain.PriceJson;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpPrivilege;
@@ -73,6 +76,10 @@ public class SpProductServiceImpl implements SpProductService{
 	private SpPSizeCustomMapper spPSizeCustomMapper;
 	@Autowired
 	private SpPColorCustomMapper spPColorCustomMapper;
+	@Autowired
+	private SpPColorMapper spPColorMapper;
+	@Autowired
+	private SpPSizeMapper spPSizeMapper;
 	@Autowired
 	private SpPCateMapper spPCateMapper;
 	@Autowired
@@ -103,6 +110,7 @@ public class SpProductServiceImpl implements SpProductService{
 	private SsStoOrderMapper ssStoOrderMapper;
 	@Autowired
 	private SpPrivilegeMapper spPrivilegeMapper;
+	@Autowired ScLogisticFeeMapper scLogisticFeeMapper;
 	
 	@Override
 	public List<ProductQuery> selectProducts(ProductQuery productQuery) {
@@ -330,6 +338,8 @@ public class SpProductServiceImpl implements SpProductService{
 		List<String> list = new ArrayList<String>();
 		list.add("SELLING_METHOD");//售价方式
 		list.add("CUSTOMER_TYPE");//获取启用的客户种类
+		list.add("PAY_TYPE");//获取支付类型
+		list.add("PRODUCT_GRADE");//获取货品级别
 		List<SsDataDictionary> dict = ssDataDictionaryMapper.selectDictionarys(list,storeId);
 		
 		ProductQuery queryResult = new ProductQuery();
@@ -348,13 +358,23 @@ public class SpProductServiceImpl implements SpProductService{
 			custOrDiscTag = spStore.getStoreType()+"";
 		}
 		String[] customs = null;
+		List<SsDataDictionary> gradeList = new ArrayList<SsDataDictionary>();
+		List<SsDataDictionary> payTypeList = new ArrayList<SsDataDictionary>();
 		if(dict !=null && dict.size()>0){
 			for(SsDataDictionary dictionary : dict){
+				SsDataDictionary d = new SsDataDictionary();
 				if("SELLING_METHOD".equals(dictionary.getDictGroup())){
 					custOrDiscTag = dictionary.getDictValue();
-				}if("CUSTOMER_TYPE".equals(dictionary.getDictGroup())){
-					
+				}else if("CUSTOMER_TYPE".equals(dictionary.getDictGroup())){
 					customs=dictionary.getDictValue().split(",");
+				}else if("PAY_TYPE".equals(dictionary.getDictGroup())){
+					d.setDictText(dictionary.getDictText());
+					d.setDictValue(dictionary.getDictValue());
+					payTypeList.add(d);
+				}else if("PRODUCT_GRADE".equals(dictionary.getDictGroup())){
+					d.setDictText(dictionary.getDictText());
+					d.setDictValue(dictionary.getDictValue());
+					gradeList.add(d);
 				}
 			}
 		}
@@ -364,70 +384,33 @@ public class SpProductServiceImpl implements SpProductService{
 		spCustProdPrice.setStoreid(storeId);
 		custProdPrice = spCustProdPriceMapper.select(spCustProdPrice);
 		
-		List<SpCustProdPrice> gradeList = new ArrayList<SpCustProdPrice>();
 		List<SpCustProdPrice> customTypeList = new ArrayList<SpCustProdPrice>();
 		List<SpCustProdPrice> customTypes = new ArrayList<SpCustProdPrice>();
-		List<SpCustProdPrice> custProdList = new ArrayList<SpCustProdPrice>();
 		if(custProdPrice.size()>0){
 			for(SpCustProdPrice price : custProdPrice){
-				if("1".equals(price.getType())){
-					price.setCustPriceJson(JSONArray.parseArray(price.getCustpricejson(), PriceJson.class));
-					price.setDiscPriceJson(JSONArray.parseArray(price.getDiscpricejson(), PriceJson.class));
-					price.setCustpricejson(null);
-					price.setDiscpricejson(null);
-					custProdList.add(price);
-				}
-				
 				SpCustProdPrice prodPrice = new SpCustProdPrice();
-				prodPrice.setId(Integer.parseInt(price.getCustTypeCode()));
+				prodPrice.setCustTypeCode(price.getCustTypeCode());
 				prodPrice.setCusttypename(price.getCusttypename());
-				if("1".equals(price.getType())){
-					gradeList.add(prodPrice);
-				}else if("2".equals(price.getType())){
-					customTypeList.add(prodPrice);
-				}
-				
-				
+				prodPrice.setCustpricejson(price.getCustpricejson());
+				customTypeList.add(prodPrice);
 			}
 		}
 		//过滤 启用客户类型
-		for(int i=0;i<customs.length;i++){
-			Integer id = Integer.parseInt(customs[i]);
-			for(int j=0;j<customTypeList.size();j++){
-				
-				if(id == customTypeList.get(j).getId()){
-					customTypes.add(customTypeList.get(j));
-					continue;
-				}
-			}
-		}
 		//根据启用的价格过滤折扣毛利中类型
 		List<SpCustProdPrice> custList = new ArrayList<SpCustProdPrice>();
-		for(int i=0;i<custProdList.size();i++){
-			List<PriceJson> cust = custProdList.get(i).getCustPriceJson();
-			List<PriceJson> dist = custProdList.get(i).getDiscPriceJson();
-			List<PriceJson> custs = new ArrayList<PriceJson>();
-			List<PriceJson> discs = new ArrayList<PriceJson>();
-			SpCustProdPrice p = custProdList.get(i);
-			for(int z=0;z<cust.size();z++){
-				for(int j=0;j<customTypes.size();j++){
-					if(cust.get(z).getName().equals(customTypes.get(j).getCusttypename())){
-						custs.add(cust.get(z));
-						discs.add(dist.get(z));
-						continue;
-					}
+		for(int i=0;i<customs.length;i++){
+			for(int j=0;j<customTypeList.size();j++){
+				if(customs[i].equals(customTypeList.get(j).getCustTypeCode()) ){
+					custList.add(customTypeList.get(j));
 				}
 			}
-			p.setDiscPriceJson(discs);
-			p.setCustPriceJson(custs);
-			custList.add(p);
-			
 		}
-		queryResult.setCustomerTypeList(customTypes);
+		List<ScLogisticFee> logisticFees = scLogisticFeeMapper.selectLogisticFees();
 		queryResult.setGradeList(gradeList);
 		queryResult.setCustProdPrice(custList);
 		queryResult.setCustOrDiscTag(custOrDiscTag);
-		
+		queryResult.setPayTypeList(payTypeList);
+		queryResult.setLogisticFees(logisticFees);
 		if(productId != null ){
 			SpProduct product = spProductMapper.selectByPrimaryKey(productId, storeId);
 			if(product != null){
@@ -476,6 +459,8 @@ public class SpProductServiceImpl implements SpProductService{
 			queryResult.setCustProdPrice(null);
 			queryResult.setCustomerTypeList(null);
 			queryResult.setPrivileges(null);
+			queryResult.setPayTypeList(null);
+			queryResult.setLogisticFees(null);
 		}
 		return queryResult;
 	}
@@ -688,24 +673,24 @@ public class SpProductServiceImpl implements SpProductService{
 	}
 	@Override
 	public ProductQuery updateProductInit(ProductQuery query) {
-		//获取商品等级
-		List<SpCustProdPrice> custProdPrice = new ArrayList<SpCustProdPrice>();
-		SpCustProdPrice spCustProdPrice = new SpCustProdPrice();
-		spCustProdPrice.setType(1+"");
-		spCustProdPrice.setStoreid(query.getStoreId());
-		custProdPrice = spCustProdPriceMapper.select(spCustProdPrice);
-				
-		List<SpCustProdPrice> gradeList = new ArrayList<SpCustProdPrice>();
-		if(custProdPrice.size()>0){
-			for(SpCustProdPrice price : custProdPrice){
-						SpCustProdPrice prodPrice = new SpCustProdPrice();
-						prodPrice.setId(Integer.parseInt(price.getCustTypeCode()));
-						prodPrice.setCusttypename(price.getCusttypename());
-						gradeList.add(prodPrice);
-				
-					}
-				}		
-		query.setGradeList(gradeList);
+//		//获取商品等级
+//		List<SpCustProdPrice> custProdPrice = new ArrayList<SpCustProdPrice>();
+//		SpCustProdPrice spCustProdPrice = new SpCustProdPrice();
+//		spCustProdPrice.setType(1+"");
+//		spCustProdPrice.setStoreid(query.getStoreId());
+//		custProdPrice = spCustProdPriceMapper.select(spCustProdPrice);
+//				
+//		List<SpCustProdPrice> gradeList = new ArrayList<SpCustProdPrice>();
+//		if(custProdPrice.size()>0){
+//			for(SpCustProdPrice price : custProdPrice){
+//						SpCustProdPrice prodPrice = new SpCustProdPrice();
+//						prodPrice.setId(Integer.parseInt(price.getCustTypeCode()));
+//						prodPrice.setCusttypename(price.getCusttypename());
+//						gradeList.add(prodPrice);
+//				
+//					}
+//				}		
+//		query.setGradeList(gradeList);
 		return query;
 	}
 	@Override
@@ -775,5 +760,38 @@ public class SpProductServiceImpl implements SpProductService{
 	public int makePopularize(ProductQuery productQuery) {
 		productQuery.setPopularize(1);//推广商品
 		return spProductMapper.updateByIds(productQuery);
+	}
+
+	@Override
+	public List<Object> patternAddPriceInit(ProductQuery productQuery) {
+		List<Object> objects = new ArrayList<Object>();
+		List<SpPSize> sizes = spPSizeMapper.getSpPSizes(productQuery.getStoreId());
+		List<SpPColor> colors = spPColorMapper.getSpPColors(productQuery.getStoreId(), null);
+		
+		if(colors!=null&& colors.size()>0){
+			for(Object object : colors){
+				objects.add(object);
+			}
+		}
+		if(sizes!=null&& sizes.size()>0){
+			for(Object object : sizes){
+				objects.add(object);
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public int savePatternAddPrice(ProductQuery productQuery) {
+		List<SpPSize> sizes = productQuery.getSizeLists();
+		List<SpPColor> colors = productQuery.getColorLists();
+		int save = 0;
+		if(sizes !=null && sizes.size()>0){
+			save =spPSizeMapper.updates(sizes);
+		}
+		if(colors !=null && colors.size()>0){
+			save =spPColorMapper.updates(colors);
+		}
+		return save;
 	}
 }

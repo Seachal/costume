@@ -39,6 +39,10 @@ public class SsStoOrder extends Entity {
      *  退款时间
      */
     private Date refunddate;
+    /**
+     * 运费
+     * */
+    private BigDecimal freight;
 
     /**
      *  外部订单号
@@ -59,6 +63,8 @@ public class SsStoOrder extends Entity {
      *  订单状态 1：新增，2：已付款，3、已审核，4：已发货，5：已完成，6：取消
      */
     private Integer orderstatus;
+    
+    private String logisticsCode;
 
     /**
      *  配发类型
@@ -532,6 +538,22 @@ public class SsStoOrder extends Entity {
 
 	public void setClientId(String clientId) {
 		this.clientId = clientId;
+	}
+
+	public BigDecimal getFreight() {
+		return freight;
+	}
+
+	public void setFreight(BigDecimal freight) {
+		this.freight = freight;
+	}
+
+	public String getLogisticsCode() {
+		return logisticsCode;
+	}
+
+	public void setLogisticsCode(String logisticsCode) {
+		this.logisticsCode = logisticsCode;
 	}
     
     

@@ -42,6 +42,10 @@ public interface SpOrderService {
 	 * */
 	public int orderOperate(OrderQuery param);
 	/*
+	 * 订单修改
+	 * */
+	public int updateOrder(OrderQuery param);
+	/*
 	 * 订单支付
 	 * */
 	public int orderPay(SsFinancial ssFinancial);

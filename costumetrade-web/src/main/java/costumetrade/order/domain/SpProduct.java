@@ -56,6 +56,10 @@ public class SpProduct extends Entity {
      *  是否参与打折 1、参与打折 2、不参与打折
      */
     private Integer isDiscount;
+    /*
+     * 款式加价
+     * */
+    private String isPattern;
 
     /**
      *  助记简码
@@ -700,6 +704,14 @@ public class SpProduct extends Entity {
 
 	public void setPopularize(Integer popularize) {
 		this.popularize = popularize;
+	}
+
+	public String getIsPattern() {
+		return isPattern;
+	}
+
+	public void setIsPattern(String isPattern) {
+		this.isPattern = isPattern;
 	}
 	
 	

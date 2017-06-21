@@ -23,4 +23,6 @@ public interface SpPSizeMapper {
     int updateByPrimaryKey(SpPSize record);
     
     List<SpPSize> getSpPSizes(@Param("storeId")int storeId);
+    
+    int updates(@Param("sizes")List<SpPSize> sizes);
 }

@@ -111,8 +111,6 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 		if(spEmployee.getId() == null){
 			return 0;
 		}
-		
-		
 		return spEmployeeMapper.deleteByPrimaryKey(spEmployee);
 	}
 	@Override

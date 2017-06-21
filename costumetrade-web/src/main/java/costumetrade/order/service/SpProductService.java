@@ -19,6 +19,18 @@ public interface SpProductService {
 	 * 分享链接查询商品
 	 * */
 	public List<ProductQuery> getShareProduct(ProductQuery productQuery);
+	/**
+	 * 保存款式加价
+	 * */
+	public List<Object> patternAddPriceInit(ProductQuery productQuery);
+	/**
+	 * 保存款式加价
+	 * */
+	public int savePatternAddPrice(ProductQuery productQuery);
+	/**
+	 * 
+	 * 商品加入推广
+	 * */
 	public int makePopularize(ProductQuery productQuery);
 	/**
 	 * 获取商品詳情

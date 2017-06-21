@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import costumetrade.common.page.Page;
 import costumetrade.order.domain.SpPColor;
+import costumetrade.order.domain.SpPSize;
 @Mapper
 public interface SpPColorMapper {
     int deleteByPrimaryKey(@Param("ids")List<Integer> ids);
@@ -24,5 +25,7 @@ public interface SpPColorMapper {
     int updateByPrimaryKeySelective(SpPColor record);
 
     int updateByPrimaryKey(SpPColor record);
+    
+    int updates(@Param("colors")List<SpPColor> colors);
     
 }

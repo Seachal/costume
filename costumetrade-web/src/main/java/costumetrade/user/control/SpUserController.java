@@ -61,6 +61,15 @@ public class SpUserController {
 			query.setOpenid(openid);
 			if(chat != null){
 				query.setStoreId(chat.getStoreid());
+				if(chat.getStoreid()!=null){
+					if(chat.getEmpid()!=null){
+						resultQuery.setUserIdentity(3);//员工身份
+					}else{
+						resultQuery.setUserIdentity(1);//店家身份
+					}
+				}else{
+					resultQuery.setUserIdentity(2);//普通消费者
+				}
 			}
 			query = spUserService.getStores(query);
 			resultQuery.setQuery(query);

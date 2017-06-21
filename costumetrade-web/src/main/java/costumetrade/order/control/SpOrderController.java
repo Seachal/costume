@@ -197,7 +197,31 @@ public class SpOrderController {
 		}
 		
 	}
-
+	@RequestMapping("/updateOrder")
+	@ResponseBody   
+	public ApiResponse updateOrder(OrderQuery query) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(query==null){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		
+		
+		int save = spOrderService.updateOrder(query);
+		
+		if(save <= 0){
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			return result;
+		}else{
+			result.setData(query);
+			return result;
+		}
+		
+	}
 	@RequestMapping("/orderOperate")
 	@ResponseBody
 	public ApiResponse orderOperate(OrderQuery param) {

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -551,38 +552,44 @@ public class SpOrderServiceImpl implements SpOrderService{
 		ScWeChat wechat = scWeChatMapper.selectByOpenId(openid);
 		SsStoOrder spStoOrder = new SsStoOrder();
 		List<SsStoOrder> spStoOrders = new ArrayList<SsStoOrder>();
-		/*
-		 * 1、待付款  2、待发货   3、待收货  4、待审核 5、全部
-			采购单列签：1
-			orderStatus   值                    备注
-			待付款                                   1                       新增
-			待发货                                   2，3                      已付款    审核
-			待收货                                  4                       已发货
-			全部                                 所有状态                线上单据+线下单据
-		 * 
-		 * 销售单列签：2
-			orderStatus   值                    备注
-			待付款                                    1                    新增
-			待审核                                    2                    付款
-			待发货                        	  3                    已审核
-			全部                         所有状态              线上单据+线下单据
+		/*1、待付款  2、待发货   3、待收货  4、待审核 5、全部6、待配货
+		orderStatus 值 备注
+		待付款                          1,3            新增
+		待发货                          8                    配货
+		待收货                          4                    已发货
+		全部                         所有状态                线上单据+线下单据
+		
+		
+		销售单列签：
+		orderStatus 值 备注
+		待审核                          1                    新增
+		待配货                          2                 付款
+		待发货                          8                    已配货
+		全部                         所有状态              线上单据+线下单据
+		 * 先审核 后付款
 		 * */
 		List<Integer> status = new ArrayList<Integer>();
 		if(orderType == 1){  //采购单列签
 			if(orderStatus == 2){
-				status.add(3);
-				status.add(2);
+				status.add(8);
 				spStoOrder.setOrdertype(1+"");//线上订单
 			}else if(orderStatus == 3){
 				status.add(4);
 				spStoOrder.setOrdertype(1+"");//线上订单
+			}else if(orderStatus == 1){
+				status.add(1);
+				status.add(3);
+				spStoOrder.setOrdertype(1+"");//线上订单
 			}
 		}else if(orderType == 2){ //销售单列签
 			if(orderStatus == 4){
-				status.add(2);
+				status.add(1);
 				spStoOrder.setOrdertype(1+"");//线上订单
 			}else if(orderStatus == 2){
-				status.add(3);
+				status.add(8);
+				spStoOrder.setOrdertype(1+"");//线上订单
+			}else if(orderStatus == 6){
+				status.add(2);
 				spStoOrder.setOrdertype(1+"");//线上订单
 			}
 		}
@@ -593,9 +600,8 @@ public class SpOrderServiceImpl implements SpOrderService{
 			status.add(4);
 			status.add(5);
 			status.add(6);
-		}else if(orderStatus == 1){
-			status.add(1);
-			spStoOrder.setOrdertype(1+"");//线上订单
+			status.add(7);
+			status.add(8);
 		}
 		spStoOrder.setStatus(status);
 		
@@ -763,8 +769,25 @@ public class SpOrderServiceImpl implements SpOrderService{
 	}
 	@Override
 	public int saveOrderFee(List<SsCgsorder> orders) {
-
 		return ssCgsorderMapper.saveFeeOrders(orders);
+	}
+	@Override
+	public int updateOrder(OrderQuery param) {
+		int update = 0;
+		//更新订单数据 1、根据订单号在普通消费者的订单表中查询记录，存在就更新普通消费者的订单信息，否则就在买家（店家）的订单表中更新数据
+		if(StringUtils.isNotBlank(param.getOrder().getPayorderno())){
+			SsStoOrder spStoOrder = new SsStoOrder();
+			spStoOrder.setPayorderno(param.getOrder().getPayorderno());
+			List<SsStoOrder> spStoOrders = ssStoOrderMapper.selectByOrderMember(spStoOrder,null);
+			spStoOrder = param.getOrder();
+			if(spStoOrders!=null && spStoOrders.size()>0){//买家是普通消费者身份
+				update =ssStoOrderMapper.updateByPrimaryKeySelective(spStoOrder);
+			}else{//买家是店铺身份
+				update =ssStoOrderMapper.updateByPrimaryKeySelectiveStore(spStoOrder);
+			}
+			
+		}
+		return update;
 	}
 	
 	

@@ -169,6 +169,49 @@ public class SpProductController {
 		}
 		return  result;
 	}
+	@RequestMapping("/patternAddPriceInit")
+	@ResponseBody
+	public ApiResponse patternAddPriceInit(ProductQuery  productQuery ) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		if(productQuery.getStoreId()==null){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		List<Object> objects = spProductService.patternAddPriceInit(productQuery);
+		if(objects == null){
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			return result;
+		}else{
+			result.setData(objects);
+		}
+		return  result;
+	}
+	
+	@RequestMapping("/savePatternAddPrice")
+	@ResponseBody
+	public ApiResponse savePatternAddPrice(ProductQuery  productQuery ) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		if(productQuery.getStoreId()==null){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		int save = spProductService.savePatternAddPrice(productQuery);
+		if(save <= 0){
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			return result;
+		}
+		return  result;
+	}
 	
 	
 	@RequestMapping("/updateProducts")
