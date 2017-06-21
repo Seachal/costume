@@ -33,7 +33,7 @@
 	</select>
 	<select id="getSpPColors" resultMap="BaseResultMap">
 		select
-		<include refid="Base_Column_List" />
+		id, storeId, colorName,price_raise
 		from sp_pcolor
 		where storeId = #{storeId,jdbcType=INTEGER}
 		and status =0
@@ -42,6 +42,12 @@
 		update  sp_pcolor set status =1
 		where id in <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
 	</update>
+	
+	<update id="updates" parameterType="List">
+	   <foreach collection="colors" index="index" item="item" separator=";">
+	   		 update  sp_pcolor set price_raise =#{priceRaise} where id =#{id}
+	   </foreach>
+  </update>
 	<insert id="insert" parameterType="costumetrade.order.domain.SpPColor" useGeneratedKeys="true" keyProperty="id">
 		
 		insert into sp_pcolor (storeId, colorName,price_raise,status,

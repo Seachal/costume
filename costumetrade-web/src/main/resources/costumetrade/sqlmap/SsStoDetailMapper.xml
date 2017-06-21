@@ -277,53 +277,83 @@
 			</if>
 		</trim>
 	</insert>
-	<update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SsStoDetail">
-		update ss_stodetail
+	<update id="updateByPrimaryKeySelectiveStore" >
+	   <foreach collection="details" item="item" index="index" separator=";">
+		update ss_stodetail_#{item.storeid}
 		<set>
-			<if test="orderid != null">
-				orderId = #{orderid,jdbcType=VARCHAR},
+			<if test="item.orderid != null">
+				orderId = #{item.orderid,jdbcType=VARCHAR},
 			</if>
-			<if test="storeid != null">
-				storeId = #{storeid,jdbcType=VARCHAR},
+			<if test="item.storeid != null">
+				storeId = #{item.storeid,jdbcType=VARCHAR},
 			</if>
-			<if test="handtag != null">
-				handtag = #{handtag,jdbcType=INTEGER},
+			<if test="item.handtag != null">
+				handtag = #{item.handtag,jdbcType=INTEGER},
 			</if>
-			<if test="productid != null">
-				productId = #{productid,jdbcType=VARCHAR},
+			<if test="item.productid != null">
+				productId = #{item.productid,jdbcType=VARCHAR},
 			</if>
-			<if test="productname != null">
-				productName = #{productname,jdbcType=VARCHAR},
+			<if test="item.productname != null">
+				productName = #{item.productname,jdbcType=VARCHAR},
 			</if>
-			<if test="productunit != null">
-				productUnit = #{productunit,jdbcType=VARCHAR},
+			<if test="item.productunit != null">
+				productUnit = #{item.productunit,jdbcType=VARCHAR},
 			</if>
-			<if test="productcolor != null">
-				productColor = #{productcolor,jdbcType=VARCHAR},
+			<if test="item.productcolor != null">
+				productColor = #{item.productcolor,jdbcType=VARCHAR},
 			</if>
-			<if test="productsize != null">
-				productSize = #{productsize,jdbcType=VARCHAR},
+			<if test="item.productsize != null">
+				productSize = #{item.productsize,jdbcType=VARCHAR},
 			</if>
-			<if test="count != null">
-				count = #{count,jdbcType=DECIMAL},
+			<if test="item.price != null">
+				price = #{item.price,jdbcType=DECIMAL},
 			</if>
-			<if test="price != null">
+				modifyTime = NOW(),
+			<if test="item.modifyby != null">
+				modifyBy = #{item.modifyby,jdbcType=VARCHAR},
+			</if>
+		</set>
+			where id = #{item.id,jdbcType=INTEGER}
+		</foreach>
+	</update>
+	<update id="updateByPrimaryKeySelectiveMember">
+		<foreach collection="details" item="item" index="index" separator=";">
+		update ss_member_stodetail
+		<set>
+			<if test="item.orderid != null">
+				orderId = #{item.orderid,jdbcType=VARCHAR},
+			</if>
+			<if test="item.storeid != null">
+				storeId = #{item.storeid,jdbcType=VARCHAR},
+			</if>
+			<if test="item.handtag != null">
+				handtag = #{item.handtag,jdbcType=INTEGER},
+			</if>
+			<if test="item.productid != null">
+				productId = #{item.productid,jdbcType=VARCHAR},
+			</if>
+			<if test="item.productname != null">
+				productName = #{item.productname,jdbcType=VARCHAR},
+			</if>
+			<if test="item.productunit != null">
+				productUnit = #{item.productunit,jdbcType=VARCHAR},
+			</if>
+			<if test="item.productcolor != null">
+				productColor = #{item.productcolor,jdbcType=VARCHAR},
+			</if>
+			<if test="item.productsize != null">
+				productSize = #{item.productsize,jdbcType=VARCHAR},
+			</if>
+			<if test="item.price != null">
 				price = #{price,jdbcType=DECIMAL},
 			</if>
-			<if test="createtime != null">
-				createTime = #{createtime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="createby != null">
-				createBy = #{createby,jdbcType=VARCHAR},
-			</if>
-			<if test="modifytime != null">
-				modifyTime = #{modifytime,jdbcType=TIMESTAMP},
-			</if>
-			<if test="modifyby != null">
-				modifyBy = #{modifyby,jdbcType=VARCHAR},
+				modifyTime = NOW(),
+			<if test="item.modifyby != null">
+				modifyBy = #{item.modifyby,jdbcType=VARCHAR},
 			</if>
 		</set>
 		where id = #{id,jdbcType=INTEGER}
+		</foreach>
 	</update>
 	<update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsStoDetail">
 		update ss_stodetail

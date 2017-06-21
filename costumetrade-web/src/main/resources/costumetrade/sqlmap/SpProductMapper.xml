@@ -10,7 +10,7 @@
 		<result column="brandId" jdbcType="INTEGER" property="brandid" />
 		<result column="productType" jdbcType="INTEGER" property="producttype" />
 		<result column="name" jdbcType="VARCHAR" property="name" />
-		<result column="fastcode" jdbcType="VARCHAR" property="fastcode" />
+		<result column="isPattern" jdbcType="VARCHAR" property="isPattern" />
 		<result column="barcode" jdbcType="VARCHAR" property="barcode" />
 		<result column="barcodes" jdbcType="VARCHAR" property="barcodes" />
 		<result column="grade" jdbcType="VARCHAR" property="grade" />
@@ -103,7 +103,7 @@
 
 	<sql id="Base_Column_List">
 		id, storeId, status, code, brandId, productType,
-		name,isDiscount,isModify, fastcode, barcode, barcodes, popularize,
+		name,isDiscount,isModify, isPattern, barcode, barcodes, popularize,
 		grade, unit, colors, sizes, handcount, year, season, salTag,
 		salMonth,saleNum, image, image1,video1,video2,video3,
 		image2, image3, image4, description, warn_low, warn_high, time_up, time_down,
@@ -151,7 +151,7 @@
 	</select>
 
 	<select id="selectProducts" resultType="java.util.HashMap">
-		SELECT product.isDiscount,product.isModify,
+		SELECT product.isDiscount,product.isModify,product.isPattern,
 		product.id,product.storeId,product.code,product.name,product.time_up,product.barcode, product.barcodes,
 		(CASE WHEN product.image IS NOT NULL THEN product.image
 			WHEN product.image1 IS NOT NULL THEN product.image1
@@ -395,7 +395,7 @@
 	<insert id="insert" parameterType="costumetrade.order.domain.SpProduct">
 		insert into sp_product (id, storeId, status,popularize,
 		code, brandId, productType,
-		name, fastcode, barcode,
+		name, isPattern, barcode,
 		barcodes, grade, unit, isModify,isDiscount,
 		colors, sizes, handcount,
 		year, season, salTag,
@@ -408,7 +408,7 @@
 		#{status,jdbcType=INTEGER}, #{popularize,jdbcType=INTEGER},
 		#{code,jdbcType=VARCHAR}, #{brandid,jdbcType=INTEGER},
 		#{producttype,jdbcType=INTEGER},
-		#{name,jdbcType=VARCHAR}, #{fastcode,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR},
+		#{name,jdbcType=VARCHAR}, #{isPattern,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR},
 		#{barcodes,jdbcType=VARCHAR}, #{grade,jdbcType=VARCHAR},
 		#{unit,jdbcType=VARCHAR}, #{isModify,jdbcType=INTEGER},
 		#{isDiscount,jdbcType=INTEGER},
@@ -458,8 +458,8 @@
 			<if test="name != null">
 				name,
 			</if>
-			<if test="fastcode != null">
-				fastcode,
+			<if test="isPattern != null">
+				isPattern,
 			</if>
 			<if test="barcode != null">
 				barcode,
@@ -581,8 +581,8 @@
 			<if test="name != null">
 				#{name,jdbcType=VARCHAR},
 			</if>
-			<if test="fastcode != null">
-				#{fastcode,jdbcType=VARCHAR},
+			<if test="isPattern != null">
+				#{isPattern,jdbcType=VARCHAR},
 			</if>
 			<if test="barcode != null">
 				#{barcode,jdbcType=VARCHAR},
@@ -701,8 +701,8 @@
 			<if test="name != null">
 				name = #{name,jdbcType=VARCHAR},
 			</if>
-			<if test="fastcode != null">
-				fastcode = #{fastcode,jdbcType=VARCHAR},
+			<if test="isPattern != null">
+				isPattern = #{isPattern,jdbcType=VARCHAR},
 			</if>
 			<if test="barcode != null">
 				barcode = #{barcode,jdbcType=VARCHAR},
@@ -803,7 +803,7 @@
 		brandId = #{brandid,jdbcType=INTEGER},
 		productType = #{producttype,jdbcType=INTEGER},
 		name = #{name,jdbcType=VARCHAR},
-		fastcode = #{fastcode,jdbcType=VARCHAR},
+		isPattern = #{isPattern,jdbcType=VARCHAR},
 		barcode = #{barcode,jdbcType=VARCHAR},
 		barcodes = #{barcodes,jdbcType=VARCHAR},
 		grade = #{grade,jdbcType=VARCHAR},

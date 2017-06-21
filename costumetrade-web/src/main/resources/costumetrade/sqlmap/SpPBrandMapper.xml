@@ -29,7 +29,7 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="getSpPBrands"  resultMap="BaseResultMap">
-    select id, brandName, storeId,profit_d0
+    select id, brandName, storeId
     from sp_pbrand
     where storeId = #{storeId,jdbcType=INTEGER}
 	and status =0

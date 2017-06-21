@@ -22,7 +22,7 @@
   </select>
    <select id="getSpPrivilegeList" resultMap="BaseResultMap">
     select 
-    <include refid="Base_Column_List" />
+   id,operate_code, operate_name
     from sp_privilege
   </select> 
 

@@ -20,6 +20,7 @@
 		<result column="shipPhone" jdbcType="VARCHAR" property="shipphone" />
 		<result column="shipAddress" jdbcType="VARCHAR" property="shipaddress" />
 		<result column="contactStoreId" jdbcType="VARCHAR" property="contactstoreid" />
+		<result column="logisticsCode" jdbcType="VARCHAR" property="logisticsCode" />
 		<result column="remarks" jdbcType="VARCHAR" property="remarks" />
 		<result column="totalNum" jdbcType="DECIMAL" property="totalnum" />
 		<result column="totalAmt" jdbcType="DECIMAL" property="totalamt" />
@@ -32,6 +33,7 @@
 		<result column="payCost1" jdbcType="DECIMAL" property="paycost1" />
 		<result column="payCate2" jdbcType="VARCHAR" property="paycate2" />
 		<result column="payCost2" jdbcType="DECIMAL" property="paycost2" />
+		<result column="freight" jdbcType="DECIMAL" property="freight" />
 		<result column="debetAmt" jdbcType="DECIMAL" property="debetamt" />
 		<result column="orderTime" jdbcType="TIMESTAMP" property="ordertime" />
 		<result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
@@ -53,13 +55,13 @@
 	<sql id="Base_Column_List">
 		id, sellerStoreId, buyerStoreId,seller,buyer, operator,
 		payOrderNo, refundDate,
-		relatedOutTradeNo,
+		relatedOutTradeNo,logisticsCode,
 		refundStatus, orderType,
 		orderStatus, shipType, shipStatus, shipContact, shipPhone,
 		shipAddress, contactStoreId, remarks, totalNum, totalAmt,
 		discountRatio, discount,
 		mchange, tax, realcost, payCate1, payCost1,
-		payCate2, payCost2, debetAmt,
+		payCate2, payCost2, debetAmt,freight,
 		orderTime,
 		createTime, createBy,
 		modifyTime, modifyBy
@@ -109,6 +111,8 @@
 		stoorder.payCate1, stoorder.payCost1,
 		stoorder.payCate2,
 		stoorder.payCost2, stoorder.debetAmt,
+		stoorder.freight,
+		stoorder.logisticsCode,
 		stoorder.orderTime
 		from
 		ss_member_stoorder stoorder
@@ -171,6 +175,8 @@
 		stoorder.payCate1, stoorder.payCost1,
 		stoorder.payCate2,
 		stoorder.payCost2, stoorder.debetAmt,
+		stoorder.freight,
+		stoorder.logisticsCode,
 		stoorder.orderTime
 		from
 		ss_stoorder_#{spStoOrder.storeId,jdbcType=INTEGER} stoorder
@@ -334,10 +340,10 @@
 		relatedOutTradeNo,
 		refundStatus, orderType,
 		orderStatus, shipType, shipStatus,
-		shipContact, shipPhone, shipAddress,
+		shipContact, shipPhone, shipAddress,logisticsCode,
 		contactStoreId, remarks, totalNum,
 		totalAmt, discountRatio, discount,
-		mchange, tax, realcost,
+		mchange, tax, realcost,freight,
 		payCate1,
 		payCost1, payCate2,
 		payCost2, debetAmt, orderTime,
@@ -358,6 +364,7 @@
 		#{record.shipcontact,jdbcType=VARCHAR},
 		#{record.shipphone,jdbcType=VARCHAR},
 		#{record.shipaddress,jdbcType=VARCHAR},
+		#{record.logisticsCode,jdbcType=VARCHAR},
 		#{record.contactstoreid,jdbcType=VARCHAR},
 		#{record.remarks,jdbcType=VARCHAR},
 		#{record.totalnum,jdbcType=DECIMAL},
@@ -366,6 +373,7 @@
 		#{record.discount,jdbcType=DECIMAL},
 		#{record.mchange,jdbcType=DECIMAL}, #{record.tax,jdbcType=DECIMAL},
 		#{record.realcost,jdbcType=DECIMAL},
+		#{record.freight,jdbcType=DECIMAL},
 		#{record.paycate1,jdbcType=VARCHAR},
 		#{record.paycost1,jdbcType=DECIMAL},
 		#{record.paycate2,jdbcType=VARCHAR},
@@ -384,12 +392,12 @@
 		relatedOutTradeNo, refundStatus, orderType,
 		orderStatus, shipType,
 		shipStatus,
-		shipContact, shipPhone, shipAddress,
+		shipContact, shipPhone, shipAddress,logisticsCode,
 		contactStoreId,
 		remarks, totalNum,
 		totalAmt, discountRatio, discount,
 		mchange, tax,
-		realcost,
+		realcost,freight,
 		payCate1, payCost1, payCate2,
 		payCost2, debetAmt, orderTime,
 		createTime, createBy, modifyTime,
@@ -409,6 +417,7 @@
 		#{record.shipcontact,jdbcType=VARCHAR},
 		#{record.shipphone,jdbcType=VARCHAR},
 		#{record.shipaddress,jdbcType=VARCHAR},
+		#{record.logisticsCode,jdbcType=VARCHAR},
 		#{record.contactstoreid,jdbcType=VARCHAR},
 		#{record.remarks,jdbcType=VARCHAR},
 		#{record.totalnum,jdbcType=DECIMAL},
@@ -417,6 +426,7 @@
 		#{record.discount,jdbcType=DECIMAL},
 		#{record.mchange,jdbcType=DECIMAL}, #{record.tax,jdbcType=DECIMAL},
 		#{record.realcost,jdbcType=DECIMAL},
+		#{record.freight,jdbcType=DECIMAL},
 		#{record.paycate1,jdbcType=VARCHAR},
 		#{record.paycost1,jdbcType=DECIMAL},
 		#{record.paycate2,jdbcType=VARCHAR},
@@ -438,12 +448,12 @@
 		relatedOutTradeNo, refundStatus, orderType,
 		orderStatus, shipType,
 		shipStatus,
-		shipContact, shipPhone, shipAddress,
+		shipContact, shipPhone, shipAddress,logisticsCode,
 		contactStoreId,
 		remarks, totalNum,
 		totalAmt, discountRatio, discount,
 		mchange, tax,
-		realcost,
+		realcost,freight,
 		payCate1, payCost1, payCate2,
 		payCost2, debetAmt, orderTime,
 		createTime, createBy, modifyTime,
@@ -463,6 +473,7 @@
 		#{record.shipcontact,jdbcType=VARCHAR},
 		#{record.shipphone,jdbcType=VARCHAR},
 		#{record.shipaddress,jdbcType=VARCHAR},
+		#{record.logisticsCode,jdbcType=VARCHAR},
 		#{record.contactstoreid,jdbcType=VARCHAR},
 		#{record.remarks,jdbcType=VARCHAR},
 		#{record.totalnum,jdbcType=DECIMAL},
@@ -471,6 +482,7 @@
 		#{record.discount,jdbcType=DECIMAL},
 		#{record.mchange,jdbcType=DECIMAL}, #{record.tax,jdbcType=DECIMAL},
 		#{record.realcost,jdbcType=DECIMAL},
+		#{record.freight,jdbcType=DECIMAL},
 		#{record.paycate1,jdbcType=VARCHAR},
 		#{record.paycost1,jdbcType=DECIMAL},
 		#{record.paycate2,jdbcType=VARCHAR},
@@ -532,6 +544,9 @@
 			<if test="shipaddress != null">
 				shipAddress,
 			</if>
+			<if test="logisticsCode != null">
+				logisticsCode,
+			</if>
 			<if test="contactstoreid != null">
 				contactStoreId,
 			</if>
@@ -558,6 +573,9 @@
 			</if>
 			<if test="realcost != null">
 				realcost,
+			</if>
+			<if test="freight != null">
+				freight,
 			</if>
 			<if test="paycate1 != null">
 				payCate1,
@@ -636,6 +654,9 @@
 			<if test="shipaddress != null">
 				#{shipaddress,jdbcType=VARCHAR},
 			</if>
+			<if test="logisticsCode != null">
+				#{logisticsCode,jdbcType=VARCHAR},
+			</if>
 			<if test="contactstoreid != null">
 				#{contactstoreid,jdbcType=VARCHAR},
 			</if>
@@ -662,6 +683,9 @@
 			</if>
 			<if test="realcost != null">
 				#{realcost,jdbcType=DECIMAL},
+			</if>
+			<if test="freight != null">
+				#{freight,jdbcType=DECIMAL},
 			</if>
 			<if test="paycate1 != null">
 				#{paycate1,jdbcType=VARCHAR},
@@ -702,6 +726,33 @@
 			<if test="orderstatus != null">
 				orderStatus = #{orderstatus,jdbcType=INTEGER},
 			</if>
+			<if test="operator != null">
+				operator = #{operator},
+			</if>
+			<if test="paycate1 != null">
+				paycate1 = #{paycate1},
+			</if>
+			<if test="paycost1 != null">
+				paycost1 = #{paycost1},
+			</if>
+			<if test="paycate2 != null">
+				paycate2 = #{paycate2},
+			</if>
+			<if test="paycost2 != null">
+				paycost2 = #{paycost2},
+			</if>
+			<if test="realcost != null">
+				realcost = #{realcost},
+			</if>
+			<if test="debetamt != null">
+				debetamt = #{debetamt},
+			</if>
+			<if test="freight != null">
+				freight = #{freight},
+			</if>
+			<if test="logisticsCode != null">
+				logisticsCode = #{logisticsCode},
+			</if>
 		</set>
 		where payOrderNo = #{payorderno,jdbcType=VARCHAR};
 
@@ -710,6 +761,33 @@
 		<set>
 			<if test="orderstatus != null">
 				orderStatus = #{orderstatus,jdbcType=INTEGER},
+			</if>
+			<if test="operator != null">
+				operator = #{operator},
+			</if>
+			<if test="paycate1 != null">
+				paycate1 = #{paycate1},
+			</if>
+			<if test="paycost1 != null">
+				paycost1 = #{paycost1},
+			</if>
+			<if test="paycate2 != null">
+				paycate2 = #{paycate2},
+			</if>
+			<if test="paycost2 != null">
+				paycost2 = #{paycost2},
+			</if>
+			<if test="realcost != null">
+				realcost = #{realcost},
+			</if>
+			<if test="debetamt != null">
+				debetamt = #{debetamt},
+			</if>
+			<if test="freight != null">
+				freight = #{freight},
+			</if>
+			<if test="logisticsCode != null">
+				logisticsCode = #{logisticsCode},
 			</if>
 		</set>
 		where payOrderNo = #{payorderno,jdbcType=VARCHAR};
@@ -721,6 +799,33 @@
 			<if test="orderstatus != null">
 				orderStatus = #{orderstatus,jdbcType=INTEGER},
 			</if>
+			<if test="operator != null">
+				operator = #{operator},
+			</if>
+			<if test="paycate1 != null">
+				paycate1 = #{paycate1},
+			</if>
+			<if test="paycost1 != null">
+				paycost1 = #{paycost1},
+			</if>
+			<if test="paycate2 != null">
+				paycate2 = #{paycate2},
+			</if>
+			<if test="paycost2 != null">
+				paycost2 = #{paycost2},
+			</if>
+			<if test="realcost != null">
+				realcost = #{realcost},
+			</if>
+			<if test="debetamt != null">
+				debetamt = #{debetamt},
+			</if>
+			<if test="freight != null">
+				freight = #{freight},
+			</if>
+			<if test="logisticsCode != null">
+				logisticsCode = #{logisticsCode},
+			</if>
 		</set>
 		where payOrderNo = #{payorderno,jdbcType=VARCHAR};
 
@@ -729,6 +834,33 @@
 		<set>
 			<if test="orderstatus != null">
 				orderStatus = #{orderstatus,jdbcType=INTEGER},
+			</if>
+			<if test="operator != null">
+				operator = #{operator},
+			</if>
+			<if test="paycate1 != null">
+				paycate1 = #{paycate1},
+			</if>
+			<if test="paycost1 != null">
+				paycost1 = #{paycost1},
+			</if>
+			<if test="paycate2 != null">
+				paycate2 = #{paycate2},
+			</if>
+			<if test="paycost2 != null">
+				paycost2 = #{paycost2},
+			</if>
+			<if test="realcost != null">
+				realcost = #{realcost},
+			</if>
+			<if test="debetamt != null">
+				debetamt = #{debetamt},
+			</if>
+			<if test="freight != null">
+				freight = #{freight},
+			</if>
+			<if test="logisticsCode != null">
+				logisticsCode = #{logisticsCode},
 			</if>
 		</set>
 		where payOrderNo = #{payorderno,jdbcType=VARCHAR};

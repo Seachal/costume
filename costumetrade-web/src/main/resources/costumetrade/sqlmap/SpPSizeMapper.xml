@@ -31,7 +31,7 @@
   </select>
   <select id="getSpPSizes" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
-    <include refid="Base_Column_List" />
+   id, storeId, sizeName,price_raise
     from sp_psize
     where storeId = #{storeId,jdbcType=INTEGER}
     and status =0
@@ -39,6 +39,12 @@
   <update id="deleteByPrimaryKey" parameterType="List">
     update  sp_psize set status =1
     where id in <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
+  </update>
+  
+   <update id="updates" parameterType="List">
+	   <foreach collection="sizes" index="index" item="item" separator=";">
+	   		 update  sp_psize set price_raise =#{priceRaise} where id =#{id}
+	   </foreach>
   </update>
   <insert id="insert" parameterType="costumetrade.order.domain.SpPSize" useGeneratedKeys="true" keyProperty="id">
     insert into sp_psize (storeId, sizeName, price_raise,status,

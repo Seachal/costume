@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="costumetrade.order.mapper.ScLogisticFeeMapper">
+  <resultMap id="BaseResultMap" type="costumetrade.order.domain.ScLogisticFee">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="logistic_code" jdbcType="VARCHAR" property="logisticCode" />
+    <result column="logistic_name" jdbcType="VARCHAR" property="logisticName" />
+    <result column="fee_type" jdbcType="VARCHAR" property="feeType" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="fixed_fee" jdbcType="DECIMAL" property="fixedFee" />
+    <result column="free_fee" jdbcType="DECIMAL" property="freeFee" />
+    <result column="sort_no" jdbcType="INTEGER" property="sortNo" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, logistic_code, logistic_name, fee_type, description, fixed_fee, free_fee, sort_no
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sc_logistic_fee
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectLogisticFees"  resultMap="BaseResultMap">
+    select 
+   logistic_code, logistic_name, fee_type,fixed_fee, free_fee
+    from sc_logistic_fee
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sc_logistic_fee
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="costumetrade.order.domain.ScLogisticFee">
+    insert into sc_logistic_fee (id, logistic_code, logistic_name, 
+      fee_type, description, fixed_fee, 
+      free_fee, sort_no)
+    values (#{id,jdbcType=INTEGER}, #{logisticCode,jdbcType=VARCHAR}, #{logisticName,jdbcType=VARCHAR}, 
+      #{feeType,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{fixedFee,jdbcType=DECIMAL}, 
+      #{freeFee,jdbcType=DECIMAL}, #{sortNo,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="costumetrade.order.domain.ScLogisticFee">
+    insert into sc_logistic_fee
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="logisticCode != null">
+        logistic_code,
+      </if>
+      <if test="logisticName != null">
+        logistic_name,
+      </if>
+      <if test="feeType != null">
+        fee_type,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="fixedFee != null">
+        fixed_fee,
+      </if>
+      <if test="freeFee != null">
+        free_fee,
+      </if>
+      <if test="sortNo != null">
+        sort_no,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="logisticCode != null">
+        #{logisticCode,jdbcType=VARCHAR},
+      </if>
+      <if test="logisticName != null">
+        #{logisticName,jdbcType=VARCHAR},
+      </if>
+      <if test="feeType != null">
+        #{feeType,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="fixedFee != null">
+        #{fixedFee,jdbcType=DECIMAL},
+      </if>
+      <if test="freeFee != null">
+        #{freeFee,jdbcType=DECIMAL},
+      </if>
+      <if test="sortNo != null">
+        #{sortNo,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.ScLogisticFee">
+    update sc_logistic_fee
+    <set>
+      <if test="logisticCode != null">
+        logistic_code = #{logisticCode,jdbcType=VARCHAR},
+      </if>
+      <if test="logisticName != null">
+        logistic_name = #{logisticName,jdbcType=VARCHAR},
+      </if>
+      <if test="feeType != null">
+        fee_type = #{feeType,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="fixedFee != null">
+        fixed_fee = #{fixedFee,jdbcType=DECIMAL},
+      </if>
+      <if test="freeFee != null">
+        free_fee = #{freeFee,jdbcType=DECIMAL},
+      </if>
+      <if test="sortNo != null">
+        sort_no = #{sortNo,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.ScLogisticFee">
+    update sc_logistic_fee
+    set logistic_code = #{logisticCode,jdbcType=VARCHAR},
+      logistic_name = #{logisticName,jdbcType=VARCHAR},
+      fee_type = #{feeType,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      fixed_fee = #{fixedFee,jdbcType=DECIMAL},
+      free_fee = #{freeFee,jdbcType=DECIMAL},
+      sort_no = #{sortNo,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

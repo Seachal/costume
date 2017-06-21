@@ -48,7 +48,7 @@
     from ss_data_dictionary
     where 1=1
     and dict_group in <foreach collection="list" item="item" index="index" separator="," open="(" close=")">#{item,jdbcType=VARCHAR}</foreach>
-    and status =0
+ 
     and storeId = #{storeId}
      
   </select>
@@ -57,7 +57,7 @@
     <include refid="Base_Column_List" />
     from ss_data_dictionary
     where storeId = #{storeId,jdbcType=INTEGER}
-    and status = 0
+   
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ss_data_dictionary
