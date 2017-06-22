@@ -5,6 +5,7 @@
     <result column="id" jdbcType="INTEGER" property="id" />
     <result column="storeId" jdbcType="INTEGER" property="storeId" />
     <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="isDefault" jdbcType="INTEGER" property="isDefault" />
     <result column="brandName" jdbcType="VARCHAR" property="brandname" />
     <result column="fastcode" jdbcType="VARCHAR" property="fastcode" />
     <result column="profit_d0" jdbcType="DECIMAL" property="profitD0" />
@@ -20,7 +21,7 @@
     <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
   </resultMap>
    <sql id="Base_Column_List">
-    id, brandName, storeId,status, fastcode,profit_d0,profit_d1,profit_d2,profit_d3,profit_d4,profit_d5,profit_precise, create_time, create_by, modify_time, modify_by
+    id, brandName, storeId,status,isDefault, fastcode,profit_d0,profit_d1,profit_d2,profit_d3,profit_d4,profit_d5,profit_precise, create_time, create_by, modify_time, modify_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -29,7 +30,7 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
   <select id="getSpPBrands"  resultMap="BaseResultMap">
-    select id, brandName, storeId
+    select id, brandName, storeId,isDefault
     from sp_pbrand
     where storeId = #{storeId,jdbcType=INTEGER}
 	and status =0
@@ -55,13 +56,13 @@
   
   
   <insert id="insert" parameterType="costumetrade.order.domain.SpPBrand" useGeneratedKeys="true" keyProperty="id">
-    insert into sp_pbrand ( storeId, brandName,status, 
+    insert into sp_pbrand ( storeId, brandName,status, isDefault,
       fastcode, profit_d0, profit_d1, 
       profit_d2, profit_d3, profit_d4, 
       profit_d5, profit_precise, create_time, 
       create_by, modify_time, modify_by
       )
-    values ( #{storeId,jdbcType=INTEGER}, #{brandname,jdbcType=VARCHAR}, 0,
+    values ( #{storeId,jdbcType=INTEGER}, #{brandname,jdbcType=VARCHAR}, 0,#{isDefault},
       #{fastcode,jdbcType=VARCHAR}, #{profitD0,jdbcType=DECIMAL}, #{profitD1,jdbcType=DECIMAL}, 
       #{profitD2,jdbcType=DECIMAL}, #{profitD3,jdbcType=DECIMAL}, #{profitD4,jdbcType=DECIMAL}, 
       #{profitD5,jdbcType=DECIMAL}, #{profitPrecise,jdbcType=DECIMAL}, NOW(), 
@@ -79,6 +80,9 @@
       </if>
       <if test="storeId != null">
         storeId,
+      </if>
+      <if test="isDefault != null">
+        isDefault,
       </if>
       status,
       <if test="brandname != null">
@@ -128,6 +132,9 @@
       <if test="storeId != null">
         #{storeId,jdbcType=INTEGER},
       </if>
+      <if test="isDefault != null">
+        #{isDefault,jdbcType=INTEGER},
+      </if>
       0,
       <if test="brandname != null">
         #{brandname,jdbcType=VARCHAR},
@@ -175,6 +182,9 @@
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isDefault != null">
+        #{isDefault,jdbcType=INTEGER},
       </if>
       <if test="brandname != null">
         #{brandname,jdbcType=VARCHAR},

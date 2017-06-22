@@ -7,10 +7,11 @@
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="storeId" jdbcType="INTEGER" property="storeId" />
+    <result column="isDefault" jdbcType="INTEGER" property="isDefault" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, unit, create_time, storeId, create_by,status
+    id, unit, create_time, storeId, create_by,status,isDefault
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -20,7 +21,7 @@
   </select>
   <select id="getUnits"  resultMap="BaseResultMap">
     select 
-    id, unit,storeId
+    id, unit,storeId,isDefault
     from sp_punit
     where storeId = #{storeId,jdbcType=INTEGER}
 	and status =0
@@ -38,9 +39,9 @@
     where id in <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
   </update>
   <insert id="insert" parameterType="costumetrade.order.domain.SpUnit" useGeneratedKeys="true" keyProperty="id">
-    insert into sp_punit (unit, create_time, status,
+    insert into sp_punit (unit, create_time, status,isDefault,
       storeId, create_by)
-    values (#{unit,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},0, 
+    values (#{unit,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},0, #{isDefault,jdbcType=INTEGER},
       #{storeId,jdbcType=INTEGER}, #{createBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.SpUnit">
@@ -58,6 +59,9 @@
       status,
       <if test="storeId != null">
         storeId,
+      </if>
+      <if test="isDefault != null">
+        isDefault,
       </if>
       <if test="createBy != null">
         create_by,
@@ -77,6 +81,9 @@
       <if test="storeId != null">
         #{storeId,jdbcType=INTEGER},
       </if>
+      <if test="isDefault != null">
+        #{isDefault,jdbcType=INTEGER},
+      </if>
       <if test="createBy != null">
         #{createBy,jdbcType=VARCHAR},
       </if>
@@ -94,6 +101,9 @@
       <if test="storeId != null">
         storeId = #{storeId,jdbcType=INTEGER},
       </if>
+      <if test="isDefault != null">
+        isDefault = #{isDefault,jdbcType=INTEGER},
+      </if>
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
       </if>
@@ -108,6 +118,7 @@
     set unit = #{unit,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       storeId = #{storeId,jdbcType=INTEGER},
+      isDefault = #{isDefault,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       create_by = #{createBy,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

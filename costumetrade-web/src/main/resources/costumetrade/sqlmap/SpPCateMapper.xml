@@ -4,6 +4,7 @@
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.SpPCate">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="isDefault" jdbcType="INTEGER" property="isDefault" />
     <result column="cateName" jdbcType="VARCHAR" property="catename" />
     <result column="storeId" jdbcType="INTEGER" property="storeId" />
     <result column="fastcode" jdbcType="VARCHAR" property="fastcode" />
@@ -13,7 +14,7 @@
     <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, cateName,status, storeId, fastcode, create_time, create_by, modify_time, modify_by
+    id, cateName,status, storeId, fastcode, create_time, create_by, modify_time, modify_by,isDefault
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -39,7 +40,7 @@
   
   <select id="getSpPCates"  resultMap="BaseResultMap">
     select 
-  	id, cateName, storeId
+  	id, cateName, storeId,isDefault
     from sp_product_type
     where storeId = #{storeId,jdbcType=INTEGER}
 	and status = 0
@@ -49,10 +50,10 @@
     where id in <foreach collection="ids" index="index" item="item" separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
   </update>
   <insert id="insert" parameterType="costumetrade.order.domain.SpPCate" useGeneratedKeys="true" keyProperty="id">
-    insert into sp_product_type ( cateName, storeId,status, 
+    insert into sp_product_type ( cateName, storeId,status,isDefault, 
       fastcode, create_time, create_by, 
       modify_time, modify_by)
-    values ( #{catename,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER}, 0,
+    values ( #{catename,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER}, 0,#{isDefault,jdbcType=INTEGER},
       #{fastcode,jdbcType=VARCHAR}, NOW(), #{createBy,jdbcType=VARCHAR}, 
       NOW(), #{modifyBy,jdbcType=VARCHAR})
   </insert>
@@ -70,6 +71,9 @@
       </if>
       <if test="storeId != null">
         storeId,
+      </if>
+      <if test="isDefault != null">
+        isDefault,
       </if>
       status,
       <if test="fastcode != null">
@@ -94,6 +98,9 @@
       <if test="storeId != null">
         #{storeId,jdbcType=INTEGER},
       </if>
+      <if test="isDefault != null">
+        #{isDefault,jdbcType=INTEGER},
+      </if>
       0,
       <if test="fastcode != null">
         #{fastcode,jdbcType=VARCHAR},
@@ -116,6 +123,9 @@
       </if>
       <if test="storeId != null">
         storeId = #{storeId,jdbcType=INTEGER},
+      </if>
+      <if test="isDefault != null">
+        isDefault = #{isDefault,jdbcType=INTEGER},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
@@ -140,6 +150,7 @@
     update sp_product_type
     set cateName = #{catename,jdbcType=VARCHAR},
       storeId = #{storeId,jdbcType=INTEGER},
+      isDefault = #{isDefault,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       fastcode = #{fastcode,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},

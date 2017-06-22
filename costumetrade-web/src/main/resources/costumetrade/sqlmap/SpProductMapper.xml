@@ -17,6 +17,7 @@
 		<result column="unit" jdbcType="VARCHAR" property="unit" />
 		<result column="colors" jdbcType="VARCHAR" property="colors" />
 		<result column="sizes" jdbcType="VARCHAR" property="sizes" />
+		<result column="raise_price" jdbcType="VARCHAR" property="raisePrice" />
 		<result column="handcount" jdbcType="INTEGER" property="handcount" />
 		<result column="year" jdbcType="VARCHAR" property="year" />
 		<result column="season" jdbcType="VARCHAR" property="season" />
@@ -102,7 +103,7 @@
 	</resultMap>
 
 	<sql id="Base_Column_List">
-		id, storeId, status, code, brandId, productType,
+		id, storeId, status, code, brandId, productType,raise_price,
 		name,isDiscount,isModify, isPattern, barcode, barcodes, popularize,
 		grade, unit, colors, sizes, handcount, year, season, salTag,
 		salMonth,saleNum, image, image1,video1,video2,video3,
@@ -151,7 +152,7 @@
 	</select>
 
 	<select id="selectProducts" resultType="java.util.HashMap">
-		SELECT product.isDiscount,product.isModify,product.isPattern,
+		SELECT product.isDiscount,product.isModify,product.isPattern,product.raise_price,
 		product.id,product.storeId,product.code,product.name,product.time_up,product.barcode, product.barcodes,
 		(CASE WHEN product.image IS NOT NULL THEN product.image
 			WHEN product.image1 IS NOT NULL THEN product.image1
@@ -269,7 +270,7 @@
 	<select id="selectProduct" parameterType="costumetrade.order.query.ProductQuery"
 		resultMap="ProductResultMap">
 		select
-		product.id,product.code,product.name,product.image,product.time_up,
+		product.id,product.code,product.name,product.image,product.time_up,product.raise_price,
 		price.purchasePrice, price.tagPrice, price.firsthPrice, price.secondPrice,
 		price.thirdPrice, price.fourthPrice,price.fifthPrice,
 		product.storeId,
@@ -337,6 +338,9 @@
 			<if test="sizes != null">
 				sizes = #{sizes,jdbcType=VARCHAR},
 			</if>
+			<if test="raisePrice != null">
+				raise_price = #{raisePrice,jdbcType=VARCHAR},
+			</if>
 			<if test="handcount != null">
 				handcount = #{handcount,jdbcType=INTEGER},
 			</if>
@@ -393,7 +397,7 @@
 			separator="," close=")">#{item,jdbcType=VARCHAR}</foreach>
 	</update>
 	<insert id="insert" parameterType="costumetrade.order.domain.SpProduct">
-		insert into sp_product (id, storeId, status,popularize,
+		insert into sp_product (id, storeId, status,popularize,raise_price,
 		code, brandId, productType,
 		name, isPattern, barcode,
 		barcodes, grade, unit, isModify,isDiscount,
@@ -405,7 +409,7 @@
 		time_up, time_down, create_time,
 		create_by, modify_time, modify_by)
 		values (#{id,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER},
-		#{status,jdbcType=INTEGER}, #{popularize,jdbcType=INTEGER},
+		#{status,jdbcType=INTEGER}, #{popularize,jdbcType=INTEGER},#{raise_price,jdbcType=VARCHAR},
 		#{code,jdbcType=VARCHAR}, #{brandid,jdbcType=INTEGER},
 		#{producttype,jdbcType=INTEGER},
 		#{name,jdbcType=VARCHAR}, #{isPattern,jdbcType=VARCHAR}, #{barcode,jdbcType=VARCHAR},
@@ -478,6 +482,9 @@
 			</if>
 			<if test="sizes != null">
 				sizes,
+			</if>
+			<if test="raisePrice != null">
+				raise_price,
 			</if>
 			<if test="handcount != null">
 				handcount,
@@ -602,6 +609,9 @@
 			<if test="sizes != null">
 				#{sizes,jdbcType=VARCHAR},
 			</if>
+			<if test="raisePrice != null">
+				#{raisePrice,jdbcType=VARCHAR},
+			</if>
 			<if test="handcount != null">
 				#{handcount,jdbcType=INTEGER},
 			</if>
@@ -722,6 +732,9 @@
 			<if test="sizes != null">
 				sizes = #{sizes,jdbcType=VARCHAR},
 			</if>
+			<if test="raisePrice != null">
+				raise_price = #{raisePrice,jdbcType=VARCHAR},
+			</if>
 			<if test="handcount != null">
 				handcount = #{handcount,jdbcType=INTEGER},
 			</if>
@@ -810,6 +823,7 @@
 		unit = #{unit,jdbcType=VARCHAR},
 		colors = #{colors,jdbcType=VARCHAR},
 		sizes = #{sizes,jdbcType=VARCHAR},
+		raise_price = #{raisePrice,jdbcType=VARCHAR},
 		handcount = #{handcount,jdbcType=INTEGER},
 		year = #{year,jdbcType=VARCHAR},
 		season = #{season,jdbcType=VARCHAR},

@@ -3,14 +3,15 @@
 <mapper namespace="costumetrade.order.mapper.ScStoreAddrMapper">
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.ScStoreAddr">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="storeId" jdbcType="INTEGER" property="storeid" />
+    <result column="type" jdbcType="INTEGER" property="type" />
     <result column="contact" jdbcType="VARCHAR" property="contact" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="address" jdbcType="VARCHAR" property="address" />
-    <result column="isDefault" jdbcType="BIT" property="isdefault" />
+    <result column="isDefault" jdbcType="INTEGER" property="isdefault" />
+    <result column="userid" jdbcType="INTEGER" property="userid" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, storeId, contact, phone, address, isDefault
+    id, type, contact, phone, address, isDefault,userid
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -18,22 +19,40 @@
     from sc_store_addr
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="selectAddr" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectAddr" parameterType="costumetrade.order.domain.ScStoreAddr" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from sc_store_addr
-    where storeId = #{storeId,jdbcType=INTEGER}
+    where 1=1
+	   <if test="type!=null">
+	    and type = #{type,jdbcType=INTEGER}
+	   </if>
+       <if test="contact != null">
+       and contact = #{contact,jdbcType=VARCHAR}
+      </if>
+      <if test="phone != null">
+       and phone = #{phone,jdbcType=VARCHAR}
+      </if>
+      <if test="address != null">
+       and address = #{address,jdbcType=VARCHAR}
+      </if>
+      <if test="isdefault != null">
+       and isDefault = #{isdefault,jdbcType=INTEGER}
+      </if>
+      <if test="userid != null">
+       and userid = #{userid,jdbcType=INTEGER}
+      </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sc_store_addr
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.ScStoreAddr">
-    insert into sc_store_addr (id, storeId, contact, 
-      phone, address, isDefault
+    insert into sc_store_addr (id, type, contact, 
+      phone, address, isDefault,userid
       )
-    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{contact,jdbcType=VARCHAR}, 
-      #{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{isdefault,jdbcType=BIT}
+    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{contact,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{isdefault,jdbcType=INTEGER},#{userid,jdbcType=INTEGER}
       )
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.ScStoreAddr">
@@ -42,8 +61,8 @@
       <if test="id != null">
         id,
       </if>
-      <if test="storeid != null">
-        storeId,
+      <if test="type != null">
+        type,
       </if>
       <if test="contact != null">
         contact,
@@ -57,13 +76,16 @@
       <if test="isdefault != null">
         isDefault,
       </if>
+      <if test="userid != null">
+        userid,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="storeid != null">
-        #{storeid,jdbcType=INTEGER},
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
       </if>
       <if test="contact != null">
         #{contact,jdbcType=VARCHAR},
@@ -75,15 +97,18 @@
         #{address,jdbcType=VARCHAR},
       </if>
       <if test="isdefault != null">
-        #{isdefault,jdbcType=BIT},
+        #{isdefault,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.ScStoreAddr">
     update sc_store_addr
     <set>
-      <if test="storeid != null">
-        storeId = #{storeid,jdbcType=INTEGER},
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
       </if>
       <if test="contact != null">
         contact = #{contact,jdbcType=VARCHAR},
@@ -95,18 +120,22 @@
         address = #{address,jdbcType=VARCHAR},
       </if>
       <if test="isdefault != null">
-        isDefault = #{isdefault,jdbcType=BIT},
+        isDefault = #{isdefault,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null">
+        userid = #{userid,jdbcType=INTEGER},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.ScStoreAddr">
     update sc_store_addr
-    set storeId = #{storeid,jdbcType=INTEGER},
+    set type = #{type,jdbcType=INTEGER},
       contact = #{contact,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       address = #{address,jdbcType=VARCHAR},
-      isDefault = #{isdefault,jdbcType=BIT}
+      isDefault = #{isdefault,jdbcType=INTEGER}
+      userid = #{userid,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

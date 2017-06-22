@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.order.mapper.SsCgsorderMapper">
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.SsCgsorder">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="storeId" jdbcType="INTEGER" property="storeid" />
+    <result column="storeId" jdbcType="INTEGER" property="storeId" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="cate" jdbcType="VARCHAR" property="cate" />
     <result column="cateName" jdbcType="VARCHAR" property="catename" />
@@ -36,7 +36,7 @@
       payCost, remarks, order_time, 
       create_time, create_by, modify_time, 
       modify_by)
-    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
       #{cate,jdbcType=VARCHAR}, #{catename,jdbcType=VARCHAR}, #{paycate,jdbcType=VARCHAR}, 
       #{paycost,jdbcType=DECIMAL}, #{remarks,jdbcType=VARCHAR}, #{orderTime,jdbcType=TIMESTAMP}, 
       #{createTime,jdbcType=BIGINT}, #{createBy,jdbcType=VARCHAR}, #{modifyTime,jdbcType=BIGINT}, 
@@ -49,7 +49,7 @@
       create_time, create_by, modify_time, 
       modify_by)
     values <foreach collection="orders" item="item" index="index" separator=",">( #{item.storeId},0,#{item.cate}, 
-      #{item.cateName}, #{item.payCate}, #{item.payCost}, 
+      #{item.catename}, #{item.paycate}, #{item.paycost}, 
       #{item.remarks}, NOW(),NOW(),#{item.createBy},NOW(),#{item.modifyBy}
       )</foreach>;
   </insert>
@@ -59,7 +59,7 @@
       <if test="id != null">
         id,
       </if>
-      <if test="storeid != null">
+      <if test="storeId != null">
         storeId,
       </if>
       <if test="status != null">
@@ -100,8 +100,8 @@
       <if test="id != null">
         #{id,jdbcType=INTEGER},
       </if>
-      <if test="storeid != null">
-        #{storeid,jdbcType=INTEGER},
+      <if test="storeId != null">
+        #{storeId,jdbcType=INTEGER},
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
@@ -141,8 +141,8 @@
   <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SsCgsorder">
     update ss_cgsorder
     <set>
-      <if test="storeid != null">
-        storeId = #{storeid,jdbcType=INTEGER},
+      <if test="storeId != null">
+        storeId = #{storeId,jdbcType=INTEGER},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
@@ -182,7 +182,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsCgsorder">
     update ss_cgsorder
-    set storeId = #{storeid,jdbcType=INTEGER},
+    set storeId = #{storeId,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       cate = #{cate,jdbcType=VARCHAR},
       cateName = #{catename,jdbcType=VARCHAR},

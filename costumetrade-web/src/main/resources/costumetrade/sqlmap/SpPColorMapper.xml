@@ -28,14 +28,25 @@
 		select
 		<include refid="Base_Column_List" />
 		from sp_pcolor
-		where storeId = #{storeId,jdbcType=INTEGER}
-		and colorName = #{colorname,jdbcType=VARCHAR}
+		where 1=1
+		<if test="color.storeId!=null">
+		and  storeId = #{color.storeId,jdbcType=INTEGER}
+		</if>
+		
+		<if test="color.colorname!=null">
+		and colorName = #{color.colorname,jdbcType=VARCHAR}
+		</if>
+		
 	</select>
 	<select id="getSpPColors" resultMap="BaseResultMap">
 		select
-		id, storeId, colorName,price_raise
+		id, storeId, colorName,price_raise,productId
 		from sp_pcolor
-		where storeId = #{storeId,jdbcType=INTEGER}
+		where 1=1
+		<if test="color.storeId!=null">
+		and storeId = #{color.storeId,jdbcType=INTEGER}
+		</if>
+	
 		and status =0
 	</select>
 	<update id="deleteByPrimaryKey" parameterType="List">
@@ -45,9 +56,19 @@
 	
 	<update id="updates" parameterType="List">
 	   <foreach collection="colors" index="index" item="item" separator=";">
-	   		 update  sp_pcolor set price_raise =#{priceRaise} where id =#{id}
+	   		 update  sp_pcolor set price_raise =#{item.priceRaise} where id =#{item.id}
 	   </foreach>
   </update>
+	<insert id="inserts" parameterType="List" >
+		insert into sp_pcolor (storeId, colorName,price_raise,status,
+		barcode, create_time, create_by,
+		modify_time, modify_by)
+		values <foreach collection="sizes" index="index" item="item" separator=","> (#{item.storeId,jdbcType=INTEGER},
+		#{item.colorname,jdbcType=VARCHAR}, #{item.priceRaise,jdbcType=DECIMAL},0,
+		#{item.barcode,jdbcType=VARCHAR}, NOW(),
+		#{item.createBy,jdbcType=VARCHAR},
+		NOW(), #{item.modifyBy,jdbcType=VARCHAR})</foreach>
+	</insert>
 	<insert id="insert" parameterType="costumetrade.order.domain.SpPColor" useGeneratedKeys="true" keyProperty="id">
 		
 		insert into sp_pcolor (storeId, colorName,price_raise,status,
@@ -84,6 +105,7 @@
 			<if test="createBy != null">
 				create_by,
 			</if>
+			
 			<if test="modifyTime != null">
 				modify_time,
 			</if>
@@ -114,6 +136,7 @@
 			<if test="createBy != null">
 				#{createBy,jdbcType=VARCHAR},
 			</if>
+			
 			<if test="modifyTime != null">
 				#{modifyTime,jdbcType=TIMESTAMP},
 			</if>
@@ -146,6 +169,7 @@
 			<if test="createBy != null">
 				create_by = #{createBy,jdbcType=VARCHAR},
 			</if>
+			
 				modify_time = NOW(),
 			<if test="modifyBy != null">
 				modify_by = #{modifyBy,jdbcType=VARCHAR},
