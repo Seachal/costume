@@ -87,6 +87,8 @@ public class SpPBrand extends Entity {
 	 * 当前页码
 	 */
 	private Integer pageNum;
+	
+	private Integer isDefault;
 
     private static final long serialVersionUID = 1L;
 
@@ -227,6 +229,14 @@ public class SpPBrand extends Entity {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public Integer getIsDefault() {
+		return isDefault;
+	}
+
+	public void setIsDefault(Integer isDefault) {
+		this.isDefault = isDefault;
 	}
 
 	

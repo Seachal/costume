@@ -19,7 +19,7 @@ public class SsStoDetail extends Entity {
     /**
      *  店铺编号
      */
-    private String storeid;
+    private Integer storeid;
 
     /**
      *  手数标记
@@ -99,12 +99,12 @@ public class SsStoDetail extends Entity {
         this.orderid = orderid == null ? null : orderid.trim();
     }
 
-    public String getStoreid() {
+    public Integer getStoreid() {
         return storeid;
     }
 
-    public void setStoreid(String storeid) {
-        this.storeid = storeid == null ? null : storeid.trim();
+    public void setStoreid(Integer storeid) {
+        this.storeid = storeid;
     }
 
     public Integer getHandtag() {

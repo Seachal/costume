@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONArray;
 
+import costumetrade.order.domain.ScLogisticFee;
+import costumetrade.order.mapper.ScLogisticFeeMapper;
 import costumetrade.user.domain.PriceJson;
 import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpCustomerType;
@@ -18,6 +20,7 @@ import costumetrade.user.mapper.SpCustProdPriceMapper;
 import costumetrade.user.mapper.SpCustomerTypeMapper;
 import costumetrade.user.mapper.SsDataDictionaryMapper;
 import costumetrade.user.query.DataDictionaryQuery;
+import costumetrade.user.query.SettingQuery;
 import costumetrade.user.service.SsDataDictionaryService;
 
 @Transactional
@@ -29,10 +32,23 @@ public class SsDataDictionaryServiceImpl implements SsDataDictionaryService{
 	private SpCustomerTypeMapper spCustomerTypeMapper;
 	@Autowired
 	private SpCustProdPriceMapper  spCustProdPriceMapper;
+	@Autowired
+	private ScLogisticFeeMapper scLogisticFeeMapper;
 	
 	@Override
-	public List<SsDataDictionary> getDataDictionarys(Integer storeId) {
-		return ssDataDictionaryMapper.getDataDictionarys(storeId);
+	public SettingQuery getDataDictionarys(Integer storeId) {
+		SettingQuery query = new SettingQuery();
+	
+		List<SsDataDictionary> datas = ssDataDictionaryMapper.getDataDictionarys(storeId);
+		List<ScLogisticFee> logisticFees= scLogisticFeeMapper.selectLogisticFees();
+		SpCustProdPrice record = new SpCustProdPrice();
+		record.setStoreid(storeId);
+		List<SpCustProdPrice>  customerCusts = spCustProdPriceMapper.select(record);
+		
+		query.setDatas(datas);
+		query.setLogisticFees(logisticFees);
+		query.setCustomerCusts(customerCusts);
+		return query;
 	}
 
 	@Override

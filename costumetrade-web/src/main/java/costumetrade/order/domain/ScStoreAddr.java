@@ -11,7 +11,9 @@ public class ScStoreAddr extends Entity {
     /**
      *  店铺ID主键
      */
-    private Integer storeid;
+    private Integer userid;
+    
+    private Integer type;
 
     /**
      *  收货人名:收货联系人名称
@@ -31,7 +33,9 @@ public class ScStoreAddr extends Entity {
     /**
      *  是否默认
      */
-    private Boolean isdefault;
+    private Integer isdefault;
+    
+    private String openid;
 
     private static final long serialVersionUID = 1L;
 
@@ -43,15 +47,24 @@ public class ScStoreAddr extends Entity {
         this.id = id;
     }
 
-    public Integer getStoreid() {
-        return storeid;
-    }
+    
+    public Integer getUserid() {
+		return userid;
+	}
 
-    public void setStoreid(Integer storeid) {
-        this.storeid = storeid;
-    }
+	public void setUserid(Integer userid) {
+		this.userid = userid;
+	}
 
-    public String getContact() {
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public String getContact() {
         return contact;
     }
 
@@ -75,11 +88,20 @@ public class ScStoreAddr extends Entity {
         this.address = address == null ? null : address.trim();
     }
 
-    public Boolean getIsdefault() {
+    public Integer getIsdefault() {
         return isdefault;
     }
 
-    public void setIsdefault(Boolean isdefault) {
+    public void setIsdefault(Integer isdefault) {
         this.isdefault = isdefault;
     }
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
+    
 }

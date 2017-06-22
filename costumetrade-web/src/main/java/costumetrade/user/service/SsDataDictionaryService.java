@@ -6,6 +6,7 @@ import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpCustomerType;
 import costumetrade.user.domain.SsDataDictionary;
 import costumetrade.user.query.DataDictionaryQuery;
+import costumetrade.user.query.SettingQuery;
 
 
 public interface SsDataDictionaryService {
@@ -13,7 +14,7 @@ public interface SsDataDictionaryService {
 	/**
 	 * 查询设置
 	 * */
-	public List<SsDataDictionary> getDataDictionarys(Integer storeId);
+	public SettingQuery getDataDictionarys(Integer storeId);
 	
 	/**
 	 * 

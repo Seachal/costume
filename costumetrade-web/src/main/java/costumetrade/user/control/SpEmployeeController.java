@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -71,16 +72,17 @@ public class SpEmployeeController {
 
 	@RequestMapping("/saveEmployee")
 	@ResponseBody
-	public ApiResponse saveEmployee(SpEmployee spEmployee) {
+	public ApiResponse saveEmployee(@RequestBody SpEmployee spEmployee) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		if(spEmployee == null ){
+		if(spEmployee == null ||spEmployee.getId()==null){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
-			result.setMsg("员工信息为空，不能保存");
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
+		spEmployee.setStatus(0);
 		int save = spEmployeeService.saveEmployee(spEmployee);
 		
 		List<SpPrivilegeEmployee> privilegeEmployees = spEmployee.getPrivilegeEmployees();

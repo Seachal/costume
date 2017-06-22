@@ -61,6 +61,8 @@ public class SpPColor extends Entity {
 	 * 当前页码
 	 */
 	private Integer pageNum;
+	
+	private String productId;
 
     private static final long serialVersionUID = 1L;
 
@@ -160,6 +162,14 @@ public class SpPColor extends Entity {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public String getProductId() {
+		return productId;
+	}
+
+	public void setProductId(String productId) {
+		this.productId = productId;
 	}
 	
 	

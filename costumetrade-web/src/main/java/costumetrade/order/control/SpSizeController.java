@@ -32,10 +32,10 @@ public class SpSizeController {
 
 	@RequestMapping("/getAllSizes")
 	@ResponseBody
-	public ApiResponse getAllSizes(int storeId) {
+	public ApiResponse getAllSizes(int storeId,String productId) {
 		
 		List<SpPSize> sizeLists = new ArrayList<SpPSize>();
-		sizeLists = spPSizeService.getSpPSizes(storeId);
+		sizeLists = spPSizeService.getSpPSizes(storeId,productId);
 
 		return  ApiResponse.getInstance(sizeLists);
 	}

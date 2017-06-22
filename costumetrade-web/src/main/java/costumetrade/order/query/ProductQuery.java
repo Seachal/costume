@@ -228,6 +228,8 @@ public class ProductQuery extends Entity{
      */
     private Integer isDiscount;
     
+    private String raisePrice;
+    
     /*
      * 款式加价
      * */
@@ -981,6 +983,14 @@ public class ProductQuery extends Entity{
 
 	public void setColorLists(List<SpPColor> colorLists) {
 		this.colorLists = colorLists;
+	}
+
+	public String getRaisePrice() {
+		return raisePrice;
+	}
+
+	public void setRaisePrice(String raisePrice) {
+		this.raisePrice = raisePrice;
 	}
 
 	

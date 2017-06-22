@@ -16,8 +16,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import costumetrade.order.domain.ScFocusShop;
+import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.mapper.ScFocusShopMapper;
+import costumetrade.order.mapper.ScStoreAddrMapper;
 import costumetrade.order.mapper.SpProductMapper;
 import costumetrade.order.query.OrderCountQuery;
 import costumetrade.order.service.SpOrderService;
@@ -52,6 +54,8 @@ public class SpUserServiceImpl implements SpUserService{
 	private SpOrderService spOrderService;
 	@Autowired
 	private WeChatService weChatService;
+	@Autowired
+	private ScStoreAddrMapper scStoreAddrMapper;
 	
 	@Override
 	public ScWeChat login(String openId) {
@@ -108,26 +112,55 @@ public class SpUserServiceImpl implements SpUserService{
 	}
 	@Override
 	public int saveUserOrStore(SpStore spStore) {
+		int save = 0;
+		//保存我的中心的信息时候，设置默认的地址
+		ScStoreAddr addr = new ScStoreAddr();
+		addr.setIsdefault(1);
 		if(spStore.getStoreId() != null){
-			return spStoreMapper.updateByPrimaryKeySelective(spStore);			
+			addr.setUserid(spStore.getStoreId());
+			save = spStoreMapper.updateByPrimaryKeySelective(spStore);			
 		}else if(spStore.getUserId() != null){
-				SpUser spUser = new SpUser();
-				spUser.setId(spStore.getUserId());
-				spUser.setAddress(spStore.getAddress());
-				spUser.setBirthday(spStore.getBirthday());
-				spUser.setCphone(spStore.getCphone());
-				spUser.setCreateBy(spStore.getUserId()+"");
-				spUser.setCreateTime(new Date());
-				spUser.setName(spStore.getName());
-				spUser.setPhone(spStore.getPhone());
-				spUser.setPhoto(spStore.getStorephoto());
-				spUser.setRegion(spStore.getRegion());
-				spUser.setRemark(spStore.getDescription());
-				spUser.setWechatNo(spStore.getWechat());
-				return spUserMapper.updateByPrimaryKeySelective(spUser);
+			addr.setUserid(spStore.getUserId());
+			
+			SpUser spUser = new SpUser();
+			spUser.setId(spStore.getUserId());
+			spUser.setAddress(spStore.getAddress());
+			spUser.setBirthday(spStore.getBirthday());
+			spUser.setCphone(spStore.getCphone());
+			spUser.setCreateBy(spStore.getUserId()+"");
+			spUser.setCreateTime(new Date());
+			spUser.setName(spStore.getName());
+			spUser.setPhone(spStore.getPhone());
+			spUser.setPhoto(spStore.getStorephoto());
+			spUser.setRegion(spStore.getRegion());
+			spUser.setRemark(spStore.getDescription());
+			spUser.setWechatNo(spStore.getWechat());
+			save = spUserMapper.updateByPrimaryKeySelective(spUser);
+			
 		}
-		
-		return 0;
+		if(save>0){
+			addr.setUserid(spStore.getStoreId());
+			List<ScStoreAddr> addrs  = scStoreAddrMapper.selectAddr(addr);
+			if(addrs!=null&&addrs.size()>0){
+				addr = addrs.get(0);
+				if(StringUtils.isNotBlank(spStore.getAddress())){
+					addr.setAddress(spStore.getAddress());
+				} 
+				if(StringUtils.isNotBlank(spStore.getPhone())){
+					addr.setPhone(spStore.getPhone());
+				}
+				if(StringUtils.isNotBlank(spStore.getName())){
+					addr.setContact(spStore.getName());
+				}
+				scStoreAddrMapper.updateByPrimaryKeySelective(addr);
+			}else{
+				addr.setAddress(spStore.getAddress());
+				addr.setPhone(spStore.getPhone());
+				addr.setContact(spStore.getName());
+				scStoreAddrMapper.insertSelective(addr);
+			}
+		}
+		return save;
 	}
 	@Override
 	public StoreQuery getStores(StoreQuery query) {
@@ -259,5 +292,42 @@ public class SpUserServiceImpl implements SpUserService{
 		}
 		return imageList;
 	}
-	;
+	@Override
+	public List<ScStoreAddr> getAddressList(String openid) {
+		ScStoreAddr addr = new ScStoreAddr();
+		ScWeChat wechat = scWeChatMapper.selectByOpenId(openid);
+		if(wechat!=null){
+			if(wechat.getStoreid()!=null){
+				addr.setUserid(wechat.getStoreid());
+			}else{
+				addr.setUserid(wechat.getUserid());
+			}
+		}
+		List<ScStoreAddr> addrs = new ArrayList<ScStoreAddr>();
+		if(addr.getUserid()!=null){
+			addrs = scStoreAddrMapper.selectAddr(addr);
+		}
+		return addrs;
+	}
+	@Override
+	public int saveAddress(ScStoreAddr addr) {
+		
+		ScWeChat wechat = scWeChatMapper.selectByOpenId(addr.getOpenid());
+		if(wechat!=null){
+			if(wechat.getStoreid()!=null){
+				addr.setUserid(wechat.getStoreid());
+			}else{
+				addr.setUserid(wechat.getUserid());
+			}
+		}
+		int save = 0;
+		if(addr.getId()!=null){
+			save =scStoreAddrMapper.updateByPrimaryKeySelective(addr);
+		}else{
+			save =scStoreAddrMapper.insertSelective(addr);
+		}
+		
+		return save;
+	}
+	
 }

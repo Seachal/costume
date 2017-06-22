@@ -385,7 +385,6 @@ public class SpProductServiceImpl implements SpProductService{
 		custProdPrice = spCustProdPriceMapper.select(spCustProdPrice);
 		
 		List<SpCustProdPrice> customTypeList = new ArrayList<SpCustProdPrice>();
-		List<SpCustProdPrice> customTypes = new ArrayList<SpCustProdPrice>();
 		if(custProdPrice.size()>0){
 			for(SpCustProdPrice price : custProdPrice){
 				SpCustProdPrice prodPrice = new SpCustProdPrice();
@@ -442,6 +441,9 @@ public class SpProductServiceImpl implements SpProductService{
 				queryResult.setVideo1(product.getVideo1());
 				queryResult.setVideo2(product.getVideo2());
 				queryResult.setVideo3(product.getVideo3());
+				queryResult.setIsPattern(product.getIsPattern());
+				queryResult.setStatus(product.getStatus());
+				queryResult.setRaisePrice(product.getRaisePrice());
 			}
 			SsPrice price = ssPriceMapper.select(storeId, productId);
 			queryResult.setPurchaseprice(price.getPurchaseprice());
@@ -608,14 +610,12 @@ public class SpProductServiceImpl implements SpProductService{
 
 	@Override
 	public List<SsStock> takingStock(SpProduct product) {
-		Integer currentStore = product.getStoreId();
 		//根据storeiD查询集团的storeId
 		SpStore store = spStoreMapper.selectByPrimaryKey(product.getStoreId());
 		List<SpStore> stores = new  ArrayList<SpStore>();
 		
 		
 		List<SsStock> stocks = new ArrayList<SsStock>();
-		List<SsStock> stockShares = new ArrayList<SsStock>();
 		SsStock stock = new SsStock();
 		stock.setProductid(product.getId());
 		stock.setStoreid(product.getStoreId());
@@ -765,8 +765,17 @@ public class SpProductServiceImpl implements SpProductService{
 	@Override
 	public List<Object> patternAddPriceInit(ProductQuery productQuery) {
 		List<Object> objects = new ArrayList<Object>();
-		List<SpPSize> sizes = spPSizeMapper.getSpPSizes(productQuery.getStoreId());
-		List<SpPColor> colors = spPColorMapper.getSpPColors(productQuery.getStoreId(), null);
+		SpPSize size = new SpPSize();
+		List<SpPSize> sizes  =null;
+		
+		SpPColor color = new SpPColor();
+		List<SpPColor> colors = null;
+		if(StringUtil.isNotBlank(productQuery.getId())){
+			size.setProductId(productQuery.getId());
+			sizes= spPSizeMapper.getSpPSizes(size);
+			color.setProductId(productQuery.getId());
+			colors = spPColorMapper.getSpPColors(color, null);
+		}
 		
 		if(colors!=null&& colors.size()>0){
 			for(Object object : colors){
@@ -778,7 +787,7 @@ public class SpProductServiceImpl implements SpProductService{
 				objects.add(object);
 			}
 		}
-		return null;
+		return objects;
 	}
 
 	@Override

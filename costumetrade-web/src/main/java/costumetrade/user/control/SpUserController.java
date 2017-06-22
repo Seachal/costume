@@ -2,6 +2,9 @@ package costumetrade.user.control;
 
 
 
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +15,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
+import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.service.WeChatService;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpEmployee;
@@ -64,11 +68,14 @@ public class SpUserController {
 				if(chat.getStoreid()!=null){
 					if(chat.getEmpid()!=null){
 						resultQuery.setUserIdentity(3);//员工身份
+						resultQuery.setEmpId(chat.getEmpid());
 					}else{
 						resultQuery.setUserIdentity(1);//店家身份
 					}
+					resultQuery.setStoreId(chat.getStoreid());
 				}else{
 					resultQuery.setUserIdentity(2);//普通消费者
+					resultQuery.setUserid(chat.getUserid());
 				}
 			}
 			query = spUserService.getStores(query);
@@ -107,7 +114,40 @@ public class SpUserController {
 		Integer obj = spUserService.saveUserOrStore(store);
 		return  ApiResponse.getInstance(obj);
 	}
-
 	
+	@RequestMapping("/getAddressList")
+	@ResponseBody
+	public ApiResponse getAddressList(String openid) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(openid == null){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.name());
+			return result;
+		}
+		List<ScStoreAddr> addrs = spUserService.getAddressList(openid);
+		return  ApiResponse.getInstance(addrs);
+	}
+	@RequestMapping("/saveAddress")
+	@ResponseBody
+	public ApiResponse saveAddress(ScStoreAddr addr) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(StringUtils.isBlank(addr.getOpenid())){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.name());
+			return result;
+		}
+		int save = spUserService.saveAddress(addr);
+		if(save <=0){
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.name());
+			return result;
+		}
+		return  result;
+	}
+
 	
 }

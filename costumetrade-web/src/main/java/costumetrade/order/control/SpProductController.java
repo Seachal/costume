@@ -105,8 +105,6 @@ public class SpProductController {
 			return result;
 		}
 		ProductQuery q = spProductService.productInit(query);
-	
-		
 		return  ApiResponse.getInstance(q);
 	}
 	
@@ -194,20 +192,15 @@ public class SpProductController {
 	
 	@RequestMapping("/savePatternAddPrice")
 	@ResponseBody
-	public ApiResponse savePatternAddPrice(ProductQuery  productQuery ) {
+	public ApiResponse savePatternAddPrice(@RequestBody ProductQuery  productQuery ) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		
-		if(productQuery.getStoreId()==null){
-			result.setCode(ResponseInfo.LACK_PARAM.code);
-			result.setMsg(ResponseInfo.LACK_PARAM.msg);
-			return result;
-		}
+	
 		int save = spProductService.savePatternAddPrice(productQuery);
 		if(save <= 0){
-			result.setCode(ResponseInfo.NOT_DATA.code);
-			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}
 		return  result;

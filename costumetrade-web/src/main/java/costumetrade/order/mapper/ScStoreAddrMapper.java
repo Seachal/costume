@@ -1,5 +1,7 @@
 package costumetrade.order.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import costumetrade.order.domain.ScStoreAddr;
@@ -16,5 +18,6 @@ public interface ScStoreAddrMapper {
     int updateByPrimaryKeySelective(ScStoreAddr record);
 
     int updateByPrimaryKey(ScStoreAddr record);
-    ScStoreAddr selectAddr(Integer storeId);
+    
+    List<ScStoreAddr> selectAddr(ScStoreAddr record);
 }

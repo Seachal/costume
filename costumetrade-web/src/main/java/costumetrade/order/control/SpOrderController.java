@@ -114,7 +114,7 @@ public class SpOrderController {
 	}
 	@RequestMapping("/saveOrderFee")
 	@ResponseBody
-	public ApiResponse saveOrderFee(List<SsCgsorder> orders) {
+	public ApiResponse saveOrderFee(@RequestBody List<SsCgsorder> orders) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
@@ -199,7 +199,7 @@ public class SpOrderController {
 	}
 	@RequestMapping("/updateOrder")
 	@ResponseBody   
-	public ApiResponse updateOrder(OrderQuery query) {
+	public ApiResponse updateOrder(@RequestBody OrderQuery query) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
@@ -208,16 +208,12 @@ public class SpOrderController {
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		
-		
 		int save = spOrderService.updateOrder(query);
-		
 		if(save <= 0){
 			result.setCode(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
-			result.setData(query);
 			return result;
 		}
 		

@@ -13,7 +13,7 @@ public class SsCgsorder extends Entity {
     /**
      *  店铺ID
      */
-    private Integer storeid;
+    private Integer storeId;
 
     /**
      *  状态
@@ -80,15 +80,16 @@ public class SsCgsorder extends Entity {
         this.id = id ;
     }
 
-    public Integer getStoreid() {
-        return storeid;
-    }
 
-    public void setStoreid(Integer storeid) {
-        this.storeid = storeid;
-    }
+    public Integer getStoreId() {
+		return storeId;
+	}
 
-    public Integer getStatus() {
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
+	}
+
+	public Integer getStatus() {
         return status;
     }
 

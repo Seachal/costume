@@ -34,6 +34,8 @@ public class SpUnit extends Entity {
     private String createBy;
     
     private Page page;
+    
+    private Integer isDefault;
 
     private static final long serialVersionUID = 1L;
 
@@ -91,6 +93,14 @@ public class SpUnit extends Entity {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public Integer getIsDefault() {
+		return isDefault;
+	}
+
+	public void setIsDefault(Integer isDefault) {
+		this.isDefault = isDefault;
 	}
     
     

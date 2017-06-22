@@ -16,13 +16,15 @@ public interface SpPSizeMapper {
 
     SpPSize selectByPrimaryKey(Integer id);
     
-    SpPSize selectByName(@Param("storeId")Integer storeId , @Param("sizeName")String sizeName);
+    SpPSize selectByName(@Param("size")SpPSize size );
 
     int updateByPrimaryKeySelective(SpPSize record);
 
     int updateByPrimaryKey(SpPSize record);
     
-    List<SpPSize> getSpPSizes(@Param("storeId")int storeId);
+    List<SpPSize> getSpPSizes(@Param("size")SpPSize size );
     
     int updates(@Param("sizes")List<SpPSize> sizes);
+    
+    int inserts(@Param("sizes")List<SpPSize> sizes);
 }

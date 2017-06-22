@@ -200,10 +200,10 @@ public class SpOrderServiceImpl implements SpOrderService{
 		ScWeChat wechat = scWeChatMapper.selectByOpenId(openid);
 		
 		SsStoOrder spStoOrder = new SsStoOrder();
+		spStoOrder.setPayorderno(orderNo);
 		List<SsStoOrder> spStoOrders = new ArrayList<SsStoOrder>();
 		List<SsStoDetail> ssStoDetails = new ArrayList<SsStoDetail>();
 		if(wechat.getStoreid() == null){
-			spStoOrder.setPayorderno(orderNo);
 			spStoOrders = ssStoOrderMapper.selectByOrderMember(spStoOrder,null);
 			ssStoDetails = ssStoDetailMapper.selectByOrderIdMember(orderNo);
 		}else{
@@ -236,10 +236,13 @@ public class SpOrderServiceImpl implements SpOrderService{
 		 * */
 	
 		if(param.getOperate() == 3){ //审核  配货
+			spStoOrder.setOrderstatus(8);
 			boolean operatestock =orderStock(param,null);
 			if(!operatestock){
 				return 2;
 			}
+		}else if(param.getOperate() == 8){
+			spStoOrder.setOrderstatus(3);
 		}
 		/**
 		 * 只对当日订单允许作废
@@ -525,19 +528,23 @@ public class SpOrderServiceImpl implements SpOrderService{
 		 * 返回地址信息ScStoreAddr
 		 * */
 		ScStoreAddr addr = new ScStoreAddr();
+		addr.setIsdefault(1);
 		ScWeChat wechat = scWeChatMapper.selectByOpenId(openid);
 		
 		if(wechat != null){
 			if(wechat.getStoreid() == null){
-				SpUser user = spUserMapper.selectByPrimaryKey(wechat.getUserid());
-				addr.setAddress(user.getAddress());
-				addr.setContact(user.getName());
-				addr.setPhone(user.getPhone());
+				addr.setUserid(wechat.getStoreid()); 
 			}else{
-				addr = scStoreAddrMapper.selectAddr(wechat.getStoreid());
+				addr.setUserid(wechat.getUserid());
 			}
-		}else{
-			return addr;
+		}else {
+			return null;
+		}
+		List<ScStoreAddr >addrs = scStoreAddrMapper.selectAddr(addr);
+		if(addrs!=null && addrs.size()>0){
+			addr = addrs.get(0);
+		}else {
+			return null;
 		}
 		return addr;
 	}
@@ -554,8 +561,8 @@ public class SpOrderServiceImpl implements SpOrderService{
 		List<SsStoOrder> spStoOrders = new ArrayList<SsStoOrder>();
 		/*1、待付款  2、待发货   3、待收货  4、待审核 5、全部6、待配货
 		orderStatus 值 备注
-		待付款                          1,3            新增
-		待发货                          8                    配货
+		待付款                          1，3                 新增，审核通过
+		待发货                          8 ,2                 配货
 		待收货                          4                    已发货
 		全部                         所有状态                线上单据+线下单据
 		
@@ -563,7 +570,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 		销售单列签：
 		orderStatus 值 备注
 		待审核                          1                    新增
-		待配货                          2                 付款
+		待配货                          2                   付款
 		待发货                          8                    已配货
 		全部                         所有状态              线上单据+线下单据
 		 * 先审核 后付款
@@ -572,6 +579,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 		if(orderType == 1){  //采购单列签
 			if(orderStatus == 2){
 				status.add(8);
+				status.add(2);
 				spStoOrder.setOrdertype(1+"");//线上订单
 			}else if(orderStatus == 3){
 				status.add(4);
@@ -692,17 +700,19 @@ public class SpOrderServiceImpl implements SpOrderService{
 	    Integer ordersCount=0;//订单总数量
 		/**
 		 * 		采购单列签：1
-			orderStatus   值                    备注
-			待付款                                   1                       新增
-			待发货                                  2, 3                   已付款      审核
-			待收货                                  4                       已发货
-			全部                                 所有状态                线上单据+线下单据
-		 * 
-		 * 销售单列签：2
-			orderStatus   值                    备注
-			待付款                                    1                    新增
-			待审核                                    2                    付款
-			待发货                        	  3                    已审核
+				orderStatus 值                    备注
+				待付款                          1，3                 新增，审核通过
+				待发货                          8 ,2                  配货,f付款
+				待收货                          4                    已发货
+				全部                         所有状态                线上单据+线下单据
+				
+				
+				销售单列签：
+				orderStatus 值 备注
+				待审核                          1                    新增
+				待配货                          2                   付款
+				待发货                          8                    已配货
+				全部                         所有状态              线上单据+线下单据
 		 * 
 		 * */
 		if(orders.size()>0){
@@ -711,9 +721,9 @@ public class SpOrderServiceImpl implements SpOrderService{
 				if((isStore&&order.getBuyerstoreid().equals(wechat.getStoreid()))
 						||(!isStore&&order.getBuyerstoreid().equals(wechat.getUserid()))){
 					purchaseCount += order.getCount();
-					if(1==order.getOrderstatus()){
+					if(1==order.getOrderstatus()||3==order.getOrderstatus()){
 						pNoPayCount += order.getCount();
-					}else if(3==order.getOrderstatus()||2==order.getOrderstatus()){
+					}else if(8==order.getOrderstatus()||2==order.getOrderstatus()){
 						pNoShipCount += order.getCount();
 					}else if(4==order.getOrderstatus()){
 						pNoReceiptCount += order.getCount();
@@ -726,7 +736,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 						sNoPayCount += order.getCount();
 					}else if(2==order.getOrderstatus()){
 						sNoAuditCount += order.getCount();
-					}else if(3==order.getOrderstatus()){
+					}else if(8==order.getOrderstatus()){
 						sNoShipCount += order.getCount();
 					}
 				}
@@ -775,17 +785,33 @@ public class SpOrderServiceImpl implements SpOrderService{
 	public int updateOrder(OrderQuery param) {
 		int update = 0;
 		//更新订单数据 1、根据订单号在普通消费者的订单表中查询记录，存在就更新普通消费者的订单信息，否则就在买家（店家）的订单表中更新数据
+		SsStoOrder spStoOrder = new SsStoOrder();
+		spStoOrder.setPayorderno(param.getOrder().getPayorderno());
+		List<SsStoOrder> spStoOrders = ssStoOrderMapper.selectByOrderMember(spStoOrder,null);
 		if(StringUtils.isNotBlank(param.getOrder().getPayorderno())){
-			SsStoOrder spStoOrder = new SsStoOrder();
-			spStoOrder.setPayorderno(param.getOrder().getPayorderno());
-			List<SsStoOrder> spStoOrders = ssStoOrderMapper.selectByOrderMember(spStoOrder,null);
 			spStoOrder = param.getOrder();
+			if(StringUtils.isBlank(spStoOrder.getPaycate1())&&StringUtils.isBlank(spStoOrder.getPaycate2())){
+				spStoOrder.setOrderstatus(3);//修改运费提交，直接审核通过
+			}
 			if(spStoOrders!=null && spStoOrders.size()>0){//买家是普通消费者身份
 				update =ssStoOrderMapper.updateByPrimaryKeySelective(spStoOrder);
 			}else{//买家是店铺身份
 				update =ssStoOrderMapper.updateByPrimaryKeySelectiveStore(spStoOrder);
 			}
 			
+		}
+		if(param.getStoDetails()!=null&&param.getStoDetails().size()>0){
+			if(spStoOrders!=null && spStoOrders.size()>0){//买家是普通消费者身份
+				update =ssStoDetailMapper.updateByPrimaryKeySelectiveMember(param.getStoDetails());
+			}else{//买家是店铺身份
+				List<SsStoDetail> details = new ArrayList<SsStoDetail>();
+				for(SsStoDetail detail : param.getStoDetails()){
+					detail.setStoreid(param.getOrder().getBuyerstoreid());
+					details.add(detail);
+				}
+				update =ssStoDetailMapper.updateByPrimaryKeySelectiveStore(details);
+			}
+			update =ssStoDetailMapper.updateByPrimaryKeySelectiveStore(param.getStoDetails());
 		}
 		return update;
 	}

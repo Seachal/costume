@@ -237,8 +237,10 @@ public class SpProduct extends Entity {
      *  第四销售价
      */
     private BigDecimal fourthPrice;
-    
-    
+    /*
+     * 款式加价
+     * */
+    private String raisePrice;
     
 	private String productCode;
 	
@@ -712,6 +714,14 @@ public class SpProduct extends Entity {
 
 	public void setIsPattern(String isPattern) {
 		this.isPattern = isPattern;
+	}
+
+	public String getRaisePrice() {
+		return raisePrice;
+	}
+
+	public void setRaisePrice(String raisePrice) {
+		this.raisePrice = raisePrice;
 	}
 	
 	

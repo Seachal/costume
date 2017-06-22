@@ -34,6 +34,13 @@ public class ScUserQuery extends Entity {
     private StoreQuery query;
     
     private Integer userIdentity;
+    
+    private Integer userid;
+    
+    private Integer storeId;
+    
+    private Integer empId;
+    
 
     private static final long serialVersionUID = 1L;
 
@@ -99,6 +106,30 @@ public class ScUserQuery extends Entity {
 
 	public void setUserIdentity(Integer userIdentity) {
 		this.userIdentity = userIdentity;
+	}
+
+	public Integer getUserid() {
+		return userid;
+	}
+
+	public void setUserid(Integer userid) {
+		this.userid = userid;
+	}
+
+	public Integer getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(Integer storeId) {
+		this.storeId = storeId;
+	}
+
+	public Integer getEmpId() {
+		return empId;
+	}
+
+	public void setEmpId(Integer empId) {
+		this.empId = empId;
 	}
     
     

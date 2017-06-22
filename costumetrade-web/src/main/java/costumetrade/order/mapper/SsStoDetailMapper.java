@@ -27,6 +27,10 @@ public interface SsStoDetailMapper {
     
     int saveDetail(@Param("detail")List<SsStoDetail> detail , @Param("sellerStoreId")Integer sellerStoreId);
     
+    int updateByPrimaryKeySelectiveStore(@Param("details")List<SsStoDetail> details);
+    
+    int updateByPrimaryKeySelectiveMember(@Param("details")List<SsStoDetail> details);
+    
     int saveDetailStore(@Param("detail")List<SsStoDetail> detail , @Param("storeId")Integer storeId);
     
     List<SsStoDetail> selectByOrderId(@Param("orderNo")String orderNo,@Param("storeId")Integer storeId);

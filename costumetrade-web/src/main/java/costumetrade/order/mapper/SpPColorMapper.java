@@ -18,14 +18,16 @@ public interface SpPColorMapper {
 
     SpPColor selectByPrimaryKey(Integer id);
     
-    SpPColor selectByName(@Param("colorname")String colorname, @Param("storeId")Integer storeId);
+    SpPColor selectByName(@Param("color")SpPColor color);
     
-    List<SpPColor> getSpPColors(@Param("storeId")int storeId,@Param("page")Page page);
+    List<SpPColor> getSpPColors(@Param("color")SpPColor color,@Param("page")Page page);
 
     int updateByPrimaryKeySelective(SpPColor record);
 
     int updateByPrimaryKey(SpPColor record);
     
     int updates(@Param("colors")List<SpPColor> colors);
+    
+    int inserts(@Param("colors")List<SpPColor> colors);
     
 }

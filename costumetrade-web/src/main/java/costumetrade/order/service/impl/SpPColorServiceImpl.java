@@ -21,12 +21,12 @@ public class SpPColorServiceImpl implements SpPColorService{
 	public List<SpPColor> getSpPColors(SpPColor spPColor) {
 		Page page = new Page();
 		page.setPageNum(spPColor.getPageNum());
-		return spPColorMapper.getSpPColors(spPColor.getStoreId(),page);
+		return spPColorMapper.getSpPColors(spPColor,page);
 	}
 	public int saveSpPColor(SpPColor spPColor) {
 		int save = 0;
 		//查询对应颜色是否存在，存在的话进行update 不存在save
-		SpPColor getColor = spPColorMapper.selectByName(spPColor.getColorname(), spPColor.getStoreId());
+		SpPColor getColor = spPColorMapper.selectByName(spPColor);
 		if(getColor != null){
 			return ResultTypeEnum.RESULT_EXISTS.getCode();
 		}else {

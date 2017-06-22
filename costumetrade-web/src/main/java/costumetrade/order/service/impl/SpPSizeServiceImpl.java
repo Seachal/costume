@@ -17,14 +17,16 @@ public class SpPSizeServiceImpl implements SpPSizeService{
 	@Autowired
 	private SpPSizeMapper spPSizeMapper;
 	
-	public List<SpPSize> getSpPSizes(int storeId) {
-
-		return spPSizeMapper.getSpPSizes(storeId);
+	public List<SpPSize> getSpPSizes(int storeId,String productId) {
+		SpPSize size = new SpPSize();
+		size.setStoreId(storeId);
+		size.setProductId(productId);
+		return spPSizeMapper.getSpPSizes(size);
 	}
 	public int saveSpPSize(SpPSize spPSize) {
 		int save = 0;
 		//查询对应yanse是否存在，存在的话进行update 不存在save
-		SpPSize getSize = spPSizeMapper.selectByName(spPSize.getStoreId(),spPSize.getSizename());
+		SpPSize getSize = spPSizeMapper.selectByName(spPSize);
 		if(getSize != null){
 			return ResultTypeEnum.RESULT_EXISTS.getCode();
 		}else {
