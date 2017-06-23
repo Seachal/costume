@@ -162,15 +162,16 @@
 		SELECT
 		stoorder.id, stoorder.sellerStoreId,
 		stoorder.buyerStoreId,store.name AS seller,store1.name AS buyer,
-		stoorder.operator, stoorder.payOrderNo, stoorder.refundDate,
+		stoorder.operator, stoorder.payOrderNo, 
 		stoorder.orderType,
 		stoorder.orderStatus,
-		stoorder.contactStoreId,
 		stoorder.remarks,
 		stoorder.totalNum, stoorder.totalAmt,
 		stoorder.discountRatio,
 		stoorder.discount,
 		stoorder.mchange,
+		stoorder.shipContact, stoorder.shipPhone,
+		stoorder.shipAddress,
 		stoorder.tax, stoorder.realcost,
 		stoorder.payCate1, stoorder.payCost1,
 		stoorder.payCate2,
@@ -230,8 +231,7 @@
 		b on
 		a.payOrderNo = b.payOrderNo
 		where b.tradeNo
-		=
-		#{tradeNo,jdbcType=VARCHAR}
+		=#{tradeNo,jdbcType=VARCHAR}
 	</select>
 	<select id="selectByTradeNo" resultMap="BaseResultMap">
 		select

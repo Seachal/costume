@@ -23,7 +23,7 @@
   </select>
   <select id="selectByStoreId" resultMap="BaseResultMap">
     select 
-    <include refid="Base_Column_List" />
+    id, storeId, productId,productName, fileName, url,resizeFixUrl
     from ss_product_file
     where 1=1
     <if test="ssProductFile.filename !=null">
@@ -32,14 +32,27 @@
     <if test="ssProductFile.productName !=null">
     and productName like CONCAT('%',#{ssProductFile.productName},'%')
     </if>
+    <if test="ssProductFile.productid !=null">
+    and productId = #{ssProductFile.productid}
+    </if>
+    <if test="ssProductFile.storeid !=null">
+    and storeId = #{ssProductFile.storeid}
+    </if>
     <if test="page!=null">
     LIMIT #{page.startRow},#{page.pageSize}
     </if>
     
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey">
     delete from ss_product_file
-    where id = #{id,jdbcType=INTEGER}
+    where 1=1
+      <if test="productid != null">
+       and productId = #{productid}
+      </if>
+      <if test="id !=null">
+      and id = #{id,jdbcType=INTEGER}
+      </if>
+    
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SsProductFile">
     insert into ss_product_file (id, storeId, productId, productName,
@@ -54,7 +67,7 @@
       fileName, url,resizeFixUrl, createTime, 
       createBy)
     values <foreach collection="files" index="index" item ="item" separator=",">( #{item.storeid,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR}, #{item.productName,jdbcType=VARCHAR},  
-      #{item.filename,jdbcType=VARCHAR}, #{item.url,jdbcType=VARCHAR},#{item.resizeFixUrl,jdbcType=VARCHAR}, #{item.createtime,jdbcType=TIMESTAMP}, 
+      #{item.filename,jdbcType=VARCHAR}, #{item.url,jdbcType=VARCHAR},#{item.resizeFixUrl,jdbcType=VARCHAR}, NOW(), 
       #{item.createby,jdbcType=VARCHAR})</foreach> 
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.SsProductFile">

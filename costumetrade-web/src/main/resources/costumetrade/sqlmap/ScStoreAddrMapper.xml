@@ -1,141 +1,181 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="costumetrade.order.mapper.ScStoreAddrMapper">
-  <resultMap id="BaseResultMap" type="costumetrade.order.domain.ScStoreAddr">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="type" jdbcType="INTEGER" property="type" />
-    <result column="contact" jdbcType="VARCHAR" property="contact" />
-    <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="address" jdbcType="VARCHAR" property="address" />
-    <result column="isDefault" jdbcType="INTEGER" property="isdefault" />
-    <result column="userid" jdbcType="INTEGER" property="userid" />
-  </resultMap>
-  <sql id="Base_Column_List">
-    id, type, contact, phone, address, isDefault,userid
-  </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from sc_store_addr
-    where id = #{id,jdbcType=INTEGER}
-  </select>
-  <select id="selectAddr" parameterType="costumetrade.order.domain.ScStoreAddr" resultMap="BaseResultMap">
-    select 
-    <include refid="Base_Column_List" />
-    from sc_store_addr
-    where 1=1
-	   <if test="type!=null">
-	    and type = #{type,jdbcType=INTEGER}
-	   </if>
-       <if test="contact != null">
-       and contact = #{contact,jdbcType=VARCHAR}
-      </if>
-      <if test="phone != null">
-       and phone = #{phone,jdbcType=VARCHAR}
-      </if>
-      <if test="address != null">
-       and address = #{address,jdbcType=VARCHAR}
-      </if>
-      <if test="isdefault != null">
-       and isDefault = #{isdefault,jdbcType=INTEGER}
-      </if>
-      <if test="userid != null">
-       and userid = #{userid,jdbcType=INTEGER}
-      </if>
-  </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
-    delete from sc_store_addr
-    where id = #{id,jdbcType=INTEGER}
-  </delete>
-  <insert id="insert" parameterType="costumetrade.order.domain.ScStoreAddr">
-    insert into sc_store_addr (id, type, contact, 
-      phone, address, isDefault,userid
-      )
-    values (#{id,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{contact,jdbcType=VARCHAR}, 
-      #{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{isdefault,jdbcType=INTEGER},#{userid,jdbcType=INTEGER}
-      )
-  </insert>
-  <insert id="insertSelective" parameterType="costumetrade.order.domain.ScStoreAddr">
-    insert into sc_store_addr
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        id,
-      </if>
-      <if test="type != null">
-        type,
-      </if>
-      <if test="contact != null">
-        contact,
-      </if>
-      <if test="phone != null">
-        phone,
-      </if>
-      <if test="address != null">
-        address,
-      </if>
-      <if test="isdefault != null">
-        isDefault,
-      </if>
-      <if test="userid != null">
-        userid,
-      </if>
-    </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
-        #{id,jdbcType=INTEGER},
-      </if>
-      <if test="type != null">
-        #{type,jdbcType=INTEGER},
-      </if>
-      <if test="contact != null">
-        #{contact,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="address != null">
-        #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="isdefault != null">
-        #{isdefault,jdbcType=INTEGER},
-      </if>
-      <if test="userid != null">
-        #{userid,jdbcType=INTEGER},
-      </if>
-    </trim>
-  </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.ScStoreAddr">
-    update sc_store_addr
-    <set>
-      <if test="type != null">
-        type = #{type,jdbcType=INTEGER},
-      </if>
-      <if test="contact != null">
-        contact = #{contact,jdbcType=VARCHAR},
-      </if>
-      <if test="phone != null">
-        phone = #{phone,jdbcType=VARCHAR},
-      </if>
-      <if test="address != null">
-        address = #{address,jdbcType=VARCHAR},
-      </if>
-      <if test="isdefault != null">
-        isDefault = #{isdefault,jdbcType=INTEGER},
-      </if>
-      <if test="userid != null">
-        userid = #{userid,jdbcType=INTEGER},
-      </if>
-    </set>
-    where id = #{id,jdbcType=INTEGER}
-  </update>
-  <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.ScStoreAddr">
-    update sc_store_addr
-    set type = #{type,jdbcType=INTEGER},
-      contact = #{contact,jdbcType=VARCHAR},
-      phone = #{phone,jdbcType=VARCHAR},
-      address = #{address,jdbcType=VARCHAR},
-      isDefault = #{isdefault,jdbcType=INTEGER}
-      userid = #{userid,jdbcType=INTEGER}
-    where id = #{id,jdbcType=INTEGER}
-  </update>
+	<resultMap id="BaseResultMap" type="costumetrade.order.domain.ScStoreAddr">
+		<id column="id" jdbcType="INTEGER" property="id" />
+		<result column="type" jdbcType="INTEGER" property="type" />
+		<result column="contact" jdbcType="VARCHAR" property="contact" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="isDefault" jdbcType="INTEGER" property="isdefault" />
+		<result column="userid" jdbcType="INTEGER" property="userid" />
+		<result column="province" jdbcType="VARCHAR" property="province" />
+		<result column="city" jdbcType="VARCHAR" property="city" />
+		<result column="district" jdbcType="VARCHAR" property="district" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, type, contact, phone, address,province, city,
+		district,
+		isDefault,userid
+	</sql>
+	<select id="selectByPrimaryKey" parameterType="java.lang.Integer"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sc_store_addr
+		where id = #{id,jdbcType=INTEGER}
+	</select>
+	<select id="selectAddr" parameterType="costumetrade.order.domain.ScStoreAddr"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from sc_store_addr
+		where 1=1
+		<if test="type!=null">
+			and type = #{type,jdbcType=INTEGER}
+		</if>
+		<if test="contact != null">
+			and contact = #{contact,jdbcType=VARCHAR}
+		</if>
+		<if test="phone != null">
+			and phone = #{phone,jdbcType=VARCHAR}
+		</if>
+		<if test="address != null">
+			and address = #{address,jdbcType=VARCHAR}
+		</if>
+		<if test="isdefault != null">
+			and isDefault = #{isdefault,jdbcType=INTEGER}
+		</if>
+		<if test="userid != null">
+			and userid = #{userid,jdbcType=INTEGER}
+		</if>
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from sc_store_addr
+		where id = #{id,jdbcType=INTEGER}
+	</delete>
+	<insert id="insert" parameterType="costumetrade.order.domain.ScStoreAddr">
+		insert into sc_store_addr (id, type, contact, province, city,
+		district,
+		phone, address, isDefault,userid
+		)
+		values (#{id,jdbcType=INTEGER}, #{type,jdbcType=INTEGER},
+		#{contact,jdbcType=VARCHAR}, #{province,jdbcType=VARCHAR},
+		#{city,jdbcType=VARCHAR},
+		#{district,jdbcType=VARCHAR},
+		#{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
+		#{isdefault,jdbcType=INTEGER},#{userid,jdbcType=INTEGER}
+		)
+	</insert>
+	<insert id="insertSelective" parameterType="costumetrade.order.domain.ScStoreAddr">
+		insert into sc_store_addr
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="type != null">
+				type,
+			</if>
+			<if test="contact != null">
+				contact,
+			</if>
+			<if test="phone != null">
+				phone,
+			</if>
+			<if test="address != null">
+				address,
+			</if>
+			<if test="province != null">
+				province,
+			</if>
+			<if test="city != null">
+				city,
+			</if>
+			<if test="district != null">
+				district,
+			</if>
+			<if test="isdefault != null">
+				isDefault,
+			</if>
+			<if test="userid != null">
+				userid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=INTEGER},
+			</if>
+			<if test="type != null">
+				#{type,jdbcType=INTEGER},
+			</if>
+			<if test="contact != null">
+				#{contact,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				#{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				#{address,jdbcType=VARCHAR},
+			</if>
+			<if test="province != null">
+				#{province,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				#{city,jdbcType=VARCHAR},
+			</if>
+			<if test="district != null">
+				#{district,jdbcType=VARCHAR},
+			</if>
+			<if test="isdefault != null">
+				#{isdefault,jdbcType=INTEGER},
+			</if>
+			<if test="userid != null">
+				#{userid,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.ScStoreAddr">
+		update sc_store_addr
+		<set>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="contact != null">
+				contact = #{contact,jdbcType=VARCHAR},
+			</if>
+			<if test="phone != null">
+				phone = #{phone,jdbcType=VARCHAR},
+			</if>
+			<if test="address != null">
+				address = #{address,jdbcType=VARCHAR},
+			</if>
+			<if test="isdefault != null">
+				isDefault = #{isdefault,jdbcType=INTEGER},
+			</if>
+			<if test="userid != null">
+				userid = #{userid,jdbcType=INTEGER},
+			</if>
+			<if test="province != null">
+				province = #{province,jdbcType=VARCHAR},
+			</if>
+			<if test="city != null">
+				city =#{city,jdbcType=VARCHAR},
+			</if>
+
+			<if test="district != null">
+				district = #{district,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.ScStoreAddr">
+		update sc_store_addr
+		set type = #{type,jdbcType=INTEGER},
+		contact = #{contact,jdbcType=VARCHAR},
+		phone = #{phone,jdbcType=VARCHAR},
+		address = #{address,jdbcType=VARCHAR},
+		isDefault = #{isdefault,jdbcType=INTEGER}
+		userid = #{userid,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
 </mapper>

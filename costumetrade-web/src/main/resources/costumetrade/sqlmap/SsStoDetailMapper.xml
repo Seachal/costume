@@ -313,7 +313,31 @@
 				modifyBy = #{item.modifyby,jdbcType=VARCHAR},
 			</if>
 		</set>
-			where id = #{item.id,jdbcType=INTEGER}
+			where 1=1
+			<if test="item.orderid != null">
+			and	orderId = #{item.orderid,jdbcType=VARCHAR}
+			</if>
+			<if test="item.storeid != null">
+			and	storeId = #{item.storeid,jdbcType=VARCHAR}
+			</if>
+			<if test="item.handtag != null">
+			and	handtag = #{item.handtag,jdbcType=INTEGER}
+			</if>
+			<if test="item.productid != null">
+			and	productId = #{item.productid,jdbcType=VARCHAR}
+			</if>
+			<if test="item.productname != null">
+			and	productName = #{item.productname,jdbcType=VARCHAR}
+			</if>
+			<if test="item.productunit != null">
+			and	productUnit = #{item.productunit,jdbcType=VARCHAR}
+			</if>
+			<if test="item.productcolor != null">
+			and	productColor = #{item.productcolor,jdbcType=VARCHAR}
+			</if>
+			<if test="item.productsize != null">
+			and	productSize = #{item.productsize,jdbcType=VARCHAR}
+			</if>
 		</foreach>
 	</update>
 	<update id="updateByPrimaryKeySelectiveMember">
@@ -352,7 +376,31 @@
 				modifyBy = #{item.modifyby,jdbcType=VARCHAR},
 			</if>
 		</set>
-		where id = #{id,jdbcType=INTEGER}
+		where 1=1
+			<if test="item.orderid != null">
+			and	orderId = #{item.orderid,jdbcType=VARCHAR}
+			</if>
+			<if test="item.storeid != null">
+			and	storeId = #{item.storeid,jdbcType=VARCHAR}
+			</if>
+			<if test="item.handtag != null">
+			and	handtag = #{item.handtag,jdbcType=INTEGER}
+			</if>
+			<if test="item.productid != null">
+			and	productId = #{item.productid,jdbcType=VARCHAR}
+			</if>
+			<if test="item.productname != null">
+			and	productName = #{item.productname,jdbcType=VARCHAR}
+			</if>
+			<if test="item.productunit != null">
+			and	productUnit = #{item.productunit,jdbcType=VARCHAR}
+			</if>
+			<if test="item.productcolor != null">
+			and	productColor = #{item.productcolor,jdbcType=VARCHAR}
+			</if>
+			<if test="item.productsize != null">
+			and	productSize = #{item.productsize,jdbcType=VARCHAR}
+			</if>
 		</foreach>
 	</update>
 	<update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsStoDetail">

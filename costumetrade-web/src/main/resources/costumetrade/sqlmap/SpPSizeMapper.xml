@@ -38,7 +38,7 @@
   </select>
   <select id="getSpPSizes" resultMap="BaseResultMap">
     select 
-   id, storeId, sizeName,price_raise,productId
+   id, storeId, sizeName,price_raise
     from sp_psize
     where 1=1
     <if test="size.storeId!=null">

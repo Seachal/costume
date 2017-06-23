@@ -90,7 +90,7 @@
 		str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
 		AND sto.payCate1=#{payCate}
 	</select>
-	<select id="purchaseSortReport" parameterType="costumetrade.report.domain.PurchaseReportQuery"
+	<select id="purchaseAnalysisReport" parameterType="costumetrade.report.domain.PurchaseReportQuery"
 		resultMap="PurchaseResultMap">
 		SELECT
 		sum(detail.count) as quantity,
@@ -101,9 +101,10 @@
 		detail.productSize as productSize,
 		brand.brandName as brandName,
 		grade.custTypeName as gradeName,
+		sto.operator,
 		store.name as storeName
 		FROM
-		ss_stodetail_1 detail
+		ss_stodetail_#{storeId} detail
 		LEFT JOIN ss_stoorder_#{storeId} sto
 		ON sto.payOrderNo = detail.orderId
 		left join sp_product_1 product
@@ -121,7 +122,9 @@
 		<if test="filter.value !=null">
 			and ${filter.field} like CONCAT('%',#{filter.value},'%')
 		</if>
+		order by quantity desc
 		group by ${filter.field}
+		
 	</select>
 
 	<select id="purchaseReport3" 
@@ -137,15 +140,27 @@
 		left join sp_pbrand brand
 		on brand.id = product.brandId and brand.storeId =detail.storeId
 		LEFT JOIN sp_product_type productType ON productType.id =product.productType and productType.storeId =detail.storeId
-		LEFT JOIN sp_client c 
-    	ON c.storeId = sto.buyerStoreId 
-  		LEFT JOIN sc_wechat_bind wechat 
-   		 ON wechat.openId = c.openid 
-    	AND wechat.storeId = sto.sellerStoreId
+		<if test="reportType==1"><!-- 采购报表 -->
+    	LEFT JOIN sc_wechat_bind wechat 
+    	on (wechat.storeId = sto.sellerStoreId  AND wechat.storeId IS NOT NULL  )
+    	and wechat.empId IS NOT NULL
+    	LEFT JOIN sp_client c 
+    	ON wechat.openId = c.openid  
+		</if>
+		<if test="reportType==2"><!-- 销售报表 -->
+    	LEFT JOIN sc_wechat_bind wechat 
+    	on ((wechat.storeId = sto.buyerStoreId and wechat.storeId IS NOT NULL ) or (wechat.userId = sto.buyerStoreId and wechat.userId IS NOT NULL ))
+    	LEFT JOIN sp_client c 
+    	ON wechat.openId = c.openid 
+		</if>
 		where 1=1
-		AND wechat.storeId IS NOT NULL 
 		AND sto.orderStatus ='5'
+		<if test="query.reportType==1"><!-- 采购报表 -->
 		and sto.buyerStoreId=#{query.storeId}
+		</if>
+		<if test="query.reportType==2"><!-- 销售报表 -->
+		and sto.sellerStoreId=#{query.storeId}
+		</if>
 		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
 		AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
 		<if test="query.productName !=null">
@@ -205,15 +220,27 @@
 		left join sp_pbrand brand
 		on brand.id = product.brandId and brand.storeId =detail.storeId
 		LEFT JOIN sp_product_type productType ON productType.id =product.productType and productType.storeId =detail.storeId
-		LEFT JOIN sp_client c 
-    	ON c.storeId = sto.buyerStoreId 
-  		LEFT JOIN sc_wechat_bind wechat 
-   		 ON wechat.openId = c.openid 
-    	AND wechat.storeId = sto.sellerStoreId
+		<if test="reportType==1"><!-- 采购报表 -->
+    	LEFT JOIN sc_wechat_bind wechat 
+    	on (wechat.storeId = sto.sellerStoreId  AND wechat.storeId IS NOT NULL  )
+    	and wechat.empId IS NOT NULL
+    	LEFT JOIN sp_client c 
+    	ON wechat.openId = c.openid  
+		</if>
+		<if test="reportType==2"><!-- 销售报表 -->
+    	LEFT JOIN sc_wechat_bind wechat 
+    	on ((wechat.storeId = sto.buyerStoreId and wechat.storeId IS NOT NULL ) or (wechat.userId = sto.buyerStoreId and wechat.userId IS NOT NULL ))
+    	LEFT JOIN sp_client c 
+    	ON wechat.openId = c.openid 
+		</if>
 		where 1=1
-		AND wechat.storeId IS NOT NULL 
 		AND sto.orderStatus ='5'
+		<if test="query.reportType==1"><!-- 采购报表 -->
 		and sto.buyerStoreId=#{query.storeId}
+		</if>
+		<if test="query.reportType==2"><!-- 销售报表 -->
+		and sto.sellerStoreId=#{query.storeId}
+		</if>
 		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
 		AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
 	
@@ -249,7 +276,12 @@
 		ON sto.payOrderNo = detail.orderId
 		where 1=1
 		AND sto.orderStatus ='5'
+		<if test="query.reportType==1"><!-- 采购报表 -->
 		and sto.buyerStoreId=#{query.storeId}
+		</if>
+		<if test="query.reportType==2"><!-- 销售报表 -->
+		and sto.sellerStoreId=#{query.storeId}
+		</if>
 		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
 		AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
 		<if test="query.productName !=null">
@@ -267,7 +299,12 @@
 			ON sto.payOrderNo = detail.orderId
 			where 1=1
 			AND sto.orderStatus ='5'
-			and sto.buyerStoreId=#{item.storeId}
+			<if test="query.reportType==1"><!-- 采购报表 -->
+			and sto.buyerStoreId=#{query.storeId}
+			</if>
+			<if test="query.reportType==2"><!-- 销售报表 -->
+			and sto.sellerStoreId=#{query.storeId}
+			</if>
 			AND sto.orderTime &gt;=str_to_date(#{item.timeFrom},'%Y-%m-%d %H:%i:%s')
 			AND sto.orderTime &lt;=str_to_date(#{item.timeTo},'%Y-%m-%d %H:%i:%s')
 			<if test="item.productName !=null">

@@ -32,7 +32,6 @@
 		<if test="color.storeId!=null">
 		and  storeId = #{color.storeId,jdbcType=INTEGER}
 		</if>
-		
 		<if test="color.colorname!=null">
 		and colorName = #{color.colorname,jdbcType=VARCHAR}
 		</if>
@@ -40,7 +39,7 @@
 	</select>
 	<select id="getSpPColors" resultMap="BaseResultMap">
 		select
-		id, storeId, colorName,price_raise,productId
+		id, storeId, colorName,price_raise
 		from sp_pcolor
 		where 1=1
 		<if test="color.storeId!=null">
