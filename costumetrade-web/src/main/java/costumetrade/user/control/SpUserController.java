@@ -92,7 +92,7 @@ public class SpUserController {
 			
 		}
 		if(chat == null){
-			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setData(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{

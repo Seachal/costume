@@ -41,7 +41,7 @@ public interface SsDataDictionaryService {
 	
 	public SpCustomerType saveCustomType(SpCustomerType customerType);
 	
-	public int saveTypeOrGradeRate(SpCustProdPrice spCustProdPrice);
+	public int saveTypeOrGradeRate(List<SpCustProdPrice> spCustProdPrices);
 	
 	public SpCustProdPrice getTypeOrGradeRate(SpCustProdPrice spCustProdPrice);
 	

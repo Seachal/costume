@@ -104,20 +104,13 @@ public class SpReportServiceImpl implements SpReportService{
 	public ReportQuery purchaseReport(PurchaseReportQuery query) {
 		ReportQuery reportQuery = new ReportQuery();
 		if(query.getTimeFrom() ==null ){
-//			Calendar cale = null;
-//			  cale = Calendar.getInstance();  
-//		        cale.add(Calendar.MONTH, -1);  
-//		        cale.set(Calendar.DAY_OF_MONTH, 1);  
-//		        cale.set(Calendar.HOUR_OF_DAY,0);
-//		        cale.set(Calendar.MINUTE,0);
-//		        cale.set(Calendar.SECOND, 0);
-//		        cale.set(Calendar.MILLISECOND,0);
-//		        query.setTimeFrom(cale.getTime());
 			query.setTimeFrom(setTimeFrom());
 		}
 		if(query.getTimeTo() == null){
 			query.setTimeTo(setTimeTo());
 		}
+		
+		
 		ScWeChat wechat = scWeChatMapper.selectByOpenId(query.getOpenid());//根据当前操作者的openid 获取当前店铺storeId
 		
 		if(wechat !=null){
@@ -201,6 +194,7 @@ public class SpReportServiceImpl implements SpReportService{
 			q.setTimeTo(query.getTimeTo());
 			q.setProductName(maps2.get(0).getProductName());
 			q.setStoreId(query.getStoreId());
+			q.setReportType(query.getReportType());
 			ReportQuery r =  purchaseReportByProductName(q);
 			
 			reportQuery.setProductReportQuerys(r.getProductReportQuerys());
@@ -211,7 +205,6 @@ public class SpReportServiceImpl implements SpReportService{
 	
 	public  List<ProductReportQuery> getDatePoor(ProductReportQuery q) {
 		 
-	    long nd = 1000 * 24 * 60 * 60;
 	    long nh = 1000 * 60 * 60;
 	    // long ns = 1000;
 	    // 获得两个时间的毫秒时间差异
@@ -243,12 +236,22 @@ public class SpReportServiceImpl implements SpReportService{
 	    	report.setTimeFrom(timeFroms.get(i));
 	    	report.setTimeTo(timeTos.get(i));
 	    	report.setStoreId(q.getStoreId());
+	    	report.setReportType(q.getReportType());
 	    	querys.add(report);
 	    }
 	    return querys;
 	}
 	@Override
 	public ReportQuery purchaseReportByProductName(ProductReportQuery query) {
+		ScWeChat wechat = scWeChatMapper.selectByOpenId(query.getOpenid());//根据当前操作者的openid 获取当前店铺storeId
+		
+		if(wechat !=null){
+			if(wechat.getStoreid()!=null){
+				query.setStoreId(wechat.getStoreid());
+			}else{
+				return null;
+			}
+		}
 		ReportQuery reportQuery =new ReportQuery();
 		
 		//根据时间从，时间到获取8个时间区间，根据时间区间去汇总区间中的采购数量

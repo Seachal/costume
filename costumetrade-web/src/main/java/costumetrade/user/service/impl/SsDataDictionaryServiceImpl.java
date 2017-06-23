@@ -11,16 +11,21 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSONArray;
 
 import costumetrade.order.domain.ScLogisticFee;
+import costumetrade.order.domain.SpProduct;
 import costumetrade.order.mapper.ScLogisticFeeMapper;
+import costumetrade.order.mapper.SpProductMapper;
 import costumetrade.user.domain.PriceJson;
 import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpCustomerType;
+import costumetrade.user.domain.SpStore;
 import costumetrade.user.domain.SsDataDictionary;
 import costumetrade.user.mapper.SpCustProdPriceMapper;
 import costumetrade.user.mapper.SpCustomerTypeMapper;
+import costumetrade.user.mapper.SpStoreMapper;
 import costumetrade.user.mapper.SsDataDictionaryMapper;
 import costumetrade.user.query.DataDictionaryQuery;
 import costumetrade.user.query.SettingQuery;
+import costumetrade.user.service.SpUserService;
 import costumetrade.user.service.SsDataDictionaryService;
 
 @Transactional
@@ -34,6 +39,12 @@ public class SsDataDictionaryServiceImpl implements SsDataDictionaryService{
 	private SpCustProdPriceMapper  spCustProdPriceMapper;
 	@Autowired
 	private ScLogisticFeeMapper scLogisticFeeMapper;
+	@Autowired
+	private SpStoreMapper spStoreMapper;
+	@Autowired
+	private SpProductMapper spProductMapper;
+	@Autowired
+	private SpUserService spUserService;
 	
 	@Override
 	public SettingQuery getDataDictionarys(Integer storeId) {
@@ -45,9 +56,26 @@ public class SsDataDictionaryServiceImpl implements SsDataDictionaryService{
 		record.setStoreid(storeId);
 		List<SpCustProdPrice>  customerCusts = spCustProdPriceMapper.select(record);
 		
+		SpStore store = new SpStore();
+		store.setParentid(storeId);
+		List<SpStore> stores = spStoreMapper.selectStores(store, null);
+		
+		//查询推广商品图片
+		SpProduct product = new SpProduct();
+		product.setStoreId(storeId);
+		product.setPopularize(1);//
+		List<SpProduct> products = new ArrayList<SpProduct>();
+		products = spProductMapper.selectPopulars(product);
+		
+		
+		store.setStoreId(storeId);
+		List<String> images = spUserService.getStoreImage(store,products).getImages();
+		
 		query.setDatas(datas);
 		query.setLogisticFees(logisticFees);
 		query.setCustomerCusts(customerCusts);
+		query.setStores(stores);
+		query.setImages(images);
 		return query;
 	}
 
@@ -139,10 +167,9 @@ public class SsDataDictionaryServiceImpl implements SsDataDictionaryService{
 	}
 
 	@Override
-	public int saveTypeOrGradeRate(SpCustProdPrice spCustProdPrice) {
-		spCustProdPrice.setCustpricejson(JSONArray.toJSONString(spCustProdPrice.getCustPriceJson()));
-		spCustProdPrice.setDiscpricejson(JSONArray.toJSONString(spCustProdPrice.getDiscPriceJson()));
-		return spCustProdPriceMapper.insertSelective(spCustProdPrice);
+	public int saveTypeOrGradeRate(List<SpCustProdPrice>  spCustProdPrices) {
+		
+		return spCustProdPriceMapper.updates(spCustProdPrices);
 	}
 
 	@Override

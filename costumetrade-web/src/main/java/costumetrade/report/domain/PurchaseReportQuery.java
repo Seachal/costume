@@ -34,7 +34,7 @@ public class PurchaseReportQuery extends Entity {
 	
 	private String storeName;
 	
-	
+	private String operator;
 	
 	private String openid;
 	
@@ -79,6 +79,12 @@ public class PurchaseReportQuery extends Entity {
 	private String quantityOp;
 	
 	private String amountOp;
+	
+	private Integer buyerStoreId;
+	
+	private Integer sellerStoreId;
+	
+	private Integer reportType;
 
 	public BigDecimal getQuantity() {
 		return quantity;
@@ -319,6 +325,38 @@ public class PurchaseReportQuery extends Entity {
 
 	public void setProductNameArray(List<String> productNameArray) {
 		this.productNameArray = productNameArray;
+	}
+
+	public Integer getBuyerStoreId() {
+		return buyerStoreId;
+	}
+
+	public void setBuyerStoreId(Integer buyerStoreId) {
+		this.buyerStoreId = buyerStoreId;
+	}
+
+	public Integer getSellerStoreId() {
+		return sellerStoreId;
+	}
+
+	public void setSellerStoreId(Integer sellerStoreId) {
+		this.sellerStoreId = sellerStoreId;
+	}
+
+	public Integer getReportType() {
+		return reportType;
+	}
+
+	public void setReportType(Integer reportType) {
+		this.reportType = reportType;
+	}
+
+	public String getOperator() {
+		return operator;
+	}
+
+	public void setOperator(String operator) {
+		this.operator = operator;
 	}
 	
 	

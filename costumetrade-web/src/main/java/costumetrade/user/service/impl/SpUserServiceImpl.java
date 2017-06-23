@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import costumetrade.common.util.StringUtil;
 import costumetrade.order.domain.ScFocusShop;
 import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.domain.SpProduct;
@@ -138,7 +139,17 @@ public class SpUserServiceImpl implements SpUserService{
 			save = spUserMapper.updateByPrimaryKeySelective(spUser);
 			
 		}
+		
 		if(save>0){
+			String [] s = new String[3];
+			if(StringUtil.isNotBlank(spStore.getRegion())){
+				s = spStore.getRegion().split(",");
+			}
+			if(s.length>0){
+				addr.setProvince(s[0]);
+				addr.setCity(s[1]);
+				addr.setDistrict(s[2]);
+			}
 			addr.setUserid(spStore.getStoreId());
 			List<ScStoreAddr> addrs  = scStoreAddrMapper.selectAddr(addr);
 			if(addrs!=null&&addrs.size()>0){

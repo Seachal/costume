@@ -44,6 +44,8 @@ public class ProductReportQuery extends Entity {
 	
 	private Integer storeId;
 	
+	private Integer reportType;
+	
 	public BigDecimal getQuantity() {
 		return quantity;
 	}
@@ -146,6 +148,14 @@ public class ProductReportQuery extends Entity {
 
 	public void setStoreId(Integer storeId) {
 		this.storeId = storeId;
+	}
+
+	public Integer getReportType() {
+		return reportType;
+	}
+
+	public void setReportType(Integer reportType) {
+		this.reportType = reportType;
 	}
 
 	

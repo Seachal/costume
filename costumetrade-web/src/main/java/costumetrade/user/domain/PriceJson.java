@@ -17,7 +17,7 @@ public class PriceJson extends Entity {
 	/**
 	 * 毛利值   or 折扣值
 	 * */
-	private BigDecimal value;
+	private BigDecimal priceRaise;
 
 	public String getName() {
 		return name;
@@ -27,14 +27,15 @@ public class PriceJson extends Entity {
 		this.name = name == null?null : name.trim();
 	}
 
-	public BigDecimal getValue() {
-		return value;
+	public BigDecimal getPriceRaise() {
+		return priceRaise;
 	}
 
-	public void setValue(BigDecimal value) {
-		this.value = value;
+	public void setPriceRaise(BigDecimal priceRaise) {
+		this.priceRaise = priceRaise;
 	}
-	
+
+
 	
    
 }

@@ -5,6 +5,7 @@ import java.util.List;
 import costumetrade.common.Entity;
 import costumetrade.order.domain.ScLogisticFee;
 import costumetrade.user.domain.SpCustProdPrice;
+import costumetrade.user.domain.SpStore;
 import costumetrade.user.domain.SsDataDictionary;
 
 public class SettingQuery extends Entity {
@@ -52,6 +53,9 @@ public class SettingQuery extends Entity {
 	 * */
 	private SsDataDictionary pointsExchange;
 	
+	private List<SpStore> stores;
+	
+	private List<String> images;
 	
 	public List<SsDataDictionary> getPayQRCodes() {
 		return payQRCodes;
@@ -112,6 +116,18 @@ public class SettingQuery extends Entity {
 	}
 	public void setDatas(List<SsDataDictionary> datas) {
 		this.datas = datas;
+	}
+	public List<SpStore> getStores() {
+		return stores;
+	}
+	public void setStores(List<SpStore> stores) {
+		this.stores = stores;
+	}
+	public List<String> getImages() {
+		return images;
+	}
+	public void setImages(List<String> images) {
+		this.images = images;
 	}
    
 	

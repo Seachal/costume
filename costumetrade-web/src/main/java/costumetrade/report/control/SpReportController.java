@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import costumetrade.common.param.ApiResponse;
+import costumetrade.common.param.ResponseInfo;
 import costumetrade.report.domain.FinanceReportQuery;
 import costumetrade.report.domain.ProductReportQuery;
 import costumetrade.report.domain.PurchaseReportQuery;
@@ -30,36 +31,64 @@ public class SpReportController {
 	@RequestMapping("/financeReport")
 	@ResponseBody
 	public ApiResponse financeReport(FinanceReportQuery query) {
-		
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
 		
 		FinanceReportQuery report = spReportService.financeReport(query);
-
-		return  ApiResponse.getInstance(report);
+		if(report == null ){
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			result.setData(ResponseInfo.NOT_DATA.code);
+		}else{
+			result.setData(report);
+		}
+		return  result;
 	}
 	@RequestMapping("/purchaseSortReport")
 	@ResponseBody
 	public ApiResponse purchaseSortReport(PurchaseReportQuery query) {
-		
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
 		
 		List<Map<String,Object>> reports = spReportService.purchaseSortReport(query);
-		
-		return  ApiResponse.getInstance(reports);
+		if(reports == null ){
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			result.setData(ResponseInfo.NOT_DATA.code);
+		}else{
+			result.setData(reports);
+		}
+		return  result;
 	}
 	@RequestMapping("/purchaseReport")
 	@ResponseBody
 	public ApiResponse purchaseReport(PurchaseReportQuery query) {
-		
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
 		ReportQuery report = spReportService.purchaseReport(query);
-		
-		return  ApiResponse.getInstance(report);
+		if(report == null ){
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			result.setData(ResponseInfo.NOT_DATA.code);
+		}else{
+			result.setData(report);
+		}
+		return  result;
 	}
 	@RequestMapping("/purchaseReportByProductName")
 	@ResponseBody
 	public ApiResponse purchaseReportByProductName(ProductReportQuery query) {
-		
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
 		ReportQuery report = spReportService.purchaseReportByProductName(query);
-		
-		return  ApiResponse.getInstance(report);
+		if(report == null ){
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			result.setData(ResponseInfo.NOT_DATA.code);
+		}else{
+			result.setData(report);
+		}
+		return  result;
 	}
 
 	

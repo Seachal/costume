@@ -3,6 +3,7 @@ package costumetrade.user.service;
 import java.util.List;
 
 import costumetrade.order.domain.ScStoreAddr;
+import costumetrade.order.domain.SpProduct;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpStore;
 import costumetrade.user.query.StoreQuery;
@@ -29,4 +30,6 @@ public interface SpUserService {
 	 * 保存收货地址
 	 * */
 	public int saveAddress(ScStoreAddr addr);
+	
+	public SpStore getStoreImage(SpStore spStore , List<SpProduct> products);
 }

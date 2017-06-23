@@ -59,17 +59,17 @@ public class SsDataDictionaryController {
 	}
 	@RequestMapping("/saveTypeOrGradeRate")
 	@ResponseBody
-	public ApiResponse saveTypeOrGradeRate(SpCustProdPrice spCustProdPrice) {
+	public ApiResponse saveTypeOrGradeRate(@RequestBody List<SpCustProdPrice> spCustProdPrices) {
 		
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		if(spCustProdPrice == null ){
+		if(spCustProdPrices == null ){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.name());
 			return result;
 		}
-		int save = ssDataDictionaryService.saveTypeOrGradeRate(spCustProdPrice);
+		int save = ssDataDictionaryService.saveTypeOrGradeRate(spCustProdPrices);
 		if(save<=0){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
