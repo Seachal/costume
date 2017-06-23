@@ -36,6 +36,21 @@ public class ScStoreAddr extends Entity {
     private Integer isdefault;
     
     private String openid;
+    
+    /**
+     *  省份
+     */
+    private String province;
+
+    /**
+     *  市
+     */
+    private String city;
+
+    /**
+     *  区
+     */
+    private String district;
 
     private static final long serialVersionUID = 1L;
 
@@ -103,5 +118,31 @@ public class ScStoreAddr extends Entity {
 	public void setOpenid(String openid) {
 		this.openid = openid;
 	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public void setProvince(String province) {
+		this.province = province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+	public String getDistrict() {
+		return district;
+	}
+
+	public void setDistrict(String district) {
+		this.district = district;
+	}
     
+	
+	
 }

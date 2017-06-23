@@ -9,7 +9,7 @@ import costumetrade.common.page.Page;
 import costumetrade.order.domain.SsProductFile;
 @Mapper
 public interface SsProductFileMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(SsProductFile file);
 
     int insert(SsProductFile record);
 

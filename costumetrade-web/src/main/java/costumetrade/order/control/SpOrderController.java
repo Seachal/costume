@@ -284,7 +284,7 @@ public class SpOrderController {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		scLogistics.setCreateby((String) httpSession.getAttribute("clientId"));
+		
 		int  confirm = spOrderService.confirmLogistic(scLogistics);
 		
 		if(confirm <= 0){
@@ -295,6 +295,25 @@ public class SpOrderController {
 			return result;
 		}
 		
+		
+	}
+	@RequestMapping("/logisticInit")
+	@ResponseBody
+	public ApiResponse logisticInit(SsStoOrder order) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		List<Object> objects= spOrderService.logisticInit(order);
+		
+		if(objects == null){
+			result.setData(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
+			return result;
+		}else{
+			result.setData(objects);
+		}
+		return result;
 		
 	}
 	

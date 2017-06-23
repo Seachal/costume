@@ -13,13 +13,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sf.openapi.common.entity.MessageResp;
+import com.sf.openapi.express.sample.order.dto.DeliverConsigneeInfoDto;
 import com.sf.openapi.express.sample.route.dto.RouteReqDto;
 import com.sf.openapi.express.sample.route.dto.RouteRespDto;
 
 import costumetrade.common.page.Page;
 import costumetrade.common.util.OrderNoGenerator;
+import costumetrade.common.util.StringUtil;
 import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.domain.ScStoreAddr;
+import costumetrade.order.domain.Sender;
 import costumetrade.order.domain.SpClient;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SsCgsorder;
@@ -48,11 +51,14 @@ import costumetrade.order.service.SFLogisticsService;
 import costumetrade.order.service.SpOrderService;
 import costumetrade.order.service.SpProductService;
 import costumetrade.user.domain.ScWeChat;
+import costumetrade.user.domain.SpStore;
 import costumetrade.user.domain.SpUser;
 import costumetrade.user.domain.SsDataDictionary;
 import costumetrade.user.mapper.ScWeChatMapper;
+import costumetrade.user.mapper.SpStoreMapper;
 import costumetrade.user.mapper.SpUserMapper;
 import costumetrade.user.mapper.SsDataDictionaryMapper;
+import costumetrade.user.query.ScUserQuery;
 
 @Transactional
 @Service
@@ -69,6 +75,8 @@ public class SpOrderServiceImpl implements SpOrderService{
 	private SpClientMapper spClientMapper;
 	@Autowired 
 	private ScStoreAddrMapper scStoreAddrMapper;
+	@Autowired 
+	private SpStoreMapper spStoreMapper;
 	@Autowired
 	private ScLogisticsMapper scLogisticsMapper;
 	@Autowired
@@ -91,6 +99,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 	private SsDataDictionaryMapper ssDataDictionaryMapper;
 	@Autowired
 	private SsCgsorderMapper ssCgsorderMapper;
+
 	@Override
 	public Integer saveOrders(List<SsStoDetail> details,SsStoOrder order,String openid) {
 
@@ -203,16 +212,33 @@ public class SpOrderServiceImpl implements SpOrderService{
 		spStoOrder.setPayorderno(orderNo);
 		List<SsStoOrder> spStoOrders = new ArrayList<SsStoOrder>();
 		List<SsStoDetail> ssStoDetails = new ArrayList<SsStoDetail>();
+		SpStore store = new SpStore();
+		SpUser user = new SpUser();
+		SsStoOrder order = new SsStoOrder();
 		if(wechat.getStoreid() == null){
 			spStoOrders = ssStoOrderMapper.selectByOrderMember(spStoOrder,null);
 			ssStoDetails = ssStoDetailMapper.selectByOrderIdMember(orderNo);
+			user = spUserMapper.selectByPrimaryKey(wechat.getUserid());
+			
+			if(spStoOrders.size()>0){
+				order = spStoOrders.get(0);
+				order.setReceiverImage(user.getName());
+				order.setReceiverImage(user.getPhoto());
+			}
 		}else{
+			store= spStoreMapper.selectByPrimaryKey(wechat.getStoreid());
 			spStoOrder.setStoreId(wechat.getStoreid());
 			spStoOrders = ssStoOrderMapper.selectByOrderStore(spStoOrder,null);
 			ssStoDetails = ssStoDetailMapper.selectByOrderId(orderNo,wechat.getStoreid());
+			
+			if(spStoOrders.size()>0){
+				order = spStoOrders.get(0);
+				order.setReceiverImage(store.getName());
+				order.setReceiverImage(store.getStorephoto());
+			}
 		}
 		query.setSsStoDetail(ssStoDetails);
-		query.setSsStoOrder(spStoOrders.get(0));
+		query.setSsStoOrder(order);
 		return query;
 	}
 
@@ -811,9 +837,81 @@ public class SpOrderServiceImpl implements SpOrderService{
 				}
 				update =ssStoDetailMapper.updateByPrimaryKeySelectiveStore(details);
 			}
-			update =ssStoDetailMapper.updateByPrimaryKeySelectiveStore(param.getStoDetails());
+			List<SsStoDetail> details = new ArrayList<SsStoDetail>();
+			for(SsStoDetail detail : param.getStoDetails()){
+				detail.setStoreid(param.getOrder().getSellerstoreid());
+				details.add(detail);
+			}
+			update =ssStoDetailMapper.updateByPrimaryKeySelectiveStore(details);
 		}
 		return update;
+	}
+	@Override
+	public List<Object> logisticInit(SsStoOrder ssStoOrder) {
+		List<Object> objects = new ArrayList<Object>();
+		
+		SsStoOrder spStoOrder = new SsStoOrder();
+		List<SsStoOrder> ssStoOrders = ssStoOrderMapper.selectByOrderStore(spStoOrder,null);
+		if(ssStoOrders!=null && ssStoOrders.size()>0){
+			spStoOrder = ssStoOrders.get(0);
+			ScStoreAddr record = new ScStoreAddr();
+			if(StringUtil.isNotBlank(spStoOrder.getShipaddress())){
+				
+				record.setAddress(spStoOrder.getShipaddress());
+				List<ScStoreAddr> records=  scStoreAddrMapper.selectAddr(record);
+				if(records!=null){//收货人
+					record = records.get(0);
+					if("SF".equals(spStoOrder.getLogisticsCode())){
+						DeliverConsigneeInfoDto deliver = new DeliverConsigneeInfoDto();
+						deliver.setAddress(record.getAddress());
+						deliver.setCity(record.getCity());
+						deliver.setContact(record.getContact());
+						deliver.setMobile(record.getPhone());
+						deliver.setTel(record.getPhone());
+						deliver.setProvince(record.getProvince());
+						deliver.setCounty(record.getDistrict());
+						objects.add(deliver);
+					}else{
+						Sender receiver = new Sender();
+						receiver.setAddress(record.getAddress());
+						receiver.setCity(record.getProvince()+","+record.getCity()+","+record.getCity());
+						receiver.setMobile(record.getPhone());
+						receiver.setName(record.getContact());
+						receiver.setPhone(record.getPhone());
+						objects.add(receiver);
+					}
+				}
+			}
+			if(StringUtil.isNotBlank(spStoOrder.getLogisticsCode())){
+				record.setUserid(spStoOrder.getSellerstoreid());
+				record.setIsdefault(1);
+				List<ScStoreAddr> records=  scStoreAddrMapper.selectAddr(record);
+				if(records!=null){//发货人
+					record = records.get(0);
+					if("SF".equals(spStoOrder.getLogisticsCode())){
+						DeliverConsigneeInfoDto deliver = new DeliverConsigneeInfoDto();
+						deliver.setAddress(record.getAddress());
+						deliver.setCity(record.getCity());
+						deliver.setContact(record.getContact());
+						deliver.setMobile(record.getPhone());
+						deliver.setTel(record.getPhone());
+						deliver.setProvince(record.getProvince());
+						deliver.setCounty(record.getDistrict());
+						objects.add(deliver);
+					}else{
+						Sender sender = new Sender();
+						sender.setAddress(record.getAddress());
+						sender.setCity(record.getProvince()+","+record.getCity()+","+record.getCity());
+						sender.setMobile(record.getPhone());
+						sender.setName(record.getContact());
+						sender.setPhone(record.getPhone());
+						objects.add(sender);
+					}
+				}
+			}
+		}
+		objects.add(spStoOrder);
+		return objects;
 	}
 	
 	

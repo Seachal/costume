@@ -69,7 +69,7 @@ public class SpClientController {
 		
 		List<SpClient> client = spClientService.getClients(spClient);
 		if(client.size()<=0){
-			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setData(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
@@ -87,7 +87,7 @@ public class SpClientController {
 		
 		SpClient client = spClientService.getClient(clientId);
 		if(client == null){
-			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setData(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
@@ -104,7 +104,7 @@ public class SpClientController {
 
 		ClientQuery data = spClientService.initCustomer(query);
 		if(data == null){
-			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setData(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
@@ -126,7 +126,7 @@ public class SpClientController {
 		}
 		Integer save = spClientService.updateClients(spClient);
 		if(save == null){
-			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setData(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}
@@ -147,7 +147,7 @@ public class SpClientController {
 		}
 		int delete = spClientService.cancelFocus(focusShop);
 		if(delete <= 0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setData(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
 			return result;
 		}
@@ -171,7 +171,7 @@ public class SpClientController {
 		}
 		
 		if(object == null){
-			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setData(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
 			return result;
 		}else{
@@ -196,22 +196,18 @@ public class SpClientController {
 			return result;
 		}
 		if(object == null&&param.getType()==1){
-			result.setCode(ResponseInfo.SUCCESS.code);
 			result.setData(ResponseInfo.SCAN_CUSTOMER_EXCEPTION.code);
 			result.setMsg(ResponseInfo.SCAN_CUSTOMER_EXCEPTION.msg);
 			return result;
 		}else if(object == null&&param.getType()==2){
-			result.setCode(ResponseInfo.SUCCESS.code);
 			result.setData(ResponseInfo.SCAN_SUPPLIER_EXCEPTION.code);
 			result.setMsg(ResponseInfo.SCAN_SUPPLIER_EXCEPTION.msg);
 			return result;
 		}else if(object == null&&param.getType()==3){
-			result.setCode(ResponseInfo.SUCCESS.code);
 			result.setData(ResponseInfo.SCAN_FRIEND_EXCEPTION.code);
 			result.setMsg(ResponseInfo.SCAN_FRIEND_EXCEPTION.msg);
 			return result;
 		}else if(object == null&&param.getType()==4){
-			result.setCode(ResponseInfo.SUCCESS.code);
 			result.setData(ResponseInfo.SCAN_EMP_EXCEPTION.code);
 			result.setMsg(ResponseInfo.SCAN_EMP_EXCEPTION.msg);
 			return result;
@@ -228,7 +224,7 @@ public class SpClientController {
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		String object = weChatService.getWechatTwoCode();
 		if(object == null){
-			result.setCode(ResponseInfo.EXCEPTION.code);
+			result.setData(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
 			return result;
 		}else{
@@ -245,7 +241,7 @@ public class SpClientController {
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		List<OrderQuery> querys = spClientService.financialCounting(query);
 		if(querys == null){
-			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setData(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
@@ -283,7 +279,7 @@ public class SpClientController {
 		}
 		SsPayment pay = spClientService.initAccountInfo(query);
 		if(pay == null){
-			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setData(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
@@ -306,7 +302,7 @@ public class SpClientController {
 		}
 		List<ProductQuery> querys = spClientService.clientReplenishment(query);
 		if(querys == null){
-			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setData(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{

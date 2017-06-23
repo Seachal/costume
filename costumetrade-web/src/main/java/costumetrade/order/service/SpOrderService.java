@@ -83,4 +83,7 @@ public interface SpOrderService {
 	 * 统计订单数量
 	 * */
 	public OrderCountQuery countOrders(String openid);
+	
+	
+	public List<Object> logisticInit(SsStoOrder ssStoOrder);
 }

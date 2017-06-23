@@ -198,6 +198,10 @@ public class SsStoOrder extends Entity {
     
     private String clientId;
     
+    private String receiverName;
+    
+    private String receiverImage;
+    
     private static final long serialVersionUID = 1L;
     
    
@@ -554,6 +558,22 @@ public class SsStoOrder extends Entity {
 
 	public void setLogisticsCode(String logisticsCode) {
 		this.logisticsCode = logisticsCode;
+	}
+
+	public String getReceiverName() {
+		return receiverName;
+	}
+
+	public void setReceiverName(String receiverName) {
+		this.receiverName = receiverName;
+	}
+
+	public String getReceiverImage() {
+		return receiverImage;
+	}
+
+	public void setReceiverImage(String receiverImage) {
+		this.receiverImage = receiverImage;
 	}
     
     

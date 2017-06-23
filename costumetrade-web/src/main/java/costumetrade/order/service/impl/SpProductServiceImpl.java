@@ -53,6 +53,8 @@ import costumetrade.order.query.ProductQuery;
 import costumetrade.order.query.Rules;
 import costumetrade.order.service.SpProductService;
 import costumetrade.order.service.WeChatService;
+import costumetrade.user.domain.PatternPrice;
+import costumetrade.user.domain.PriceJson;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpPrivilege;
@@ -186,6 +188,8 @@ public class SpProductServiceImpl implements SpProductService{
 				for(int i=0;i<size;i++){
 					Map<String,Object> mapField = new HashMap<String, Object>();
 					Map<String,Object> map = list.get(i);
+					
+					String priceJson = (String) map.get("raise_price");
 					for(int j=0;j<filed.length;j++){
 						
 						ProductQuery product = new ProductQuery();
@@ -198,8 +202,13 @@ public class SpProductServiceImpl implements SpProductService{
 							BigDecimal salePrice = setPrice(product, custTypeCode);
 							map.put("salePrice", salePrice.toString());
 						}
+						if("raise_price".equals(filed[j])){
+							PatternPrice json =  JSONObject.parseObject(priceJson, PatternPrice.class);
+							mapField.put("priceJsons", json);
+						}else{
+							mapField.put(filed[j], map.get(filed[j]));
+						}
 						
-						mapField.put(filed[j], map.get(filed[j]));
 					}
 					listMapFiled.add(mapField);
 				}
@@ -217,6 +226,11 @@ public class SpProductServiceImpl implements SpProductService{
 					if(custTypeCode >0){
 						BigDecimal salePrice = setPrice(product, custTypeCode);
 						map.put("salePrice", salePrice.toString());
+					}
+					String price = (String) map.get("raise_price");
+					if(StringUtil.isNotBlank(price)){
+						PatternPrice json =  JSONObject.parseObject(price, PatternPrice.class);
+						map.put("priceJsons", json);
 					}
 					listMap.add(map);
 				}
@@ -444,6 +458,10 @@ public class SpProductServiceImpl implements SpProductService{
 				queryResult.setIsPattern(product.getIsPattern());
 				queryResult.setStatus(product.getStatus());
 				queryResult.setRaisePrice(product.getRaisePrice());
+				if(StringUtil.isNotBlank(product.getRaisePrice())){
+					PatternPrice json =  JSONObject.parseObject(product.getRaisePrice(), PatternPrice.class);
+					queryResult.setPriceJsons(json);
+				}
 			}
 			SsPrice price = ssPriceMapper.select(storeId, productId);
 			queryResult.setPurchaseprice(price.getPurchaseprice());
@@ -453,6 +471,14 @@ public class SpProductServiceImpl implements SpProductService{
 			queryResult.setSecondPrice(price.getSecondPrice());
 			queryResult.setThirdPrice(price.getThirdPrice());
 			queryResult.setFourthPrice(price.getFourthPrice());
+			
+			
+//			List<SsProductFile> fileList = new ArrayList<SsProductFile>();
+//			SsProductFile ssProductFile = new SsProductFile();
+//			ssProductFile.setProductid(productId);	
+//			ssProductFile.setStoreid(storeId);
+//			fileList = ssProductFileMapper.selectByStoreId(null, ssProductFile);
+//			queryResult.setFileList(fileList);
 			
 			queryResult.setBrandList(null);
 			queryResult.setProductSize(null);
@@ -489,8 +515,12 @@ public class SpProductServiceImpl implements SpProductService{
 			
 			//判断是否需保存文件地址
 			if(product.getFileList() != null && product.getFileList().size()>0){
+				SsProductFile f = new SsProductFile();
+				f.setProductid(product.getId());
+				ssProductFileMapper.deleteByPrimaryKey(f);
+				
 				List<SsProductFile> files = new ArrayList<SsProductFile>();
-				for(SsProductFile file : files){
+				for(SsProductFile file : product.getFileList()){
 					file.setProductid(file.getProductid());
 					files.add(file);
 				}
@@ -528,6 +558,10 @@ public class SpProductServiceImpl implements SpProductService{
 			}
 			List<SsProductFile> files = product.getFileList();
 			if(files !=null && files.size()>0){
+				SsProductFile f = new SsProductFile();
+				f.setProductid(product.getId());
+				ssProductFileMapper.deleteByPrimaryKey(f);
+				
 				List<SsProductFile> fileList = new ArrayList<SsProductFile>();
 				for(SsProductFile file : files){
 					file.setProductid(product.getId());

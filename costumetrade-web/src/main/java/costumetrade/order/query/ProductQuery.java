@@ -12,9 +12,11 @@ import costumetrade.order.domain.SpPColor;
 import costumetrade.order.domain.SpPSize;
 import costumetrade.order.domain.SpPSizeCustom;
 import costumetrade.order.domain.SpUnit;
+import costumetrade.order.domain.SsProductFile;
 import costumetrade.order.domain.SsProductReview;
+import costumetrade.user.domain.PatternPrice;
+import costumetrade.user.domain.PriceJson;
 import costumetrade.user.domain.SpCustProdPrice;
-import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.domain.SpPrivilege;
 import costumetrade.user.domain.SsDataDictionary;
 
@@ -252,6 +254,10 @@ public class ProductQuery extends Entity{
     private List<SsDataDictionary> payTypeList;
     
     private List<ScLogisticFee> logisticFees;
+    
+    private List<SsProductFile> fileList;
+    
+    private PatternPrice priceJsons;
 	/**
 	 * 货品列表查询  开始
 	 */
@@ -991,6 +997,22 @@ public class ProductQuery extends Entity{
 
 	public void setRaisePrice(String raisePrice) {
 		this.raisePrice = raisePrice;
+	}
+
+	public List<SsProductFile> getFileList() {
+		return fileList;
+	}
+
+	public void setFileList(List<SsProductFile> fileList) {
+		this.fileList = fileList;
+	}
+
+	public PatternPrice getPriceJsons() {
+		return priceJsons;
+	}
+
+	public void setPriceJsons(PatternPrice priceJsons) {
+		this.priceJsons = priceJsons;
 	}
 
 	
