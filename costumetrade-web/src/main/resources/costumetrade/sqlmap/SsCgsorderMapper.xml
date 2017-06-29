@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.order.mapper.SsCgsorderMapper">
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.SsCgsorder">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="storeId" jdbcType="INTEGER" property="storeId" />
+    <result column="storeId" jdbcType="VARCHAR" property="storeId" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="cate" jdbcType="VARCHAR" property="cate" />
     <result column="cateName" jdbcType="VARCHAR" property="catename" />
@@ -36,7 +36,7 @@
       payCost, remarks, order_time, 
       create_time, create_by, modify_time, 
       modify_by)
-    values (#{id,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{storeId,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
       #{cate,jdbcType=VARCHAR}, #{catename,jdbcType=VARCHAR}, #{paycate,jdbcType=VARCHAR}, 
       #{paycost,jdbcType=DECIMAL}, #{remarks,jdbcType=VARCHAR}, #{orderTime,jdbcType=TIMESTAMP}, 
       #{createTime,jdbcType=BIGINT}, #{createBy,jdbcType=VARCHAR}, #{modifyTime,jdbcType=BIGINT}, 
@@ -101,7 +101,7 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="storeId != null">
-        #{storeId,jdbcType=INTEGER},
+        #{storeId,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},
@@ -142,7 +142,7 @@
     update ss_cgsorder
     <set>
       <if test="storeId != null">
-        storeId = #{storeId,jdbcType=INTEGER},
+        storeId = #{storeId,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
@@ -182,7 +182,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsCgsorder">
     update ss_cgsorder
-    set storeId = #{storeId,jdbcType=INTEGER},
+    set storeId = #{storeId,jdbcType=VARCHAR},
       status = #{status,jdbcType=INTEGER},
       cate = #{cate,jdbcType=VARCHAR},
       cateName = #{catename,jdbcType=VARCHAR},

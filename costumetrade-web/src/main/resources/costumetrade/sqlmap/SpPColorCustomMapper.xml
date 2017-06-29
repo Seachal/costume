@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.order.mapper.SpPColorCustomMapper">
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.SpPColorCustom">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="storeId" jdbcType="INTEGER" property="storeId" />
+    <result column="storeId" jdbcType="VARCHAR" property="storeId" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="customName" jdbcType="VARCHAR" property="customname" />
     <result column="value" jdbcType="VARCHAR" property="value" />
@@ -26,14 +26,14 @@
     <include refid="Base_Column_List" />
     from sp_pcolor_custom
     where value = #{value,jdbcType=VARCHAR}
-    and storeId = #{storeId,jdbcType=INTEGER}
+    and storeId = #{storeId,jdbcType=VARCHAR}
   </select>
   <select id="getSpPColorCustoms" parameterType="int" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from sp_pcolor_custom
     where 
-    storeId = #{storeId,jdbcType=INTEGER}
+    storeId = #{storeId,jdbcType=VARCHAR}
     and status = 0
   </select>
   <update id="deleteByPrimaryKey" parameterType="List">
@@ -44,7 +44,7 @@
     insert into sp_pcolor_custom (id, storeId, customName, status
       value, create_time, create_by, 
       modify_time, modify_by)
-    values (#{id,jdbcType=INTEGER}, #{storeId,jdbcType=INTEGER}, #{customname,jdbcType=VARCHAR}, 0,
+    values (#{id,jdbcType=INTEGER}, #{storeId,jdbcType=VARCHAR}, #{customname,jdbcType=VARCHAR}, 0,
       #{value,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
   </insert>
@@ -82,7 +82,7 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="storeId != null">
-        #{storeId,jdbcType=INTEGER},
+        #{storeId,jdbcType=VARCHAR},
       </if>
       <if test="customname != null">
         #{customname,jdbcType=VARCHAR},
@@ -109,7 +109,7 @@
     update sp_pcolor_custom
     <set>
       <if test="storeId != null">
-        storeId = #{storeId,jdbcType=INTEGER},
+        storeId = #{storeId,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
@@ -135,7 +135,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SpPColorCustom">
     update sp_pcolor_custom
-    set storeId = #{storeId,jdbcType=INTEGER},
+    set storeId = #{storeId,jdbcType=VARCHAR},
     	status = #{status,jdbcType=INTEGER},
       customName = #{customname,jdbcType=VARCHAR},
       value = #{value,jdbcType=VARCHAR},

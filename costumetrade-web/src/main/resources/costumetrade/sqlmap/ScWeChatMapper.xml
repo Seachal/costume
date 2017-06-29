@@ -4,11 +4,11 @@
   <resultMap id="BaseResultMap" type="costumetrade.user.domain.ScWeChat">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="openId" jdbcType="VARCHAR" property="openid" />
-    <result column="storeId" jdbcType="INTEGER" property="storeid" />
+    <result column="storeId" jdbcType="VARCHAR" property="storeid" />
     <result column="empId" jdbcType="INTEGER" property="empid" />
     <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
     <result column="createBy" jdbcType="VARCHAR" property="createby" />
-    <result column="userId" jdbcType="INTEGER" property="userid" />
+    <result column="userId" jdbcType="VARCHAR" property="userid" />
   </resultMap>
   <sql id="Base_Column_List">
     id, openId, storeId, empId, createTime, createBy, userId
@@ -33,9 +33,9 @@
     insert into sc_wechat_bind (id, openId, storeId, 
       empId, createTime, createBy, 
       userId)
-    values (#{id,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{storeid,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{storeid,jdbcType=VARCHAR}, 
       #{empid,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR}, 
-      #{userid,jdbcType=INTEGER})
+      #{userid,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.user.domain.ScWeChat">
   	<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
@@ -73,7 +73,7 @@
         #{openid,jdbcType=VARCHAR},
       </if>
       <if test="storeid != null">
-        #{storeid,jdbcType=INTEGER},
+        #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="empid != null">
         #{empid,jdbcType=INTEGER},
@@ -85,7 +85,7 @@
         #{createby,jdbcType=VARCHAR},
       </if>
       <if test="userid != null">
-        #{userid,jdbcType=INTEGER},
+        #{userid,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -96,7 +96,7 @@
         openId = #{openid,jdbcType=VARCHAR},
       </if>
       <if test="storeid != null">
-        storeId = #{storeid,jdbcType=INTEGER},
+        storeId = #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="empid != null">
         empId = #{empid,jdbcType=INTEGER},
@@ -108,7 +108,7 @@
         createBy = #{createby,jdbcType=VARCHAR},
       </if>
       <if test="userid != null">
-        userId = #{userid,jdbcType=INTEGER},
+        userId = #{userid,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
@@ -116,11 +116,11 @@
   <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.ScWeChat">
     update sc_wechat_bind
     set openId = #{openid,jdbcType=VARCHAR},
-      storeId = #{storeid,jdbcType=INTEGER},
+      storeId = #{storeid,jdbcType=VARCHAR},
       empId = #{empid,jdbcType=INTEGER},
       createTime = #{createtime,jdbcType=TIMESTAMP},
       createBy = #{createby,jdbcType=VARCHAR},
-      userId = #{userid,jdbcType=INTEGER}
+      userId = #{userid,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.user.mapper.SpCustomerTypeMapper">
   <resultMap id="BaseResultMap" type="costumetrade.user.domain.SpCustomerType">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="storeId" jdbcType="INTEGER" property="storeid" />
+    <result column="storeId" jdbcType="VARCHAR" property="storeid" />
     <result column="typeName" jdbcType="VARCHAR" property="typename" />
     <result column="integration" jdbcType="INTEGER" property="integration" />
     <result column="saleType" jdbcType="VARCHAR" property="saletype" />
@@ -27,7 +27,7 @@
     select 
     <include refid="Base_Column_List" />
     from sp_customer_type
-    where storeId = #{storeid,jdbcType=INTEGER}
+    where storeId = #{storeid,jdbcType=VARCHAR}
     and typeName = #{typename,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -39,7 +39,7 @@
       integration, saleType,visible_grade, create_time, 
       create_by, modify_time, modify_by
       )
-    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{typename,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=VARCHAR}, #{typename,jdbcType=VARCHAR}, 
       #{integration,jdbcType=INTEGER}, #{saletype,jdbcType=VARCHAR}, #{visibleGrade,jdbcType=VARCHAR},#{createTime,jdbcType=TIMESTAMP}, 
       #{createBy,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR}
       )
@@ -83,7 +83,7 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="storeid != null">
-        #{storeid,jdbcType=INTEGER},
+        #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="typename != null">
         #{typename,jdbcType=VARCHAR},
@@ -115,7 +115,7 @@
     update sp_customer_type
     <set>
       <if test="storeid != null">
-        storeId = #{storeid,jdbcType=INTEGER},
+        storeId = #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="typename != null">
         typeName = #{typename,jdbcType=VARCHAR},
@@ -146,7 +146,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SpCustomerType">
     update sp_customer_type
-    set storeId = #{storeid,jdbcType=INTEGER},
+    set storeId = #{storeid,jdbcType=VARCHAR},
       typeName = #{typename,jdbcType=VARCHAR},
       integration = #{integration,jdbcType=INTEGER},
       saleType = #{saletype,jdbcType=VARCHAR},

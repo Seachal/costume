@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.order.mapper.SpProductMapper">
 	<resultMap id="BaseResultMap" type="costumetrade.order.domain.SpProduct">
 		<id column="id" jdbcType="VARCHAR" property="id" />
-		<result column="storeId" jdbcType="INTEGER" property="storeId" />
+		<result column="storeId" jdbcType="VARCHAR" property="storeId" />
 		<result column="status" jdbcType="INTEGER" property="status" />
 		<result column="code" jdbcType="VARCHAR" property="code" />
 		<result column="popularize" jdbcType="INTEGER" property="popularize" />
@@ -69,7 +69,8 @@
 		<result column="name" jdbcType="VARCHAR" property="name" />
 		<result column="image" jdbcType="VARCHAR" property="image" />
 		<result column="time_up" jdbcType="TIMESTAMP" property="timeUp" />
-		<result column="storeId" jdbcType="DECIMAL" property="storeId" />
+		<result column="storeId" jdbcType="VARCHAR" property="storeId" />
+		<result column="isPattern" jdbcType="VARCHAR" property="isPattern" />
 		<result column="brandId" jdbcType="VARCHAR" property="brandid" />
 		<result column="producttype" jdbcType="VARCHAR" property="producttype" />
 		<result column="colors" jdbcType="VARCHAR" property="colors" />
@@ -78,6 +79,7 @@
 		<result column="isModify" jdbcType="INTEGER" property="isModify" />
 		<result column="isDiscount" jdbcType="INTEGER" property="isDiscount" />
 		<result column="year" jdbcType="VARCHAR" property="year" />
+		<result column="raise_price" jdbcType="VARCHAR" property="raisePrice" />
 		<result column="season" jdbcType="VARCHAR" property="season" />
 		<result column="image1" jdbcType="VARCHAR" property="image1" />
 		<result column="image2" jdbcType="VARCHAR" property="image2" />
@@ -119,16 +121,16 @@
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from sp_product_#{storeId,jdbcType=INTEGER}
-
+		from sp_product
 		where id = #{id,jdbcType=VARCHAR}
+		and storeId = #{storeId,jdbcType=VARCHAR}
 	</select>
 	
 	<select id="selectPopulars" parameterType="costumetrade.order.domain.SpProduct" resultMap="BaseResultMap">
 		select id,storeId,
 		 image,
 		image1,image2,image3,image4
-		from sp_product_#{storeId,jdbcType=INTEGER}
+		from sp_product
 		where 1=1
 		<if test="id !=null">
 		and  id = #{id,jdbcType=VARCHAR}
@@ -145,10 +147,13 @@
 	<select id="selectById" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from sp_product_#{storeId,jdbcType=INTEGER}
+		from sp_product
 		where id in
 		<foreach collection="id" item="item" index="index" open="("
 			separator="," close=")">#{item,jdbcType=VARCHAR}</foreach>
+		<if test="storeId!=null">
+		and  storeId = #{storeId,jdbcType=INTEGER}
+		</if>
 	</select>
 
 	<select id="selectProducts" resultType="java.util.HashMap">
@@ -162,14 +167,16 @@
 		price.purchasePrice, price.tagPrice, price.firsthPrice,
 		price.secondPrice, price.thirdPrice,
 		price.fourthPrice,price.fifthPrice,product.saleNum
-		FROM sp_product_#{product.storeId,jdbcType=INTEGER} product
-		LEFT JOIN ss_pprice_#{product.storeId,jdbcType=INTEGER} price ON
+		FROM sp_product product
+		LEFT JOIN ss_pprice price ON
 		price.productId = product.id AND price.storeId = product.storeId
 		LEFT JOIN sp_pbrand brand ON brand.id = product.brandId
 		LEFT JOIN sp_product_type productType ON productType.id =
 		product.productType
 		WHERE 1=1
-		
+		<if test="product.storeId!=null">
+		    and  product.storeId = #{product.storeId,jdbcType=INTEGER}
+		</if>
 		<if test="product.status != null">
 			and product.status =#{product.status}
 		</if>
@@ -270,11 +277,10 @@
 	<select id="selectProduct" parameterType="costumetrade.order.query.ProductQuery"
 		resultMap="ProductResultMap">
 		select
-		product.id,product.code,product.name,product.image,product.time_up,product.raise_price,
+		product.id,product.code,product.name,product.image,product.time_up,product.isPattern,product.raise_price,
 		price.purchasePrice, price.tagPrice, price.firsthPrice, price.secondPrice,
 		price.thirdPrice, price.fourthPrice,price.fifthPrice,
 		product.storeId,
-		brand.brandId,
 		productType.cateName as producttype,
 		product.colors,
 		product.sizes,
@@ -282,28 +288,31 @@
 		storeImage,
 		product.year , product.season, product.image1, product.image2, product.image3,
 		product.image4
-		from sp_product_#{storeId,jdbcType=INTEGER} product
-		left join ss_pprice_#{storeId,jdbcType=INTEGER} price on price.productId =
+		from sp_product product
+		left join ss_pprice price on price.productId =
 		product.id and price.storeId = product.storeId
 		left join sp_pbrand brand on brand.id = product.brandId
 		left join sp_product_type productType on productType.id =
 		product.productType
 		left join sp_store store on store.id = product.storeId
 		where 1=1
-		and product.storeId = #{storeId,jdbcType=INTEGER}
+		and product.storeId = #{storeId,jdbcType=VARCHAR}
 		and product.id = #{id,jdbcType=INTEGER}
 	</select>
 	<delete id="deleteByIds">
-		delete from sp_product_#{storeId,jdbcType=INTEGER}
+		delete from sp_product
 		where id in
 		<foreach collection="ids" item="item" index="index" open="("
 			separator="," close=")">#{item,jdbcType=VARCHAR}</foreach>
+		<if test="storeId!=null">
+		    and storeId = #{storeId,jdbcType=VARCHAR}
+		</if>
 	</delete>
 	<update id="updateByIds">
-		update sp_product_#{storeId,jdbcType=INTEGER} 
+		update sp_product 
 		<set>
 			<if test="storeId != null">
-				storeId = #{storeId,jdbcType=INTEGER},
+				storeId = #{storeId,jdbcType=VARCHAR},
 			</if>
 			<if test="status != null">
 				status = #{status,jdbcType=INTEGER},
@@ -395,6 +404,9 @@
 		where id in
 		<foreach collection="idArray" item="item" index="index" open="("
 			separator="," close=")">#{item,jdbcType=VARCHAR}</foreach>
+		<if test="storeId !=null">
+			and storeId =#{storeId,jdbcType=VARCHAR}
+		</if>	
 	</update>
 	<insert id="insert" parameterType="costumetrade.order.domain.SpProduct">
 		insert into sp_product (id, storeId, status,popularize,raise_price,
@@ -408,7 +420,7 @@
 		description, warn_low, warn_high,
 		time_up, time_down, create_time,
 		create_by, modify_time, modify_by)
-		values (#{id,jdbcType=VARCHAR}, #{storeId,jdbcType=INTEGER},
+		values (#{id,jdbcType=VARCHAR}, #{storeId,jdbcType=VARCHAR},
 		#{status,jdbcType=INTEGER}, #{popularize,jdbcType=INTEGER},#{raise_price,jdbcType=VARCHAR},
 		#{code,jdbcType=VARCHAR}, #{brandid,jdbcType=INTEGER},
 		#{producttype,jdbcType=INTEGER},
@@ -430,7 +442,7 @@
 	</insert>
 	<insert id="insertSelective" keyProperty="id"
 		parameterType="costumetrade.order.domain.SpProduct">
-		insert into sp_product_#{storeId,jdbcType=INTEGER}
+		insert into sp_product
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
 				id,
@@ -565,7 +577,7 @@
 				#{popularize,jdbcType=INTEGER},
 			</if>
 			<if test="storeId != null">
-				#{storeId,jdbcType=INTEGER},
+				#{storeId,jdbcType=VARCHAR},
 			</if>
 			<if test="status != null">
 				#{status,jdbcType=INTEGER},
@@ -685,10 +697,10 @@
 		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SpProduct">
-		update sp_product_#{storeId,jdbcType=INTEGER}
+		update sp_product
 		<set>
 			<if test="storeId != null">
-				storeId = #{storeId,jdbcType=INTEGER},
+				storeId = #{storeId,jdbcType=VARCHAR},
 			</if>
 			<if test="status != null">
 				status = #{status,jdbcType=INTEGER},
@@ -807,10 +819,11 @@
 
 		</set>
 		where id = #{id,jdbcType=INTEGER}
+		and storeId = #{storeId}
 	</update>
 	<update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SpProduct">
 		update sp_product
-		set storeId = #{storeId,jdbcType=INTEGER},
+		set storeId = #{storeId,jdbcType=VARCHAR},
 		status = #{status,jdbcType=INTEGER},
 		code = #{code,jdbcType=VARCHAR},
 		brandId = #{brandid,jdbcType=INTEGER},

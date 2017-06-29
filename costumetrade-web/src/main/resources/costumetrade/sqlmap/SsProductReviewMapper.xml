@@ -3,8 +3,9 @@
 <mapper namespace="costumetrade.order.mapper.SsProductReviewMapper">
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.SsProductReview">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="storeId" jdbcType="INTEGER" property="storeid" />
-    <result column="productId" jdbcType="INTEGER" property="productid" />
+    <result column="storeId" jdbcType="VARCHAR" property="storeid" />
+    <result column="countReview" jdbcType="INTEGER" property="countReview" />
+    <result column="productId" jdbcType="VARCHAR" property="productid" />
     <result column="headPhoto" jdbcType="VARCHAR" property="headphoto" />
     <result column="clientName" jdbcType="VARCHAR" property="clientname" />
     <result column="msg" jdbcType="VARCHAR" property="msg" />
@@ -21,17 +22,26 @@
     from ss_product_review
     where id = #{id,jdbcType=INTEGER}
   </select>
-  <select id="selectReviews" parameterType="costumetrade.order.query.ProductQuery" resultMap="BaseResultMap">
+  <select id="selectReviews" resultMap="BaseResultMap">
     select 
-    id, storeId, productId, headPhoto, clientName, msg,imageUrl
+    id, storeId, productId, headPhoto, clientName, msg,imageUrl,createTime
     from ss_product_review
-    where storeId = #{storeId,jdbcType=INTEGER}
-    <if test="id!=null">
-     and productId = #{id}
+    where storeId = #{query.storeId,jdbcType=VARCHAR}
+    <if test="query.id!=null">
+     and productId = #{query.id}
     </if>
    <if test="page!=null">
     LIMIT #{page.startRow},#{page.pageSize}
     </if>
+  </select>
+    <select id="selectReviewCount" resultMap="BaseResultMap">
+    select count(*) as countReview
+    from ss_product_review
+    where storeId = #{query.storeId,jdbcType=VARCHAR}
+    <if test="query.id!=null">
+     and productId = #{query.id}
+    </if>
+  
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ss_product_review
@@ -41,7 +51,7 @@
     insert into ss_product_review (id, storeId, productId, 
       headPhoto, clientName, msg,imageUrl, 
       createTime, createBy)
-    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{productid,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=VARCHAR}, #{productid,jdbcType=VARCHAR}, 
       #{headphoto,jdbcType=VARCHAR}, #{clientname,jdbcType=VARCHAR}, #{msg,jdbcType=VARCHAR}, #{imageUrl,jdbcType=VARCHAR},
       #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR})
   </insert>
@@ -81,10 +91,10 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="storeid != null">
-        #{storeid,jdbcType=INTEGER},
+        #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="productid != null">
-        #{productid,jdbcType=INTEGER},
+        #{productid,jdbcType=VARCHAR},
       </if>
       <if test="headphoto != null">
         #{headphoto,jdbcType=VARCHAR},
@@ -110,10 +120,10 @@
     update ss_product_review
     <set>
       <if test="storeid != null">
-        storeId = #{storeid,jdbcType=INTEGER},
+        storeId = #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="productid != null">
-        productId = #{productid,jdbcType=INTEGER},
+        productId = #{productid,jdbcType=VARCHAR},
       </if>
       <if test="headphoto != null">
         headPhoto = #{headphoto,jdbcType=VARCHAR},
@@ -138,8 +148,8 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsProductReview">
     update ss_product_review
-    set storeId = #{storeid,jdbcType=INTEGER},
-      productId = #{productid,jdbcType=INTEGER},
+    set storeId = #{storeid,jdbcType=VARCHAR},
+      productId = #{productid,jdbcType=VARCHAR},
       headPhoto = #{headphoto,jdbcType=VARCHAR},
       clientName = #{clientname,jdbcType=VARCHAR},
       msg = #{msg,jdbcType=VARCHAR},

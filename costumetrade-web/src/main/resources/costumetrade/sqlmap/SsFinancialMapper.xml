@@ -5,8 +5,8 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="tradeNo" jdbcType="VARCHAR" property="tradeno" />
     <result column="orderNo" jdbcType="VARCHAR" property="orderno" />
-    <result column="buyerId" jdbcType="INTEGER" property="buyerid" />
-    <result column="sellerId" jdbcType="INTEGER" property="sellerid" />
+    <result column="buyerId" jdbcType="VARCHAR" property="buyerid" />
+    <result column="sellerId" jdbcType="VARCHAR" property="sellerid" />
     <result column="remark" jdbcType="VARCHAR" property="remark" />
     <result column="relaNo" jdbcType="VARCHAR" property="relaNo" />
     <result column="income" jdbcType="DECIMAL" property="income" />
@@ -39,7 +39,7 @@
       pay_type, payDate, cardno, 
       pay_bank, bussi_type)
     values (#{id,jdbcType=INTEGER}, #{tradeno,jdbcType=VARCHAR}, #{orderno,jdbcType=VARCHAR}, #{relaNo,jdbcType=VARCHAR}, 
-      #{buyerid,jdbcType=INTEGER}, #{sellerid,jdbcType=INTEGER}, #{remark,jdbcType=VARCHAR}, 
+      #{buyerid,jdbcType=VARCHAR}, #{sellerid,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
       #{income,jdbcType=DECIMAL}, #{pay,jdbcType=DECIMAL}, #{incomedate,jdbcType=DECIMAL}, 
       #{payType,jdbcType=VARCHAR}, #{paydate,jdbcType=TIMESTAMP}, #{cardno,jdbcType=VARCHAR}, 
       #{payBank,jdbcType=VARCHAR}, #{bussiType,jdbcType=VARCHAR})
@@ -107,10 +107,10 @@
          #{relaNo,jdbcType=VARCHAR},
       </if>
       <if test="buyerid != null">
-        #{buyerid,jdbcType=INTEGER},
+        #{buyerid,jdbcType=VARCHAR},
       </if>
       <if test="sellerid != null">
-        #{sellerid,jdbcType=INTEGER},
+        #{sellerid,jdbcType=VARCHAR},
       </if>
       <if test="remark != null">
         #{remark,jdbcType=VARCHAR},
@@ -151,10 +151,10 @@
         orderNo = #{orderno,jdbcType=VARCHAR},
       </if>
       <if test="buyerid != null">
-        buyerId = #{buyerid,jdbcType=INTEGER},
+        buyerId = #{buyerid,jdbcType=VARCHAR},
       </if>
       <if test="sellerid != null">
-        sellerId = #{sellerid,jdbcType=INTEGER},
+        sellerId = #{sellerid,jdbcType=VARCHAR},
       </if>
        <if test="relaNo != null">
          relaNo = #{relaNo,jdbcType=VARCHAR},
@@ -193,8 +193,8 @@
     update ss_financial
     set tradeNo = #{tradeno,jdbcType=VARCHAR},
       orderNo = #{orderno,jdbcType=VARCHAR},
-      buyerId = #{buyerid,jdbcType=INTEGER},
-      sellerId = #{sellerid,jdbcType=INTEGER},
+      buyerId = #{buyerid,jdbcType=VARCHAR},
+      sellerId = #{sellerid,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
       relaNo = #{relaNo,jdbcType=VARCHAR},
       income = #{income,jdbcType=DECIMAL},

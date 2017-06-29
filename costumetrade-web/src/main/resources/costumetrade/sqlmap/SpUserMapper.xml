@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="costumetrade.user.mapper.SpUserMapper">
   <resultMap id="BaseResultMap" type="costumetrade.user.domain.SpUser">
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="photo" jdbcType="VARCHAR" property="photo" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
@@ -18,23 +18,23 @@
   <sql id="Base_Column_List">
     id, photo, name, phone, address, create_time, create_by, birthday, remark, weChat_no,region,cphone
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from sp_user
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </select>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from sp_user
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="costumetrade.user.domain.SpUser" keyProperty="id" useGeneratedKeys="true">
   
-    insert into sp_user (photo, name, 
+    insert into sp_user (id,photo, name, 
       phone, address, create_time, 
       create_by, birthday, remark, 
       weChat_no,region,cphone)
-    values (#{photo,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+    values (#{id},#{photo,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
       #{createBy,jdbcType=VARCHAR}, #{birthday,jdbcType=TIMESTAMP}, #{remark,jdbcType=VARCHAR}, 
       #{wechatNo,jdbcType=VARCHAR}, #{region,jdbcType=VARCHAR}, 
@@ -82,7 +82,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=VARCHAR},
       </if>
       <if test="photo != null">
         #{photo,jdbcType=VARCHAR},
@@ -156,7 +156,7 @@
         cphone = #{cphone,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SpUser">
     update sp_user
@@ -171,6 +171,6 @@
       weChat_no = #{wechatNo,jdbcType=VARCHAR}
       region = #{region,jdbcType=VARCHAR},
       cphone = #{cphone,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

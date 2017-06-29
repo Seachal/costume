@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.order.mapper.ScLogisticsMapper">
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.ScLogistics">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="storeId" jdbcType="INTEGER" property="storeid" />
+    <result column="storeId" jdbcType="VARCHAR" property="storeid" />
     <result column="orderNo" jdbcType="VARCHAR" property="orderno" />
     <result column="logisticsType" jdbcType="VARCHAR" property="logisticstype" />
     <result column="logisticsNo" jdbcType="VARCHAR" property="logisticsno" />
@@ -39,7 +39,7 @@
     and orderNo = #{orderno,jdbcType=VARCHAR}
     </if>
     <if test="storeid != null">
-    and storeId = #{storeid,jdbcType=INTEGER}
+    and storeId = #{storeid,jdbcType=VARCHAR}
     </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -50,7 +50,7 @@
     insert into sc_logistics (id, storeId, orderNo, 
       logisticsType, logisticsNo, logisticsName,logisticsCode, 
       createTime, createBy)
-    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{orderno,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=VARCHAR}, #{orderno,jdbcType=VARCHAR}, 
       #{logisticstype,jdbcType=VARCHAR}, #{logisticsno,jdbcType=VARCHAR}, #{logisticsname,jdbcType=VARCHAR}, #{logisticsCode,jdbcType=VARCHAR},
       #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR})
   </insert>
@@ -90,7 +90,7 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="storeid != null">
-        #{storeid,jdbcType=INTEGER},
+        #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="orderno != null">
         #{orderno,jdbcType=VARCHAR},
@@ -119,7 +119,7 @@
     update sc_logistics
     <set>
       <if test="storeid != null">
-        storeId = #{storeid,jdbcType=INTEGER},
+        storeId = #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="orderno != null">
         orderNo = #{orderno,jdbcType=VARCHAR},
@@ -147,7 +147,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.ScLogistics">
     update sc_logistics
-    set storeId = #{storeid,jdbcType=INTEGER},
+    set storeId = #{storeid,jdbcType=VARCHAR},
       orderNo = #{orderno,jdbcType=VARCHAR},
       logisticsType = #{logisticstype,jdbcType=VARCHAR},
       logisticsNo = #{logisticsno,jdbcType=VARCHAR},

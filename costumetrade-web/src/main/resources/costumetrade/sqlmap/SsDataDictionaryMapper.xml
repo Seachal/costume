@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.user.mapper.SsDataDictionaryMapper">
   <resultMap id="BaseResultMap" type="costumetrade.user.domain.SsDataDictionary">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="storeId" jdbcType="INTEGER" property="storeId" />
+    <result column="storeId" jdbcType="VARCHAR" property="storeId" />
     <result column="dict_group_name" jdbcType="VARCHAR" property="dictGroupName" />
     <result column="dict_group" jdbcType="VARCHAR" property="dictGroup" />
     <result column="dict_value" jdbcType="VARCHAR" property="dictValue" />
@@ -29,7 +29,7 @@
     from ss_data_dictionary
     where 1=1
       <if test="storeId != null">
-       and storeId = #{storeId,jdbcType=INTEGER}
+       and storeId = #{storeId,jdbcType=VARCHAR}
       </if>
       <if test="dictGroupName != null">
        and dict_group_name = #{dictGroupName,jdbcType=VARCHAR}
@@ -52,11 +52,11 @@
     and storeId = #{storeId}
      
   </select>
-  <select id="getDataDictionarys" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="getDataDictionarys" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from ss_data_dictionary
-    where storeId = #{storeId,jdbcType=INTEGER}
+    where storeId = #{storeId,jdbcType=VARCHAR}
    
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -68,7 +68,7 @@
       dict_value, dict_text, sort_num, 
       status, create_time, create_by
       )
-    values (#{id,jdbcType=INTEGER},#{storeId,jdbcType=INTEGER}, #{dictGroupName,jdbcType=VARCHAR}, #{dictGroup,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER},#{storeId,jdbcType=VARCHAR}, #{dictGroupName,jdbcType=VARCHAR}, #{dictGroup,jdbcType=VARCHAR}, 
       #{dictValue,jdbcType=VARCHAR}, #{dictText,jdbcType=VARCHAR}, #{sortNum,jdbcType=INTEGER}, 
       #{status,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}
       )
@@ -112,7 +112,7 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="storeId != null">
-        #{storeId,jdbcType=INTEGER},
+        #{storeId,jdbcType=VARCHAR},
       </if>
       <if test="dictGroupName != null">
         #{dictGroupName,jdbcType=VARCHAR},
@@ -171,7 +171,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="item.storeId != null">
-        #{item.storeId,jdbcType=INTEGER},
+        #{item.storeId,jdbcType=VARCHAR},
       </if>
       <if test="item.dictGroupName != null">
         #{item.dictGroupName,jdbcType=VARCHAR},
@@ -201,7 +201,7 @@
     update ss_data_dictionary
     <set>
       <if test="storeId != null">
-        storeId = #{storeId,jdbcType=INTEGER},
+        storeId = #{storeId,jdbcType=VARCHAR},
       </if>
       <if test="dictGroupName != null">
         dict_group_name = #{dictGroupName,jdbcType=VARCHAR},
@@ -235,7 +235,7 @@
     update ss_data_dictionary
     <set>
       <if test="item.storeId != null">
-        storeId = #{item.storeId,jdbcType=INTEGER},
+        storeId = #{item.storeId,jdbcType=VARCHAR},
       </if>
       <if test="item.dictGroupName != null">
         dict_group_name = #{item.dictGroupName,jdbcType=VARCHAR},
@@ -266,7 +266,7 @@
   <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SsDataDictionary">
     update ss_data_dictionary
     set dict_group_name = #{dictGroupName,jdbcType=VARCHAR},
-      storeId = #{storeId,jdbcType=INTEGER},
+      storeId = #{storeId,jdbcType=VARCHAR},
       dict_group = #{dictGroup,jdbcType=VARCHAR},
       dict_value = #{dictValue,jdbcType=VARCHAR},
       dict_text = #{dictText,jdbcType=VARCHAR},

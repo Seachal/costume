@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.user.mapper.SsPaymentMapper">
   <resultMap id="BaseResultMap" type="costumetrade.user.domain.SsPayment">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="storeId" jdbcType="INTEGER" property="storeid" />
+    <result column="storeId" jdbcType="VARCHAR" property="storeid" />
     <result column="payObjType" jdbcType="VARCHAR" property="payobjtype" />
     <result column="payNo" jdbcType="VARCHAR" property="payno" />
     <result column="uuid" jdbcType="VARCHAR" property="uuid" />
@@ -57,7 +57,7 @@
       payType, payAmt, billType, 
       payTime, updateTime, updateBy
       )
-    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{payobjtype,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=VARCHAR}, #{payobjtype,jdbcType=VARCHAR}, 
       #{payno,jdbcType=VARCHAR}, #{uuid,jdbcType=VARCHAR}, #{clientId,jdbcType=VARCHAR}, 
       #{paytype,jdbcType=VARCHAR}, #{payamt,jdbcType=DECIMAL}, #{billtype,jdbcType=VARCHAR}, 
       #{paytime,jdbcType=TIMESTAMP}, #{updatetime,jdbcType=TIMESTAMP}, #{updateby,jdbcType=VARCHAR}
@@ -108,7 +108,7 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="storeid != null">
-        #{storeid,jdbcType=INTEGER},
+        #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="payobjtype != null">
         #{payobjtype,jdbcType=VARCHAR},
@@ -146,7 +146,7 @@
     update ss_payment
     <set>
       <if test="storeid != null">
-        storeId = #{storeid,jdbcType=INTEGER},
+        storeId = #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="payobjtype != null">
         payObjType = #{payobjtype,jdbcType=VARCHAR},
@@ -183,7 +183,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SsPayment">
     update ss_payment
-    set storeId = #{storeid,jdbcType=INTEGER},
+    set storeId = #{storeid,jdbcType=VARCHAR},
       payObjType = #{payobjtype,jdbcType=VARCHAR},
       payNo = #{payno,jdbcType=VARCHAR},
       uuid = #{uuid,jdbcType=VARCHAR},

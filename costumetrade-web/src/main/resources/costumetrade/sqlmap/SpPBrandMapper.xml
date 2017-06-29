@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.order.mapper.SpPBrandMapper">
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.SpPBrand">
     <result column="id" jdbcType="INTEGER" property="id" />
-    <result column="storeId" jdbcType="INTEGER" property="storeId" />
+    <result column="storeId" jdbcType="VARCHAR" property="storeId" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="isDefault" jdbcType="INTEGER" property="isDefault" />
     <result column="brandName" jdbcType="VARCHAR" property="brandname" />
@@ -32,21 +32,21 @@
   <select id="getSpPBrands"  resultMap="BaseResultMap">
     select id, brandName, storeId,isDefault
     from sp_pbrand
-    where storeId = #{storeId,jdbcType=INTEGER}
+    where storeId = #{storeId,jdbcType=VARCHAR}
 	and status =0
   </select>
   <select id="getSpPBrand"  resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from sp_pbrand
-    where storeId = #{storeId,jdbcType=INTEGER}
+    where storeId = #{storeId,jdbcType=VARCHAR}
     and id = #{id,jdbcType=INTEGER}
   </select>
   <select id="getSpPBrandByName"  resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from sp_pbrand
-    where storeId = #{storeId,jdbcType=INTEGER}
+    where storeId = #{storeId,jdbcType=VARCHAR}
     and brandName = #{brandname,jdbcType=VARCHAR}
   </select>
   <update id="deleteByPrimaryKey" parameterType="List">
@@ -62,7 +62,7 @@
       profit_d5, profit_precise, create_time, 
       create_by, modify_time, modify_by
       )
-    values ( #{storeId,jdbcType=INTEGER}, #{brandname,jdbcType=VARCHAR}, 0,#{isDefault},
+    values ( #{storeId,jdbcType=VARCHAR}, #{brandname,jdbcType=VARCHAR}, 0,#{isDefault},
       #{fastcode,jdbcType=VARCHAR}, #{profitD0,jdbcType=DECIMAL}, #{profitD1,jdbcType=DECIMAL}, 
       #{profitD2,jdbcType=DECIMAL}, #{profitD3,jdbcType=DECIMAL}, #{profitD4,jdbcType=DECIMAL}, 
       #{profitD5,jdbcType=DECIMAL}, #{profitPrecise,jdbcType=DECIMAL}, NOW(), 
@@ -130,7 +130,7 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="storeId != null">
-        #{storeId,jdbcType=INTEGER},
+        #{storeId,jdbcType=VARCHAR},
       </if>
       <if test="isDefault != null">
         #{isDefault,jdbcType=INTEGER},
@@ -178,7 +178,7 @@
     update sp_pbrand
     <set>
       <if test="storeId != null">
-        #{storeId,jdbcType=INTEGER},
+        #{storeId,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         #{status,jdbcType=INTEGER},

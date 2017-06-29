@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.user.mapper.SpCustProdPriceMapper">
 	<resultMap id="BaseResultMap" type="costumetrade.user.domain.SpCustProdPrice">
 		<id column="id" jdbcType="INTEGER" property="id" />
-		<result column="storeId" jdbcType="INTEGER" property="storeid" />
+		<result column="storeId" jdbcType="VARCHAR" property="storeid" />
 		<result column="type" jdbcType="VARCHAR" property="type" />
 		<result column="custTypeCode" jdbcType="VARCHAR" property="custTypeCode" />
 		<result column="custTypeName" jdbcType="VARCHAR" property="custtypename" />
@@ -35,7 +35,7 @@
 			and id = #{id,jdbcType=INTEGER}
 		</if>
 		<if test="storeid != null">
-			and storeId = #{storeid,jdbcType=INTEGER}
+			and storeId = #{storeid,jdbcType=VARCHAR}
 		</if>
 		<if test="type != null">
 			and type = #{type,jdbcType=VARCHAR}
@@ -56,7 +56,7 @@
 		custTypeName, prodGrade, custPriceJson,
 		discPriceJson, createTime, createBy
 		)
-		values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER},
+		values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=VARCHAR},
 		#{type,jdbcType=VARCHAR},#{custTypeCode,jdbcType=VARCHAR},
 		#{custtypename,jdbcType=VARCHAR}, #{prodgrade,jdbcType=VARCHAR}, #{custpricejson,jdbcType=VARCHAR},
 		#{discpricejson,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP},
@@ -68,7 +68,7 @@
 		update sp_cust_prod_price
 		<set>
 			<if test="item.storeid != null">
-				storeId = #{item.storeid,jdbcType=INTEGER},
+				storeId = #{item.storeid,jdbcType=VARCHAR},
 			</if>
 			<if test="item.type != null">
 				type = #{item.type,jdbcType=VARCHAR},
@@ -139,7 +139,7 @@
 				#{id,jdbcType=INTEGER},
 			</if>
 			<if test="storeid != null">
-				#{storeid,jdbcType=INTEGER},
+				#{storeid,jdbcType=VARCHAR},
 			</if>
 			<if test="type != null">
 				#{type,jdbcType=VARCHAR},
@@ -171,7 +171,7 @@
 		update sp_cust_prod_price
 		<set>
 			<if test="storeid != null">
-				storeId = #{storeid,jdbcType=INTEGER},
+				storeId = #{storeid,jdbcType=VARCHAR},
 			</if>
 			<if test="type != null">
 				type = #{type,jdbcType=VARCHAR},
@@ -202,7 +202,7 @@
 	</update>
 	<update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SpCustProdPrice">
 		update sp_cust_prod_price
-		set storeId = #{storeid,jdbcType=INTEGER},
+		set storeId = #{storeid,jdbcType=VARCHAR},
 		type = #{type,jdbcType=VARCHAR},
 		custTypeCode = #{custTypeCode,jdbcType=VARCHAR},
 		custTypeName = #{custtypename,jdbcType=VARCHAR},

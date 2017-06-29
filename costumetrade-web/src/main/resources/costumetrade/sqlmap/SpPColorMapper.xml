@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.order.mapper.SpPColorMapper">
 	<resultMap id="BaseResultMap" type="costumetrade.order.domain.SpPColor">
 		<id column="id" jdbcType="INTEGER" property="id" />
-		<result column="storeId" jdbcType="INTEGER" property="storeId" />
+		<result column="storeId" jdbcType="VARCHAR" property="storeId" />
 		<result column="status" jdbcType="INTEGER" property="status" />
 		<result column="colorName" jdbcType="VARCHAR" property="colorname" />
 		<result column="price_raise" jdbcType="DECIMAL" property="priceRaise" />
@@ -30,7 +30,7 @@
 		from sp_pcolor
 		where 1=1
 		<if test="color.storeId!=null">
-		and  storeId = #{color.storeId,jdbcType=INTEGER}
+		and  storeId = #{color.storeId,jdbcType=VARCHAR}
 		</if>
 		<if test="color.colorname!=null">
 		and colorName = #{color.colorname,jdbcType=VARCHAR}
@@ -43,7 +43,7 @@
 		from sp_pcolor
 		where 1=1
 		<if test="color.storeId!=null">
-		and storeId = #{color.storeId,jdbcType=INTEGER}
+		and storeId = #{color.storeId,jdbcType=VARCHAR}
 		</if>
 	
 		and status =0
@@ -62,7 +62,7 @@
 		insert into sp_pcolor (storeId, colorName,price_raise,status,
 		barcode, create_time, create_by,
 		modify_time, modify_by)
-		values <foreach collection="sizes" index="index" item="item" separator=","> (#{item.storeId,jdbcType=INTEGER},
+		values <foreach collection="sizes" index="index" item="item" separator=","> (#{item.storeId,jdbcType=VARCHAR},
 		#{item.colorname,jdbcType=VARCHAR}, #{item.priceRaise,jdbcType=DECIMAL},0,
 		#{item.barcode,jdbcType=VARCHAR}, NOW(),
 		#{item.createBy,jdbcType=VARCHAR},
@@ -73,7 +73,7 @@
 		insert into sp_pcolor (storeId, colorName,price_raise,status,
 		barcode, create_time, create_by,
 		modify_time, modify_by)
-		values (#{storeId,jdbcType=INTEGER},
+		values (#{storeId,jdbcType=VARCHAR},
 		#{colorname,jdbcType=VARCHAR}, #{priceRaise,jdbcType=DECIMAL},0,
 		#{barcode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
 		#{createBy,jdbcType=VARCHAR},
@@ -117,7 +117,7 @@
 				#{id,jdbcType=INTEGER},
 			</if>
 			<if test="storeId != null">
-				#{storeId,jdbcType=INTEGER},
+				#{storeId,jdbcType=VARCHAR},
 			</if>
 			<if test="colorname != null">
 				#{colorname,jdbcType=VARCHAR},
@@ -148,7 +148,7 @@
 		update sp_pcolor
 		<set>
 			<if test="storeId != null">
-				storeId = #{storeId,jdbcType=INTEGER},
+				storeId = #{storeId,jdbcType=VARCHAR},
 			</if>
 			<if test="status != null">
 				status = #{status,jdbcType=INTEGER},
@@ -178,7 +178,7 @@
 	</update>
 	<update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SpPColor">
 		update sp_pcolor
-		set storeId = #{storeId,jdbcType=INTEGER},
+		set storeId = #{storeId,jdbcType=VARCHAR},
 		colorName = #{colorname,jdbcType=VARCHAR},
 		price_raise = #{priceRaise,jdbcType=DECIMAL},
 		barcode = #{barcode,jdbcType=VARCHAR},

@@ -8,7 +8,7 @@
 		<result column="phone" jdbcType="VARCHAR" property="phone" />
 		<result column="address" jdbcType="VARCHAR" property="address" />
 		<result column="isDefault" jdbcType="INTEGER" property="isdefault" />
-		<result column="userid" jdbcType="INTEGER" property="userid" />
+		<result column="userid" jdbcType="VARCHAR" property="userid" />
 		<result column="province" jdbcType="VARCHAR" property="province" />
 		<result column="city" jdbcType="VARCHAR" property="city" />
 		<result column="district" jdbcType="VARCHAR" property="district" />
@@ -47,7 +47,7 @@
 			and isDefault = #{isdefault,jdbcType=INTEGER}
 		</if>
 		<if test="userid != null">
-			and userid = #{userid,jdbcType=INTEGER}
+			and userid = #{userid,jdbcType=VARCHAR}
 		</if>
 	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
@@ -64,7 +64,7 @@
 		#{city,jdbcType=VARCHAR},
 		#{district,jdbcType=VARCHAR},
 		#{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR},
-		#{isdefault,jdbcType=INTEGER},#{userid,jdbcType=INTEGER}
+		#{isdefault,jdbcType=INTEGER},#{userid,jdbcType=VARCHAR}
 		)
 	</insert>
 	<insert id="insertSelective" parameterType="costumetrade.order.domain.ScStoreAddr">
@@ -130,7 +130,7 @@
 				#{isdefault,jdbcType=INTEGER},
 			</if>
 			<if test="userid != null">
-				#{userid,jdbcType=INTEGER},
+				#{userid,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>
@@ -153,7 +153,7 @@
 				isDefault = #{isdefault,jdbcType=INTEGER},
 			</if>
 			<if test="userid != null">
-				userid = #{userid,jdbcType=INTEGER},
+				userid = #{userid,jdbcType=VARCHAR},
 			</if>
 			<if test="province != null">
 				province = #{province,jdbcType=VARCHAR},
@@ -175,7 +175,7 @@
 		phone = #{phone,jdbcType=VARCHAR},
 		address = #{address,jdbcType=VARCHAR},
 		isDefault = #{isdefault,jdbcType=INTEGER}
-		userid = #{userid,jdbcType=INTEGER}
+		userid = #{userid,jdbcType=VARCHAR}
 		where id = #{id,jdbcType=INTEGER}
 	</update>
 </mapper>

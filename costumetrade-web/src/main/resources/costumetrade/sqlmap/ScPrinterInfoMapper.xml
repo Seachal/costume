@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.user.mapper.ScPrinterInfoMapper">
   <resultMap id="BaseResultMap" type="costumetrade.user.domain.ScPrinterInfo">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="storeId" jdbcType="INTEGER" property="storeid" />
+    <result column="storeId" jdbcType="VARCHAR" property="storeid" />
     <result column="printId" jdbcType="VARCHAR" property="printid" />
     <result column="image_logo" jdbcType="VARCHAR" property="imageLogo" />
     <result column="image_code" jdbcType="VARCHAR" property="imageCode" />
@@ -24,13 +24,13 @@
   <sql id="Blob_Column_List">
     bankMessage
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
     select 
     <include refid="Base_Column_List" />
     ,
     <include refid="Blob_Column_List" />
     from sc_printer_info
-    where storeId = #{storeId,jdbcType=INTEGER}
+    where storeId = #{storeId,jdbcType=VARCHAR}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sc_printer_info
@@ -42,7 +42,7 @@
       isPrintLogo, image_wechat, image_alipay, 
       create_time, createBy, bankMessage
       )
-    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{printid,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=VARCHAR}, #{printid,jdbcType=VARCHAR}, 
       #{imageLogo,jdbcType=VARCHAR}, #{imageCode,jdbcType=VARCHAR}, #{isprintcode,jdbcType=INTEGER}, 
       #{isprintlogo,jdbcType=INTEGER}, #{imageWechat,jdbcType=VARCHAR}, #{imageAlipay,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR}, #{bankmessage,jdbcType=LONGVARCHAR}
@@ -93,7 +93,7 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="storeid != null">
-        #{storeid,jdbcType=INTEGER},
+        #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="printid != null">
         #{printid,jdbcType=VARCHAR},
@@ -131,7 +131,7 @@
     update sc_printer_info
     <set>
       <if test="storeid != null">
-        storeId = #{storeid,jdbcType=INTEGER},
+        storeId = #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="printid != null">
         printId = #{printid,jdbcType=VARCHAR},
@@ -168,7 +168,7 @@
   </update>
   <update id="updateByPrimaryKeyWithBLOBs" parameterType="costumetrade.user.domain.ScPrinterInfo">
     update sc_printer_info
-    set storeId = #{storeid,jdbcType=INTEGER},
+    set storeId = #{storeid,jdbcType=VARCHAR},
       printId = #{printid,jdbcType=VARCHAR},
       image_logo = #{imageLogo,jdbcType=VARCHAR},
       image_code = #{imageCode,jdbcType=VARCHAR},
@@ -183,7 +183,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.ScPrinterInfo">
     update sc_printer_info
-    set storeId = #{storeid,jdbcType=INTEGER},
+    set storeId = #{storeid,jdbcType=VARCHAR},
       printId = #{printid,jdbcType=VARCHAR},
       image_logo = #{imageLogo,jdbcType=VARCHAR},
       image_code = #{imageCode,jdbcType=VARCHAR},

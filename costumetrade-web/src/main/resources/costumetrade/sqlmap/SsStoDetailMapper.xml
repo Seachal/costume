@@ -43,8 +43,12 @@
 	<select id="selectByOrderId" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from ss_stodetail_#{storeId,jdbcType=INTEGER}
+		from ss_stodetail
 		where orderId = #{orderNo,jdbcType=VARCHAR}
+		<if test="storeId !=null">
+		and storeId = #{storeId,jdbcType=VARCHAR}
+		</if>
+		
 	</select>
 	<select id="selectByOrderIdMember" resultMap="BaseResultMap">
 		select
@@ -67,14 +71,18 @@
 			WHEN product.image3 IS NOT NULL THEN product.image3
 			WHEN product.image4 IS NOT NULL THEN product.image4 ELSE product.image END) as image
 		FROM
-		ss_stodetail_#{query.storeId} detail
-		LEFT JOIN ss_stoorder_#{query.storeId} sto
+		ss_stodetail detail
+		LEFT JOIN ss_stoorder sto
 		ON sto.payOrderNo = detail.orderId
-		LEFT JOIN sp_product_#{query.storeId} product 
-		ON product.id = detail.productId
+		LEFT JOIN sp_product product 
+		ON product.id = detail.productId and product.storeId = detail.storeId
 		WHERE 1 = 1
 		AND sto.buyerStoreId = #{query.buyerstoreid}
 		AND sto.sellerStoreId = #{query.sellerstoreid}
+		
+		<if test="query.storeId !=null">
+		and storeId = #{query.storeId,jdbcType=VARCHAR}
+		</if>
 		ORDER BY detail.createTime DESC
 		<if test="page != null">
 		LIMIT #{page.startRow},#{page.pageSize}
@@ -102,7 +110,7 @@
 		)
 	</insert>
 	<insert id="saveDetail">
-		insert into ss_stodetail_#{sellerStoreId,jdbcType=INTEGER} (orderId,
+		insert into ss_stodetail (orderId,
 		storeId,
 		handtag, productId, productName,
 		productUnit, productColor, productSize,
@@ -136,7 +144,7 @@
 		values
 		<foreach collection="detail" item="item" index="index"
 			separator=",">( #{item.orderid,jdbcType=VARCHAR},
-			#{sellerStoreId,jdbcType=INTEGER},
+			#{sellerStoreId,jdbcType=VARCHAR},
 			#{item.handtag,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR},
 			#{item.productname,jdbcType=VARCHAR},
 			#{item.productunit,jdbcType=VARCHAR},
@@ -155,7 +163,7 @@
 
 	<insert id="saveDetailStore">
 
-		insert into ss_stodetail_#{storeId,jdbcType=INTEGER} (orderId,
+		insert into ss_stodetail (orderId,
 		storeId,
 		handtag, productId, productName,
 		productUnit, productColor, productSize,
@@ -165,7 +173,7 @@
 		values
 		<foreach collection="detail" item="item" index="index"
 			separator=",">( #{item.orderid,jdbcType=VARCHAR},
-			#{storeId,jdbcType=INTEGER},
+			#{storeId,jdbcType=VARCHAR},
 			#{item.handtag,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR},
 			#{item.productname,jdbcType=VARCHAR},
 			#{item.productunit,jdbcType=VARCHAR},
@@ -279,7 +287,7 @@
 	</insert>
 	<update id="updateByPrimaryKeySelectiveStore" >
 	   <foreach collection="details" item="item" index="index" separator=";">
-		update ss_stodetail_#{item.storeid}
+		update ss_stodetail
 		<set>
 			<if test="item.orderid != null">
 				orderId = #{item.orderid,jdbcType=VARCHAR},

@@ -6,7 +6,7 @@
     <result column="unit" jdbcType="VARCHAR" property="unit" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="storeId" jdbcType="INTEGER" property="storeId" />
+    <result column="storeId" jdbcType="VARCHAR" property="storeId" />
     <result column="isDefault" jdbcType="INTEGER" property="isDefault" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
   </resultMap>
@@ -23,7 +23,7 @@
     select 
     id, unit,storeId,isDefault
     from sp_punit
-    where storeId = #{storeId,jdbcType=INTEGER}
+    where storeId = #{storeId,jdbcType=VARCHAR}
 	and status =0
   </select>
   
@@ -31,7 +31,7 @@
     select 
     <include refid="Base_Column_List" />
     from sp_punit
-    where storeId = #{storeId,jdbcType=INTEGER}
+    where storeId = #{storeId,jdbcType=VARCHAR}
     and unit = #{unit,jdbcType=VARCHAR}
   </select>
   <update id="deleteByPrimaryKey" parameterType="List">
@@ -42,7 +42,7 @@
     insert into sp_punit (unit, create_time, status,isDefault,
       storeId, create_by)
     values (#{unit,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},0, #{isDefault,jdbcType=INTEGER},
-      #{storeId,jdbcType=INTEGER}, #{createBy,jdbcType=VARCHAR})
+      #{storeId,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.SpUnit">
     insert into sp_punit
@@ -79,7 +79,7 @@
       </if>
       0,
       <if test="storeId != null">
-        #{storeId,jdbcType=INTEGER},
+        #{storeId,jdbcType=VARCHAR},
       </if>
       <if test="isDefault != null">
         #{isDefault,jdbcType=INTEGER},
@@ -99,7 +99,7 @@
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
       <if test="storeId != null">
-        storeId = #{storeId,jdbcType=INTEGER},
+        storeId = #{storeId,jdbcType=VARCHAR},
       </if>
       <if test="isDefault != null">
         isDefault = #{isDefault,jdbcType=INTEGER},
@@ -117,7 +117,7 @@
     update sp_punit
     set unit = #{unit,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      storeId = #{storeId,jdbcType=INTEGER},
+      storeId = #{storeId,jdbcType=VARCHAR},
       isDefault = #{isDefault,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
       create_by = #{createBy,jdbcType=VARCHAR}

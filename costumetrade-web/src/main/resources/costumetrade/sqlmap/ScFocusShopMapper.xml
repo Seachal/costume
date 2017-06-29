@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.ScFocusShop">
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="openid" jdbcType="VARCHAR" property="openid" />
-    <result column="shopId" jdbcType="INTEGER" property="shopid" />
+    <result column="shopId" jdbcType="VARCHAR" property="shopid" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
@@ -28,7 +28,7 @@
        and openid = #{openid,jdbcType=VARCHAR}
       </if>
       <if test="shopid != null">
-       and shopId = #{shopid,jdbcType=INTEGER}
+       and shopId = #{shopid,jdbcType=VARCHAR}
       </if>
       <if test="id !=null">
        and id = #{id,jdbcType=INTEGER}
@@ -51,14 +51,14 @@
        and openid = #{openid,jdbcType=VARCHAR}
       </if>
 	<if test="shopid != null">
-       and shopId = #{shopid,jdbcType=INTEGER}
+       and shopId = #{shopid,jdbcType=VARCHAR}
       </if>
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.ScFocusShop">
     insert into sc_focus_shop (id, openid, shopId, 
       create_time, create_by, modify_time, 
       modify_by)
-    values (#{id,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{shopid,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{shopid,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, #{modifyTime,jdbcType=TIMESTAMP}, 
       #{modifyBy,jdbcType=VARCHAR})
   </insert>
@@ -95,7 +95,7 @@
         #{openid,jdbcType=VARCHAR},
       </if>
       <if test="shopid != null">
-        #{shopid,jdbcType=INTEGER},
+        #{shopid,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
@@ -118,7 +118,7 @@
         openid = #{openid,jdbcType=VARCHAR},
       </if>
       <if test="shopid != null">
-        shopId = #{shopid,jdbcType=INTEGER},
+        shopId = #{shopid,jdbcType=VARCHAR},
       </if>
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -138,7 +138,7 @@
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.ScFocusShop">
     update sc_focus_shop
     set openid = #{openid,jdbcType=VARCHAR},
-      shopId = #{shopid,jdbcType=INTEGER},
+      shopId = #{shopid,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       create_by = #{createBy,jdbcType=VARCHAR},
       modify_time = #{modifyTime,jdbcType=TIMESTAMP},

@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.user.mapper.SpEmployeeMapper">
   <resultMap id="BaseResultMap" type="costumetrade.user.domain.SpEmployee">
   	<id column="id" jdbcType="INTEGER" property="id" />
-    <result column="storeId" jdbcType="INTEGER" property="storeId" />
+    <result column="storeId" jdbcType="VARCHAR" property="storeId" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
@@ -33,13 +33,13 @@
     from sp_employee
     where 1=1
      <if test="storeId != null">
-       and storeId = #{storeId,jdbcType=INTEGER}
+       and storeId = #{storeId,jdbcType=VARCHAR}
       </if>
      <if test="id != null">
       and id = #{id,jdbcType=INTEGER}
       </if>
      <if test="openid != null">
-      and openid = #{openid,jdbcType=INTEGER}
+      and openid = #{openid,jdbcType=VARCHAR}
       </if>
   </select>
   <select id="getAllEmployees" parameterType="String"  resultMap="BaseResultMap">
@@ -52,7 +52,7 @@
   
   <delete id="deleteByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployee">
     delete from sp_employee
-    where storeId = #{storeId,jdbcType=INTEGER}
+    where storeId = #{storeId,jdbcType=VARCHAR}
       <if test="id != null">
       and id = #{id,jdbcType=INTEGER}
       </if>
@@ -64,7 +64,7 @@
       reallyName, openid, phoneBack, 
       telephone, address, addressBack, 
       birthdate, nickName,discount,zeroPrice,weChatNo,modifyPrice)
-    values (#{storeId,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, 
+    values (#{storeId,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
       #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR}, 
       #{reallyName,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, #{phoneBack,jdbcType=VARCHAR}, 
@@ -140,7 +140,7 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="storeId != null">
-        #{storeId,jdbcType=INTEGER},
+        #{storeId,jdbcType=VARCHAR},
       </if>
       <if test="id != null">
         #{id,jdbcType=INTEGER},
@@ -261,7 +261,7 @@
         modifyPrice =#{modifyPrice,jdbcType=VARCHAR},
       </if>
     </set>
-    where storeId = #{storeId,jdbcType=INTEGER}
+    where storeId = #{storeId,jdbcType=VARCHAR}
       and id = #{id,jdbcType=INTEGER}
   </update>
   
@@ -286,7 +286,7 @@
       discount = #{discount,jdbcType=DECIMAL},
       nickName = #{nickName,jdbcType=VARCHAR}
       
-    where storeId = #{storeId,jdbcType=INTEGER}
+    where storeId = #{storeId,jdbcType=VARCHAR}
       and id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

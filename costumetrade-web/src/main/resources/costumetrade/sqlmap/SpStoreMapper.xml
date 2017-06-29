@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="costumetrade.user.mapper.SpStoreMapper">
   <resultMap id="BaseResultMap" type="costumetrade.user.domain.SpStore">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="parentId" jdbcType="INTEGER" property="parentid" />
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="parentId" jdbcType="VARCHAR" property="parentid" />
     <result column="storeType" jdbcType="INTEGER" property="storeType" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="storePhoto" jdbcType="VARCHAR" property="storephoto" />
@@ -29,11 +29,11 @@
     id, parentId, storePhoto, status,name,storeType, inventoryShare,server, contact, phone, cphone, address, create_time, 
     create_by, modify_time, modify_by, we_ticket, we_url, region, wechat, birthday, description
   </sql>
-  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from sp_store
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </select>
   <select id="selectStores"  resultMap="BaseResultMap">
     select id, parentId, storePhoto, name,storeType, inventoryShare,address
@@ -41,7 +41,7 @@
     where 1=1
     and status =0
      <if test="store.parentid != null">
-       and parentId = #{store.parentid,jdbcType=INTEGER}
+       and parentId = #{store.parentid,jdbcType=VARCHAR}
       </if>
       <if test="store.storephoto != null">
        and storePhoto = #{store.storephoto,jdbcType=VARCHAR}
@@ -56,7 +56,7 @@
        and name = #{store.name,jdbcType=VARCHAR}
       </if>
       <if test="store.id != null">
-  	   and id = #{store.id,jdbcType=INTEGER}
+  	   and id = #{store.id,jdbcType=VARCHAR}
       </if>
       <if test="store.idArray != null">
   	   and id in 
@@ -67,9 +67,9 @@
       LIMIT #{page.startRow},#{page.pageSize}
       </if>
   </select>
-  <update id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+  <update id="deleteByPrimaryKey" parameterType="java.lang.String">
     update  sp_store set status = 1
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
   <insert id="insert" parameterType="costumetrade.user.domain.SpStore">
     insert into sp_store (id, parentId, storePhoto,status,storeType,inventoryShare, 
@@ -79,7 +79,7 @@
       modify_by, we_ticket, we_url, 
       region, wechat, birthday, 
       description)
-    values (#{id,jdbcType=INTEGER}, #{parentid,jdbcType=INTEGER}, #{storephoto,jdbcType=VARCHAR},0, #{storeType,jdbcType=INTEGER},#{inventoryShare,jdbcType=INTEGER},
+    values (#{id,jdbcType=VARCHAR}, #{parentid,jdbcType=VARCHAR}, #{storephoto,jdbcType=VARCHAR},0, #{storeType,jdbcType=INTEGER},#{inventoryShare,jdbcType=INTEGER},
       #{name,jdbcType=VARCHAR}, #{server,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{cphone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
       NOW(), #{createBy,jdbcType=VARCHAR}, NOW(), 
@@ -158,10 +158,10 @@
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=VARCHAR},
       </if>
       <if test="parentid != null">
-        #{parentid,jdbcType=INTEGER},
+        #{parentid,jdbcType=VARCHAR},
       </if>
       <if test="storephoto != null">
         #{storephoto,jdbcType=VARCHAR},
@@ -223,7 +223,7 @@
     update sp_store
     <set>
       <if test="parentid != null">
-        parentId = #{parentid,jdbcType=INTEGER},
+        parentId = #{parentid,jdbcType=VARCHAR},
       </if>
       <if test="storephoto != null">
         storePhoto = #{storephoto,jdbcType=VARCHAR},
@@ -284,11 +284,11 @@
         description = #{description,jdbcType=VARCHAR},
       </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SpStore">
     update sp_store
-    set parentId = #{parentid,jdbcType=INTEGER},
+    set parentId = #{parentid,jdbcType=VARCHAR},
       storePhoto = #{storephoto,jdbcType=VARCHAR},
       storeType = #{storeType,jdbcType=INTEGER},
       status = #{status,jdbcType=INTEGER},
@@ -309,6 +309,6 @@
       wechat = #{wechat,jdbcType=VARCHAR},
       birthday = #{birthday,jdbcType=TIMESTAMP},
       description = #{description,jdbcType=VARCHAR}
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

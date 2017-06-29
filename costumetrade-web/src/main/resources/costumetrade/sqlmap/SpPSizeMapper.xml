@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.order.mapper.SpPSizeMapper">
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.SpPSize">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="storeId" jdbcType="INTEGER" property="storeId" />
+    <result column="storeId" jdbcType="VARCHAR" property="storeId" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="sizeName" jdbcType="VARCHAR" property="sizename" />
     <result column="barcode" jdbcType="VARCHAR" property="barcode" />
@@ -29,7 +29,7 @@
     from sp_psize
     where 1=1
     <if test="size.storeId!=null">
-    and storeId = #{size.storeId,jdbcType=INTEGER}
+    and storeId = #{size.storeId,jdbcType=VARCHAR}
     </if>
   
     <if test="size.sizeName!=null">
@@ -42,7 +42,7 @@
     from sp_psize
     where 1=1
     <if test="size.storeId!=null">
-    and storeId = #{size.storeId,jdbcType=INTEGER}
+    and storeId = #{size.storeId,jdbcType=VARCHAR}
     </if>
   
     and status =0
@@ -61,7 +61,7 @@
     insert into sp_psize (storeId, sizeName, price_raise,status,
       barcode, create_time, create_by,
       modify_time, modify_by)
-    values <foreach collection="sizes" index="index" item="item" separator=",">(#{item.storeId,jdbcType=INTEGER}, #{item.sizename,jdbcType=VARCHAR}, #{item.priceRaise,jdbcType=DECIMAL},0,
+    values <foreach collection="sizes" index="index" item="item" separator=",">(#{item.storeId,jdbcType=VARCHAR}, #{item.sizename,jdbcType=VARCHAR}, #{item.priceRaise,jdbcType=DECIMAL},0,
       #{item.barcode,jdbcType=VARCHAR}, NOW(), #{item.createBy,jdbcType=VARCHAR}, 
       NOW(), #{item.modifyBy,jdbcType=VARCHAR})</foreach>
   </insert>
@@ -69,7 +69,7 @@
     insert into sp_psize (storeId, sizeName, price_raise,status,
       barcode, create_time, create_by,
       modify_time, modify_by)
-    values (#{storeId,jdbcType=INTEGER}, #{sizename,jdbcType=VARCHAR}, #{priceRaise,jdbcType=DECIMAL},0,
+    values (#{storeId,jdbcType=VARCHAR}, #{sizename,jdbcType=VARCHAR}, #{priceRaise,jdbcType=DECIMAL},0,
       #{barcode,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR},
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR})
   </insert>
@@ -111,7 +111,7 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="storeId != null">
-        #{storeId,jdbcType=INTEGER},
+        #{storeId,jdbcType=VARCHAR},
       </if>
       <if test="sizename != null">
         #{sizename,jdbcType=VARCHAR},
@@ -142,7 +142,7 @@
     update sp_psize
     <set>
       <if test="storeId != null">
-        storeId = #{storeId,jdbcType=INTEGER},
+        storeId = #{storeId,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
@@ -174,7 +174,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SpPSize">
     update sp_psize
-    set storeId = #{storeId,jdbcType=INTEGER},
+    set storeId = #{storeId,jdbcType=VARCHAR},
     status = #{status,jdbcType=INTEGER},
       sizeName = #{sizename,jdbcType=VARCHAR},
       price_raise = #{priceRaise,jdbcType=DECIMAL},

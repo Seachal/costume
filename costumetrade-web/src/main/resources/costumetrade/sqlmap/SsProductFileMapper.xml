@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.order.mapper.SsProductFileMapper">
   <resultMap id="BaseResultMap" type="costumetrade.order.domain.SsProductFile">
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="storeId" jdbcType="INTEGER" property="storeid" />
+    <result column="storeId" jdbcType="VARCHAR" property="storeid" />
     <result column="productId" jdbcType="VARCHAR" property="productid" />
     <result column="productName" jdbcType="VARCHAR" property="productName" />
     <result column="fileName" jdbcType="VARCHAR" property="filename" />
@@ -58,7 +58,7 @@
     insert into ss_product_file (id, storeId, productId, productName,
       fileName, url,resizeFixUrl, createTime, 
       createBy)
-    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=INTEGER}, #{productid,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR},
+    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=VARCHAR}, #{productid,jdbcType=VARCHAR}, #{productName,jdbcType=VARCHAR},
       #{filename,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, #{resizeFixUrl,jdbcType=VARCHAR},#{createtime,jdbcType=TIMESTAMP}, 
       #{createby,jdbcType=VARCHAR})
   </insert>
@@ -66,7 +66,7 @@
     insert into ss_product_file (storeId, productId, productName,
       fileName, url,resizeFixUrl, createTime, 
       createBy)
-    values <foreach collection="files" index="index" item ="item" separator=",">( #{item.storeid,jdbcType=INTEGER}, #{item.productid,jdbcType=VARCHAR}, #{item.productName,jdbcType=VARCHAR},  
+    values <foreach collection="files" index="index" item ="item" separator=",">( #{item.storeid,jdbcType=VARCHAR}, #{item.productid,jdbcType=VARCHAR}, #{item.productName,jdbcType=VARCHAR},  
       #{item.filename,jdbcType=VARCHAR}, #{item.url,jdbcType=VARCHAR},#{item.resizeFixUrl,jdbcType=VARCHAR}, NOW(), 
       #{item.createby,jdbcType=VARCHAR})</foreach> 
   </insert>
@@ -106,7 +106,7 @@
         #{id,jdbcType=INTEGER},
       </if>
       <if test="storeid != null">
-        #{storeid,jdbcType=INTEGER},
+        #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="productid != null">
         #{productid,jdbcType=VARCHAR},
@@ -135,7 +135,7 @@
     update ss_product_file
     <set>
       <if test="storeid != null">
-        storeId = #{storeid,jdbcType=INTEGER},
+        storeId = #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="productid != null">
         productId = #{productid,jdbcType=VARCHAR},
@@ -163,7 +163,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsProductFile">
     update ss_product_file
-    set storeId = #{storeid,jdbcType=INTEGER},
+    set storeId = #{storeid,jdbcType=VARCHAR},
       productId = #{productid,jdbcType=VARCHAR},
       productName = #{productName,jdbcType=VARCHAR},
       fileName = #{filename,jdbcType=VARCHAR},

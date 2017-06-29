@@ -7,8 +7,8 @@
     <result column="count" jdbcType="DECIMAL" property="count" />
     <result column="price" jdbcType="DECIMAL" property="price" />
     <result column="amount" jdbcType="DECIMAL" property="amount" />
-    <result column="transferFromId" jdbcType="INTEGER" property="transferfromid" />
-    <result column="transferToId" jdbcType="INTEGER" property="transfertoid" />
+    <result column="transferFromId" jdbcType="VARCHAR" property="transferfromid" />
+    <result column="transferToId" jdbcType="VARCHAR" property="transfertoid" />
     <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
     <result column="createBy" jdbcType="VARCHAR" property="createby" />
     <result column="productId" jdbcType="VARCHAR" property="productid" />
@@ -16,14 +16,14 @@
     <result column="productSize" jdbcType="VARCHAR" property="productsize" />
   </resultMap>
   <insert id="insert" >
-    insert into ss_stock_transfer_#{storeId,jdbcType=INTEGER} ( stock_type, count, 
+    insert into ss_stock_transfer ( stock_type, count, 
       price, amount, transferFromId, 
       transferToId, createDate, createBy, 
       productId, productColor, productSize
       )
     values <foreach collection="tranfer" item="item" index ="index" separator=",">( #{item.stockType,jdbcType=INTEGER}, #{item.count,jdbcType=DECIMAL}, 
-      #{item.price,jdbcType=DECIMAL}, #{item.amount,jdbcType=DECIMAL}, #{item.transferfromid,jdbcType=INTEGER}, 
-      #{item.transfertoid,jdbcType=INTEGER}, #{item.createdate,jdbcType=TIMESTAMP}, #{item.createby,jdbcType=VARCHAR}, 
+      #{item.price,jdbcType=DECIMAL}, #{item.amount,jdbcType=DECIMAL}, #{item.transferfromid,jdbcType=VARCHAR}, 
+      #{item.transfertoid,jdbcType=VARCHAR}, #{item.createdate,jdbcType=TIMESTAMP}, #{item.createby,jdbcType=VARCHAR}, 
       #{item.productid,jdbcType=VARCHAR}, #{item.productcolor,jdbcType=VARCHAR}, #{item.productsize,jdbcType=VARCHAR}
       )</foreach> 
  
@@ -85,10 +85,10 @@
         #{amount,jdbcType=DECIMAL},
       </if>
       <if test="transferfromid != null">
-        #{transferfromid,jdbcType=INTEGER},
+        #{transferfromid,jdbcType=VARCHAR},
       </if>
       <if test="transfertoid != null">
-        #{transfertoid,jdbcType=INTEGER},
+        #{transfertoid,jdbcType=VARCHAR},
       </if>
       <if test="createdate != null">
         #{createdate,jdbcType=TIMESTAMP},

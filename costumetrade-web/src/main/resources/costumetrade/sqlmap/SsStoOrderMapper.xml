@@ -3,8 +3,8 @@
 <mapper namespace="costumetrade.order.mapper.SsStoOrderMapper">
 	<resultMap id="BaseResultMap" type="costumetrade.order.domain.SsStoOrder">
 		<id column="id" jdbcType="INTEGER" property="id" />
-		<result column="sellerStoreId" jdbcType="INTEGER" property="sellerstoreid" />
-		<result column="buyerStoreId" jdbcType="INTEGER" property="buyerstoreid" />
+		<result column="sellerStoreId" jdbcType="VARCHAR" property="sellerstoreid" />
+		<result column="buyerStoreId" jdbcType="VARCHAR" property="buyerstoreid" />
 		<result column="buyer" jdbcType="VARCHAR" property="buyer" />
 		<result column="seller" jdbcType="VARCHAR" property="seller" />
 		<result column="operator" jdbcType="VARCHAR" property="operator" />
@@ -43,8 +43,8 @@
 	</resultMap>
 	<resultMap id="CountResultMap" type="costumetrade.order.domain.SsStoOrder">
 		<result column="count" jdbcType="INTEGER" property="count" />
-		<result column="sellerStoreId" jdbcType="INTEGER" property="sellerstoreid" />
-		<result column="buyerStoreId" jdbcType="INTEGER" property="buyerstoreid" />
+		<result column="sellerStoreId" jdbcType="VARCHAR" property="sellerstoreid" />
+		<result column="buyerStoreId" jdbcType="VARCHAR" property="buyerstoreid" />
 		<result column="orderStatus" jdbcType="INTEGER" property="orderstatus" />
 	</resultMap>
 	<resultMap id="AccountResultMap" type="costumetrade.order.query.OrderQuery">
@@ -136,7 +136,7 @@
 		</if>
 		<if test="spStoOrder.buyerstoreid != null">
 			and stoorder.buyerStoreId
-			=#{spStoOrder.buyerstoreid,jdbcType=INTEGER}
+			=#{spStoOrder.buyerstoreid,jdbcType=VARCHAR}
 		</if>
 		<if test="spStoOrder.status != null">
 			and stoorder.orderStatus in
@@ -148,12 +148,15 @@
 		</if>
 	</select>
 	<!-- 查询店家的采购单或者销售单 -->
-	<select id="selectByOrderStoreCount" parameterType="java.lang.Integer"
+	<select id="selectByOrderStoreCount" parameterType="java.lang.String"
 		resultMap="CountResultMap">
 		SELECT COUNT(1) as
 		count,s.orderStatus,s.buyerStoreId,s.sellerStoreId
 		FROM
-		ss_stoorder_#{storeId,jdbcType=INTEGER} s
+		ss_stoorder s
+		where 1=1
+		and (s.sellerStoreId = #{storeId}
+		or s.buyerStoreId =#{storeId})
 		GROUP BY
 		s.orderStatus,s.buyerStoreId,s.sellerStoreId
 	</select>
@@ -180,7 +183,7 @@
 		stoorder.logisticsCode,
 		stoorder.orderTime
 		from
-		ss_stoorder_#{spStoOrder.storeId,jdbcType=INTEGER} stoorder
+		ss_stoorder stoorder
 		LEFT JOIN
 		sp_store store ON store.id = stoorder.sellerStoreId
 		LEFT JOIN sp_store
@@ -192,11 +195,11 @@
 		</if>
 		<if test="spStoOrder.sellerstoreid != null">
 			and stoorder.sellerStoreId
-			=#{spStoOrder.sellerstoreid,jdbcType=INTEGER}
+			=#{spStoOrder.sellerstoreid,jdbcType=VARCHAR}
 		</if>
 		<if test="spStoOrder.buyerstoreid != null">
 			and stoorder.buyerStoreId
-			=#{spStoOrder.buyerstoreid,jdbcType=INTEGER}
+			=#{spStoOrder.buyerstoreid,jdbcType=VARCHAR}
 		</if>
 		<if test="spStoOrder.payorderno != null">
 			and stoorder.payOrderNo =
@@ -226,7 +229,7 @@
 		a.payCost1,
 		a.payCate2, a.payCost2
 		from
-		ss_stoorder_#{storeId,jdbcType=INTEGER} a
+		ss_stoorder a
 		left join sc_trade_info
 		b on
 		a.payOrderNo = b.payOrderNo
@@ -236,7 +239,7 @@
 	<select id="selectByTradeNo" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
-		from ss_stoorder_#{storeId,jdbcType=INTEGER}
+		from ss_stoorder
 		where payOrderNo =
 		#{orderNo,jdbcType=VARCHAR}
 	</select>
@@ -247,7 +250,7 @@
 		SUM(CASE WHEN sto.orderStatus =6 THEN sto.debetAmt  ELSE 0 END) AS receivable ,
 		SUM(CASE WHEN sto.orderStatus =7 THEN sto.realcost ELSE 0 END) AS payable
 		FROM
-		ss_stoorder_#{storeId} sto
+		ss_stoorder sto
 		LEFT JOIN ss_financial ssf ON ssf.orderNo =
 		sto.payOrderNo AND
 		ssf.buyerId=sto.buyerStoreId
@@ -269,7 +272,7 @@
 		SUM(CASE WHEN sto.orderStatus =6 THEN sto.debetAmt  ELSE 0 END) AS receivable ,
 		SUM(CASE WHEN sto.orderStatus =7 THEN sto.realcost ELSE 0 END) AS payable
 		FROM
-		ss_stoorder_#{storeId} sto
+		ss_stoorder sto
 		LEFT JOIN ss_financial ssf ON
 		ssf.orderNo = sto.payOrderNo AND
 		ssf.buyerId=sto.buyerStoreId AND
@@ -294,7 +297,7 @@
 		sto.debetAmt,
 		sto.orderTime
 		FROM
-		ss_stoorder_#{storeId} sto
+		ss_stoorder sto
 		LEFT JOIN ss_financial ssf ON ssf.orderNo = sto.payOrderNo AND ssf.buyerId=sto.buyerStoreId AND ssf.sellerId=sto.sellerStoreId
 		LEFT JOIN ss_data_dictionary da ON  da.dict_value = sto.payCate1 AND da.storeId = #{storeId}
 		WHERE 1=1
@@ -334,7 +337,7 @@
 	</delete>
 	<insert id="insert">
 		insert into
-		ss_stoorder_#{sellerStoreId,jdbcType=INTEGER} (sellerStoreId,
+		ss_stoorder (sellerStoreId,
 		buyerStoreId,
 		operator, payOrderNo, refundDate,
 		relatedOutTradeNo,
@@ -350,8 +353,8 @@
 		createTime, createBy,
 		modifyTime,
 		modifyBy)
-		values (#{record.sellerstoreid,jdbcType=INTEGER},
-		#{record.buyerstoreid,jdbcType=INTEGER},
+		values (#{record.sellerstoreid,jdbcType=VARCHAR},
+		#{record.buyerstoreid,jdbcType=VARCHAR},
 		#{record.operator,jdbcType=VARCHAR},
 		#{record.payorderno,jdbcType=VARCHAR},
 		#{record.refunddate,jdbcType=TIMESTAMP},
@@ -441,7 +444,7 @@
 
 
 	<insert id="insertStore">
-		insert into ss_stoorder_#{storeId,jdbcType=INTEGER}
+		insert into ss_stoorder
 		(sellerStoreId,
 		buyerStoreId,
 		operator, payOrderNo, refundDate,
@@ -459,8 +462,8 @@
 		createTime, createBy, modifyTime,
 		modifyBy)
 		values
-		(#{record.sellerstoreid,jdbcType=INTEGER},
-		#{record.buyerstoreid,jdbcType=INTEGER},
+		(#{record.sellerstoreid,jdbcType=VARCHAR},
+		#{record.buyerstoreid,jdbcType=VARCHAR},
 		#{record.operator,jdbcType=VARCHAR},
 		#{record.payorderno,jdbcType=VARCHAR},
 		#{record.refunddate,jdbcType=TIMESTAMP},
@@ -613,10 +616,10 @@
 				#{id,jdbcType=INTEGER},
 			</if>
 			<if test="sellerstoreid != null">
-				#{sellerstoreid,jdbcType=INTEGER},
+				#{sellerstoreid,jdbcType=VARCHAR},
 			</if>
 			<if test="buyerstoreid != null">
-				#{buyerstoreid,jdbcType=INTEGER},
+				#{buyerstoreid,jdbcType=VARCHAR},
 			</if>
 			<if test="operator != null">
 				#{operator,jdbcType=VARCHAR},
@@ -794,7 +797,7 @@
 	</update>
 
 	<update id="updateByPrimaryKeySelectiveStore" parameterType="costumetrade.order.domain.SsStoOrder">
-		update ss_stoorder_#{sellerstoreid,jdbcType=INTEGER}
+		update ss_stoorder
 		<set>
 			<if test="orderstatus != null">
 				orderStatus = #{orderstatus,jdbcType=INTEGER},
@@ -829,47 +832,13 @@
 		</set>
 		where payOrderNo = #{payorderno,jdbcType=VARCHAR};
 
-		update
-		ss_stoorder_#{buyerstoreid,jdbcType=INTEGER}
-		<set>
-			<if test="orderstatus != null">
-				orderStatus = #{orderstatus,jdbcType=INTEGER},
-			</if>
-			<if test="operator != null">
-				operator = #{operator},
-			</if>
-			<if test="paycate1 != null">
-				paycate1 = #{paycate1},
-			</if>
-			<if test="paycost1 != null">
-				paycost1 = #{paycost1},
-			</if>
-			<if test="paycate2 != null">
-				paycate2 = #{paycate2},
-			</if>
-			<if test="paycost2 != null">
-				paycost2 = #{paycost2},
-			</if>
-			<if test="realcost != null">
-				realcost = #{realcost},
-			</if>
-			<if test="debetamt != null">
-				debetamt = #{debetamt},
-			</if>
-			<if test="freight != null">
-				freight = #{freight},
-			</if>
-			<if test="logisticsCode != null">
-				logisticsCode = #{logisticsCode},
-			</if>
-		</set>
-		where payOrderNo = #{payorderno,jdbcType=VARCHAR};
+		
 	</update>
 	<update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsStoOrder">
 		update ss_stoorder
-		set sellerStoreId = #{sellerstoreid,jdbcType=INTEGER},
+		set sellerStoreId = #{sellerstoreid,jdbcType=VARCHAR},
 		buyerStoreId =
-		#{buyerstoreid,jdbcType=INTEGER},
+		#{buyerstoreid,jdbcType=VARCHAR},
 		operator =
 		#{operator,jdbcType=VARCHAR},
 		payOrderNo =

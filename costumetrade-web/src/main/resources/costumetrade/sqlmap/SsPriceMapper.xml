@@ -31,8 +31,11 @@
   <select id="select"  resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from ss_pprice_#{storeid,jdbcType=INTEGER}
+    from ss_pprice
     where productId = #{productid,jdbcType=VARCHAR}
+    <if test="storeid!=null">
+    and storeId = #{storeid,jdbcType=VARCHAR}
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ss_pprice
@@ -51,7 +54,7 @@
       )
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.order.domain.SsPrice">
-    insert into ss_pprice_#{storeid,jdbcType=VARCHAR}
+    insert into ss_pprice
     <trim prefix="(" suffix=")" suffixOverrides=",">
       <if test="id != null">
         id,
@@ -142,7 +145,7 @@
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SsPrice">
-    update ss_pprice_#{storeid}
+    update ss_pprice
     <set>
       <if test="storeid != null">
         storeId = #{storeid,jdbcType=VARCHAR},
@@ -187,6 +190,9 @@
     </if>
     <if test="productid != null">
        and productId = #{productid,jdbcType=VARCHAR}
+    </if>
+    <if test="storeid!=null">
+    and storeId = #{storeid,jdbcType=VARCHAR}
     </if>
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsPrice">

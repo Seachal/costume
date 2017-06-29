@@ -3,7 +3,7 @@
 <mapper namespace="costumetrade.user.mapper.SpPrivilegeMapper">
   <resultMap id="BaseResultMap" type="costumetrade.user.domain.SpPrivilege">
     <id column="id" jdbcType="BIGINT" property="id" />
-    <result column="storeId" jdbcType="BIGINT" property="storeid" />
+    <result column="storeId" jdbcType="VARCHAR" property="storeid" />
     <result column="operate_code" jdbcType="VARCHAR" property="operateCode" />
     <result column="operate_name" jdbcType="VARCHAR" property="operateName" />
     <result column="parent_id" jdbcType="BIGINT" property="parentId" />
@@ -45,7 +45,7 @@
     insert into sp_privilege (id, storeId, operate_code, 
       operate_name, parent_id, is_del, 
       create_date, update_date)
-    values (#{id,jdbcType=BIGINT}, #{storeid,jdbcType=BIGINT}, #{operateCode,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=BIGINT}, #{storeid,jdbcType=VARCHAR}, #{operateCode,jdbcType=VARCHAR}, 
       #{operateName,jdbcType=VARCHAR}, #{parentId,jdbcType=BIGINT}, #{isDel,jdbcType=INTEGER}, 
       #{createDate,jdbcType=TIMESTAMP}, #{updateDate,jdbcType=TIMESTAMP})
   </insert>
@@ -82,7 +82,7 @@
         #{id,jdbcType=BIGINT},
       </if>
       <if test="storeid != null">
-        #{storeid,jdbcType=BIGINT},
+        #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="operateCode != null">
         #{operateCode,jdbcType=VARCHAR},
@@ -108,7 +108,7 @@
     update sp_privilege
     <set>
       <if test="storeid != null">
-        storeId = #{storeid,jdbcType=BIGINT},
+        storeId = #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="operateCode != null">
         operate_code = #{operateCode,jdbcType=VARCHAR},
@@ -133,7 +133,7 @@
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SpPrivilege">
     update sp_privilege
-    set storeId = #{storeid,jdbcType=BIGINT},
+    set storeId = #{storeid,jdbcType=VARCHAR},
       operate_code = #{operateCode,jdbcType=VARCHAR},
       operate_name = #{operateName,jdbcType=VARCHAR},
       parent_id = #{parentId,jdbcType=BIGINT},
