@@ -21,9 +21,9 @@ public interface SpPSizeCustomMapper {
 
     int updateByPrimaryKey(SpPSizeCustom record);
     
-    List<SpPSizeCustom>  getSpPSizeCustoms(@Param("storeId")int storeId,@Param("page") Page page);
+    List<SpPSizeCustom>  getSpPSizeCustoms(@Param("storeId")String storeId,@Param("page") Page page);
     
-    SpPSizeCustom  getSpPSizeCustom(@Param("storeId")int storeId,@Param("customName")String customName);
+    SpPSizeCustom  getSpPSizeCustom(@Param("storeId")String storeId,@Param("customName")String customName);
     
     SpPSizeCustom selectByCustomValue(SpPSizeCustom record);
 }

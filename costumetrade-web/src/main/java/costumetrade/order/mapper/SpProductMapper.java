@@ -11,7 +11,7 @@ import costumetrade.order.domain.SpProduct;
 import costumetrade.order.query.ProductQuery;
 @Mapper
 public interface SpProductMapper {
-    int deleteByIds(@Param("storeId")Integer storeId,@Param("ids")List<String> ids);
+    int deleteByIds(@Param("storeId")String storeId,@Param("ids")List<String> ids);
     
     int updateByIds(ProductQuery  productQuery);
 
@@ -19,9 +19,9 @@ public interface SpProductMapper {
 
     int insertSelective(SpProduct record);
 
-    SpProduct selectByPrimaryKey(@Param("id")String id,@Param("storeId")Integer storeId);
+    SpProduct selectByPrimaryKey(@Param("id")String id,@Param("storeId")String storeId);
     
-    List<SpProduct> selectById(@Param("id")List<String> id,@Param("storeId")Integer storeId);
+    List<SpProduct> selectById(@Param("id")List<String> id,@Param("storeId")String storeId);
 
     int updateByPrimaryKeySelective(SpProduct record);
 

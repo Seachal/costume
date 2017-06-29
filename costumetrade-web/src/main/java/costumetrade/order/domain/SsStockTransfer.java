@@ -34,12 +34,12 @@ public class SsStockTransfer extends Entity {
     /**
      *  本客户
      */
-    private Integer transferfromid;
+    private String transferfromid;
 
     /**
      *  对方客户
      */
-    private Integer transfertoid;
+    private String transfertoid;
 
     /**
      *  
@@ -108,19 +108,19 @@ public class SsStockTransfer extends Entity {
         this.amount = amount;
     }
 
-    public Integer getTransferfromid() {
+    public String getTransferfromid() {
         return transferfromid;
     }
 
-    public void setTransferfromid(Integer transferfromid) {
+    public void setTransferfromid(String transferfromid) {
         this.transferfromid = transferfromid;
     }
 
-    public Integer getTransfertoid() {
+    public String getTransfertoid() {
         return transfertoid;
     }
 
-    public void setTransfertoid(Integer transfertoid) {
+    public void setTransfertoid(String transfertoid) {
         this.transfertoid = transfertoid;
     }
 

@@ -14,7 +14,7 @@ public class SpPBrand extends Entity {
     /**
      *  企业ID
      */
-    private Integer storeId;
+    private String storeId;
 
     /**
      *  品牌名称
@@ -102,11 +102,11 @@ public class SpPBrand extends Entity {
 
 
 
-    public Integer getStoreId() {
+    public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 

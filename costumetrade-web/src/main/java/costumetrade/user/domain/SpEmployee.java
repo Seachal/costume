@@ -89,7 +89,7 @@ public class SpEmployee extends Entity implements Serializable{
     /**
      *  
      */
-    private Integer storeId;
+    private String storeId;
 
     /**
      *  员工编号:
@@ -117,11 +117,11 @@ public class SpEmployee extends Entity implements Serializable{
     
     private String openid ;
     
-    public Integer getStoreId() {
+    public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 

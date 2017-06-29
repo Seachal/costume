@@ -51,7 +51,7 @@ public class SFLogisticController {
 			orderQueryReqDto.setOrderId(orderReqDto.getOrderId());
 			response1 = sFLogisticsService.querySF(orderQueryReqDto);
 			ScLogistics logistics = new ScLogistics();
-			logistics.setStoreid(1);//storeId createBy  获取session中的值
+			//logistics.setStoreid(1);//storeId createBy  获取session中的值
 			logistics.setLogisticsname("顺丰");
 			logistics.setLogisticsCode("SF");
 			logistics.setCreatetime(new Date());
@@ -76,7 +76,7 @@ public class SFLogisticController {
 			if("1".equals(response.getStatus())){//下单成功
 				
 				ScLogistics logistics = new ScLogistics();
-				logistics.setStoreid(1);//storeId createBy  获取session中的值
+				//logistics.setStoreid(1);//storeId createBy  获取session中的值
 				logistics.setLogisticsname("顺丰");
 				logistics.setLogisticsCode("SF");
 				logistics.setCreatetime(new Date());

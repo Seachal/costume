@@ -109,7 +109,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 		BigDecimal count = new BigDecimal(0.0);
 		BigDecimal cost =   new BigDecimal(0.0);
 		OrderQuery param = new OrderQuery();
-		//根据clientId 设置卖家 买家
+		//根据clientId 设置卖家 买家  开单
 		SpClient client = spClientMapper.selectByPrimaryKey(order.getClientId());
 		if(client !=null){
 			ScWeChat wechat = scWeChatMapper.selectByOpenId(client.getOpenid());
@@ -140,6 +140,13 @@ public class SpOrderServiceImpl implements SpOrderService{
 		if(param.getBuyerstoreid()==param.getSellerstoreid()){//自己不能开自家的订单
 			return 3;
 		}
+		
+		ScWeChat wechat1 = scWeChatMapper.selectByOpenId(openid);
+		if(wechat1!=null){
+			order.setOperator(wechat1.getId()+"");
+		}else{
+			return 0;
+		}
 		//订单状态 1：新增  2、已付款 3、审核 4、发货 5、收货 6、已取消
 		if(details.size() > 0){
 			for(SsStoDetail d : details){
@@ -147,11 +154,11 @@ public class SpOrderServiceImpl implements SpOrderService{
 				d1.setOrderid(orderNo);
 				cost = cost.add((d.getCount()).multiply(d.getPrice()))  ;
 				count = count.add(d.getCount());
-				detail.add(d);
+				d1.setCreateby(order.getOperator());
+				d1.setCreatetime(new Date());
+				detail.add(d1);
 			}
 			order.setPayorderno(orderNo+"");
-			order.setTotalamt(cost);
-			order.setTotalnum(count);
 			order.setOrderstatus(1);
 			order.setOrdertime(new Date());
 		}
@@ -179,27 +186,18 @@ public class SpOrderServiceImpl implements SpOrderService{
 			ssFinancialMapper.insertSelective(record );
 		}
 		
-		ScWeChat wechat1 = scWeChatMapper.selectByOpenId(openid);
+		
 		if(wechat1.getStoreid() == null){ //普通会员
 			order.setBuyerstoreid(wechat1.getUserid());
-			ssStoDetailMapper.saveDetail(detail,order.getSellerstoreid());
-			save = ssStoOrderMapper.insert(order,order.getSellerstoreid());
 		}else{
 			order.setBuyerstoreid(wechat1.getStoreid());
-			if(order.getBuyerstoreid()!=null&&order.getBuyerstoreid()!=order.getSellerstoreid()){
-				//买家保存采购单
-				ssStoDetailMapper.saveDetailStore(detail,order.getBuyerstoreid());
-				save = ssStoOrderMapper.insertStore(order,order.getBuyerstoreid());
-			}else{
-				return 3;
-			}
-			
 		}
 		if(order.getSellerstoreid()!=null){
-			//卖家保存销售单
 			ssStoDetailMapper.saveDetailStore(detail,order.getSellerstoreid());
-			save = ssStoOrderMapper.insertStore(order,order.getSellerstoreid());
+		}else if(order.getBuyerstoreid()!=null){
+			ssStoDetailMapper.saveDetailStore(detail,order.getBuyerstoreid());
 		}
+		save = ssStoOrderMapper.insertStore(order,order.getBuyerstoreid());
 		return save;
 
 	}
@@ -215,11 +213,12 @@ public class SpOrderServiceImpl implements SpOrderService{
 		SpStore store = new SpStore();
 		SpUser user = new SpUser();
 		SsStoOrder order = new SsStoOrder();
+		
+		spStoOrders = ssStoOrderMapper.selectByOrderStore(spStoOrder,null);
+		ssStoDetails = ssStoDetailMapper.selectByOrderId(orderNo,null);
+		
 		if(wechat.getStoreid() == null){
-			spStoOrders = ssStoOrderMapper.selectByOrderMember(spStoOrder,null);
-			ssStoDetails = ssStoDetailMapper.selectByOrderIdMember(orderNo);
 			user = spUserMapper.selectByPrimaryKey(wechat.getUserid());
-			
 			if(spStoOrders.size()>0){
 				order = spStoOrders.get(0);
 				order.setReceiverImage(user.getName());
@@ -227,10 +226,6 @@ public class SpOrderServiceImpl implements SpOrderService{
 			}
 		}else{
 			store= spStoreMapper.selectByPrimaryKey(wechat.getStoreid());
-			spStoOrder.setStoreId(wechat.getStoreid());
-			spStoOrders = ssStoOrderMapper.selectByOrderStore(spStoOrder,null);
-			ssStoDetails = ssStoDetailMapper.selectByOrderId(orderNo,wechat.getStoreid());
-			
 			if(spStoOrders.size()>0){
 				order = spStoOrders.get(0);
 				order.setReceiverImage(store.getName());
@@ -279,13 +274,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 				return 3;
 			}
 		}
-		
-		if(wechat.getStoreid() == null){
-			operate = ssStoOrderMapper.updateByPrimaryKeySelective(spStoOrder);
-		}else{
-			operate = ssStoOrderMapper.updateByPrimaryKeySelectiveStore(spStoOrder);
-		}
-	
+		operate = ssStoOrderMapper.updateByPrimaryKeySelectiveStore(spStoOrder);
 		if(operate > 0){
 			return 1;
 		}else{
@@ -323,6 +312,12 @@ public class SpOrderServiceImpl implements SpOrderService{
 			stock.setStocknum(detail.getCount());
 			stock.setProductPrice(detail.getPrice());
 			stock.setStoreid(param.getSellerstoreid());
+			stock.setCreateby(detail.getCreateby());
+			
+			List<String> otherStoreIds = new ArrayList<String>();
+			otherStoreIds.add(param.getSellerstoreid());
+			stock.setOtherStoreIds(otherStoreIds );
+			
 			ssStocks.add(stock);
 			ids.add(detail.getProductid());
 		
@@ -330,7 +325,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 			if(s == null || s.size()<=0 ){
 				stockTag = false ; //库存不存在时，在库存记录中保存一条负库存记录
 				stock.setCreatetime(new Date());
-				stock.setCreateby(wechat.getUserid()+"");
+				stock.setCreateby(wechat.getId()+"");
 				ssStock.add(stock);
 			}else{
 				ssStock.add(s.get(0));
@@ -342,7 +337,9 @@ public class SpOrderServiceImpl implements SpOrderService{
 			transfer.setCount(detail.getCount());
 			transfer.setCreatedate(new Date());
 			transfer.setTransfertoid(param.getSellerstoreid());
+			transfer.setTransferfromid(param.getBuyerstoreid());
 			transfer.setAmount(detail.getCount().multiply(detail.getPrice()));
+			transfer.setCreateby(stock.getCreateby());
 			transfers.add(transfer);
 		}
 		int updateSellerStock = 0;
@@ -354,11 +351,6 @@ public class SpOrderServiceImpl implements SpOrderService{
 			 * 
 			 * */
 			for(SsStockTransfer transfer : transfers){
-				if(wechat.getStoreid()==null){
-					transfer.setTransferfromid(wechat.getUserid());
-				}else{
-					transfer.setTransferfromid(wechat.getStoreid());
-				}
 				transfer.setStockType(2);//调出
 				ssStockTransferSeller.add(transfer);
 			}
@@ -405,6 +397,11 @@ public class SpOrderServiceImpl implements SpOrderService{
 					SsStock stock = new SsStock();
 					stock = ssStocks.get(i);
 					stock.setStoreid(param.getBuyerstoreid());
+					
+					List<String> otherStoreIds = new ArrayList<String>();
+					otherStoreIds.add(param.getBuyerstoreid());
+					stock.setOtherStoreIds(otherStoreIds );
+					
 					List<SsStock> stocks = ssStockMapper.select(stock);//买家库存，存在更新，不存在新增库存
 					SsStock stockBuyyer = new SsStock();
 					if(stocks != null ){
@@ -442,24 +439,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 		 * 只允许当天的订单允许作废
 		 * */
 		
-		SimpleDateFormat formater = new SimpleDateFormat("yyyy/MM/dd");
-	    SimpleDateFormat formater2 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-	     
-	    //start = formater2.parse(formater.format(new Date())+ " 00:00:00");
-	    SsStoOrder order = ssStoOrderMapper.selectByOrderNo(param.getOrderNo(), param.getSellerstoreid());
-	    boolean canCancellation =true;
-	    Date currentDayEnd = null;
-	    try {
-	    	currentDayEnd = formater2.parse(formater.format(new Date())+ " 23:59:59");
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    //只允许当天的订单 允许作废
-	    if(order.getOrdertime().getTime()>currentDayEnd.getTime()){
-	    	canCancellation =false;
-	    	return false;
-	    }
+		
 		List<SsStoDetail> ssStoDetails = ssStoDetailMapper.selectByOrderId(param.getOrderNo(),param.getSellerstoreid());
 		
 		List<SsStock> ssStockSellers = new ArrayList<SsStock>();
@@ -481,10 +461,19 @@ public class SpOrderServiceImpl implements SpOrderService{
 				stock.setProductsize(detail.getProductsize());
 				stock.setStoreid(param.getSellerstoreid());
 				
+				List<String> otherStoreIds = new ArrayList<String>();
+				otherStoreIds.add(param.getSellerstoreid());
+				stock.setOtherStoreIds(otherStoreIds );
+				
 				List<SsStock> ssStockSeller = ssStockMapper.select(stock);
 				List<SsStock> ssStockBuyer = null;
 				if(isStore){//修改卖家库存  加  修改买方库存 减  修改卖方库存  加
 					stock.setStoreid(param.getBuyerstoreid());
+					
+					List<String> otherStoreId = new ArrayList<String>();
+					otherStoreId.add(param.getBuyerstoreid());
+					stock.setOtherStoreIds(otherStoreId );
+					
 					ssStockBuyer = ssStockMapper.select(stock);
 				}
 				if(ssStockSeller!=null&& ssStockSeller.size()>0){
@@ -575,7 +564,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 		return addr;
 	}
 	@Override
-	public SsStoOrder order(String orderNo, Integer storeId) {
+	public SsStoOrder order(String orderNo, String storeId) {
 		return ssStoOrderMapper.selectByOrderNo(orderNo,storeId);
 	}
 	@Override
@@ -596,7 +585,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 		销售单列签：
 		orderStatus 值 备注
 		待审核                          1                    新增
-		待配货                          2                   付款
+		待配货                          2 ,3  待付款，已付款
 		待发货                          8                    已配货
 		全部                         所有状态              线上单据+线下单据
 		 * 先审核 后付款
@@ -624,6 +613,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 				spStoOrder.setOrdertype(1+"");//线上订单
 			}else if(orderStatus == 6){
 				status.add(2);
+				status.add(3);
 				spStoOrder.setOrdertype(1+"");//线上订单
 			}
 		}
@@ -646,26 +636,53 @@ public class SpOrderServiceImpl implements SpOrderService{
 		if(orderType == 1){  //采购单列签
 			if(wechat.getStoreid() == null){
 				spStoOrder.setBuyerstoreid(wechat.getUserid());
-				spStoOrders = ssStoOrderMapper.selectByOrderMember(spStoOrder,page);
 				//count = ssStoOrderMapper.selectByOrderMemberCount(spStoOrder);
 			}else{
 				spStoOrder.setStoreId(wechat.getStoreid());
 				spStoOrder.setBuyerstoreid(wechat.getStoreid());
-				spStoOrders = ssStoOrderMapper.selectByOrderStore(spStoOrder,page);
 				//count = ssStoOrderMapper.selectByOrderStoreCount(spStoOrder);
 			}
+			
 		}else if(orderType == 2){//销售单列签
 			if(wechat.getStoreid() != null){
 				spStoOrder.setStoreId(wechat.getStoreid());
 				spStoOrder.setSellerstoreid(wechat.getStoreid());
-				spStoOrders = ssStoOrderMapper.selectByOrderStore(spStoOrder,page);
+				//spStoOrders = ssStoOrderMapper.selectByOrderStore(spStoOrder,page);
 				//count = ssStoOrderMapper.selectByOrderStoreCount(spStoOrder);
 			}
 		}
+		spStoOrders = ssStoOrderMapper.selectByOrderStore(spStoOrder,page);
 		OrderQuery query = new OrderQuery();
-		query.setCount(count);
-		query.setSsStoOrder(spStoOrders);
+		List<SsStoOrder> spStoOrders1 = new ArrayList<SsStoOrder>();
+		if(orderStatus == 5&&spStoOrders.size()>0){
+			for(SsStoOrder o : spStoOrders){
+				Boolean b = canCancellation(o);
+				o.setCanCancellation(b);
+				spStoOrders1.add(o);
+			}
+			query.setSsStoOrder(spStoOrders1);
+		}else{
+			query.setSsStoOrder(spStoOrders);
+		}
 		return spStoOrders;
+	}
+	
+	public Boolean canCancellation(SsStoOrder order){
+		
+		SimpleDateFormat formater = new SimpleDateFormat("yyyy/MM/dd");
+	    SimpleDateFormat formater2 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+	    boolean canCancellation =true;
+	    Date currentDayEnd = null;
+	    try {
+	    	currentDayEnd = formater2.parse(formater.format(new Date())+ " 23:59:59");
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	    //只允许当天的订单 允许作废
+	    if(order.getOrdertime().getTime()>currentDayEnd.getTime()){
+	    	canCancellation =false;
+	    }
+	    return canCancellation;
 	}
 	@Override
 	public int confirmLogistic(ScLogistics scLogistics) {
@@ -711,7 +728,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 			orders = ssStoOrderMapper.selectByOrderStoreCount(wechat.getStoreid());
 			isStore = true;
 		}else if(wechat.getUserid()!=null){//普通消费者
-			orders = ssStoOrderMapper.selectByOrderMemberCount();
+			orders = ssStoOrderMapper.selectByOrderStoreCount(wechat.getUserid());
 		}
 		Integer purchaseCount=0;//采购单总数
 	    Integer pNoPayCount=0;//采购单未付款数量
@@ -788,7 +805,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 		if(wechat!=null){
 			dict.setStoreId(wechat.getStoreid());
 		}else{
-			dict.setStoreId(-1);
+			dict.setStoreId(-1+"");
 		}
 		
 		dict.setDictGroup("FEE_TYPE");
@@ -813,36 +830,15 @@ public class SpOrderServiceImpl implements SpOrderService{
 		//更新订单数据 1、根据订单号在普通消费者的订单表中查询记录，存在就更新普通消费者的订单信息，否则就在买家（店家）的订单表中更新数据
 		SsStoOrder spStoOrder = new SsStoOrder();
 		spStoOrder.setPayorderno(param.getOrder().getPayorderno());
-		List<SsStoOrder> spStoOrders = ssStoOrderMapper.selectByOrderMember(spStoOrder,null);
 		if(StringUtils.isNotBlank(param.getOrder().getPayorderno())){
 			spStoOrder = param.getOrder();
 			if(StringUtils.isBlank(spStoOrder.getPaycate1())&&StringUtils.isBlank(spStoOrder.getPaycate2())){
 				spStoOrder.setOrderstatus(3);//修改运费提交，直接审核通过
 			}
-			if(spStoOrders!=null && spStoOrders.size()>0){//买家是普通消费者身份
-				update =ssStoOrderMapper.updateByPrimaryKeySelective(spStoOrder);
-			}else{//买家是店铺身份
-				update =ssStoOrderMapper.updateByPrimaryKeySelectiveStore(spStoOrder);
-			}
-			
+			update =ssStoOrderMapper.updateByPrimaryKeySelectiveStore(spStoOrder);
 		}
 		if(param.getStoDetails()!=null&&param.getStoDetails().size()>0){
-			if(spStoOrders!=null && spStoOrders.size()>0){//买家是普通消费者身份
-				update =ssStoDetailMapper.updateByPrimaryKeySelectiveMember(param.getStoDetails());
-			}else{//买家是店铺身份
-				List<SsStoDetail> details = new ArrayList<SsStoDetail>();
-				for(SsStoDetail detail : param.getStoDetails()){
-					detail.setStoreid(param.getOrder().getBuyerstoreid());
-					details.add(detail);
-				}
-				update =ssStoDetailMapper.updateByPrimaryKeySelectiveStore(details);
-			}
-			List<SsStoDetail> details = new ArrayList<SsStoDetail>();
-			for(SsStoDetail detail : param.getStoDetails()){
-				detail.setStoreid(param.getOrder().getSellerstoreid());
-				details.add(detail);
-			}
-			update =ssStoDetailMapper.updateByPrimaryKeySelectiveStore(details);
+			update =ssStoDetailMapper.updateByPrimaryKeySelectiveStore(param.getStoDetails());
 		}
 		return update;
 	}

@@ -32,7 +32,7 @@ public class SpSizeController {
 
 	@RequestMapping("/getAllSizes")
 	@ResponseBody
-	public ApiResponse getAllSizes(int storeId,String productId) {
+	public ApiResponse getAllSizes(String storeId,String productId) {
 		
 		List<SpPSize> sizeLists = new ArrayList<SpPSize>();
 		sizeLists = spPSizeService.getSpPSizes(storeId,productId);
@@ -83,7 +83,7 @@ public class SpSizeController {
 	
 	@RequestMapping("/getAllSizeCustom")
 	@ResponseBody
-	public ApiResponse getAllSizeCustom(int storeId) {
+	public ApiResponse getAllSizeCustom(String storeId) {
 		
 		List<SpPSizeCustom> sizeCustomLists = new ArrayList<SpPSizeCustom>();
 		sizeCustomLists = spPSizeCustomService.getSpPSizeCustoms(storeId);

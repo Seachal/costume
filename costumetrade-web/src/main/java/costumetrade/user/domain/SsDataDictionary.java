@@ -10,7 +10,7 @@ public class SsDataDictionary extends Entity {
      */
     private Integer id;
     
-    private Integer storeId;
+    private String storeId;
 
     /**
      *  分组名称
@@ -139,11 +139,11 @@ public class SsDataDictionary extends Entity {
         this.createBy = createBy == null ? null : createBy.trim();
     }
 
-	public Integer getStoreId() {
+	public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
     

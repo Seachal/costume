@@ -47,7 +47,7 @@ public class SsDataDictionaryServiceImpl implements SsDataDictionaryService{
 	private SpUserService spUserService;
 	
 	@Override
-	public SettingQuery getDataDictionarys(Integer storeId) {
+	public SettingQuery getDataDictionarys(String storeId) {
 		SettingQuery query = new SettingQuery();
 	
 		List<SsDataDictionary> datas = ssDataDictionaryMapper.getDataDictionarys(storeId);

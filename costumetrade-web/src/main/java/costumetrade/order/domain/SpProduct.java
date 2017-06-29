@@ -15,7 +15,7 @@ public class SpProduct extends Entity {
     /**
      *  企业ID
      */
-    private Integer storeId;
+    private String storeId;
 
     /**
      *  实体状态 0:正常 1：待处理 2、作废
@@ -272,11 +272,11 @@ public class SpProduct extends Entity {
 
   
 
-    public Integer getStoreId() {
+    public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 

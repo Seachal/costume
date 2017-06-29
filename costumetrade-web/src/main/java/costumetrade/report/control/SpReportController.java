@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -44,14 +45,14 @@ public class SpReportController {
 		}
 		return  result;
 	}
-	@RequestMapping("/purchaseSortReport")
+	@RequestMapping("/purchaseAnalysisReport")
 	@ResponseBody
-	public ApiResponse purchaseSortReport(PurchaseReportQuery query) {
+	public ApiResponse purchaseAnalysisReport(@RequestBody PurchaseReportQuery query) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		
-		List<Map<String,Object>> reports = spReportService.purchaseSortReport(query);
+		ReportQuery reports = spReportService.purchaseAnalysisReport(query);
 		if(reports == null ){
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			result.setData(ResponseInfo.NOT_DATA.code);

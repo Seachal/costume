@@ -18,15 +18,15 @@ public class SpClient extends Entity {
     /**
      *  当前店铺ID
      */
-    private Integer storeId;
+    private String storeId;
     /**
      *  对方店铺ID：针对店员
      */
-    private Integer otherStoreId;
+    private String otherStoreId;
     /**
      *  普通用户ID：针对普通消费者
      */
-    private Integer userId;
+    private String userId;
     
     private String openid;
 
@@ -174,6 +174,8 @@ public class SpClient extends Entity {
     private String name;
     
     private List<String> idArray;
+    
+    private Boolean checkAllTag;
 
     private static final long serialVersionUID = 1L;
     
@@ -197,11 +199,11 @@ public class SpClient extends Entity {
 
   
 
-    public Integer getStoreId() {
+    public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 
@@ -390,19 +392,19 @@ public class SpClient extends Entity {
 		this.prodPrice = prodPrice;
 	}
 
-	public Integer getOtherStoreId() {
+	public String getOtherStoreId() {
 		return otherStoreId;
 	}
 
-	public void setOtherStoreId(Integer otherStoreId) {
+	public void setOtherStoreId(String otherStoreId) {
 		this.otherStoreId = otherStoreId;
 	}
 
-	public Integer getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Integer userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
@@ -526,6 +528,14 @@ public class SpClient extends Entity {
 
 	public void setPoints(BigDecimal points) {
 		this.points = points;
+	}
+
+	public Boolean getCheckAllTag() {
+		return checkAllTag;
+	}
+
+	public void setCheckAllTag(Boolean checkAllTag) {
+		this.checkAllTag = checkAllTag;
 	}
     
     

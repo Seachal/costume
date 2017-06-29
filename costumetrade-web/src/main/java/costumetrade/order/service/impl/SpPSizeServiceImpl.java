@@ -17,7 +17,7 @@ public class SpPSizeServiceImpl implements SpPSizeService{
 	@Autowired
 	private SpPSizeMapper spPSizeMapper;
 	
-	public List<SpPSize> getSpPSizes(int storeId,String productId) {
+	public List<SpPSize> getSpPSizes(String storeId,String productId) {
 		SpPSize size = new SpPSize();
 		size.setStoreId(storeId);
 		size.setProductId(productId);

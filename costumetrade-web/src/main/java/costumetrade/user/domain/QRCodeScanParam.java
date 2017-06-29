@@ -8,17 +8,17 @@ public class QRCodeScanParam extends Entity {
    
     private static final long serialVersionUID = 1L;
 
-    private Integer storeId;
+    private String storeId;
     
     private String id;
     /**
      * 扫描类型 1：加客户，2.加供应商 3.加朋友 4、加员工
      * */
     private Integer type;
-	public Integer getStoreId() {
+	public String getStoreId() {
 		return storeId;
 	}
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 	public Integer getType() {

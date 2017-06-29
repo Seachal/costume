@@ -13,15 +13,15 @@ public interface SpPBrandMapper {
 
     int insertSelective(SpPBrand record);
     
-    List<SpPBrand>  getSpPBrands(@Param("storeId")int storeId,@Param("page")Page page);
+    List<SpPBrand>  getSpPBrands(@Param("storeId")	String storeId,@Param("page")Page page);
     
     int deleteByPrimaryKey(@Param("ids")List<Integer> ids);
     
     SpPBrand selectByPrimaryKey(Integer id);
     
-    SpPBrand getSpPBrand(@Param("id")Integer id,@Param("storeId")Integer storeId);
+    SpPBrand getSpPBrand(@Param("id")Integer id,@Param("storeId")String storeId);
     
-    SpPBrand getSpPBrandByName(@Param("brandname")String brandname,@Param("storeId")Integer storeId);
+    SpPBrand getSpPBrandByName(@Param("brandname")String brandname,@Param("storeId")String storeId);
     
     int updateByPrimaryKeySelective(SpPBrand record);
 }

@@ -58,7 +58,7 @@ public class TradeInfoService implements ITradeInfoService {
 			String transactionId) {
 		
            //test
-		   Integer  storeId = 1;
+		   String  storeId = "1";
 		   SsStoOrder order =  ssStoOrderMapper.selectByTradeNo(tradeOutNo, storeId);
 		   SsFinancial ssFinancial = new SsFinancial();
 		   ssFinancial.setTradeno(tradeOutNo);

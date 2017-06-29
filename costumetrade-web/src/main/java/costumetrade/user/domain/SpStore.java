@@ -6,17 +6,17 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import costumetrade.common.Entity;
-@Mapper
+
 public class SpStore extends Entity {
     /**
      *  分店编号:
      */
-    private Integer id;
+    private String id;
 
     /**
      *  上级店铺编号:
      */
-    private Integer parentid;
+    private String parentid;
 
     /**
      *  店铺头像
@@ -111,29 +111,29 @@ public class SpStore extends Entity {
      */
     private String description;
     
-    private Integer storeId;
+    private String storeId;
     
-    private Integer userId;
+    private String userId;
     
     private List<String> images;
     
-    private List<Integer > idArray;
+    private List<String > idArray;
     
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Integer getParentid() {
+    public String getParentid() {
         return parentid;
     }
 
-    public void setParentid(Integer parentid) {
+    public void setParentid(String parentid) {
         this.parentid = parentid;
     }
 
@@ -273,19 +273,19 @@ public class SpStore extends Entity {
         this.description = description == null ? null : description.trim();
     }
 
-	public Integer getStoreId() {
+	public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 
-	public Integer getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Integer userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
@@ -314,11 +314,11 @@ public class SpStore extends Entity {
 	}
 
 
-	public List<Integer> getIdArray() {
+	public List<String> getIdArray() {
 		return idArray;
 	}
 
-	public void setIdArray(List<Integer> idArray) {
+	public void setIdArray(List<String> idArray) {
 		this.idArray = idArray;
 	}
 

@@ -46,7 +46,7 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 		List<SpCustProdPrice> custProdPrice = new ArrayList<SpCustProdPrice>();
 		SpCustProdPrice spCustProdPrice = new SpCustProdPrice();
 		spCustProdPrice.setType(2+"");
-		spCustProdPrice.setStoreid(Integer.valueOf(storeId));
+		spCustProdPrice.setStoreid(storeId);
 		custProdPrice = spCustProdPriceMapper.select(spCustProdPrice);
 		
 		if(custProdPrice.size()>0){
@@ -60,7 +60,7 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 		//获取分店，保存时可以选择加入某个分店中去
 		
 		SpStore store = new SpStore();
-		store.setParentid(Integer.parseInt(storeId));
+		store.setParentid(storeId);
 		List<SpStore> stores = spStoreMapper.selectStores(store, null);
 		List<SpStore> storeList = new ArrayList<SpStore>();
 		//查询员工时过滤信息
@@ -130,7 +130,10 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 		ScWeChat wechat = scWeChatMapper.selectByOpenId(openid);
 		SpEmployee employee = new SpEmployee();
 		if(wechat!=null){
-			employee = getEmployee(wechat.getEmpid()+"");
+			if(wechat.getEmpid()!=null){
+				employee = getEmployee(wechat.getEmpid()+"");
+			}
+			
 		}
 		return employee;
 	}

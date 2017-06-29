@@ -16,7 +16,7 @@ public class SpPSizeCustomServiceImpl implements SpPSizeCustomService{
 	@Autowired
 	private SpPSizeCustomMapper spPSizeCustomMapper;
 	
-	public List<SpPSizeCustom> getSpPSizeCustoms(int storeId) {
+	public List<SpPSizeCustom> getSpPSizeCustoms(String storeId) {
 
 		return spPSizeCustomMapper.getSpPSizeCustoms(storeId,null);
 	}

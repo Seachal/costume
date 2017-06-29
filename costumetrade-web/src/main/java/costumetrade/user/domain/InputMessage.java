@@ -24,6 +24,9 @@ public class InputMessage implements Serializable {
     // 文本消息  
     @XStreamAlias("Content")  
     private String Content;  
+    
+    @XStreamAlias("SessionFrom")  
+    private String SessionFrom;  
     // 图片消息  
     @XStreamAlias("PicUrl")  
     private String PicUrl;  
@@ -216,5 +219,15 @@ public class InputMessage implements Serializable {
   
     public void setTicket(String ticket) {  
         Ticket = ticket;  
-    }  
+    }
+
+	public String getSessionFrom() {
+		return SessionFrom;
+	}
+
+	public void setSessionFrom(String sessionFrom) {
+		SessionFrom = sessionFrom;
+	}  
+    
+    
 }  

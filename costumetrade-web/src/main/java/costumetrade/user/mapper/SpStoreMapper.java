@@ -9,13 +9,13 @@ import costumetrade.common.page.Page;
 import costumetrade.user.domain.SpStore;
 @Mapper
 public interface SpStoreMapper {
-    int deleteByPrimaryKey(Integer id);
+    int deleteByPrimaryKey(String id);
 
     int insert(SpStore record);
 
     int insertSelective(SpStore record);
 
-    SpStore selectByPrimaryKey(Integer id);
+    SpStore selectByPrimaryKey(String id);
     
     List<SpStore> selectStores(@Param("store")SpStore store,@Param("page") Page page);
 

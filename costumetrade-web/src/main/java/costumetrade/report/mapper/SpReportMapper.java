@@ -1,6 +1,6 @@
 package costumetrade.report.mapper;
 
-import java.util.Date;
+
 import java.util.List;
 import java.util.Map;
 
@@ -16,7 +16,9 @@ public interface SpReportMapper {
 	
 	FinanceReportQuery financeReport(FinanceReportQuery query);
 	
-	List<Map<String, Object>> purchaseSortReport(PurchaseReportQuery query);
+	List<Map<String, Object>> purchaseAnalysisReport(PurchaseReportQuery query);
+	
+	List<Map<String, Object>> realTimeInventory(PurchaseReportQuery query);
 	
 	List<PurchaseReportQuery> purchaseReport3(@Param("query")PurchaseReportQuery query,@Param("page")Page page);
 	

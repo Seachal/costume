@@ -15,7 +15,7 @@ public class SpPrinterInfoServiceImpl implements SpPrinterInfoService{
 	@Autowired
 	private ScPrinterInfoMapper scPrinterInfoMapper;
 	
-	public ScPrinterInfo getSpPrinterInfos(Integer  storeId) {
+	public ScPrinterInfo getSpPrinterInfos(String  storeId) {
 
 		return scPrinterInfoMapper.selectByPrimaryKey(storeId);
 	}

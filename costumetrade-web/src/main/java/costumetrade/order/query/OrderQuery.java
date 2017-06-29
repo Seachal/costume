@@ -17,18 +17,18 @@ public class OrderQuery extends Entity {
     /**
      *  卖家客户编号
      */
-    private Integer sellerstoreid;
+    private String sellerstoreid;
 
     /**
      *  买家分店编号
      */
-    private Integer buyerstoreid;
+    private String buyerstoreid;
 
     private Integer orderType;
     /**
      *  企业ID
      */
-    private Integer storeId;
+    private String storeId;
     
     private Integer userId;
     
@@ -105,7 +105,6 @@ public class OrderQuery extends Entity {
 
 
 
-	
 	public List<String> getProductIdArray() {
 		return productIdArray;
 	}
@@ -180,11 +179,11 @@ public class OrderQuery extends Entity {
 		this.operate = operate;
 	}
 
-	public Integer getStoreId() {
+	public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 
@@ -198,19 +197,19 @@ public class OrderQuery extends Entity {
 		this.openid = openid;
 	}
 
-	public Integer getSellerstoreid() {
+	public String getSellerstoreid() {
 		return sellerstoreid;
 	}
 
-	public void setSellerstoreid(Integer sellerstoreid) {
+	public void setSellerstoreid(String sellerstoreid) {
 		this.sellerstoreid = sellerstoreid;
 	}
 
-	public Integer getBuyerstoreid() {
+	public String getBuyerstoreid() {
 		return buyerstoreid;
 	}
 
-	public void setBuyerstoreid(Integer buyerstoreid) {
+	public void setBuyerstoreid(String buyerstoreid) {
 		this.buyerstoreid = buyerstoreid;
 	}
 

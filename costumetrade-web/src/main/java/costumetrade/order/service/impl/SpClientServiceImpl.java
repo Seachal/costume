@@ -197,6 +197,25 @@ public class SpClientServiceImpl implements SpClientService{
 	}
 	@Override
 	public int updateClients(SpClient spClient) {
+		SpClient c = new SpClient();
+		List<String> ids = new ArrayList<String>();
+		if(spClient.getCheckAllTag()!=null&&spClient.getCheckAllTag()){
+			c.setType(spClient.getType());
+			c.setStoreId(spClient.getStoreId());
+			List<SpClient> clients = spClientMapper.select(c,null);
+			if(clients!=null && clients.size()>0&&spClient.getIdArray()!=null){
+				for(SpClient s : clients){
+					for(String id : spClient.getIdArray()){
+						if(!s.getId().equals(id)){
+							ids.add(s.getId());
+						}
+					}
+				}
+				spClient.setIdArray(ids);
+			}
+			
+		}
+		
 		int save = spClientMapper.updateByPrimaryKeySelective(spClient);
 		
 		List<String> openids = new ArrayList<String>();

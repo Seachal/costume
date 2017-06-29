@@ -35,7 +35,7 @@ public class ProductQuery extends Entity{
     /**
      *  企业ID
      */
-    private Integer storeId;
+    private String storeId;
     /**
      *  实体状态 0:正常 1：待处理 2、作废
      */
@@ -293,7 +293,7 @@ public class ProductQuery extends Entity{
 	
 	private BigDecimal price ;
 	
-	private String appid;
+	private String appId;
 	
 	private String appSecret;
 	
@@ -308,6 +308,10 @@ public class ProductQuery extends Entity{
 	private List<SpPSize> sizeLists;
 	
 	private List<SpPColor> colorLists;
+	
+	private Boolean checkAllTag;
+	
+	private Integer countReview;
 	
 	public String getFields() {
 		return fields;
@@ -347,11 +351,11 @@ public class ProductQuery extends Entity{
 		this.brandid = brandid;
 	}
 
-	public Integer getStoreId() {
+	public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 
@@ -879,12 +883,12 @@ public class ProductQuery extends Entity{
 		this.idArray = idArray;
 	}
 
-	public String getAppid() {
-		return appid;
+	public String getAppId() {
+		return appId;
 	}
 
-	public void setAppid(String appid) {
-		this.appid = appid;
+	public void setAppId(String appId) {
+		this.appId = appId;
 	}
 
 	public String getAppSecret() {
@@ -1013,6 +1017,22 @@ public class ProductQuery extends Entity{
 
 	public void setPriceJsons(PatternPrice priceJsons) {
 		this.priceJsons = priceJsons;
+	}
+
+	public Boolean getCheckAllTag() {
+		return checkAllTag;
+	}
+
+	public void setCheckAllTag(Boolean checkAllTag) {
+		this.checkAllTag = checkAllTag;
+	}
+
+	public Integer getCountReview() {
+		return countReview;
+	}
+
+	public void setCountReview(Integer countReview) {
+		this.countReview = countReview;
 	}
 
 	

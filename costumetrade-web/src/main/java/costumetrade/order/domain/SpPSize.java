@@ -14,7 +14,7 @@ public class SpPSize extends Entity {
     /**
      *  企业ID
      */
-    private Integer storeId;
+    private String storeId;
 
     /**
      *  识别编码:尺码名称，字符类型，允许1-10个字符（最多5个汉字）
@@ -69,11 +69,11 @@ public class SpPSize extends Entity {
     }
 
 
-    public Integer getStoreId() {
+    public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 

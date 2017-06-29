@@ -32,7 +32,7 @@ public class SsDataDictionaryController {
 	
 	@RequestMapping("/getDataDictionarys")
 	@ResponseBody
-	public ApiResponse getDataDictionarys(Integer storeId) {
+	public ApiResponse getDataDictionarys(String storeId) {
 		return  ApiResponse.getInstance(ssDataDictionaryService.getDataDictionarys(storeId));
 	}
 

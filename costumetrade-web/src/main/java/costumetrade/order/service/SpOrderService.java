@@ -56,7 +56,7 @@ public interface SpOrderService {
 	/*
 	 * 根据订单号 查询订单
 	 * */
-	public SsStoOrder order(String orderNo , Integer storeId);
+	public SsStoOrder order(String orderNo , String storeId);
 	
 	public List<SsDataDictionary> orderFeeInit(String  openid);
 	

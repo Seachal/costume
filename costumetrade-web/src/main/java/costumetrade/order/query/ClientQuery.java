@@ -23,7 +23,7 @@ public class ClientQuery extends Entity {
 	private List<String> districtList;
 	private Integer type;
 	
-	private Integer storeId;
+	private String storeId;
 	
 	
 
@@ -59,11 +59,11 @@ public class ClientQuery extends Entity {
 		this.type = type;
 	}
 
-	public Integer getStoreId() {
+	public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 	

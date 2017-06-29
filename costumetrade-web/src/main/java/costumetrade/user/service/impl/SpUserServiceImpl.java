@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,10 +89,11 @@ public class SpUserServiceImpl implements SpUserService{
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
+				String userId = UUID.randomUUID().toString().replaceAll("\\_", "");
+				user.setId(userId);
 				user.setCreateTime(new Date());
-				we.setUserid(user.getId());
 				userid = spUserMapper.insertSelective(user);
+				we.setUserid(userId);
 				we.setCreateby(userid+"");
 			}else{//绑定员工号
 				we.setEmpid(semployee.getId());
@@ -117,7 +119,8 @@ public class SpUserServiceImpl implements SpUserService{
 		//保存我的中心的信息时候，设置默认的地址
 		ScStoreAddr addr = new ScStoreAddr();
 		addr.setIsdefault(1);
-		if(spStore.getStoreId() != null){
+		if(StringUtil.isNotBlank(spStore.getStoreId())){
+			spStore.setId(spStore.getStoreId());
 			addr.setUserid(spStore.getStoreId());
 			save = spStoreMapper.updateByPrimaryKeySelective(spStore);			
 		}else if(spStore.getUserId() != null){
@@ -185,7 +188,7 @@ public class SpUserServiceImpl implements SpUserService{
 		List<ScFocusShop> shops = scFocusShopMapper.select(shop);
 		
 		SpStore store = new SpStore();
-		List<Integer> idArray = new ArrayList<Integer>();
+		List<String> idArray = new ArrayList<String>();
 		if(query.getStoreId()!=null){
 			idArray.add(query.getStoreId());//商城第一个店铺显示自己的店铺
 		}
@@ -195,6 +198,9 @@ public class SpUserServiceImpl implements SpUserService{
 				idArray.add(s.getShopid());
 			}
 			
+			
+		}
+		if(idArray.size()>0){
 			store.setIdArray(idArray);
 		}
 		

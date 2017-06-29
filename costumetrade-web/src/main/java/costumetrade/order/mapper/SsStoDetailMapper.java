@@ -25,15 +25,15 @@ public interface SsStoDetailMapper {
 
     int updateByPrimaryKey(SsStoDetail record);
     
-    int saveDetail(@Param("detail")List<SsStoDetail> detail , @Param("sellerStoreId")Integer sellerStoreId);
+    int saveDetail(@Param("detail")List<SsStoDetail> detail , @Param("sellerStoreId")String sellerStoreId);
     
     int updateByPrimaryKeySelectiveStore(@Param("details")List<SsStoDetail> details);
     
     int updateByPrimaryKeySelectiveMember(@Param("details")List<SsStoDetail> details);
     
-    int saveDetailStore(@Param("detail")List<SsStoDetail> detail , @Param("storeId")Integer storeId);
+    int saveDetailStore(@Param("detail")List<SsStoDetail> detail , @Param("storeId")String storeId);
     
-    List<SsStoDetail> selectByOrderId(@Param("orderNo")String orderNo,@Param("storeId")Integer storeId);
+    List<SsStoDetail> selectByOrderId(@Param("orderNo")String orderNo,@Param("storeId")String storeId);
     
     List<SsStoDetail> selectByOrderIdMember(@Param("orderNo")String orderNo);
     

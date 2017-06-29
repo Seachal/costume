@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -47,6 +48,7 @@ public class SpUserController {
 	@ResponseBody
 	public ApiResponse login(String code,String appId,String appSecret) throws Exception {
 		ApiResponse result = new ApiResponse();
+		System.out.println("欢迎进入小程序");
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		if(code == null){
@@ -57,6 +59,7 @@ public class SpUserController {
 		String openIdAndKey = weChatService.getOpenIdAndKey(code,appId,appSecret);
 		JSONObject json = JSON.parseObject(openIdAndKey);
 		String openid = json.getString("openid");
+		System.out.println("欢迎进入小程序"+openIdAndKey);
 		ScWeChat chat = null;
 		ScUserQuery resultQuery = new ScUserQuery();
 		StoreQuery query = new StoreQuery();
@@ -102,7 +105,7 @@ public class SpUserController {
 	}
 	@RequestMapping("/saveUserOrStore")
 	@ResponseBody
-	public ApiResponse saveUserOrStore(SpStore store) {
+	public ApiResponse saveUserOrStore(@RequestBody SpStore store) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);

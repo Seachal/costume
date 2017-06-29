@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import costumetrade.common.page.Page;
+import costumetrade.common.util.StringUtil;
 import costumetrade.order.query.Rules;
 import costumetrade.report.domain.FinanceReportQuery;
 import costumetrade.report.domain.ProductReportQuery;
@@ -20,7 +21,11 @@ import costumetrade.report.domain.ReportQuery;
 import costumetrade.report.mapper.SpReportMapper;
 import costumetrade.report.service.SpReportService;
 import costumetrade.user.domain.ScWeChat;
+import costumetrade.user.domain.SpEmployee;
+import costumetrade.user.domain.SpStore;
 import costumetrade.user.mapper.ScWeChatMapper;
+import costumetrade.user.mapper.SpEmployeeMapper;
+import costumetrade.user.mapper.SpStoreMapper;
 
 @Transactional
 @Service
@@ -29,6 +34,10 @@ public class SpReportServiceImpl implements SpReportService{
 	private SpReportMapper spReportMapper;
 	@Autowired
 	private ScWeChatMapper scWeChatMapper;
+	@Autowired
+	private SpEmployeeMapper spEmployeeMapper;
+	@Autowired
+	private SpStoreMapper spStoreMapper;
 	@Override
 	public FinanceReportQuery financeReport(FinanceReportQuery query) {
 		if(query.getTimeFrom() ==null ){
@@ -49,8 +58,10 @@ public class SpReportServiceImpl implements SpReportService{
 		return report;
 	}
 	@Override
-	public List<Map<String,Object>> purchaseSortReport(
+	public ReportQuery purchaseAnalysisReport(
 			PurchaseReportQuery query) {
+		ReportQuery reportQuery = new ReportQuery();
+	
 		if(query.getTimeFrom() ==null ){
 			query.setTimeFrom(setTimeFrom());
 		}
@@ -67,21 +78,49 @@ public class SpReportServiceImpl implements SpReportService{
 			}
 		}
 		List<Map<String,Object>> mapList = new ArrayList<Map<String,Object>>();
-		List<Map<String,Object>> maps =  spReportMapper.purchaseSortReport(query);
+		List<Map<String,Object>> maps =  spReportMapper.purchaseAnalysisReport(query);
 		if(maps!=null){
 			for(int i=0;i<maps.size();i++){
 				Map<String,Object> map = maps.get(i);
 				Map<String,Object> m = new HashMap<String, Object>();
+				String createBy  = (String) map.get("createBy");
+				//查询创建人中文
+				if(StringUtil.isNotBlank(createBy)){
+					ScWeChat we = scWeChatMapper.selectByPrimaryKey(Integer.parseInt(createBy));
+					if(we!=null){
+						if(StringUtil.isNotBlank(we.getEmpid()+"")){//操作者是员工
+							SpEmployee e  = new SpEmployee();
+							e.setId(we.getEmpid());
+							e = spEmployeeMapper.selectByPrimaryKey(e);
+							createBy = e.getName();
+						}else if(StringUtil.isNotBlank(we.getStoreid()+"")){//操作者是店家
+							SpStore store = new SpStore();
+							store = spStoreMapper.selectByPrimaryKey(we.getStoreid());
+							createBy = store.getName();
+						}
+					}
+					m.put("createBy", createBy);
+				}
 				m.put(query.getFilter().getField(), map.get(query.getFilter().getField()));
 				m.put("quantity", map.get("quantity"));
-				m.put("amount", map.get("amount"));
 				mapList.add(m);
+			}
+		}
+		List<Map<String,Object>> mapList1 = new ArrayList<Map<String,Object>>();
+		List<Map<String,Object>> maps1 =  spReportMapper.realTimeInventory(query);
+		if(maps1!=null){
+			for(int i=0;i<maps1.size();i++){
+				Map<String,Object> map = maps1.get(i);
+				Map<String,Object> m = new HashMap<String, Object>();
+				m.put(query.getFilter().getField(), map.get(query.getFilter().getField()));
+				m.put("quantity", map.get("quantity"));
+				mapList1.add(m);
 				
 			}
-		}else{
-			return mapList;
 		}
-		return mapList;
+		reportQuery.setInvReportQuerys(mapList1);
+		reportQuery.setPurchaseQuerys(mapList);
+		return reportQuery;
 	}
 	
 	

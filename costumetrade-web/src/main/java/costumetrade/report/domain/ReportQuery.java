@@ -1,15 +1,10 @@
 package costumetrade.report.domain;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import costumetrade.common.Entity;
-import costumetrade.order.domain.SsStoOrder;
-import costumetrade.order.query.Filter;
-import costumetrade.order.query.Rules;
-import costumetrade.order.query.Sort;
-import costumetrade.user.domain.SsPayment;
+
 
 public class ReportQuery extends Entity {
 
@@ -19,6 +14,10 @@ public class ReportQuery extends Entity {
 	private static final long serialVersionUID = 1L;
 	
 	private List<PurchaseReportQuery> purchaseReportQuerys;
+	
+	private List<Map<String,Object>> InvReportQuerys;
+	
+	private List<Map<String,Object>> purchaseQuerys;
 	
 	private List<ProductReportQuery> productReportQuerys;
 
@@ -38,6 +37,24 @@ public class ReportQuery extends Entity {
 	public void setProductReportQuerys(List<ProductReportQuery> productReportQuerys) {
 		this.productReportQuerys = productReportQuerys;
 	}
+
+	public List<Map<String, Object>> getInvReportQuerys() {
+		return InvReportQuerys;
+	}
+
+	public void setInvReportQuerys(List<Map<String, Object>> invReportQuerys) {
+		InvReportQuerys = invReportQuerys;
+	}
+
+	public List<Map<String, Object>> getPurchaseQuerys() {
+		return purchaseQuerys;
+	}
+
+	public void setPurchaseQuerys(List<Map<String, Object>> purchaseQuerys) {
+		this.purchaseQuerys = purchaseQuerys;
+	}
+
+
 	
 	
 	

@@ -10,7 +10,7 @@ public interface SpPSizeCustomService {
 	 * 获取所有尺码组
 	 * 
 	 * */
-	public List<SpPSizeCustom> getSpPSizeCustoms(int cropId);
+	public List<SpPSizeCustom> getSpPSizeCustoms(String cropId);
 	/**
 	 * 保存尺码组信息
 	 * 

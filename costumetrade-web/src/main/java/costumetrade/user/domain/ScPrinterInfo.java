@@ -13,7 +13,7 @@ public class ScPrinterInfo extends Entity {
     /**
      *  企业ID
      */
-    private Integer storeid;
+    private String storeid;
 
     /**
      *  打印机编码
@@ -75,11 +75,11 @@ public class ScPrinterInfo extends Entity {
         this.id = id;
     }
 
-    public Integer getStoreid() {
+    public String getStoreid() {
         return storeid;
     }
 
-    public void setStoreid(Integer storeid) {
+    public void setStoreid(String storeid) {
         this.storeid = storeid;
     }
 

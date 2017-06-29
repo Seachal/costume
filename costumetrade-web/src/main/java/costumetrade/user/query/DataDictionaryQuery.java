@@ -10,7 +10,7 @@ public class DataDictionaryQuery extends Entity {
      */
     private Integer id;
     
-    private Integer storeId;
+    private String storeId;
 
     /**
      *  类型名称
@@ -46,11 +46,11 @@ public class DataDictionaryQuery extends Entity {
 		this.id = id;
 	}
 
-	public Integer getStoreId() {
+	public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 	public String getTypename() {

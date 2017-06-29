@@ -14,7 +14,7 @@ public interface SsPriceMapper {
 
     SsPrice selectByPrimaryKey(Integer id);
     
-    SsPrice select(@Param("storeid")Integer storeid ,@Param("productid")String productid);
+    SsPrice select(@Param("storeid")String storeid ,@Param("productid")String productid);
 
     int updateByPrimaryKeySelective(SsPrice record);
 

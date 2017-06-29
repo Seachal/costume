@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import costumetrade.cache.Cache;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
+import costumetrade.common.util.StringUtil;
 import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.domain.SpPrivilegeEmployee;
 import costumetrade.user.domain.SpStore;
@@ -42,13 +43,13 @@ public class SpStoreController {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		if(storeId == null ){
+		if(StringUtil.isBlank(storeId) ){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.name());
 			return result;
 		}
 		List<SpStore> storeLists = new ArrayList<SpStore>();
-		storeLists = spStoreService.getChainStore(Integer.valueOf(storeId));
+		storeLists = spStoreService.getChainStore(storeId);
 
 		return  ApiResponse.getInstance(storeLists);
 	}
@@ -81,7 +82,7 @@ public class SpStoreController {
 
 	@RequestMapping("/deleteChainStore")
 	@ResponseBody
-	public ApiResponse deleteChainStore(Integer id) {
+	public ApiResponse deleteChainStore(String id) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
@@ -103,7 +104,7 @@ public class SpStoreController {
 	}
 	@RequestMapping("/getStore")
 	@ResponseBody
-	public ApiResponse getStore(Integer storeId) {
+	public ApiResponse getStore(String storeId) {
 		
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
@@ -137,9 +138,9 @@ public class SpStoreController {
 			result.setMsg(ResponseInfo.LACK_PARAM.name());
 			return result;
 		}
-		Integer store = spStoreService.insertStore(openid);
+		String store = spStoreService.insertStore(openid);
 		
-		if(store == null){
+		if(StringUtil.isBlank(store)){
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;

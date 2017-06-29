@@ -16,17 +16,17 @@ public interface SsStoOrderMapper {
 
     int insertSelective(SsStoOrder record);
 
-    int insert(@Param("record")SsStoOrder record,@Param("sellerStoreId")Integer sellerStoreId);
+    int insert(@Param("record")SsStoOrder record,@Param("sellerStoreId")String sellerStoreId);
     
-    int insertStore(@Param("record")SsStoOrder record,@Param("storeId")Integer storeId);
+    int insertStore(@Param("record")SsStoOrder record,@Param("storeId")String storeId);
 
     SsStoOrder selectByPrimaryKey(Integer id);
     
     SsStoOrder selectSupplierByProduct(SpProduct product);
     
-    SsStoOrder selectByOrderNo(@Param("orderNo")String orderNo,@Param("storeId")Integer storeId);
+    SsStoOrder selectByOrderNo(@Param("orderNo")String orderNo,@Param("storeId")String storeId);
     
-    SsStoOrder selectByTradeNo(@Param("tradeNo")String tradeNo,@Param("storeId")Integer storeId);
+    SsStoOrder selectByTradeNo(@Param("tradeNo")String tradeNo,@Param("storeId")String storeId);
     
     int updateByPrimaryKeySelective(SsStoOrder record);
     
@@ -34,7 +34,7 @@ public interface SsStoOrderMapper {
 
     int updateByPrimaryKey(SsStoOrder record);
     
-    SsStoOrder selectByOrderId(Integer orderId);
+    SsStoOrder selectByOrderId(String orderId);
     
     List<SsStoOrder> selectByOrderMember(@Param("spStoOrder")SsStoOrder spStoOrder ,@Param("page") Page page);
     
@@ -42,7 +42,7 @@ public interface SsStoOrderMapper {
     
     List<SsStoOrder> selectByOrderMemberCount();
     
-    List<SsStoOrder> selectByOrderStoreCount(@Param("storeId")Integer storeId);
+    List<SsStoOrder> selectByOrderStoreCount(@Param("storeId")String storeId);
     
     List<SsStoOrder> financialCountingOrders(OrderQuery query);
     

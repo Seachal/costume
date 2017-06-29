@@ -18,7 +18,7 @@ public class ScWeChat extends Entity {
     /**
      *  店铺编号
      */
-    private Integer storeid;
+    private String storeid;
 
     /**
      *  员工编号
@@ -38,7 +38,7 @@ public class ScWeChat extends Entity {
     /**
      *  普通用户
      */
-    private Integer userid;
+    private String userid;
 
     private static final long serialVersionUID = 1L;
 
@@ -58,11 +58,11 @@ public class ScWeChat extends Entity {
         this.openid = openid == null ? null : openid.trim();
     }
 
-    public Integer getStoreid() {
+    public String getStoreid() {
         return storeid;
     }
 
-    public void setStoreid(Integer storeid) {
+    public void setStoreid(String storeid) {
         this.storeid = storeid;
     }
 
@@ -90,11 +90,11 @@ public class ScWeChat extends Entity {
         this.createby = createby == null ? null : createby.trim();
     }
 
-    public Integer getUserid() {
+    public String getUserid() {
         return userid;
     }
 
-    public void setUserid(Integer userid) {
+    public void setUserid(String userid) {
         this.userid = userid;
     }
 }

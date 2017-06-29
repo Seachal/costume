@@ -10,7 +10,7 @@ public interface SpPSizeService {
 	 * 获取所有尺码
 	 * 
 	 * */
-	public List<SpPSize> getSpPSizes(int storeId,String productId);
+	public List<SpPSize> getSpPSizes(String storeId,String productId);
 	/**
 	 * 保存尺码信息
 	 * 

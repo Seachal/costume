@@ -16,11 +16,11 @@ public interface SpUnitMapper {
     int insertSelective(SpUnit record);
 
     SpUnit selectByPrimaryKey(Integer id);
-    SpUnit getSpUnitByName(@Param("unit") String unit,@Param("storeId")Integer storeId);
+    SpUnit getSpUnitByName(@Param("unit") String unit,@Param("storeId")String storeId);
 
     int updateByPrimaryKeySelective(SpUnit record);
 
     int updateByPrimaryKey(SpUnit record);
     
-    List<SpUnit> getUnits(@Param("storeId")Integer storeId,@Param("page") Page page );
+    List<SpUnit> getUnits(@Param("storeId")String storeId,@Param("page") Page page );
 }

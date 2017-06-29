@@ -172,7 +172,13 @@ public class SpProductServiceImpl implements SpProductService{
 		page.setPageNum(productQuery.getPageNum());
 		page.setPageSize(productQuery.getPageSize());
 		
-		List<Map<String,Object>> list = spProductMapper.selectProducts(productQuery,page);
+		List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
+		if(productQuery.getCheckAllTag()!=null&&productQuery.getCheckAllTag()){
+			list = spProductMapper.selectProducts(productQuery,null);
+		}else{
+			list = spProductMapper.selectProducts(productQuery,page);
+		}
+		
 		//商城商品列表设置销售价
 		List<ProductQuery> productList = new ArrayList<ProductQuery>();
 		
@@ -303,10 +309,15 @@ public class SpProductServiceImpl implements SpProductService{
 		if(weChat!=null){
 			//针对商城的商品查询，货品管理的商品查询不需要对价格显示设置和商品等级
 			if(weChat.getStoreid()!=null&&(!weChat.getStoreid().equals(productQuery.getStoreId()))){
-				client.setOtherStoreId(weChat.getStoreid());
+				//client.setOtherStoreId(weChat.getStoreid());
 				mallProList =true ;
 			}else if(weChat.getUserid()!=null){
-				client.setUserId(weChat.getUserid());
+				//client.setUserId(weChat.getUserid());
+				
+				mallProList =true ;
+			}
+			if(StringUtil.isNotBlank(productQuery.getOpenid())){
+				client.setOpenid(productQuery.getOpenid());
 				mallProList =true ;
 			}
 			client.setStoreId(productQuery.getStoreId());
@@ -323,11 +334,20 @@ public class SpProductServiceImpl implements SpProductService{
 	@Override
 	public ProductQuery selectProduct(ProductQuery queryDetail) {
 		ProductQuery query = spProductMapper.selectProduct(queryDetail);
-		
+		if(query!=null && StringUtil.isNotBlank(query.getRaisePrice())){
+			PatternPrice json =  JSONObject.parseObject(query.getRaisePrice(), PatternPrice.class);
+			query.setPriceJsons(json);
+			query.setRaisePrice(null);
+		}
 		SpClient client = getClientByopenId(queryDetail);
 		int custTypeCode = 0;
 		if(client != null){
-			custTypeCode = Integer.parseInt(client.getCate());
+			if(StringUtil.isBlank(client.getCate())){
+				custTypeCode =1;
+			}else{
+				custTypeCode = Integer.parseInt(client.getCate());
+			}
+			
 			if(custTypeCode>0){
 				BigDecimal salePrice = setPrice(query, custTypeCode);
 				query.setPrice(salePrice);
@@ -335,14 +355,19 @@ public class SpProductServiceImpl implements SpProductService{
 				query.setOriginalPrice(query.getTagprice());
 			}
 		}
-		List<SsProductReview> productReviews = ssProductReviewMapper.selectReviews(queryDetail);
+		List<SsProductReview> productReviews = ssProductReviewMapper.selectReviews(queryDetail,new Page());
+		//查询评价数量
+		SsProductReview countReview = ssProductReviewMapper.selectReviewCount(queryDetail);
+		if(countReview!=null){
+			query.setCountReview(countReview.getCountReview());
+		}
 		query.setProductReviews(productReviews);
 		return query;
 	}
 
 	@Override
 	public ProductQuery productInit(ProductQuery query) {
-		Integer storeId = query.getStoreId();
+		String storeId = query.getStoreId();
 		String productId = query.getId();
 		List<SpPBrand> brands = spPBrandMapper.getSpPBrands(storeId,null);
 		List<SpPCate> productTypes = spPCateMapper.getSpPCates(storeId,null);
@@ -579,11 +604,11 @@ public class SpProductServiceImpl implements SpProductService{
 	}
 
 	@Override
-	public List<SpProduct> selectProductById(List<String> ids,Integer storeId) {
+	public List<SpProduct> selectProductById(List<String> ids,String storeId) {
 		return spProductMapper.selectById(ids,storeId);
 	}
 	
-	public void insertSuspendingProduct(SpProduct product,Integer buyerStoreId){
+	public void insertSuspendingProduct(SpProduct product,String buyerStoreId){
 		
 		//查询商品类型是否存在买家，不存在，新增
 		SpPCate cate = spPCateMapper.getSpPCate(product.getBrandid(), product.getStoreId());
@@ -633,13 +658,33 @@ public class SpProductServiceImpl implements SpProductService{
 	}
 
 	@Override
-	public int deleteProducts(List<String> id, Integer storeId) {
+	public int deleteProducts(List<String> id, String storeId) {
 		return spProductMapper.deleteByIds(storeId, id);
 	}
 
 	@Override
 	public int updateProducts(ProductQuery  productQuery) {
-		return spProductMapper.updateByIds(productQuery);
+		ProductQuery  product = new ProductQuery();
+		product = productQuery;
+		List<String> ids = new ArrayList<String>();
+		//全选标签控制,先查询所有符合条件的
+		if(productQuery.getCheckAllTag()!=null&&productQuery.getCheckAllTag()){
+			productQuery.setIdArray(null);
+			List<ProductQuery> list = selectProducts(productQuery);
+			if(list!=null&& list.size()>0&&product.getIdArray()!=null&&product.getIdArray().size()>0){
+				for(ProductQuery query : list){
+					for(String id: product.getIdArray()){
+						if(!query.getId().equals(id)){
+							ids.add(query.getId());
+						}
+					}
+				}
+			}
+		}
+		if(ids.size()>0){
+			product.setIdArray(ids);
+		}
+		return spProductMapper.updateByIds(product);
 	}
 
 	@Override
@@ -653,7 +698,7 @@ public class SpProductServiceImpl implements SpProductService{
 		SsStock stock = new SsStock();
 		stock.setProductid(product.getId());
 		stock.setStoreid(product.getStoreId());
-		List<Integer> otherStoreIds = null;
+		List<String> otherStoreIds = null;
 		
 		if(store.getParentid()!=null&&store.getInventoryShare()==1){//分店//查询允许共享的店铺
 			store = new SpStore();
@@ -662,7 +707,7 @@ public class SpProductServiceImpl implements SpProductService{
 			stores = spStoreMapper.selectStores(store, null);//查询允许共享的店铺
 			
 			if(stores.size()>0){
-				otherStoreIds = new ArrayList<Integer>();
+				otherStoreIds = new ArrayList<String>();
 				for(SpStore store1 :stores){
 					if(store1.getId()!=product.getStoreId()){
 						otherStoreIds.add(store1.getId());
@@ -670,6 +715,7 @@ public class SpProductServiceImpl implements SpProductService{
 					
 				}
 			}
+			otherStoreIds.add(product.getStoreId());
 			stock.setOtherStoreIds(otherStoreIds);
 		}
 		stocks = ssStockMapper.select(stock);
@@ -703,7 +749,9 @@ public class SpProductServiceImpl implements SpProductService{
 
 	@Override
 	public List<SsProductReview> getReviews(ProductQuery query) {
-		return ssProductReviewMapper.selectReviews(query);
+		Page page = new Page();
+		page.setPageNum(query.getPageNum());
+		return ssProductReviewMapper.selectReviews(query,page);
 	}
 	@Override
 	public ProductQuery updateProductInit(ProductQuery query) {
@@ -733,7 +781,8 @@ public class SpProductServiceImpl implements SpProductService{
 		boolean skipShare = false;
 		if(!StringUtil.isBlank(productQuery.getCode())){//这是code指小程序加载时传的code，不是商品code，用来获取openid !"".equals(productQuery.getCode())
 			try {
-				openIdAndKey = weChatService.getOpenIdAndKey(productQuery.getCode(), productQuery.getAppid(), productQuery.getAppSecret());
+				openIdAndKey = weChatService.getOpenIdAndKey(productQuery.getCode(), productQuery.getAppId(), productQuery.getAppSecret());
+				System.out.println(openIdAndKey);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -760,9 +809,28 @@ public class SpProductServiceImpl implements SpProductService{
 			}
 		}
 		List<ProductQuery> products = new ArrayList<ProductQuery>();
-		List<Map<String,Object>> maps = spProductMapper.selectProducts(productQuery,null);
-		if(maps!=null && maps.size()>0){
-			JSONArray jsonArray = (JSONArray) JSONArray.toJSON(maps);
+		productQuery.setCode(null);
+		//控制全选 查询所有的商品，并去掉未勾选的商品
+		List<String> idArray = productQuery.getIdArray();
+		List<Map<String,Object>> maps = new ArrayList<Map<String,Object>>();
+		if(productQuery.getCheckAllTag()!=null&&productQuery.getCheckAllTag()){
+			productQuery.setIdArray(null);
+		}
+		maps= spProductMapper.selectProducts(productQuery,null);
+		//全选标签控制,先查询所有符合条件的
+		List<Map<String,Object>> maps1 = new ArrayList<Map<String,Object>>();
+		if(maps!=null&& maps.size()>0&&idArray!=null&&idArray.size()>0){
+			for(Map<String, Object> map : maps){
+				for(String id: idArray){
+					if(!map.get("id").equals(id)){
+						maps1.add(map);
+					}
+				}
+			}
+		}
+		
+		if(maps1!=null && maps1.size()>0){
+			JSONArray jsonArray = (JSONArray) JSONArray.toJSON(maps1);
 
 			products = JSONArray.parseArray(jsonArray.toJSONString(), ProductQuery.class);
 		}

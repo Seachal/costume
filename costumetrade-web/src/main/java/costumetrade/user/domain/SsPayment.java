@@ -15,7 +15,7 @@ public class SsPayment extends Entity {
     /**
      *  
      */
-    private Integer storeid;
+    private String storeid;
 
     /**
      *  还款对象类型 1：客户还款，2：供货商还款
@@ -84,11 +84,11 @@ public class SsPayment extends Entity {
         this.id = id;
     }
 
-    public Integer getStoreid() {
+    public String getStoreid() {
         return storeid;
     }
 
-    public void setStoreid(Integer storeid) {
+    public void setStoreid(String storeid) {
         this.storeid = storeid;
     }
 

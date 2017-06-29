@@ -33,7 +33,7 @@ public class FinanceReportQuery extends Entity {
 	
 	private BigDecimal count;
 	
-	private Integer storeId;
+	private String storeId;
 	
 	private String openid;
 	
@@ -110,7 +110,7 @@ public class FinanceReportQuery extends Entity {
 	}
 
 	public BigDecimal getCount() {
-		count = saleIncome.subtract(salePay).add(purchaseIncome).subtract(purchasePay).add(customerRepay).add(suppierRepay).subtract(feePay);
+		//count = saleIncome.subtract(salePay).add(purchaseIncome).subtract(purchasePay).add(customerRepay).add(suppierRepay).subtract(feePay);
 		return count;
 	}
 
@@ -118,11 +118,11 @@ public class FinanceReportQuery extends Entity {
 		this.count = count;
 	}
 
-	public Integer getStoreId() {
+	public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 

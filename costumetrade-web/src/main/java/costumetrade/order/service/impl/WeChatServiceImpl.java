@@ -37,12 +37,12 @@ import costumetrade.user.mapper.SpUserMapper;
 @Service
 @Transactional
 public class WeChatServiceImpl implements WeChatService {
-//	private final static String APP_ID="wx0f02d5eacaf954e7";
-//	private final static String APP_SECRET="8d7f55d6a5008b7f8efead72672008a6";
+	private final static String APP_ID="wx0f02d5eacaf954e7";
+	private final static String APP_SECRET="8d7f55d6a5008b7f8efead72672008a6";
 //	private final static String APP_ID="wxf3b0d53cdb909d00";
 //	private final static String APP_SECRET="a8cbc70d8ae728dea2a4f00f0dcd9410";
-	private final static String APP_ID="wx223537d8341fd657";//微信公众号测试号
-	private final static String APP_SECRET="11f146a95fdf222f899cd385615061f4";
+//	private final static String APP_ID="wx223537d8341fd657";//微信公众号测试号
+//	private final static String APP_SECRET="11f146a95fdf222f899cd385615061f4";
 //	private final static String APP_ID="wx82428b2ac752c6a3";
 //	private final static String APP_SECRET="ed8c5aa16cf56f66339fcb4be3377e30";
 //	private final static String APP_ID="wx5f22c054831a13c1";
@@ -184,6 +184,7 @@ public class WeChatServiceImpl implements WeChatService {
     			client.setId(param.getId());
     			client.setType(param.getType()+"");
     			client.setOpenid(message.getFromUserName());
+    			client.setCate(1+"");
     			client.setStoreId(param.getStoreId());
     			client.setCreateTime(new Date());
     			client.setModifyTime(new Date());
@@ -253,5 +254,23 @@ public class WeChatServiceImpl implements WeChatService {
 		String url ="https://api.weixin.qq.com/cgi-bin/user/info?access_token="+json.getString("access_token")+"&openid="+openid+"&lang=zh_CN";
 		String response = HttpClientUtils.get(url, "utf-8");
 		return response;
+	}
+
+	@Override
+	public void sendMessage(InputMessage message) {
+		String chat;
+		try {
+			chat = getAccessToken();
+			com.alibaba.fastjson.JSONObject json = JSON.parseObject(chat);
+			String url = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token="+json.getString("access_token");
+			
+			String param ="{'touser': 'oDy7t0GCpfxdFdFyNPhu_VYVufS4', 'msgtype': 'text', 'text': {'content': '"+message.getContent()+"'}}";//
+			JSONObject jsonObject = HttpPostUtil.sendHTTPSPostRequestJSON(url, JSONObject.parseObject(param));
+			System.out.println("jsonObject:"+jsonObject);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

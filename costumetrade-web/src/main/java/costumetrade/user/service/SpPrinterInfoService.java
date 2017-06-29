@@ -10,7 +10,7 @@ public interface SpPrinterInfoService {
 	 * 获取该分店下的打印机
 	 * 
 	 * */
-	public ScPrinterInfo getSpPrinterInfos(Integer storeId);
+	public ScPrinterInfo getSpPrinterInfos(String storeId);
 	/**
 	 * 保存打印机信息
 	 * 

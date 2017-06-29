@@ -37,6 +37,15 @@ public class PurchaseReportQuery extends Entity {
 	private String operator;
 	
 	private String openid;
+	/**
+	 * 供应商名称
+	 * */
+	private String clientName;
+	/**
+	 * 创建人
+	 * */
+	private String createBy;
+	
 	
 	private Date timeFrom;
 	
@@ -48,7 +57,7 @@ public class PurchaseReportQuery extends Entity {
 	
 	private Filter filter;
 	
-	private Integer storeId;
+	private String storeId;
 	
 	private String productId;
 	
@@ -198,11 +207,11 @@ public class PurchaseReportQuery extends Entity {
 		this.filter = filter;
 	}
 
-	public Integer getStoreId() {
+	public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 
@@ -357,6 +366,22 @@ public class PurchaseReportQuery extends Entity {
 
 	public void setOperator(String operator) {
 		this.operator = operator;
+	}
+
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
+	}
+
+	public String getCreateBy() {
+		return createBy;
+	}
+
+	public void setCreateBy(String createBy) {
+		this.createBy = createBy;
 	}
 	
 	

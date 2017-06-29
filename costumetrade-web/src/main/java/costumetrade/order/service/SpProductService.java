@@ -70,19 +70,19 @@ public interface SpProductService {
 	 * 查询货品
 	 * 
 	 * */
-	public List<SpProduct> selectProductById(List<String> id,Integer storeId);
+	public List<SpProduct> selectProductById(List<String> id,String storeId);
 	/**
 	 * 删除货品
 	 * 
 	 * */
-	public int deleteProducts(List<String> id,Integer storeId);
+	public int deleteProducts(List<String> id,String storeId);
 	/**
 	 * 删除货品
 	 * 
 	 * */
 	public int updateProducts(ProductQuery  productQuery);
 	
-	public void insertSuspendingProduct(SpProduct product,Integer buyerStoreId);
+	public void insertSuspendingProduct(SpProduct product,String buyerStoreId);
 	
 	/**
 	 * 查询商品评价

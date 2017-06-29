@@ -25,7 +25,7 @@ public class SpPrinterController {
 	
 	@ResponseBody
 	@RequestMapping(value ="/getPrinter", method=RequestMethod.POST)
-	public ApiResponse getPrinters(Integer storeId) {
+	public ApiResponse getPrinters(String storeId) {
 	
 		return  ApiResponse.getInstance(spPrinterInfoService.getSpPrinterInfos(storeId));
 	}

@@ -44,4 +44,9 @@ public interface WeChatService  {
 	 * 获取微信用户信息
 	 * */
 	public String getWeChatUserInfo(String openid)throws Exception;
+	
+	/*
+	 * 小程序发送消息
+	 * **/
+	public void sendMessage(InputMessage message);
 }

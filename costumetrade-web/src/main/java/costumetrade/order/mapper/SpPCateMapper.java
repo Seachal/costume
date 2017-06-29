@@ -17,13 +17,13 @@ public interface SpPCateMapper {
 
     SpPCate selectByPrimaryKey(Integer id);
   
-    SpPCate getSpPCate(@Param("id")Integer id,@Param("storeId")Integer storeId);
+    SpPCate getSpPCate(@Param("id")Integer id,@Param("storeId")String storeId);
     
-    SpPCate getSpPCateByName(@Param("catename")String catename,@Param("storeId")Integer storeId);
+    SpPCate getSpPCateByName(@Param("catename")String catename,@Param("storeId")String storeId);
 
     int updateByPrimaryKeySelective(SpPCate record);
 
     int updateByPrimaryKey(SpPCate record);
     
-    List<SpPCate> getSpPCates(@Param("storeId")Integer storeId,@Param("page")Page page);
+    List<SpPCate> getSpPCates(@Param("storeId")String storeId,@Param("page")Page page);
 }

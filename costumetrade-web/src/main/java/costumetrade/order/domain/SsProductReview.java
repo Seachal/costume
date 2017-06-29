@@ -13,12 +13,12 @@ public class SsProductReview extends Entity {
     /**
      *  店铺ID号
      */
-    private Integer storeid;
+    private String storeid;
 
     /**
      *  货号ID
      */
-    private Integer productid;
+    private String productid;
 
     /**
      *  客户头像
@@ -48,6 +48,8 @@ public class SsProductReview extends Entity {
      *  
      */
     private String createby;
+    
+    private Integer countReview;
 
     private static final long serialVersionUID = 1L;
 
@@ -59,19 +61,19 @@ public class SsProductReview extends Entity {
         this.id = id;
     }
 
-    public Integer getStoreid() {
+    public String getStoreid() {
         return storeid;
     }
 
-    public void setStoreid(Integer storeid) {
+    public void setStoreid(String storeid) {
         this.storeid = storeid;
     }
 
-    public Integer getProductid() {
+    public String getProductid() {
         return productid;
     }
 
-    public void setProductid(Integer productid) {
+    public void setProductid(String productid) {
         this.productid = productid;
     }
 
@@ -121,6 +123,14 @@ public class SsProductReview extends Entity {
 
 	public void setImageUrl(String imageUrl) {
 		this.imageUrl = imageUrl;
+	}
+
+	public Integer getCountReview() {
+		return countReview;
+	}
+
+	public void setCountReview(Integer countReview) {
+		this.countReview = countReview;
 	}
     
     

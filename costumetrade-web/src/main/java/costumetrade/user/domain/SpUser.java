@@ -8,7 +8,7 @@ public class SpUser extends Entity {
     /**
      *  
      */
-    private Integer id;
+    private String id;
 
     /**
      *  头像
@@ -67,11 +67,11 @@ public class SpUser extends Entity {
 
     private static final long serialVersionUID = 1L;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

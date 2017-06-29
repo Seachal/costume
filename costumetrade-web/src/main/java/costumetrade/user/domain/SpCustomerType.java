@@ -13,7 +13,7 @@ public class SpCustomerType extends Entity {
     /**
      *  店铺编号
      */
-    private Integer storeid;
+    private String storeid;
 
     /**
      *  类型名称
@@ -66,11 +66,11 @@ public class SpCustomerType extends Entity {
         this.id = id;
     }
 
-    public Integer getStoreid() {
+    public String getStoreid() {
         return storeid;
     }
 
-    public void setStoreid(Integer storeid) {
+    public void setStoreid(String storeid) {
         this.storeid = storeid;
     }
 

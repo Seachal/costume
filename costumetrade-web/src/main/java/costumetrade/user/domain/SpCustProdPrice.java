@@ -14,7 +14,7 @@ public class SpCustProdPrice extends Entity {
     /**
      *  店铺ID
      */
-    private Integer storeid;
+    private String storeid;
 
     /**
      *  种类 1：货品级别，2：会员类型
@@ -68,11 +68,11 @@ public class SpCustProdPrice extends Entity {
         this.id = id;
     }
 
-    public Integer getStoreid() {
+    public String getStoreid() {
         return storeid;
     }
 
-    public void setStoreid(Integer storeid) {
+    public void setStoreid(String storeid) {
         this.storeid = storeid;
     }
 

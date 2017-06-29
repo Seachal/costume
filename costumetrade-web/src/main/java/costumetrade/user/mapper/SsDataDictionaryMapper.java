@@ -20,9 +20,9 @@ public interface SsDataDictionaryMapper {
     
     List<SsDataDictionary> select(SsDataDictionary record);
     
-    List<SsDataDictionary> selectDictionarys(@Param("list")List<String> list,@Param("storeId")Integer storeId);
+    List<SsDataDictionary> selectDictionarys(@Param("list")List<String> list,@Param("storeId")String storeId);
     
-    List<SsDataDictionary> getDataDictionarys(Integer storeId);
+    List<SsDataDictionary> getDataDictionarys(String storeId);
     
     int updateByPrimaryKeySelective(SsDataDictionary record);
     

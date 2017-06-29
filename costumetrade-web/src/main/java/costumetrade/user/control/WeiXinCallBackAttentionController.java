@@ -2,8 +2,8 @@ package costumetrade.user.control;
 
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Calendar;
-
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -14,11 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-
 import com.thoughtworks.xstream.XStream;
 
 import costumetrade.common.util.SerializeXmlUtil;
-
 import costumetrade.order.service.WeChatService;
 import costumetrade.user.domain.InputMessage;
 import costumetrade.user.domain.OutputMessage;
@@ -48,7 +46,7 @@ public class WeiXinCallBackAttentionController {
 		public void callback(String body,HttpServletRequest request,HttpServletResponse response){
 				
 		        System.out.println("================================微信URL回调测试=========================");  
-		      
+		        
 		        // 处理接收消息  
 		        ServletInputStream in;
 		        XStream xs = new XStream();
@@ -74,19 +72,26 @@ public class WeiXinCallBackAttentionController {
 			        String msgType = inputMsg.getMsgType();  
 			        System.out.println("inputMsg.getEvent():"+inputMsg.getEvent());
 			        // 根据消息类型获取对应的消息内容  
-			        if (msgType.equals("event")) {  // 文本消息  
+			        if (msgType.equals("event")) { 
 			            if("SCAN".equals(inputMsg.getEvent())||"subscribe".equals(inputMsg.getEvent())){//已关注事件推送，未关注公众号事件推送
 			            	weChatService.bindOpenidScan(inputMsg);
-			            }
-			            OutputMessage outputMsg = new OutputMessage();  
-			            outputMsg.setFromUserName(inputMsg.getToUserName());  
-			            outputMsg.setToUserName(inputMsg.getFromUserName());  
-			            outputMsg.setCreateTime(returnTime);  
-			            outputMsg.setMsgType("text");  
-			            outputMsg.setContent("欢迎来到公众号！");
+			            	
+			            	 OutputMessage outputMsg = new OutputMessage();  
+			            	    outputMsg.setFromUserName(inputMsg.getToUserName());  
+					            outputMsg.setToUserName(inputMsg.getFromUserName());  
+					            outputMsg.setCreateTime(returnTime);  
+					            outputMsg.setMsgType("text");  
+					            outputMsg.setContent("欢迎来到公众号！");
 
-			            System.out.println("xml转换：/n" + xs.toXML(outputMsg));  
-			            response.getWriter().write(xs.toXML(outputMsg)); 
+					            System.out.println("xml转换：/n" + xs.toXML(outputMsg));  
+					            response.getWriter().write(xs.toXML(outputMsg));     
+			            }else if("user_enter_tempsession".equals(inputMsg.getEvent())){//进入会话事件
+			            	System.out.println("user_enter_tempsession::"+xmlMsg.toString());
+			            }
+			           
+			        }else if(msgType.equals("text")){ // 文本消息  
+			        	System.out.println("text::"+xmlMsg.toString());
+			        	weChatService.sendMessage(inputMsg);
 			        }  
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -146,6 +151,33 @@ public class WeiXinCallBackAttentionController {
 			}
 			*/
 	}
+		
+		@RequestMapping(value ="/smallApplication", method={RequestMethod.POST,RequestMethod.GET})
+		public void callbackApplication(String body,HttpServletRequest request,HttpServletResponse response){
+				
+		        System.out.println("================================微信小程序URL回调测试=========================");  
+		     
+			String signature = request.getParameter("signature");
+			String timestamp = request.getParameter("timestamp");
+			String nonce = request.getParameter("nonce");
+			String echostr = request.getParameter("echostr");
+			//echostr = "fancywexin";
+			String token = "fancywexin123";
+			System.out.println(echostr+"++++++1234566");
+			PrintWriter out;
+			
+			try {
+				out = response.getWriter();
+				out.println(echostr);
+				out.flush();
+				out.close();
+				response.flushBuffer();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+	}
+		
 		
 	
 }

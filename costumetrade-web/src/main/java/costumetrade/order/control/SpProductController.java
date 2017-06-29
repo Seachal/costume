@@ -1,7 +1,5 @@
 package costumetrade.order.control;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.lang.StringUtils;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +17,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.common.util.FTPClientUtils;
-import costumetrade.common.word.ImageUtils;
+import costumetrade.common.util.StringUtil;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SsProductFile;
 import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStock;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.service.SpProductService;
-import costumetrade.user.service.SpEmployeeService;
+import costumetrade.order.service.WeChatService;
 import costumetrade.user.service.SsDataDictionaryService;
 
 /**
@@ -47,7 +47,8 @@ public class SpProductController {
     private SsDataDictionaryService ssDataDictionaryService;
 	@Autowired
 	private SpProductService spProductService;
-	
+	@Autowired
+	private WeChatService weChatService;
 
 	@RequestMapping("/getProducts")
 	@ResponseBody
@@ -119,7 +120,25 @@ public class SpProductController {
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
+		String openid = null;
+		if(StringUtil.isNotBlank(query.getAppId())&&StringUtil.isNotBlank(query.getAppSecret())&&StringUtil.isNotBlank(query.getCode())){
+			String openIdAndKey;
+			try {
+				openIdAndKey = weChatService.getOpenIdAndKey(query.getCode(),query.getAppId(),query.getAppSecret());
+				JSONObject json = JSON.parseObject(openIdAndKey);
+				openid = json.getString("openid");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		List<Object> obj = new ArrayList<Object>();
+		obj.add(openid);
+		
 		List<ProductQuery> q= spProductService.getShareProduct(query);
+		obj.add(q);
+		
 		return  ApiResponse.getInstance(q);
 	}
 	

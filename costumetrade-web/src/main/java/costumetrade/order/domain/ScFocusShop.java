@@ -19,7 +19,7 @@ public class ScFocusShop extends Entity {
     /**
      *  店铺ID主键店铺ID   店铺被关注者
      */
-    private Integer shopid;
+    private String  shopid;
 
     /**
      *  创建时间
@@ -61,11 +61,11 @@ public class ScFocusShop extends Entity {
         this.openid = openid;
     }
 
-    public Integer getShopid() {
+    public String getShopid() {
         return shopid;
     }
 
-    public void setShopid(Integer shopid) {
+    public void setShopid(String shopid) {
         this.shopid = shopid;
     }
 

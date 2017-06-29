@@ -15,12 +15,12 @@ public class SsStoOrder extends Entity {
     /**
      *  卖家客户编号
      */
-    private Integer sellerstoreid;
+    private String sellerstoreid;
 
     /**
      *  买家分店编号
      */
-    private Integer buyerstoreid;
+    private String buyerstoreid;
 
     private String buyer;
     
@@ -188,7 +188,7 @@ public class SsStoOrder extends Entity {
     
     private List<Integer>  status;
     
-    private Integer storeId ;
+    private String storeId ;
     
     private String openid ;
   
@@ -204,7 +204,16 @@ public class SsStoOrder extends Entity {
     
     private static final long serialVersionUID = 1L;
     
-   
+    private Boolean canCancellation;
+    
+	
+	public Boolean getCanCancellation() {
+		return canCancellation;
+	}
+
+	public void setCanCancellation(Boolean canCancellation) {
+		this.canCancellation = canCancellation;
+	}
     
     
 
@@ -224,19 +233,19 @@ public class SsStoOrder extends Entity {
         this.id = id;
     }
 
-    public Integer getSellerstoreid() {
+    public String getSellerstoreid() {
         return sellerstoreid;
     }
 
-    public void setSellerstoreid(Integer sellerstoreid) {
+    public void setSellerstoreid(String sellerstoreid) {
         this.sellerstoreid = sellerstoreid;
     }
 
-    public Integer getBuyerstoreid() {
+    public String getBuyerstoreid() {
         return buyerstoreid;
     }
 
-    public void setBuyerstoreid(Integer buyerstoreid) {
+    public void setBuyerstoreid(String buyerstoreid) {
         this.buyerstoreid = buyerstoreid;
     }
 
@@ -495,11 +504,11 @@ public class SsStoOrder extends Entity {
 		this.status = status;
 	}
 
-	public Integer getStoreId() {
+	public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 

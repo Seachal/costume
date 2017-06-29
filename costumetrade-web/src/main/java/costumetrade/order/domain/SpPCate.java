@@ -18,7 +18,7 @@ public class SpPCate extends Entity {
     /**
      *  企业ID
      */
-    private Integer storeId;
+    private String storeId;
     
     private Integer stauts;
 
@@ -75,11 +75,11 @@ public class SpPCate extends Entity {
     }
 
 
-    public Integer getStoreId() {
+    public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 

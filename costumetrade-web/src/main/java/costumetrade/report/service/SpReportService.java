@@ -18,7 +18,7 @@ public interface SpReportService {
 	/**
 	 * 采购分析报表
 	 * */
-	public List<Map<String,Object>>  purchaseSortReport(PurchaseReportQuery query);
+	public ReportQuery  purchaseAnalysisReport(PurchaseReportQuery query);
 	/**
 	 * 采购报表
 	 * */

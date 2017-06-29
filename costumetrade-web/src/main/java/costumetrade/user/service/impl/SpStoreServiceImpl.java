@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,7 +50,7 @@ public class SpStoreServiceImpl implements SpStoreService{
 	@Autowired
 	private SsDataDictionaryMapper ssDataDictionaryMapper;
 	@Override
-	public List<SpStore> getChainStore(Integer storeId) {
+	public List<SpStore> getChainStore(String storeId) {
 		SpStore store = new SpStore();
 		store.setParentid(storeId);
 		List<SpStore> stores = spStoreMapper.selectStores(store, null);
@@ -69,7 +70,7 @@ public class SpStoreServiceImpl implements SpStoreService{
 		}else{
 			update = spStoreMapper.insertSelective(spStore);
 			//初始化高级设置数据
-	    	GeneratorBaseTable.generatorTable(spStore.getId()+"");
+	    	//GeneratorBaseTable.generatorTable(spStore.getId()+"");
 	    	if(spStore.getId()!=null){
 	    	
 	    		//保存高级设置中的客户类型
@@ -81,15 +82,15 @@ public class SpStoreServiceImpl implements SpStoreService{
 		return update;
 	}
 	@Override
-	public SpStore getStore(Integer storeId) {
+	public SpStore getStore(String storeId) {
 		return spStoreMapper.selectByPrimaryKey(storeId);
 	}
 	@Override
-	public int deleteChainStore(Integer storeId) {
+	public int deleteChainStore(String storeId) {
 		return spStoreMapper.deleteByPrimaryKey(storeId);
 	}
 	@Override
-	public int insertStore(String openid) {
+	public String insertStore(String openid) {
 		String  userInfo=null;
 		try {
 			userInfo =WeChatService.getWeChatUserInfo(openid);
@@ -97,18 +98,21 @@ public class SpStoreServiceImpl implements SpStoreService{
 				JSONObject json = JSON.parseObject(userInfo);
 		    	String nickName = json.getString("nickname"); 
 		    	String headimgurl = json.getString("headimgurl");
+		    	
+		    	ScWeChat record = new ScWeChat();
+	    		record = scWeChatMapper.selectByOpenId(openid);
+	    		
 		    	SpStore store = new SpStore();
+		    	store.setId(record.getUserid());
 		    	store.setCreateTime(new Date());
 		    	store.setName(nickName);
 		    	store.setStorephoto(headimgurl);
 		    	store.setStatus(0);
 		    	spStoreMapper.insertSelective(store);
 		    	
-		    	//初始化高级设置数据
-		    	GeneratorBaseTable.generatorTable(store.getId()+"");
+//		    	//初始化高级设置数据
+//		    	GeneratorBaseTable.generatorTable(store.getId()+"");
 		    	if(store.getId()!=null){
-		    		ScWeChat record = new ScWeChat();
-		    		record = scWeChatMapper.selectByOpenId(openid);
 		    		if(record !=null){
 		    			record.setUserid(null);
 		    			record.setStoreid(store.getId());
@@ -126,14 +130,14 @@ public class SpStoreServiceImpl implements SpStoreService{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return 0;
+		return null;
 	}
 	// 默认取 店铺1的初始数据
-	public int insertDictionarys(Integer storeId){
+	public int insertDictionarys(String storeId){
 		List<SsDataDictionary> dicts = new ArrayList<SsDataDictionary>();
 		List<SsDataDictionary> dictList = new ArrayList<SsDataDictionary>();
 		SsDataDictionary dict = new SsDataDictionary();
-		dict.setStoreId(-1);
+		dict.setStoreId(-1+"");
 		dicts = ssDataDictionaryMapper.select(dict);
 		if(dicts.size()>0){
 			for(SsDataDictionary d:dicts){
@@ -150,11 +154,11 @@ public class SpStoreServiceImpl implements SpStoreService{
 	/**
 	 * 插入客户种类，等级 毛利  折扣  默认取 店铺1的初始数据
 	 * */
-	public int insertCustPrice(Integer storeId){
+	public int insertCustPrice(String storeId){
 		List<SpCustProdPrice> prices = new ArrayList<SpCustProdPrice>();
 		List<SpCustProdPrice> priceList = new ArrayList<SpCustProdPrice>();
 		SpCustProdPrice price = new SpCustProdPrice();
-		price.setStoreid(-1);
+		price.setStoreid(-1+"");
 		prices = spCustProdPriceMapper.select(price);
 		if(prices.size()>0){
 			for(SpCustProdPrice p : prices){

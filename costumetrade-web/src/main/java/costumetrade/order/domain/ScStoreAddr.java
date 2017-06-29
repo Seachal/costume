@@ -11,7 +11,7 @@ public class ScStoreAddr extends Entity {
     /**
      *  店铺ID主键
      */
-    private Integer userid;
+    private String userid;
     
     private Integer type;
 
@@ -63,11 +63,11 @@ public class ScStoreAddr extends Entity {
     }
 
     
-    public Integer getUserid() {
+    public String getUserid() {
 		return userid;
 	}
 
-	public void setUserid(Integer userid) {
+	public void setUserid(String userid) {
 		this.userid = userid;
 	}
 

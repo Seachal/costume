@@ -35,9 +35,9 @@ public class ScUserQuery extends Entity {
     
     private Integer userIdentity;
     
-    private Integer userid;
+    private String userid;
     
-    private Integer storeId;
+    private String storeId;
     
     private Integer empId;
     
@@ -108,19 +108,19 @@ public class ScUserQuery extends Entity {
 		this.userIdentity = userIdentity;
 	}
 
-	public Integer getUserid() {
+	public String getUserid() {
 		return userid;
 	}
 
-	public void setUserid(Integer userid) {
+	public void setUserid(String userid) {
 		this.userid = userid;
 	}
 
-	public Integer getStoreId() {
+	public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 

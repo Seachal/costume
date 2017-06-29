@@ -42,7 +42,7 @@ public class ProductReportQuery extends Entity {
 	
 	private List<Date> timeTos;
 	
-	private Integer storeId;
+	private String storeId;
 	
 	private Integer reportType;
 	
@@ -142,11 +142,11 @@ public class ProductReportQuery extends Entity {
 		this.timeTos = timeTos;
 	}
 
-	public Integer getStoreId() {
+	public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 

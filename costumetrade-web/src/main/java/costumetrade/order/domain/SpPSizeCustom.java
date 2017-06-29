@@ -13,7 +13,7 @@ public class SpPSizeCustom extends Entity {
     /**
      *  企业ID
      */
-    private Integer storeId;
+    private String storeId;
 
     /**
      *  自定义尺码组
@@ -59,11 +59,11 @@ public class SpPSizeCustom extends Entity {
 
   
 
-    public Integer getStoreId() {
+    public String getStoreId() {
 		return storeId;
 	}
 
-	public void setStoreId(Integer storeId) {
+	public void setStoreId(String storeId) {
 		this.storeId = storeId;
 	}
 

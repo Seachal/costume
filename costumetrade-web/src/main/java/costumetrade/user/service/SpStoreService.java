@@ -9,7 +9,7 @@ public interface SpStoreService {
 	/**
 	 * 查询分店
 	 * */
-	public List<SpStore> getChainStore(Integer storeId);
+	public List<SpStore> getChainStore(String storeId);
 	/**
 	 * 保存分店
 	 * */
@@ -17,12 +17,12 @@ public interface SpStoreService {
 	/**
 	 * 查询当前店铺信息
 	 * */
-	public SpStore getStore(Integer storeId);
+	public SpStore getStore(String storeId);
 	/**
 	 * 删除店铺信息
 	 * */
-	public int deleteChainStore(Integer storeId);
+	public int deleteChainStore(String storeId);
 	
 	
-	public int insertStore(String openid);
+	public String insertStore(String openid);
 }

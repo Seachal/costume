@@ -13,7 +13,7 @@ public class ScLogistics extends Entity {
     /**
      *  店铺编号
      */
-    private Integer storeid;
+    private String storeid;
 
     /**
      *  订单号
@@ -58,11 +58,11 @@ public class ScLogistics extends Entity {
         this.id = id;
     }
 
-    public Integer getStoreid() {
+    public String getStoreid() {
         return storeid;
     }
 
-    public void setStoreid(Integer storeid) {
+    public void setStoreid(String storeid) {
         this.storeid = storeid;
     }
 

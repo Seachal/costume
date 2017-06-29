@@ -13,7 +13,7 @@ public class SpPrivilege extends Entity {
     /**
      *  店铺编号
      */
-    private Long storeid;
+    private String storeid;
 
     /**
      *  操作CODE
@@ -55,11 +55,11 @@ public class SpPrivilege extends Entity {
         this.id = id;
     }
 
-    public Long getStoreid() {
+    public String getStoreid() {
         return storeid;
     }
 
-    public void setStoreid(Long storeid) {
+    public void setStoreid(String storeid) {
         this.storeid = storeid;
     }
 

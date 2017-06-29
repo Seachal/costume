@@ -15,7 +15,7 @@ public class SsStock extends Entity {
     /**
      *  店铺编号
      */
-    private Integer storeid;
+    private String storeid;
 
     /**
      *  商品编号
@@ -70,14 +70,14 @@ public class SsStock extends Entity {
      * */
     private String name;
     
-    private List<Integer> otherStoreIds;
+    private List<String> otherStoreIds;
     
     private Integer currentStore;
     /*
      * 供货商ID
      * 
      * **/
-    private Integer supplierStoreId;
+    private String supplierStoreId;
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -88,11 +88,11 @@ public class SsStock extends Entity {
         this.id = id;
     }
 
-    public Integer getStoreid() {
+    public String getStoreid() {
         return storeid;
     }
 
-    public void setStoreid(Integer storeid) {
+    public void setStoreid(String storeid) {
         this.storeid = storeid;
     }
 
@@ -186,11 +186,11 @@ public class SsStock extends Entity {
 		this.name = name;
 	}
 
-	public List<Integer> getOtherStoreIds() {
+	public List<String> getOtherStoreIds() {
 		return otherStoreIds;
 	}
 
-	public void setOtherStoreIds(List<Integer> otherStoreIds) {
+	public void setOtherStoreIds(List<String> otherStoreIds) {
 		this.otherStoreIds = otherStoreIds;
 	}
 
@@ -202,11 +202,11 @@ public class SsStock extends Entity {
 		this.currentStore = currentStore;
 	}
 
-	public Integer getSupplierStoreId() {
+	public String getSupplierStoreId() {
 		return supplierStoreId;
 	}
 
-	public void setSupplierStoreId(Integer supplierStoreId) {
+	public void setSupplierStoreId(String supplierStoreId) {
 		this.supplierStoreId = supplierStoreId;
 	}
     

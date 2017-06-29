@@ -14,7 +14,7 @@ public interface SsDataDictionaryService {
 	/**
 	 * 查询设置
 	 * */
-	public SettingQuery getDataDictionarys(Integer storeId);
+	public SettingQuery getDataDictionarys(String storeId);
 	
 	/**
 	 * 

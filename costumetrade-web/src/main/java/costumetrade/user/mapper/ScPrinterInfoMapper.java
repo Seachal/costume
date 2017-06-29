@@ -11,7 +11,7 @@ public interface ScPrinterInfoMapper {
 
     int insertSelective(ScPrinterInfo record);
 
-    ScPrinterInfo selectByPrimaryKey(Integer storeId);
+    ScPrinterInfo selectByPrimaryKey(String storeId);
 
     int updateByPrimaryKeySelective(ScPrinterInfo record);
 

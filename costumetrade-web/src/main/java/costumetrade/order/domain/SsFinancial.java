@@ -28,12 +28,12 @@ public class SsFinancial extends Entity {
     /**
      *  买家客户号
      */
-    private Integer buyerid;
+    private String buyerid;
 
     /**
      *  卖家客户号
      */
-    private Integer sellerid;
+    private String sellerid;
 
     /**
      *  备注
@@ -122,19 +122,19 @@ public class SsFinancial extends Entity {
         this.orderno = orderno == null ? null : orderno.trim();
     }
 
-    public Integer getBuyerid() {
+    public String getBuyerid() {
         return buyerid;
     }
 
-    public void setBuyerid(Integer buyerid) {
+    public void setBuyerid(String buyerid) {
         this.buyerid = buyerid;
     }
 
-    public Integer getSellerid() {
+    public String getSellerid() {
         return sellerid;
     }
 
-    public void setSellerid(Integer sellerid) {
+    public void setSellerid(String sellerid) {
         this.sellerid = sellerid;
     }
 
