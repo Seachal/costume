@@ -76,7 +76,7 @@
 		AND cgs.order_time &lt;=
 		str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
 		)c ON c.storeId=#{storeId}
-		AND c.payCate = sto.payCate1
+		AND (p.payType=sto.payCate1 OR p.payType=sto.payCate2)
 		LEFT JOIN (SELECT
 		SUM(CASE WHEN
 		pay.payObjType =1 THEN pay.payAmt ELSE 0 END) AS
@@ -95,33 +95,25 @@
 		p.storeId=#{storeId}
 		AND p.payType=sto.payCate1
 		WHERE 1=1
-		AND
-		ssf.orderNo IS NOT NULL
-		AND
-		((sto.debetAmt>0 AND sto.orderStatus=5) OR
-		STO.orderStatus=7)
-		AND
-		sto.orderTime &gt;=
-		str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
-		AND
-		sto.orderTime &lt;=
-		str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
-		AND
-		sto.payCate1=#{payCate}
+		AND ssf.orderNo IS NOT NULL
+		AND ((sto.debetAmt>0 AND sto.orderStatus=5) OR STO.orderStatus=7)
+		AND sto.orderTime &gt;=str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND sto.orderTime &lt;=str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
+		AND  (sto.payCate1 = #{payCate} or sto.payCate2 = #{payCate})
 	</select>
 	<select id="purchaseAnalysisReport" parameterType="costumetrade.report.domain.PurchaseReportQuery"
 		resultType="java.util.HashMap">
 		SELECT
 		sum(detail.count) as quantity,
+		SUM(detail.price*detail.count) AS amount,
 		detail.productId,
 		detail.productName as productName,
 		detail.productColor as productColor,
 		detail.productSize as productSize,
 		brand.brandName as brandName,
 		grade.dict_text as gradeName,
-		sto.operator as createBy,
-		store.name as
-		storeName
+		sto.operator as createBy
+		
 		FROM
 		ss_stodetail detail
 		LEFT JOIN
@@ -137,14 +129,13 @@
 		brand
 		on brand.id =
 		product.brandId and brand.storeId
-		=detail.storeId
+		=#{query.storeId}
 		left join
 		ss_data_dictionary grade
 		on grade.dict_group='PRODUCT_GRADE'
 		and
-		grade.storeId=detail.storeId and grade.dict_value = product.grade
-		left join sp_store store
-		on store.id = sto.sellerStoreId
+		grade.storeId=#{query.storeId} and grade.dict_value = product.grade
+	
 		where 1=1
 		and
 		sto.buyerStoreId=#{storeId}
@@ -159,7 +150,7 @@
 	    order by quantity desc
 	</select>
 
-	<select id="realTimeInventory" parameterType="costumetrade.report.domain.PurchaseReportQuery"
+	<select id="realTimeInventory"
 		resultType="java.util.HashMap">
 		SELECT
 		SUM(stock.stockNum) AS quantity,
@@ -170,7 +161,6 @@
 		brand.brandName AS brandName,
 		grade.dict_text AS gradeName,
 		stock.createBy,
-		NULL AS clientName,
 		store.name AS storeName
 		FROM
 		ss_stock stock
@@ -186,138 +176,98 @@
 		LEFT JOIN sp_store store
 		ON store.id = stock.storeId
 		WHERE 1=1
-		AND STOCK.createTime &gt;=str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
-		AND STOCK.createTime &lt;=str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
-		<if test="filter.value !=null">
-			and ${filter.field} like CONCAT('%',#{filter.value},'%')
+		and stock.storeId = #{query.storeId}
+		AND STOCK.createTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND STOCK.createTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
+		<if test="query.filter.value !=null">
+			and ${query.filter.field} like CONCAT('%',#{query.filter.value},'%')
 		</if>
-		group by ${filter.field}
-	    order by quantity desc
-
+		<if test="query.productTypeArray != null">
+			and productType.cateName in
+			<foreach collection="query.productTypeArray" item="item"
+				index="index" open="(" separator="," close=")">#{item}</foreach>
+		</if>
+		<if test="query.productBrandArray != null">
+			and brand.brandName in
+			<foreach collection="query.productBrandArray" item="item"
+				index="index" open="(" separator="," close=")">#{item}</foreach>
+		</if>
+		<if test="query.productSeasonArray != null">
+			and product.season in
+			<foreach collection="query.productSeasonArray" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		<if test="query.productColorArray != null">
+			and stock.productColor in
+			<foreach collection="query.productColorArray" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		<if test="query.productSizeArray != null">
+			and stock.productSize in
+			<foreach collection="query.productSizeArray" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		<if test="query.operatorArray != null">
+			and stock.createBy in
+			<foreach collection="query.operatorArray" item="item" index="index"
+				open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		
+		group by ${query.filter.field}
+	    <if test="query.quantityOp == 'asc'">
+			order by quantity asc
+		</if>
+		<if test="query.quantityOp == 'desc'">
+			order by quantity desc
+		</if>
+		<if test="query.amountOp == 'asc'">
+			order by amount asc
+		</if>
+		<if test="query.amountOp == 'desc'">
+			order by amount desc
+		</if>
+		<if test="page != null">
+			LIMIT #{page.startRow},#{page.pageSize}
+		</if>
 	</select>
 	<select id="purchaseReport3" resultMap="PurchaseResultMap">
-		SELECT DISTINCT
-		detail.productName as productName
+		SELECT 
+		detail.productName as productName,
+		(CASE WHEN c.remarkName IS NOT NULL THEN c.remarkName 
+       WHEN c.reallyName IS NOT NULL THEN c.reallyName
+       WHEN c.nickName IS NOT NULL THEN c.nickName ELSE c.nickName END) AS clientName
 		FROM
-		ss_stodetail_#{query.storeId} detail
+		ss_stodetail detail
 		LEFT JOIN
-		ss_stoorder_#{query.storeId} sto
+		ss_stoorder sto
 		ON sto.payOrderNo = detail.orderId
-		left join sp_product_#{query.storeId} product
-		on
-		product.id=detail.productId
+		left join sp_product product
+		on product.id=detail.productId
 		left join sp_pbrand brand
-		on brand.id =
-		product.brandId and brand.storeId =detail.storeId
-		LEFT JOIN
-		sp_product_type productType ON productType.id =product.productType and
-		productType.storeId =detail.storeId
+		on brand.id =product.brandId and brand.storeId =#{query.storeId}
+		LEFT JOIN sp_product_type productType ON productType.id =product.productType and
+		productType.storeId =#{query.storeId}
 		<if test="reportType==1"><!-- 采购报表 -->
-			LEFT JOIN
-			(SELECT
-			cli.id ,S1.payOrderNo
-			FROM
-			sp_client cli
-			LEFT JOIN
-			sc_wechat_bind wechat
-			ON wechat.openId = cli.openid
-			LEFT JOIN
-			ss_stoorder_#{query.storeId}
-			s1
-			ON s1.sellerStoreId = wechat.storeId
-			WHERE 1 = 1
-			AND NOT EXISTS
-			(SELECT
-			s.payOrderNo
-			FROM
-			ss_stoorder_#{query.storeId} s
-			LEFT JOIN
-			ss_member_stoorder memorder
-			ON
-			memorder.payOrderNo = s.payOrderNo
-			WHERE s.sellerStoreId=
-			#{query.storeId}
-			AND s1.payOrderNo =
-			s.payOrderNo)
-			AND wechat.storeId IS
-			NOT NULL
-			) c
-			ON c.payOrderNo =
-			detail.orderId
+		 LEFT JOIN sc_wechat_bind wechat ON wechat.storeId = sto.buyerStoreId
+ 		 LEFT JOIN sp_client c ON c.openid = wechat.openId
 		</if>
 		<if test="reportType==2"><!-- 销售报表 -->
-			LEFT JOIN
-			(SELECT
-			cli.id ,S1.payOrderNo
-			FROM
-			sp_client cli
-			LEFT JOIN
-			sc_wechat_bind wechat
-			ON wechat.openId = cli.openid
-			LEFT JOIN
-			ss_stoorder_#{query.storeId} s1
-			ON s1.buyerStoreId = wechat.storeId
-			WHERE 1 = 1
-			AND s1.buyerStoreId=wechat.storeId
-			AND s1.sellerStoreId <![CDATA[ <> ]]>
-			wechat.storeId
-			AND s1.sellerStoreId=#{query.storeId}
-			AND wechat.storeId
-			IS NOT NULL
-			AND
-			wechat.empId IS NULL
-			UNION
-			ALL
-			SELECT
-			cli.id ,S1.payOrderNo
-			FROM
-			sp_client
-			cli
-			LEFT JOIN sc_wechat_bind wechat
-			ON wechat.openId =
-			cli.openid
-			LEFT
-			JOIN ss_stoorder_#{query.storeId} s1
-			ON s1.buyerStoreId
-			=
-			wechat.userId
-			WHERE 1 = 1
-			AND wechat.userId IS NOT NULL
-			AND EXISTS
-			(SELECT
-			s.payOrderNo
-			FROM
-			ss_stoorder_#{query.storeId} s
-			LEFT JOIN
-			ss_member_stoorder memorder
-			ON memorder.payOrderNo = s.payOrderNo
-			WHERE s.buyerStoreId = wechat.userId
-			AND
-			s1.sellerStoreId=#{query.storeId}
-			AND s1.payOrderNo = s.payOrderNo
-			AND
-			memorder.payOrderNo IS NOT NULL)
-			AND wechat.userId IS NOT NULL) c
-			ON
-			c.payOrderNo = detail.orderId
+			LEFT JOIN sc_wechat_bind wechat ON (wechat.userId = sto.buyerStoreId OR wechat.storeId = sto.buyerStoreId)
+  			LEFT JOIN sp_client c ON c.openid = wechat.openId
 		</if>
 		where 1=1
 		AND sto.orderStatus ='5'
 		<if test="query.reportType==1"><!-- 采购报表 -->
 			and sto.buyerStoreId=#{query.storeId}
-			AND STO.sellerStoreId <![CDATA[ <> ]]>
-			STO.buyerStoreId
+			AND wechat.storeId IS NOT NULL
 		</if>
 		<if test="query.reportType==2"><!-- 销售报表 -->
+		    AND (wechat.userId IS NOT NULL OR wechat.storeId IS NOT NULL)
 			and sto.sellerStoreId=#{query.storeId}
 		</if>
-		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d
-		%H:%i:%s')
-		AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d
-		%H:%i:%s')
-		<if test="query.productName !=null">
-			and productName = #{query.productName}
-		</if>
+		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
+		
 		<if test="query.productTypeArray != null">
 			and productType.cateName in
 			<foreach collection="query.productTypeArray" item="item"
@@ -353,7 +303,10 @@
 			<foreach collection="query.operatorArray" item="item" index="index"
 				open="(" separator="," close=")"> #{item}</foreach>
 		</if>
-
+		<if test="query.filter.value !=null">
+			and ${query.filter.field} like CONCAT('%',#{query.filter.value},'%')
+		</if>
+		group by ${query.filter.field}
 		<if test="page != null">
 			LIMIT #{page.startRow},#{page.pageSize}
 		</if>
@@ -361,145 +314,63 @@
 	<select id="purchaseReport1" resultMap="PurchaseResultMap">
 		SELECT
 		sum(detail.count) as quantity,
-		SUM(detail.price*detail.count) AS
-		amount,
-		detail.productName as productName
+		SUM(detail.price*detail.count) AS amount,
+		detail.productName as productName,
+		(CASE WHEN c.remarkName IS NOT NULL THEN c.remarkName 
+       WHEN c.reallyName IS NOT NULL THEN c.reallyName
+       WHEN c.nickName IS NOT NULL THEN c.nickName ELSE c.nickName END) AS clientName
 		FROM
-		ss_stodetail_#{query.storeId} detail
+		ss_stodetail detail
 		LEFT JOIN
-		ss_stoorder_#{query.storeId} sto
+		ss_stoorder sto
 		ON sto.payOrderNo = detail.orderId
-		left join sp_product_#{query.storeId} product
+		left join sp_product product
 		on
 		product.id=detail.productId
 		left join sp_pbrand brand
 		on brand.id =
-		product.brandId and brand.storeId =detail.storeId
+		product.brandId and brand.storeId =#{query.storeId}
 		LEFT JOIN
 		sp_product_type productType ON productType.id =product.productType and
-		productType.storeId =detail.storeId
-		<if test="reportType==1"><!-- 采购报表 -->
-			LEFT JOIN
-			(SELECT
-			cli.id ,S1.payOrderNo
-			FROM
-			sp_client cli
-			LEFT JOIN
-			sc_wechat_bind wechat
-			ON wechat.openId = cli.openid
-			LEFT JOIN
-			ss_stoorder_#{query.storeId}
-			s1
-			ON s1.sellerStoreId = wechat.storeId
-			WHERE 1 = 1
-			AND NOT EXISTS
-			(SELECT
-			s.payOrderNo
-			FROM
-			ss_stoorder_#{query.storeId} s
-			LEFT JOIN
-			ss_member_stoorder memorder
-			ON
-			memorder.payOrderNo = s.payOrderNo
-			WHERE s.sellerStoreId=
-			#{query.storeId}
-			AND s1.payOrderNo =
-			s.payOrderNo)
-			AND wechat.storeId IS
-			NOT NULL
-			) c
-			ON c.payOrderNo =
-			detail.orderId
+		productType.storeId =#{query.storeId}
+			<if test="reportType==1"><!-- 采购报表 -->
+		 LEFT JOIN sc_wechat_bind wechat ON wechat.storeId = sto.buyerStoreId
+ 		 LEFT JOIN sp_client c ON c.openid = wechat.openId
 		</if>
 		<if test="reportType==2"><!-- 销售报表 -->
-			LEFT JOIN
-			(SELECT
-			cli.id ,S1.payOrderNo
-			FROM
-			sp_client cli
-			LEFT JOIN
-			sc_wechat_bind wechat
-			ON wechat.openId = cli.openid
-			LEFT JOIN
-			ss_stoorder_#{query.storeId} s1
-			ON s1.buyerStoreId = wechat.storeId
-			WHERE 1 = 1
-			AND s1.buyerStoreId=wechat.storeId
-			AND s1.sellerStoreId <![CDATA[ <> ]]>
-			wechat.storeId
-			AND s1.sellerStoreId=#{query.storeId}
-			AND wechat.storeId
-			IS NOT NULL
-			AND
-			wechat.empId IS NULL
-			UNION
-			ALL
-			SELECT
-			cli.id ,S1.payOrderNo
-			FROM
-			sp_client
-			cli
-			LEFT JOIN sc_wechat_bind wechat
-			ON wechat.openId =
-			cli.openid
-			LEFT
-			JOIN ss_stoorder_#{query.storeId} s1
-			ON s1.buyerStoreId
-			=
-			wechat.userId
-			WHERE 1 = 1
-			AND wechat.userId IS NOT NULL
-			AND EXISTS
-			(SELECT
-			s.payOrderNo
-			FROM
-			ss_stoorder_#{query.storeId} s
-			LEFT JOIN
-			ss_member_stoorder memorder
-			ON memorder.payOrderNo = s.payOrderNo
-			WHERE s.buyerStoreId = wechat.userId
-			AND
-			s1.sellerStoreId=#{query.storeId}
-			AND s1.payOrderNo = s.payOrderNo
-			AND
-			memorder.payOrderNo IS NOT NULL)
-			AND wechat.userId IS NOT NULL) c
-			ON
-			c.payOrderNo = detail.orderId
+			LEFT JOIN sc_wechat_bind wechat ON (wechat.userId = sto.buyerStoreId OR wechat.storeId = sto.buyerStoreId)
+  			LEFT JOIN sp_client c ON c.openid = wechat.openId
 		</if>
 		where 1=1
 		AND sto.orderStatus ='5'
 		<if test="query.reportType==1"><!-- 采购报表 -->
 			and sto.buyerStoreId=#{query.storeId}
-			AND STO.sellerStoreId <![CDATA[ <> ]]>
-			STO.buyerStoreId
+			AND wechat.storeId IS NOT NULL
 		</if>
 		<if test="query.reportType==2"><!-- 销售报表 -->
 			and sto.sellerStoreId=#{query.storeId}
+			AND (wechat.userId IS NOT NULL OR wechat.storeId IS NOT NULL)
 		</if>
-		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d
-		%H:%i:%s')
-		AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d
-		%H:%i:%s')
+		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
 
-		<if test="query.productNameArray != null">
-			and productName in
-			<foreach collection="query.productNameArray" item="item"
-				index="index" open="(" separator="," close=")">#{item}</foreach>
+		<if test="query.filter.value !=null">
+			and ${query.filter.field} like CONCAT('%',#{query.filter.value},'%')
 		</if>
+		group by ${query.filter.field}
 		<if test="query.quantityOp == 'asc'">
 			order by quantity asc
 		</if>
 		<if test="query.quantityOp == 'desc'">
 			order by quantity desc
 		</if>
-		<if test="query.amountOp == 'desc'">
-			order by amount desc
+		<if test="query.amountOp == 'asc'">
+			order by amount asc
 		</if>
 		<if test="query.amountOp == 'desc'">
 			order by amount desc
 		</if>
-		group by productName
+	
 
 	</select>
 
@@ -507,60 +378,259 @@
 		SELECT
 		sum(detail.count) as quantity,
 		#{query.timeFrom} as timeFrom,
-		#{query.timeTo} as timeTo
+		#{query.timeTo} as timeTo,
+		detail.productName as productName,
+		(CASE WHEN c.remarkName IS NOT NULL THEN c.remarkName 
+       WHEN c.reallyName IS NOT NULL THEN c.reallyName
+       WHEN c.nickName IS NOT NULL THEN c.nickName ELSE c.nickName END) AS clientName
 		FROM
-		ss_stodetail_#{query.storeId} detail
+		ss_stodetail detail
 		LEFT
-		JOIN ss_stoorder_#{query.storeId} sto
+		JOIN ss_stoorder sto
 		ON sto.payOrderNo =
 		detail.orderId
+		<if test="query.reportType==1"><!-- 采购报表 -->
+		 LEFT JOIN sc_wechat_bind wechat ON wechat.storeId = sto.buyerStoreId
+ 		 LEFT JOIN sp_client c ON c.openid = wechat.openId
+		</if>
+		<if test="query.reportType==2"><!-- 销售报表 -->
+			LEFT JOIN sc_wechat_bind wechat ON (wechat.userId = sto.buyerStoreId OR wechat.storeId = sto.buyerStoreId)
+  			LEFT JOIN sp_client c ON c.openid = wechat.openId
+		</if>
 		where 1=1
 		AND sto.orderStatus ='5'
 		<if test="query.reportType==1"><!-- 采购报表 -->
 			and sto.buyerStoreId=#{query.storeId}
-			AND STO.sellerStoreId <![CDATA[ <> ]]>
-			STO.buyerStoreId
+			
 		</if>
 		<if test="query.reportType==2"><!-- 销售报表 -->
 			and sto.sellerStoreId=#{query.storeId}
 		</if>
-		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d
-		%H:%i:%s')
-		AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d
-		%H:%i:%s')
-		<if test="query.productName !=null">
-			and productName = #{query.productName}
+		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
+		<if test="query.filter.value !=null">
+			and ${query.filter.field} like CONCAT('%',#{query.filter.value},'%')
 		</if>
 		<foreach collection="querys" index="index" item="item">
-			union all
-			SELECT
-			sum(detail.count) as quantity,
-			#{item.timeFrom} as
-			timeFrom,
-			#{item.timeTo} as timeTo
-			FROM
-			ss_stodetail_#{item.storeId}
-			detail
-			LEFT JOIN ss_stoorder_#{item.storeId} sto
-			ON sto.payOrderNo =
-			detail.orderId
+		union all
+		SELECT
+		sum(detail.count) as quantity,
+		#{query.timeFrom} as timeFrom,
+		#{query.timeTo} as timeTo,
+		detail.productName as productName,
+		(CASE WHEN c.remarkName IS NOT NULL THEN c.remarkName 
+       WHEN c.reallyName IS NOT NULL THEN c.reallyName
+       WHEN c.nickName IS NOT NULL THEN c.nickName ELSE c.nickName END) AS clientName
+		FROM
+		ss_stodetail detail
+		LEFT
+		JOIN ss_stoorder sto
+		ON sto.payOrderNo =
+		detail.orderId
+		<if test="query.reportType==1"><!-- 采购报表 -->
+		 LEFT JOIN sc_wechat_bind wechat ON wechat.storeId = sto.buyerStoreId
+ 		 LEFT JOIN sp_client c ON c.openid = wechat.openId
+		</if>
+		<if test="query.reportType==2"><!-- 销售报表 -->
+			LEFT JOIN sc_wechat_bind wechat ON (wechat.userId = sto.buyerStoreId OR wechat.storeId = sto.buyerStoreId)
+  			LEFT JOIN sp_client c ON c.openid = wechat.openId
+		</if>
 			where 1=1
 			AND sto.orderStatus ='5'
 			<if test="query.reportType==1"><!-- 采购报表 -->
 				and sto.buyerStoreId=#{query.storeId}
-				AND STO.sellerStoreId <![CDATA[ <> ]]>
-				STO.buyerStoreId
 			</if>
 			<if test="query.reportType==2"><!-- 销售报表 -->
 				and sto.sellerStoreId=#{query.storeId}
 			</if>
-			AND sto.orderTime &gt;=str_to_date(#{item.timeFrom},'%Y-%m-%d
-			%H:%i:%s')
-			AND sto.orderTime &lt;=str_to_date(#{item.timeTo},'%Y-%m-%d
-			%H:%i:%s')
-			<if test="item.productName !=null">
-				and productName = #{item.productName}
+			AND sto.orderTime &gt;=str_to_date(#{item.timeFrom},'%Y-%m-%d %H:%i:%s')
+			AND sto.orderTime &lt;=str_to_date(#{item.timeTo},'%Y-%m-%d %H:%i:%s')
+			<if test="query.filter.value !=null">
+			and ${query.filter.field} like CONCAT('%',#{query.filter.value},'%')
 			</if>
+		
 		</foreach>
+	</select>
+	
+	<select id="employeeReport" 
+		resultType="java.util.HashMap">
+		SELECT 
+		  SUM(detail.count) AS quantity,
+		  SUM(detail.price * detail.count) AS amount,
+		  detail.productId,
+		  detail.productName AS productName,
+		  detail.productColor AS productColor,
+		  detail.productSize AS productSize,
+		  brand.brandName AS brandName,
+		  grade.dict_text AS gradeName,
+		  employee.reallyName AS createBy
+		
+		FROM
+		  ss_stodetail detail 
+		  LEFT JOIN ss_stoorder sto 
+		    ON sto.payOrderNo = detail.orderId 
+		  LEFT JOIN sp_product product 
+		    ON product.id = detail.productId 
+		  LEFT JOIN sp_pbrand brand 
+		    ON brand.id = product.brandId 
+		    AND brand.storeId = #{query.storeId} 
+		  LEFT JOIN ss_data_dictionary grade 
+		    ON grade.dict_group = 'PRODUCT_GRADE' 
+		    AND grade.storeId = #{query.storeId} 
+		    AND grade.dict_value = product.grade 
+		LEFT JOIN sp_employee employee ON employee.id = sto.operator
+		where 1=1
+		AND sto.orderStatus ='5'
+		and sto.sellerStoreId=#{query.storeId}
+		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
+		<if test="query.filter.value !=null">
+			and ${query.filter.field} like CONCAT('%',#{query.filter.value},'%')
+		</if>
+		
+		group by ${query.filter.field}
+	    <if test="query.quantityOp == 'asc'">
+			order by quantity asc
+		</if>
+		<if test="query.quantityOp == 'desc'">
+			order by quantity desc
+		</if>
+		<if test="query.amountOp == 'asc'">
+			order by amount asc
+		</if>
+		<if test="query.amountOp == 'desc'">
+			order by amount desc
+		</if>
+		<if test="page != null">
+			LIMIT #{page.startRow},#{page.pageSize}
+		</if>
+	</select>
+	<select id="generalOrder" parameterType="costumetrade.report.domain.GeneralReportQuery" resultType="java.util.HashMap">
+		SELECT 
+		  SUM(
+		    CASE
+		      WHEN sto.buyerStoreId = #{storeId} 
+		      THEN sto.realcost 
+		      ELSE 0 
+		    END
+		  ) AS purchaseAmount,
+		  SUM(
+		    CASE
+		      WHEN sto.buyerStoreId = #{storeId} 
+		      THEN 1 
+		      ELSE 0 
+		    END
+		  ) AS puchaseOrderCount,
+		  SUM(
+		    CASE
+		      WHEN sto.sellerStoreId = #{storeId} 
+		      THEN sto.realcost 
+		      ELSE 0 
+		    END
+		  ) AS saleAmount,
+		  SUM(
+		    CASE
+		      WHEN sto.sellerStoreId = #{storeId} 
+		      THEN 1 
+		      ELSE 0 
+		    END
+		  ) AS saleOrderCount 
+		FROM
+		  ss_stoorder sto 
+		WHERE 1 = 1 
+		  AND sto.orderStatus = 5 
+  
+	</select>
+	
+	<select id="generalClient" parameterType="costumetrade.report.domain.GeneralReportQuery" resultType="java.util.HashMap">
+		SELECT 
+		  SUM(
+		    CASE
+		      WHEN pay.billType = 1 
+		      OR pay.billType = 3 
+		      THEN pay.payAmt 
+		      ELSE 0 
+		    END
+		  ) AS clientAmount,
+		  SUM(
+		    CASE
+		      WHEN pay.billType = 1 
+		      OR pay.billType = 3 
+		      OR pay.billType = 2 
+		      OR pay.billType = 4 
+		      THEN 1 
+		      ELSE 0 
+		    END
+		  ) AS clientOrderCount 
+		FROM
+		  ss_payment pay 
+		WHERE 1 = 1 
+		 and pay.storeId = #{storeId}
+	</select>
+	<select id="generalFee" parameterType="costumetrade.report.domain.GeneralReportQuery" resultType="java.util.HashMap">
+	SELECT 
+	  SUM(
+	    CASE
+	      WHEN cgs.payCost IS NOT NULL 
+	      THEN cgs.payCost 
+	      ELSE 0 
+	    END
+	  ) AS feeAmount 
+	FROM
+	  ss_cgsorder cgs 
+	WHERE cgs.storeId = #{storeId} 
+	</select>
+	
+	<select id="saleSortReport"  resultMap="costumetrade.report.domain.SaleReportQuery">
+		SELECT 
+		  SUM(detail.count) AS quantity,
+		  SUM(CASE WHEN sto.buyerStoreId = #{storeId} THEN detail.price * detail.count ELSE 0 END) AS pucharseAmount,
+		  SUM(CASE WHEN sto.sellerStoreId = #{storeId} THEN detail.price * detail.count ELSE 0 END) AS saleAmount,
+		  detail.productId,
+		  detail.productName AS productName,
+		  detail.productColor AS productColor,
+		  detail.productSize AS productSize,
+		  brand.brandName AS brandName,
+		  grade.dict_text AS gradeName,
+		  employee.reallyName AS createBy
+		
+		FROM
+		  ss_stodetail detail 
+		  LEFT JOIN ss_stoorder sto 
+		    ON sto.payOrderNo = detail.orderId 
+		  LEFT JOIN sp_product product 
+		    ON product.id = detail.productId 
+		  LEFT JOIN sp_pbrand brand 
+		    ON brand.id = product.brandId 
+		    AND brand.storeId = #{storeId} 
+		  LEFT JOIN ss_data_dictionary grade 
+		    ON grade.dict_group = 'PRODUCT_GRADE' 
+		    AND grade.storeId = #{storeId} 
+		    AND grade.dict_value = product.grade 
+		  LEFT JOIN sp_employee employee ON employee.id = sto.operator
+		  where 1=1
+		  AND sto.orderStatus = 5 
+		  AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
+		  AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
+		
+		<if test="query.filter.value !=null">
+			and ${query.filter.field} like CONCAT('%',#{query.filter.value},'%')
+		</if>
+		group by ${query.filter.field}
+	    <if test="query.quantityOp == 'asc'">
+			order by quantity asc
+		</if>
+		<if test="query.quantityOp == 'desc'">
+			order by quantity desc
+		</if>
+		<if test="query.amountOp == 'asc'">
+			order by saleAmount asc
+		</if>
+		<if test="query.amountOp == 'desc'">
+			order by saleAmount desc
+		</if>
+		<if test="page != null">
+			LIMIT #{page.startRow},#{page.pageSize}
+		</if>
 	</select>
 </mapper>
