@@ -15,6 +15,7 @@ import costumetrade.report.domain.FinanceReportQuery;
 import costumetrade.report.domain.ProductReportQuery;
 import costumetrade.report.domain.PurchaseReportQuery;
 import costumetrade.report.domain.ReportQuery;
+import costumetrade.report.domain.SaleReportQuery;
 import costumetrade.report.service.SpReportService;
 
 /**
@@ -53,6 +54,55 @@ public class SpReportController {
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		
 		ReportQuery reports = spReportService.purchaseAnalysisReport(query);
+		if(reports == null ){
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			result.setData(ResponseInfo.NOT_DATA.code);
+		}else{
+			result.setData(reports);
+		}
+		return  result;
+	}
+	@RequestMapping("/realTimeInventory")
+	@ResponseBody
+	public ApiResponse realTimeInventory(@RequestBody PurchaseReportQuery query) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		ReportQuery reports = spReportService.realTimeInventory(query);
+		if(reports == null ){
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			result.setData(ResponseInfo.NOT_DATA.code);
+		}else{
+			result.setData(reports);
+		}
+		return  result;
+	}
+	@RequestMapping("/employeeReport")
+	@ResponseBody
+	public ApiResponse employeeReport(@RequestBody PurchaseReportQuery query) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		ReportQuery reports = spReportService.employeeReport(query);
+		if(reports == null ){
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			result.setData(ResponseInfo.NOT_DATA.code);
+		}else{
+			result.setData(reports);
+		}
+		return  result;
+	}
+	
+	@RequestMapping("/saleSortReport")
+	@ResponseBody
+	public ApiResponse saleSortReport(@RequestBody SaleReportQuery query) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		List<SaleReportQuery> reports = spReportService.saleSortReport(query);
 		if(reports == null ){
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			result.setData(ResponseInfo.NOT_DATA.code);

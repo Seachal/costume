@@ -19,6 +19,8 @@ public class ReportQuery extends Entity {
 	
 	private List<Map<String,Object>> purchaseQuerys;
 	
+	private List<Map<String,Object>> employeeQuerys;
+	
 	private List<ProductReportQuery> productReportQuerys;
 
 	public List<PurchaseReportQuery> getPurchaseReportQuerys() {
@@ -54,7 +56,15 @@ public class ReportQuery extends Entity {
 		this.purchaseQuerys = purchaseQuerys;
 	}
 
+	public List<Map<String, Object>> getEmployeeQuerys() {
+		return employeeQuerys;
+	}
 
+	public void setEmployeeQuerys(List<Map<String, Object>> employeeQuerys) {
+		this.employeeQuerys = employeeQuerys;
+	}
+
+	
 	
 	
 	
