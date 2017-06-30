@@ -671,16 +671,16 @@ public class SpOrderServiceImpl implements SpOrderService{
 		
 		SimpleDateFormat formater = new SimpleDateFormat("yyyy/MM/dd");
 	    SimpleDateFormat formater2 = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-	    boolean canCancellation =true;
+	    boolean canCancellation =false;
 	    Date currentDayEnd = null;
 	    try {
-	    	currentDayEnd = formater2.parse(formater.format(new Date())+ " 23:59:59");
+	    	currentDayEnd = formater2.parse(formater.format(new Date())+ " 00:00:00");
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	    //只允许当天的订单 允许作废
 	    if(order.getOrdertime().getTime()>currentDayEnd.getTime()){
-	    	canCancellation =false;
+	    	canCancellation =true;
 	    }
 	    return canCancellation;
 	}
