@@ -136,10 +136,10 @@ public class FTPClientUtils {
     public  boolean createDir(String remote) 
     {
       try{
-        	if(getFTPClient().changeWorkingDirectory(remote)){
-        		return true;
+        	if(!getFTPClient().changeWorkingDirectory(remote)){
+        		getFTPClient().makeDirectory(remote);
             }
-        	getFTPClient().makeDirectory(remote);
+        	
     	}catch (IOException e) {
         	logger.error("创建FTP目录输入输出异常:"+e);
         	return false;
