@@ -81,12 +81,12 @@ public class WxPayAction  {
 	public ApiResponse pay(PayInfoReq infoReq,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		
 
-		String openid = String.valueOf(request.getSession().getAttribute("openid"));
+		//String openid = String.valueOf(request.getSession().getAttribute("openid"));
 		WxPayPubHelper  pubHelper = new  WxPayPubHelper(request,response);
 		String out_trade_no = OrderNoGenerator.generate("TI", 10);
 		infoReq.setOut_trade_no(out_trade_no);
 		TradeInfo tradeInfo=getTradeInfo(infoReq);
-		infoReq.setOpenid(openid);
+		infoReq.setOpenid(infoReq.getOpenid());
 		tradeInfoService.insert(tradeInfo);
 		
 		// 生成支付签名,这个签名 给 微信支付的调用使用
