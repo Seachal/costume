@@ -7,8 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import costumetrade.cache.Cache;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.user.domain.SpCustProdPrice;
@@ -27,9 +25,6 @@ import costumetrade.user.service.SsDataDictionaryService;
 public class SsDataDictionaryController {
 	@Autowired
 	private SsDataDictionaryService ssDataDictionaryService;
-	@Autowired
-	private Cache cache;
-	
 	@RequestMapping("/getDataDictionarys")
 	@ResponseBody
 	public ApiResponse getDataDictionarys(String storeId) {

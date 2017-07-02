@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import costumetrade.cache.Cache;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.user.domain.SpEmployee;
@@ -30,8 +28,6 @@ import costumetrade.user.service.SpEmployeeService;
 public class SpEmployeeController {
 	@Autowired
 	private SpEmployeeService spEmployeeService;
-	@Autowired
-	private Cache cache;
 	@Autowired
 	private ISpPrivilegeService privilegeService;
 	

@@ -9,13 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import costumetrade.cache.Cache;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.common.util.StringUtil;
-import costumetrade.user.domain.SpEmployee;
-import costumetrade.user.domain.SpPrivilegeEmployee;
 import costumetrade.user.domain.SpStore;
 import costumetrade.user.service.ISpPrivilegeService;
 import costumetrade.user.service.SpStoreService;
@@ -31,8 +27,6 @@ import costumetrade.user.service.SpStoreService;
 public class SpStoreController {
 	@Autowired
 	private SpStoreService spStoreService;
-	@Autowired
-	private Cache cache;
 	@Autowired
 	private ISpPrivilegeService privilegeService;
 	
