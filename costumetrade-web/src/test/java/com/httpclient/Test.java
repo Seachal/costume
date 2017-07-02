@@ -3,13 +3,9 @@ package com.httpclient;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.apache.http.client.ClientProtocolException;
-
-import net.sf.json.JSONObject;
-
 import com.alibaba.fastjson.JSON;
-
+import com.alibaba.fastjson.JSONObject;
 import costumetrade.common.util.HttpPostUtil;
 
 public class Test {
@@ -28,7 +24,7 @@ public class Test {
 //		paramMap.put("width", 430);
 //		paramMap.put("auto_color", false);
 //		paramMap.put("line_color", "{\"r\":\"0\",\"g\":\"0\",\"b\":\"0\"}");
-		JSONObject jsonObject = HttpPostUtil.sendPostRequestJSON(url, JSONObject.fromObject(param));
+		JSONObject jsonObject = HttpPostUtil.sendPostRequestJSON(url, JSONObject.parseObject(param));
 //		String response = HttpClientUtils.postDo(url, paramMap,"utf-8");
 		System.out.println(jsonObject.toString());
 		//JSONObject jsonObject = HttpPostUtil.sendPostRequestJSON(url, JSONObject.fromObject(param));
@@ -64,7 +60,7 @@ public class Test {
 		
 		String url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token="+json.getString("access_token");
 		String param ="{'action_name': 'QR_LIMIT_STR_SCENE', 'action_info': {'scene': {'scene_str': '123'}}}";
-		JSONObject jsonObject = HttpPostUtil.sendHTTPSPostRequestJSON(url, JSONObject.fromObject(param));
+		JSONObject jsonObject = HttpPostUtil.sendHTTPSPostRequestJSON(url, JSONObject.parseObject(param));
 		
 		String ticketUrl ="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket="+jsonObject.getString("ticket");
 	
@@ -104,7 +100,7 @@ public class Test {
 		paramMap.put("width", 430);
 		paramMap.put("auto_color", false);
 		paramMap.put("line_color", "{\"r\":\"0\",\"g\":\"0\",\"b\":\"0\"}");
-		JSONObject jsonObject = HttpPostUtil.sendPostRequestJSON(url, JSONObject.fromObject(param));
+		JSONObject jsonObject = HttpPostUtil.sendPostRequestJSON(url, JSONObject.parseObject(param));
 //		String response = HttpClientUtils.postDo(url, paramMap,"utf-8");
 		System.out.println(jsonObject.toString());
 		//JSONObject jsonObject = HttpPostUtil.sendPostRequestJSON(url, JSONObject.fromObject(param));
