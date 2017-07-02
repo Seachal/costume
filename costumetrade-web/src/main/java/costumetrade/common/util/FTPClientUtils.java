@@ -190,10 +190,10 @@ public class FTPClientUtils {
 		this.url=ConfigProperties.getProperty("ftp.ip");
 		this.username=ConfigProperties.getProperty("ftp.username");
 		this.password=ConfigProperties.getProperty("ftp.password");
-		
+/*		
 		this.url="117.149.24.42";
 		this.username="administrator";
-		this.password="touchart@82606523";
+		this.password="touchart@82606523";*/
 		
 		if(null == ftpClient)
 			return false;
