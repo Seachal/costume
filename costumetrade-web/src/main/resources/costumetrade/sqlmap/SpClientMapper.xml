@@ -7,7 +7,7 @@
 		<result column="otherStoreId" jdbcType="VARCHAR" property="otherStoreId" />
 		<result column="userId" jdbcType="VARCHAR" property="userId" />
 		<result column="openid" jdbcType="VARCHAR" property="openid" />
-		<result column="prodLevels" jdbcType="VARCHAR" property="prodlevels" />
+		<result column="scene" jdbcType="VARCHAR" property="scene" />
 		<result column="type" jdbcType="VARCHAR" property="type" />
 		<result column="cate" jdbcType="VARCHAR" property="cate" />
 		<result column="fastcode" jdbcType="VARCHAR" property="fastcode" />
@@ -33,7 +33,7 @@
 		<result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, storeId,otherStoreId,userId,openid, prodLevels,
+		id, storeId,otherStoreId,userId,openid, scene,
 		type, cate,
 		fastcode,
 		status, nickName, image,
@@ -91,6 +91,9 @@
 		<if test="client.name != null">
 			and (remarkName like CONCAT('%',#{client.name},'%') or nickName like CONCAT('%',#{client.name},'%') or reallyName like CONCAT('%',#{client.name},'%'))
 		</if>
+		<if test="client.scene != null">
+			and scene = #{client.scene,jdbcType=VARCHAR}
+		</if>
 		<if test="client.districtList != null">
 			and district in
 			<foreach collection="client.districtList" item="item"
@@ -126,6 +129,7 @@
 		<if test="client.pointsOp == 'desc'">
 			order by points desc
 		</if>
+		ORDER BY createTime ASC
 		<if test="page !=null">
 		LIMIT #{page.startRow},#{page.pageSize}
 		</if>
@@ -147,7 +151,7 @@
 
 	<insert id="insert" parameterType="costumetrade.order.domain.SpClient">
 		insert into sp_client (id,
-		storeId,otherStoreId,userId,openid, prodLevels,
+		storeId,otherStoreId,userId,openid, scene,
 		type, cate, fastcode,
 		status,
 		nickName, image,
@@ -164,7 +168,7 @@
 		#{otherStoreId,jdbcType=VARCHAR},
 		#{userId,jdbcType=VARCHAR},
 		#{openid,jdbcType=VARCHAR},
-		#{prodlevels,jdbcType=VARCHAR},
+		#{scene,jdbcType=VARCHAR},
 		#{type,jdbcType=VARCHAR}, #{cate,jdbcType=VARCHAR},
 		#{fastcode,jdbcType=VARCHAR},
 		#{status,jdbcType=VARCHAR},
@@ -203,8 +207,8 @@
 			<if test="openid != null">
 				openid,
 			</if>
-			<if test="prodlevels != null">
-				prodLevels,
+			<if test="scene != null">
+				scene,
 			</if>
 			<if test="type != null">
 				type,
@@ -292,8 +296,8 @@
 			<if test="openid != null">
 				#{openid,jdbcType=VARCHAR},
 			</if>
-			<if test="prodlevels != null">
-				#{prodlevels,jdbcType=VARCHAR},
+			<if test="scene != null">
+				#{scene,jdbcType=VARCHAR},
 			</if>
 			<if test="type != null">
 				#{type,jdbcType=VARCHAR},
@@ -365,7 +369,7 @@
 		</trim>
 	</insert>
 
-	<update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SpCart">
+	<update id="updateByPrimaryKeySelective" parameterType="costumetrade.order.domain.SpClient">
 		update sp_client
 		<set>
 			<if test="storeId != null">
@@ -383,8 +387,8 @@
 			<if test="status != null">
 				status = #{status,jdbcType=INTEGER},
 			</if>
-			<if test="prodlevels != null">
-				prodLevels =#{prodlevels,jdbcType=VARCHAR},
+			<if test="scene != null">
+				scene =#{scene,jdbcType=VARCHAR},
 			</if>
 			<if test="type != null">
 				type = #{type,jdbcType=VARCHAR},
@@ -448,4 +452,11 @@
 		</if>
 		
 	</update>
+	
+	
+	<delete id="deleteClient" parameterType="costumetrade.order.domain.SpClient">
+		delete from sp_client
+		where 1=1
+		and scene > 0
+	</delete>
 </mapper>

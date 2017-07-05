@@ -78,9 +78,9 @@
 		resultType="costumetrade.order.domain.SsStoOrder">
 		SELECT MAX(d.createTime) as
 		createTime,s.sellerStoreId,s.buyerStoreId
-		FROM ss_stodetail_#{storeId}
+		FROM ss_stodetail
 		d
-		LEFT JOIN ss_stoorder_#{storeId} s ON
+		LEFT JOIN ss_stoorder s ON
 		s.payOrderNo = d.orderId
 		WHERE
 		d.productId=#{id}
@@ -178,9 +178,10 @@
 		stoorder.tax, stoorder.realcost,
 		stoorder.payCate1, stoorder.payCost1,
 		stoorder.payCate2,
-		stoorder.payCost2, stoorder.debetAmt,
+		stoorder.payCost2, 
+		(case when stoorder.debetAmt is null then 0 else stoorder.debetAmt end) as debetAmt,
 		stoorder.freight,
-		stoorder.logisticsCode,
+		lo.logistic_name as logisticsCode,
 		stoorder.orderTime
 		from
 		ss_stoorder stoorder
@@ -188,6 +189,7 @@
 		sp_store store ON store.id = stoorder.sellerStoreId
 		LEFT JOIN sp_store
 		store1 ON store1.id = stoorder.buyerStoreId
+		LEFT JOIN sc_logistic_fee lo ON lo.logistic_code = stoorder.logisticsCode
 		where 1=1
 		<if test="spStoOrder.ordertype != null">
 			and stoorder.orderType
@@ -210,6 +212,7 @@
 			<foreach collection="spStoOrder.status" item="item" index="index"
 				separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
 		</if>
+		ORDER BY stoorder.orderTime DESC
 		<if test="page!=null">
 			LIMIT #{page.startRow},#{page.pageSize}
 		</if>

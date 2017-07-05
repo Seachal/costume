@@ -27,6 +27,41 @@
 		<result column="createBy" jdbcType="VARCHAR" property="createBy" />
 
 	</resultMap>
+	
+	<resultMap id="SaleResultMap"
+		type="costumetrade.report.domain.PurchaseReportQuery">
+		<result column="quantity" jdbcType="DECIMAL" property="quantity" />
+		<result column="amount" jdbcType="DECIMAL" property="amount" />
+		<result column="productName" jdbcType="VARCHAR" property="productName" />
+		<result column="productColor" jdbcType="VARCHAR" property="productColor" />
+		<result column="productSize" jdbcType="VARCHAR" property="productSize" />
+		<result column="brandName" jdbcType="VARCHAR" property="brandName" />
+		<result column="gradeName" jdbcType="VARCHAR" property="gradeName" />
+		<result column="storeName" jdbcType="VARCHAR" property="storeName" />
+		<result column="productId" jdbcType="VARCHAR" property="productId" />
+		<result column="clientName" jdbcType="VARCHAR" property="clientName" />
+		<result column="createBy" jdbcType="VARCHAR" property="createBy" />
+		<result column="saleAmount" jdbcType="DECIMAL" property="saleAmount" />
+		<result column="purchaseAmount" jdbcType="DECIMAL" property="purchaseAmount" />
+	</resultMap>
+	<resultMap id="GeneralResultMap"
+		type="costumetrade.report.domain.GeneralReportQuery">
+		<result column="saleAmount" jdbcType="DECIMAL" property="saleAmount" />
+		<result column="purchaseAmount" jdbcType="DECIMAL" property="purchaseAmount" />
+		<result column="noPayAmount" jdbcType="DECIMAL" property="noPayAmount" />
+		<result column="noReciptAmount" jdbcType="DECIMAL" property="noReciptAmount" />
+		<result column="payCate" jdbcType="VARCHAR" property="payCate" />
+		<result column="payAmount" jdbcType="DECIMAL" property="payAmount" />
+		<result column="reciptAmount" jdbcType="DECIMAL" property="reciptAmount" />
+		<result column="clientAmount" jdbcType="DECIMAL" property="clientAmount" />
+		<result column="feeAmount" jdbcType="DECIMAL" property="feeAmount" />
+		<result column="ordersCount" jdbcType="DECIMAL" property="ordersCount" />
+		<result column="puchaseOrderCount" jdbcType="DECIMAL" property="puchaseOrderCount" />
+		<result column="saleOrderCount" jdbcType="DECIMAL" property="saleOrderCount" />
+		<result column="clientOrderCount" jdbcType="DECIMAL" property="clientOrderCount" />
+		<result column="saleCount" jdbcType="DECIMAL" property="saleCount" />
+		<result column="puchaseCount" jdbcType="DECIMAL" property="puchaseCount" />
+	</resultMap>
 	<sql id="Base_Column_List">
 		saleIncome, salePay,purchaseIncome, purchasePay,
 		customerRepay, suppierRepay,
@@ -76,7 +111,7 @@
 		AND cgs.order_time &lt;=
 		str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
 		)c ON c.storeId=#{storeId}
-		AND (p.payType=sto.payCate1 OR p.payType=sto.payCate2)
+		
 		LEFT JOIN (SELECT
 		SUM(CASE WHEN
 		pay.payObjType =1 THEN pay.payAmt ELSE 0 END) AS
@@ -153,7 +188,7 @@
 	<select id="realTimeInventory"
 		resultType="java.util.HashMap">
 		SELECT
-		SUM(stock.stockNum) AS quantity,
+		(case when  SUM(stock.stockNum) is not null then SUM(stock.stockNum) else 0 end)  AS quantity,
 		stock.productId,
 		product.name AS productName,
 		stock.productColor AS productColor,
@@ -179,9 +214,14 @@
 		and stock.storeId = #{query.storeId}
 		AND STOCK.createTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
 		AND STOCK.createTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
+		
+		
+		<!--  
 		<if test="query.filter.value !=null">
 			and ${query.filter.field} like CONCAT('%',#{query.filter.value},'%')
 		</if>
+		
+		-->
 		<if test="query.productTypeArray != null">
 			and productType.cateName in
 			<foreach collection="query.productTypeArray" item="item"
@@ -212,8 +252,12 @@
 			<foreach collection="query.operatorArray" item="item" index="index"
 				open="(" separator="," close=")"> #{item}</foreach>
 		</if>
-		
+		<!--  
+		<if test="query.filter.field !=null">
 		group by ${query.filter.field}
+		</if>
+		
+		-->
 	    <if test="query.quantityOp == 'asc'">
 			order by quantity asc
 		</if>
@@ -505,32 +549,64 @@
 			LIMIT #{page.startRow},#{page.pageSize}
 		</if>
 	</select>
-	<select id="generalOrder" parameterType="costumetrade.report.domain.GeneralReportQuery" resultType="java.util.HashMap">
-		SELECT 
+	<select id="generalOrder" parameterType="costumetrade.report.domain.GeneralReportQuery" resultMap="GeneralResultMap">
+SELECT 
 		  SUM(
 		    CASE
-		      WHEN sto.buyerStoreId = #{storeId} 
+		      WHEN sto.buyerStoreId = #{storeId} and sto.orderStatus=5
 		      THEN sto.realcost 
 		      ELSE 0 
 		    END
 		  ) AS purchaseAmount,
 		  SUM(
 		    CASE
-		      WHEN sto.buyerStoreId = #{storeId} 
+		      WHEN sto.buyerStoreId = #{storeId} and sto.orderStatus=5
+		      THEN sto.totalNum 
+		      ELSE 0 
+		    END
+		  ) AS puchaseCount,
+		  SUM(
+		    CASE
+		      WHEN sto.buyerStoreId = #{storeId} AND sto.orderStatus=7
+		      THEN sto.payCost1+ sto.payCost2
+		      when sto.sellerStoreId =#{storeId} and sto.orderStatus=5
+		      then sto.debetAmt
+		      ELSE 0 
+		    END
+		  ) AS noPayAmount,
+		  SUM(
+		    CASE
+		      WHEN sto.buyerStoreId = #{storeId} AND sto.orderStatus=7
+		      THEN sto.debetAmt
+		      WHEN sto.sellerStoreId = #{storeId} AND sto.orderStatus=5
+		      THEN sto.payCost1+ sto.payCost2
+		      ELSE 0 
+		    END
+		  ) AS noReciptAmount,
+		  SUM(
+		    CASE
+		      WHEN sto.buyerStoreId = #{storeId} AND sto.orderStatus=5
 		      THEN 1 
 		      ELSE 0 
 		    END
 		  ) AS puchaseOrderCount,
 		  SUM(
 		    CASE
-		      WHEN sto.sellerStoreId = #{storeId} 
+		      WHEN sto.sellerStoreId = #{storeId} AND sto.orderStatus=5
 		      THEN sto.realcost 
 		      ELSE 0 
 		    END
 		  ) AS saleAmount,
+		   SUM(
+		    CASE
+		      WHEN sto.sellerStoreId = #{storeId} and sto.orderStatus=5
+		      THEN sto.totalNum 
+		      ELSE 0 
+		    END
+		  ) AS saleCount,
 		  SUM(
 		    CASE
-		      WHEN sto.sellerStoreId = #{storeId} 
+		      WHEN sto.sellerStoreId = #{storeId} AND sto.orderStatus=5
 		      THEN 1 
 		      ELSE 0 
 		    END
@@ -538,20 +614,39 @@
 		FROM
 		  ss_stoorder sto 
 		WHERE 1 = 1 
-		  AND sto.orderStatus = 5 
-  
+  		AND sto.orderTime &gt;=str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND sto.orderTime &lt;=str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
 	</select>
 	
-	<select id="generalClient" parameterType="costumetrade.report.domain.GeneralReportQuery" resultType="java.util.HashMap">
+	<select id="generalClient" parameterType="costumetrade.report.domain.GeneralReportQuery" resultMap="GeneralResultMap">
 		SELECT 
-		  SUM(
+		  (CASE WHEN SUM(
 		    CASE
 		      WHEN pay.billType = 1 
 		      OR pay.billType = 3 
 		      THEN pay.payAmt 
+		      
 		      ELSE 0 
 		    END
-		  ) AS clientAmount,
+		  ) IS NULL THEN 0 ELSE SUM(
+		    CASE
+		      WHEN pay.billType = 1 
+		      OR pay.billType = 3 
+		      THEN pay.payAmt 
+		      
+		      ELSE 0 
+		    END
+		  )END) AS reciptAmount,
+		  SUM(
+		    CASE
+		      WHEN pay.billType = 2 
+		      OR pay.billType = 4 
+		      THEN pay.payAmt 
+		      when pay.billType is null
+		      then 0
+		      ELSE 0 
+		    END
+		  ) AS payAmount,
 		  SUM(
 		    CASE
 		      WHEN pay.billType = 1 
@@ -559,29 +654,98 @@
 		      OR pay.billType = 2 
 		      OR pay.billType = 4 
 		      THEN 1 
+		      when pay.billType is null
+		      then 0
 		      ELSE 0 
 		    END
-		  ) AS clientOrderCount 
+		  ) AS clientOrderCount ,
+		  pay.payType as payCate
 		FROM
 		  ss_payment pay 
 		WHERE 1 = 1 
 		 and pay.storeId = #{storeId}
+		 AND pay.payTime &gt;=str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND pay.payTime &lt;=str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
+		 <if test="groupByTag !=null">
+			GROUP BY pay.payType
+		</if>
 	</select>
-	<select id="generalFee" parameterType="costumetrade.report.domain.GeneralReportQuery" resultType="java.util.HashMap">
+	<select id="generalFee" parameterType="costumetrade.report.domain.GeneralReportQuery" resultMap="GeneralResultMap">
 	SELECT 
-	  SUM(
+	  (CASE WHEN SUM(
 	    CASE
 	      WHEN cgs.payCost IS NOT NULL 
 	      THEN cgs.payCost 
 	      ELSE 0 
 	    END
-	  ) AS feeAmount 
+	  ) IS NULL THEN 0 ELSE SUM(
+	    CASE
+	      WHEN cgs.payCost IS NOT NULL 
+	      THEN cgs.payCost 
+	      ELSE 0 
+	    END
+	  )end ) AS feeAmount ,
+	  cgs.payCate
 	FROM
 	  ss_cgsorder cgs 
-	WHERE cgs.storeId = #{storeId} 
+	WHERE 1=1
+	and cgs.storeId = #{storeId} 
+	and cgs.payCost IS NOT NULL 
+	AND cgs.order_time &gt;=str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
+	AND cgs.order_time &lt;=str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
+	<if test="groupByTag !=null">
+	GROUP BY cgs.payCate
+	</if>
 	</select>
-	
-	<select id="saleSortReport"  resultMap="costumetrade.report.domain.SaleReportQuery">
+	<select id="generalPayType1" parameterType="costumetrade.report.domain.GeneralReportQuery" resultMap="GeneralResultMap">
+		SELECT 
+		  SUM(
+		    CASE
+		      WHEN sto.buyerStoreId = #{storeId} AND sto.orderStatus=5
+		      THEN sto.payCost1 
+		      ELSE 0 
+		    END
+		  ) AS payAmount,
+		  SUM(
+		    CASE
+		      WHEN sto.sellerStoreId =#{storeId} AND sto.orderStatus=5
+		      THEN sto.payCost1 
+		      ELSE 0 
+		    END
+		  ) AS reciptAmount,
+		(case when  sto.payCate1 is null then "" else sto.payCate1 end) as payCate
+		FROM
+		  ss_stoorder sto 
+		WHERE 1 = 1 
+		AND sto.orderTime &gt;=str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND sto.orderTime &lt;=str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
+		GROUP BY sto.payCate1
+	</select>
+	<select id="generalPayType2" parameterType="costumetrade.report.domain.GeneralReportQuery" resultMap="GeneralResultMap">
+		SELECT 
+		  SUM(
+		    CASE
+		      WHEN sto.buyerStoreId = #{storeId} AND sto.orderStatus=5
+		      THEN sto.payCost1 
+		      ELSE 0 
+		    END
+		  ) AS payAmount,
+		  SUM(
+		    CASE
+		      WHEN sto.sellerStoreId =#{storeId} AND sto.orderStatus=5
+		      THEN sto.payCost1 
+		      ELSE 0 
+		    END
+		  ) AS reciptAmount,
+		 sto.payCate2 as payCate
+		FROM
+		  ss_stoorder sto 
+		WHERE 1 = 1 
+		AND sto.orderTime &gt;=str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND sto.orderTime &lt;=str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
+		GROUP BY sto.payCate2
+		</select>
+	<select id="saleSortReport"  parameterType="costumetrade.report.domain.SaleReportQuery" resultMap="SaleResultMap">
 		SELECT 
 		  SUM(detail.count) AS quantity,
 		  SUM(CASE WHEN sto.buyerStoreId = #{storeId} THEN detail.price * detail.count ELSE 0 END) AS pucharseAmount,

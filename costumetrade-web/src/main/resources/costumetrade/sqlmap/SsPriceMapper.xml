@@ -12,14 +12,14 @@
     <result column="firsthPrice" jdbcType="DECIMAL" property="firsthPrice" />
     <result column="secondPrice" jdbcType="DECIMAL" property="secondPrice" />
     <result column="thirdPrice" jdbcType="DECIMAL" property="thirdPrice" />
-    
+    <result column="custPrice" jdbcType="DECIMAL" property="custPrice" />
     <result column="modify_time" jdbcType="TIMESTAMP" property="modifyTime" />
     <result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, storeId, productId, purchasePrice, tagPrice, firsthPrice, secondPrice, thirdPrice, fourthPrice,fifthPrice,
+    id, storeId, productId, purchasePrice, tagPrice, firsthPrice, secondPrice, thirdPrice, fourthPrice,fifthPrice,custPrice,
     modify_time, modify_by, create_time, create_by
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -32,10 +32,74 @@
     select 
     <include refid="Base_Column_List" />
     from ss_pprice
-    where productId = #{productid,jdbcType=VARCHAR}
+    where 1=1
+    <if test="productid!=null">
+    and productId = #{productid,jdbcType=VARCHAR}
+    </if>
     <if test="storeid!=null">
     and storeId = #{storeid,jdbcType=VARCHAR}
     </if>
+   
+  </select>
+  <update id="updates" parameterType="List">
+  <foreach collection="list" index="index" item="item" separator=";">
+    update ss_pprice
+    <set>
+      <if test="item.storeid != null">
+        storeId = #{item.storeid,jdbcType=VARCHAR},
+      </if>
+      <if test="item.purchaseprice != null">
+        purchasePrice = #{item.purchaseprice,jdbcType=DECIMAL},
+      </if>
+      <if test="item.tagprice != null">
+        tagPrice = #{item.tagprice,jdbcType=DECIMAL},
+      </if>
+      <if test="item.fifthPrice != null">
+        fifthPrice = #{item.fifthPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="item.fourthPrice != null">
+        fourthPrice = #{item.fourthPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="item.thirdPrice != null">
+        thirdPrice = #{item.thirdPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="item.secondPrice != null">
+        secondPrice = #{item.secondPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="item.firsthPrice != null">
+        firsthPrice = #{item.firsthPrice,jdbcType=DECIMAL},
+      </if>custPrice
+        modify_time = now(),
+      <if test="item.custPrice != null">
+        custPrice = #{item.custPrice,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where 1=1
+    <if test="item.id != null">
+    and id = #{item.id,jdbcType=INTEGER}
+    </if>
+    <if test="item.productid != null">
+       and productId = #{item.productid,jdbcType=VARCHAR}
+    </if>
+    <if test="item.storeid!=null">
+    and storeId = #{item.storeid,jdbcType=VARCHAR}
+    </if>
+    </foreach>
+  </update>
+   <select id="selectPrices"  resultMap="BaseResultMap">
+    select 
+   id, storeId, productId,custPrice
+    from ss_pprice
+    where 1=1
+ 	and productId is not null
+    <if test="storeid!=null">
+    and storeId = #{storeid,jdbcType=VARCHAR}
+    </if>
+    <if test="idArray!=null">
+		AND productId IN <foreach collection="idArray" index="index" item="item" separator="," open="(" close=")">
+		#{item}
+		</foreach>
+	</if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ss_pprice
@@ -43,12 +107,12 @@
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SsPrice">
     insert into ss_pprice (id, storeId, productId, 
-      purchasePrice, tagPrice,firsthPrice, secondPrice, thirdPrice, fourthPrice,fifthPrice, modify_time, 
+      purchasePrice, tagPrice,firsthPrice, secondPrice, thirdPrice, fourthPrice,fifthPrice,custPrice， modify_time, 
       modify_by, create_time, create_by
       )
     values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=VARCHAR}, #{productid,jdbcType=VARCHAR}, 
       #{purchaseprice,jdbcType=DECIMAL}, #{tagprice,jdbcType=DECIMAL}, #{firsthPrice,jdbcType=DECIMAL}, 
-      #{secondPrice,jdbcType=DECIMAL}, #{thirdPrice,jdbcType=DECIMAL},#{fourthPrice,jdbcType=DECIMAL}, #{fifthPrice,jdbcType=DECIMAL},
+      #{secondPrice,jdbcType=DECIMAL}, #{thirdPrice,jdbcType=DECIMAL},#{fourthPrice,jdbcType=DECIMAL}, #{fifthPrice,jdbcType=DECIMAL},0,
        #{modifyTime,jdbcType=TIMESTAMP}, 
       #{modifyBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}
       )
@@ -85,6 +149,9 @@
       </if>
       <if test="fifthPrice != null">
         fifthPrice,
+      </if>
+      <if test="custPrice != null">
+        custPrice,
       </if>
       <if test="modifyTime != null">
         modify_time,
@@ -130,6 +197,7 @@
       <if test="fifthPrice != null">
         #{fifthPrice,jdbcType=DECIMAL},
       </if>
+      0,
       <if test="modifyTime != null">
         #{modifyTime,jdbcType=TIMESTAMP},
       </if>

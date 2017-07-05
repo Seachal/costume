@@ -33,7 +33,7 @@
     </if>
   
     <if test="size.sizeName!=null">
-    and sizeName =#{size.sizeName}
+    and sizeName =#{size.sizename}
     </if>
   </select>
   <select id="getSpPSizes" resultMap="BaseResultMap">
@@ -65,6 +65,7 @@
       #{item.barcode,jdbcType=VARCHAR}, NOW(), #{item.createBy,jdbcType=VARCHAR}, 
       NOW(), #{item.modifyBy,jdbcType=VARCHAR})</foreach>
   </insert>
+  
   <insert id="insert" parameterType="costumetrade.order.domain.SpPSize" useGeneratedKeys="true" keyProperty="id">
     insert into sp_psize (storeId, sizeName, price_raise,status,
       barcode, create_time, create_by,

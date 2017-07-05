@@ -46,7 +46,19 @@
     <include refid="Base_Column_List" />
     from ss_payment
     where id = #{id,jdbcType=INTEGER}
+ 
   </select>
+  
+    <select id="selects" parameterType="costumetrade.report.domain.GeneralReportQuery" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ss_payment
+    where 1=1
+    and storeId = #{storeId}
+    AND payTime &gt;=str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
+	AND payTime &lt;=str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from ss_payment
     where id = #{id,jdbcType=INTEGER}

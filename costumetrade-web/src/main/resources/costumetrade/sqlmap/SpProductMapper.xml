@@ -148,9 +148,12 @@
 		select
 		<include refid="Base_Column_List" />
 		from sp_product
-		where id in
+		where 1=1
+		<if test="id!=null">
+		and id in
 		<foreach collection="id" item="item" index="index" open="("
 			separator="," close=")">#{item,jdbcType=VARCHAR}</foreach>
+		</if>
 		<if test="storeId!=null">
 		and  storeId = #{storeId,jdbcType=INTEGER}
 		</if>
@@ -174,6 +177,7 @@
 		LEFT JOIN sp_product_type productType ON productType.id =
 		product.productType
 		WHERE 1=1
+		and product.status = 0
 		<if test="product.storeId!=null">
 		    and  product.storeId = #{product.storeId,jdbcType=INTEGER}
 		</if>
@@ -284,6 +288,7 @@
 		productType.cateName as producttype,
 		product.colors,
 		product.sizes,
+		unit.unit as unit,
 		product.handcount, product.description,store.name as storeName,store.storePhoto as
 		storeImage,
 		product.year , product.season, product.image1, product.image2, product.image3,
@@ -292,10 +297,11 @@
 		left join ss_pprice price on price.productId =
 		product.id and price.storeId = product.storeId
 		left join sp_pbrand brand on brand.id = product.brandId
-		left join sp_product_type productType on productType.id =
-		product.productType
+		left join sp_product_type productType on productType.id = product.productType
 		left join sp_store store on store.id = product.storeId
+		left join sp_punit unit on unit.storeId = product.storeId and unit.id = product.unit 
 		where 1=1
+		and product.status = 0
 		and product.storeId = #{storeId,jdbcType=VARCHAR}
 		and product.id = #{id,jdbcType=INTEGER}
 	</select>
@@ -401,9 +407,12 @@
 			</if>
 		</set>
 		
-		where id in
+		where 1=1 
+		<if test="idArray!=null">
+		and id in
 		<foreach collection="idArray" item="item" index="index" open="("
 			separator="," close=")">#{item,jdbcType=VARCHAR}</foreach>
+		</if>
 		<if test="storeId !=null">
 			and storeId =#{storeId,jdbcType=VARCHAR}
 		</if>	

@@ -12,6 +12,7 @@
 		<result column="productColor" jdbcType="VARCHAR" property="productcolor" />
 		<result column="productSize" jdbcType="VARCHAR" property="productsize" />
 		<result column="count" jdbcType="DECIMAL" property="count" />
+		<result column="average" jdbcType="DECIMAL" property="average" />
 		<result column="price" jdbcType="DECIMAL" property="price" />
 		<result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
 		<result column="createBy" jdbcType="VARCHAR" property="createby" />
@@ -50,6 +51,30 @@
 		</if>
 		
 	</select>
+	<select id="avePriceByProducts" parameterType="costumetrade.order.domain.SsStoOrder" resultMap="BaseResultMap">
+		SELECT
+		SUM(detail.price*detail.count)/SUM(detail.count) as average,
+		detail.productId,
+		detail.productName AS productName
+		FROM
+		ss_stodetail detail
+		LEFT JOIN
+		ss_stoorder sto
+		ON
+		sto.payOrderNo = detail.orderId
+		WHERE 1=1
+		and detail.productId is not null
+		<if test="buyerstoreid!=null">
+		AND sto.buyerStoreId=#{buyerstoreid}
+		</if>
+		<if test="idArray!=null">
+		AND detail.productId IN <foreach collection="idArray" index="index" item="item" separator="," open="(" close=")">
+		#{item}
+		</foreach>
+		</if>
+		GROUP BY productId
+	
+	</select>
 	<select id="selectByOrderIdMember" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
@@ -81,7 +106,7 @@
 		AND sto.sellerStoreId = #{query.sellerstoreid}
 		
 		<if test="query.storeId !=null">
-		and storeId = #{query.storeId,jdbcType=VARCHAR}
+		<!-- and storeId = #{query.storeId,jdbcType=VARCHAR} -->
 		</if>
 		ORDER BY detail.createTime DESC
 		<if test="page != null">

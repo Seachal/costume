@@ -18,14 +18,14 @@
     <result column="birthdate" jdbcType="TIMESTAMP" property="birthdate" />
     <result column="nickName" jdbcType="VARCHAR" property="nickName" />
     <result column="image" jdbcType="VARCHAR" property="image" />
-    <result column="weChatNo" jdbcType="VARCHAR" property="weChatNo" />
+    <result column="scene" jdbcType="VARCHAR" property="scene" />
     <result column="discount" jdbcType="DECIMAL" property="discount" />
     <result column="zeroPrice" jdbcType="DECIMAL" property="zeroPrice" />
     <result column="modifyPrice" jdbcType="VARCHAR" property="modifyPrice" />
   </resultMap>
   <sql id="Base_Column_List">
     storeId, id, status,  create_time, create_by, modify_time, modify_by,image, 
-    reallyName, openid, phoneBack, telephone, address, addressBack, birthdate, nickName,discount,zeroPrice,weChatNo,modifyPrice
+    reallyName, openid, phoneBack, telephone, address, addressBack, birthdate, nickName,discount,zeroPrice,scene,modifyPrice
   </sql>
   <select id="selectByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployee" resultMap="BaseResultMap">
     select 
@@ -57,19 +57,25 @@
       and id = #{id,jdbcType=INTEGER}
       </if>
   </delete>
+  
+  <delete id="deleteEmployee" parameterType="costumetrade.user.domain.SpEmployee">
+		delete from sp_employee
+		where 1=1
+		and scene > 0
+	</delete>
   <insert id="insert" parameterType="costumetrade.user.domain.SpEmployee"  useGeneratedKeys="true" keyProperty="id">
     insert into sp_employee (storeId, status, 
        create_time, create_by, 
       modify_time, modify_by, 
       reallyName, openid, phoneBack, 
       telephone, address, addressBack, 
-      birthdate, nickName,discount,zeroPrice,weChatNo,modifyPrice)
+      birthdate, nickName,discount,zeroPrice,scene,modifyPrice)
     values (#{storeId,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
       #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR}, 
       #{reallyName,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, #{phoneBack,jdbcType=VARCHAR}, 
       #{telephone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{addressBack,jdbcType=VARCHAR}, 
-      #{birthdate,jdbcType=TIMESTAMP}, #{nickName,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, #{zeroPrice,jdbcType=DECIMAL}, #{weChatNo,jdbcType=VARCHAR},
+      #{birthdate,jdbcType=TIMESTAMP}, #{nickName,jdbcType=VARCHAR}, #{discount,jdbcType=DECIMAL}, #{zeroPrice,jdbcType=DECIMAL}, #{scene,jdbcType=VARCHAR},
       #{modifyPrice,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.user.domain.SpEmployee" useGeneratedKeys="true" keyProperty="id">
@@ -131,8 +137,8 @@
       <if test="zeroPrice != null">
         zeroPrice,
       </if>
-      <if test="weChatNo != null">
-        weChatNo,
+      <if test="scene != null">
+        scene,
       </if>
       <if test="modifyPrice != null">
         modifyPrice,
@@ -194,8 +200,8 @@
       <if test="zeroPrice != null">
         #{zeroPrice,jdbcType=DECIMAL},
       </if>
-      <if test="weChatNo != null">
-        #{weChatNo,jdbcType=VARCHAR},
+      <if test="scene != null">
+        #{scene,jdbcType=VARCHAR},
       </if>
       <if test="modifyPrice != null">
         #{modifyPrice,jdbcType=VARCHAR},
@@ -254,8 +260,8 @@
       <if test="zeroPrice != null">
         zeroPrice =#{zeroPrice,jdbcType=DECIMAL},
       </if>
-      <if test="weChatNo != null">
-        weChatNo =#{weChatNo,jdbcType=VARCHAR},
+      <if test="scene != null">
+        scene =#{scene,jdbcType=VARCHAR},
       </if>
       <if test="modifyPrice != null">
         modifyPrice =#{modifyPrice,jdbcType=VARCHAR},
@@ -281,7 +287,7 @@
       addressBack = #{addressBack,jdbcType=VARCHAR},
       birthdate = #{birthdate,jdbcType=TIMESTAMP},
       modifyPrice =#{modifyPrice,jdbcType=VARCHAR},
-      weChatNo =#{weChatNo,jdbcType=VARCHAR},
+      scene =#{scene,jdbcType=VARCHAR},
       zeroPrice =#{zeroPrice,jdbcType=DECIMAL},
       discount = #{discount,jdbcType=DECIMAL},
       nickName = #{nickName,jdbcType=VARCHAR}
