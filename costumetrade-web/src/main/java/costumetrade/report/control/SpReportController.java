@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.report.domain.FinanceReportQuery;
+import costumetrade.report.domain.GeneralReportQuery;
 import costumetrade.report.domain.ProductReportQuery;
 import costumetrade.report.domain.PurchaseReportQuery;
 import costumetrade.report.domain.ReportQuery;
@@ -141,6 +142,20 @@ public class SpReportController {
 		}
 		return  result;
 	}
-
+	@RequestMapping("/generalReport")
+	@ResponseBody
+	public ApiResponse generalReport(@RequestBody GeneralReportQuery query) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		GeneralReportQuery report = spReportService.generalReport(query);
+		if(report == null ){
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			result.setData(ResponseInfo.NOT_DATA.code);
+		}else{
+			result.setData(report);
+		}
+		return  result;
+	}
 	
 }

@@ -15,6 +15,7 @@ import org.apache.http.impl.cookie.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +27,6 @@ import costumetrade.common.util.MD5Util;
 import costumetrade.common.util.OrderNoGenerator;
 import costumetrade.common.util.ServiceUtil;
 import costumetrade.common.util.Sha1Util;
-import costumetrade.order.service.WeChatService;
 import costumetrade.pay.common.WxPayConfig;
 import costumetrade.pay.domain.TradeInfo;
 import costumetrade.pay.enums.EnumResultCode;
@@ -50,6 +50,7 @@ import costumetrade.user.service.SpStoreService;
  * @version 1.0
  * 
  ******************************************************************************/
+
 @RequestMapping("/wxpay")
 @RestController
 public class WxPayAction  {
@@ -130,7 +131,8 @@ public class WxPayAction  {
 	 * 支付成功跳转
 	 * */
 	@RequestMapping("/paySuccess")
-	public ApiResponse paySuccess(String openid){
+	@ResponseBody
+	public ApiResponse paySuccess(@RequestParam("openid") String openid,@RequestParam("name")String name,@RequestParam("image")String image){
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
@@ -139,7 +141,7 @@ public class WxPayAction  {
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		result.setData(spStoreService.insertStore(openid));
+		result.setData(spStoreService.insertStore(openid,name,image));
 		return result;
 	}
 	/**

@@ -1,14 +1,16 @@
 package costumetrade.user.service.impl;
 
 
+import java.security.InvalidAlgorithmParameterException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.net.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import costumetrade.common.util.AES;
 import costumetrade.common.util.StringUtil;
+import costumetrade.common.util.WxPKCS7Encoder;
 import costumetrade.order.domain.ScFocusShop;
 import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.domain.SpProduct;
@@ -30,10 +34,12 @@ import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.domain.SpStore;
 import costumetrade.user.domain.SpUser;
+import costumetrade.user.domain.SsDataDictionary;
 import costumetrade.user.mapper.ScWeChatMapper;
 import costumetrade.user.mapper.SpEmployeeMapper;
 import costumetrade.user.mapper.SpStoreMapper;
 import costumetrade.user.mapper.SpUserMapper;
+import costumetrade.user.mapper.SsDataDictionaryMapper;
 import costumetrade.user.query.StoreQuery;
 import costumetrade.user.service.SpUserService;
 
@@ -58,6 +64,8 @@ public class SpUserServiceImpl implements SpUserService{
 	private WeChatService weChatService;
 	@Autowired
 	private ScStoreAddrMapper scStoreAddrMapper;
+	@Autowired
+	private SsDataDictionaryMapper ssDataDictionaryMapper;
 	
 	@Override
 	public ScWeChat login(String openId) {
@@ -89,7 +97,7 @@ public class SpUserServiceImpl implements SpUserService{
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				String userId = UUID.randomUUID().toString().replaceAll("\\_", "");
+				String userId = new Date().getTime()+"";
 				user.setId(userId);
 				user.setCreateTime(new Date());
 				userid = spUserMapper.insertSelective(user);
@@ -207,7 +215,7 @@ public class SpUserServiceImpl implements SpUserService{
 		StoreQuery resultQuery = new StoreQuery();
 		List<SpStore> storeList = spStoreMapper.selectStores(store, null);
 		if(store.getIdArray() == null){
-			storeList =null;
+			storeList =new ArrayList<SpStore>();
 		}
 		
 		List<SpStore> stores = new ArrayList<SpStore>();
@@ -220,18 +228,21 @@ public class SpUserServiceImpl implements SpUserService{
 				sStore.setAddress(spStore.getAddress());
 				
 				//查询推广商品图片
-				SpProduct product = new SpProduct();
-				product.setStoreId(spStore.getId());
-				product.setPopularize(1);//
-				List<SpProduct> products = new ArrayList<SpProduct>();
-				products = spProductMapper.selectPopulars(product);
+				List<String> images = new ArrayList<String>();
 				
-				sStore.setImages(getStoreImage(spStore,products).getImages());
-				
+				List<String> list = new ArrayList<String>();
+				list.add("IMAGE");
+				List<SsDataDictionary> dict = ssDataDictionaryMapper.selectDictionarys(list,spStore.getId());
+				if(dict!=null&& dict.size()>0){
+					SsDataDictionary dic = dict.get(0);
+					String iamge = dic.getDictValue();
+					sStore.setImages(Arrays.asList(iamge.split(",")));
+				}
+
 				stores.add(sStore);
 			}
-			resultQuery.setStoreList(stores);
 		}
+		resultQuery.setStoreList(stores);
 		resultQuery.setOpenid(query.getOpenid());
 		//汇总订单数量
 		OrderCountQuery countQuery = spOrderService.countOrders(query.getOpenid());
@@ -345,6 +356,55 @@ public class SpUserServiceImpl implements SpUserService{
 		}
 		
 		return save;
+	}
+	@Override
+	public void getUnionId(String encryptedData,String iv,String sessionKey) {
+		
+        try {  
+            AES aes = new AES();  
+            byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData), Base64.decodeBase64(sessionKey), Base64.decodeBase64(iv));  
+            if(null != resultByte && resultByte.length > 0){  
+                String userInfo = new String(WxPKCS7Encoder.decode(resultByte));  
+                System.out.println(userInfo);
+                JSONObject json = JSON.parseObject(userInfo);
+		    	String unionId = json.getString("unionId"); 
+		    	String openId = json.getString("openId");
+		    	
+		    	String nickName = json.getString("nickName");
+		    	String avatarUrl = json.getString("avatarUrl");
+		    	//把openid字段保存unionID
+		    	
+		    	ScWeChat wechat = scWeChatMapper.selectByOpenId(openId);
+	    		
+		    	if(StringUtil.isNotBlank(unionId)){
+		    		wechat.setOpenid(unionId);
+		    	}
+		    	
+		    	if(wechat !=null && wechat.getId()!=null){
+	    			scWeChatMapper.updateByPrimaryKeySelective(wechat);
+	    			//把昵称 头像保存到店铺or 用户
+	    			if(StringUtil.isNotBlank(wechat.getStoreid())){
+			    		SpStore store = new SpStore();
+			    		store.setName(nickName);
+			    		store.setId(wechat.getStoreid());
+			    		store.setStorephoto(avatarUrl);
+			    		spStoreMapper.updateByPrimaryKeySelective(store);
+			    	}
+	    			//把昵称 头像保存到店铺or 用户
+	    			if(StringUtil.isNotBlank(wechat.getUserid())){
+			    		SpUser user = new SpUser();
+			    		user.setName(nickName);
+			    		user.setId(wechat.getUserid());
+			    		user.setPhoto(avatarUrl);;
+			    		spUserMapper.updateByPrimaryKeySelective(user);
+			    	}
+	    		}
+		    	
+		    	
+            }  
+        } catch (InvalidAlgorithmParameterException e) {  
+            e.printStackTrace();
+        }
 	}
 	
 }

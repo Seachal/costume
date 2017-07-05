@@ -7,8 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
+import costumetrade.order.domain.ScLogisticFee;
 import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpCustomerType;
 import costumetrade.user.domain.SsDataDictionary;
@@ -151,6 +153,21 @@ public class SsDataDictionaryController {
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		
+		return result;
+	}
+	
+	@RequestMapping("/updateLogistics")
+	@ResponseBody
+	public ApiResponse updateLogistics(@RequestBody List<ScLogisticFee> list){
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(list==null){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		ssDataDictionaryService.updateLogistics(list);
 		return result;
 	}
 	

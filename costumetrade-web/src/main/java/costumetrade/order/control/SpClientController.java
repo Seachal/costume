@@ -159,9 +159,9 @@ public class SpClientController {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		
+		//System.out.println(param.getId()+","+param.getType()+","+param.getStoreId());
 		JSONObject  scene = (JSONObject) JSONObject.toJSON(param);
-		String object =null;
+		Object object =null;
 		if(StringUtils.isNotBlank(scene.toJSONString())){
 			object = weChatService.getTwoCode(scene.toJSONString());
 		}else{

@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 
 import costumetrade.common.page.Page;
 import costumetrade.report.domain.FinanceReportQuery;
+import costumetrade.report.domain.GeneralReportQuery;
 import costumetrade.report.domain.ProductReportQuery;
 import costumetrade.report.domain.PurchaseReportQuery;
 import costumetrade.report.domain.SaleReportQuery;
@@ -30,4 +31,14 @@ public interface SpReportMapper {
 	List<PurchaseReportQuery> purchaseReport1(@Param("query")PurchaseReportQuery query);
 	
 	List<SaleReportQuery> saleSortReport(@Param("query")SaleReportQuery query,@Param("page")Page page);
+	
+	GeneralReportQuery generalOrder(GeneralReportQuery query);
+	
+	List<GeneralReportQuery> generalClient(GeneralReportQuery query);
+	
+	List<GeneralReportQuery> generalFee(GeneralReportQuery query);
+	
+	List<GeneralReportQuery> generalPayType1(GeneralReportQuery query);
+	
+	List<GeneralReportQuery> generalPayType2(GeneralReportQuery query);
 }

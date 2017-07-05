@@ -93,7 +93,7 @@ public class SsDataDictionaryServiceImpl implements SsDataDictionaryService{
 			}
 		}
 		if(dataDictionarys1.size()>0){
-			save =ssDataDictionaryMapper.updateDatas(dataDictionarys2);
+			save =ssDataDictionaryMapper.updateDatas(dataDictionarys1);
 		}
 		if(dataDictionarys2.size()>0){
 			save = ssDataDictionaryMapper.insertDatas(dataDictionarys2);
@@ -168,8 +168,8 @@ public class SsDataDictionaryServiceImpl implements SsDataDictionaryService{
 
 	@Override
 	public int saveTypeOrGradeRate(List<SpCustProdPrice>  spCustProdPrices) {
-		
-		return spCustProdPriceMapper.updates(spCustProdPrices);
+		int update = spCustProdPriceMapper.updates(spCustProdPrices); 
+		return update;
 	}
 
 	@Override
@@ -184,6 +184,12 @@ public class SsDataDictionaryServiceImpl implements SsDataDictionaryService{
 	public int saveTypeOrGradeRates(List<SpCustProdPrice> spCustProdPrice) {
 		
 		return spCustProdPriceMapper.saveTypeOrGradeRates(spCustProdPrice);
+	}
+
+	@Override
+	public int updateLogistics(List<ScLogisticFee> list) {
+		int update = scLogisticFeeMapper.updates(list);
+		return update;
 	}
 	
 

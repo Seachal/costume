@@ -16,6 +16,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import costumetrade.common.service.GeneratorBaseTable;
+import costumetrade.order.domain.SpPBrand;
+import costumetrade.order.domain.SpPCate;
+import costumetrade.order.mapper.SpPBrandMapper;
+import costumetrade.order.mapper.SpPCateMapper;
 import costumetrade.order.service.WeChatService;
 import costumetrade.user.domain.PriceJson;
 import costumetrade.user.domain.ScWeChat;
@@ -49,6 +53,10 @@ public class SpStoreServiceImpl implements SpStoreService{
 	private SpPrivilegeMapper spPrivilegeMapper;
 	@Autowired
 	private SsDataDictionaryMapper ssDataDictionaryMapper;
+	@Autowired
+	private SpPBrandMapper spPBrandMapper;
+	@Autowired
+	private SpPCateMapper spPCateMapper;
 	@Override
 	public List<SpStore> getChainStore(String storeId) {
 		SpStore store = new SpStore();
@@ -90,7 +98,8 @@ public class SpStoreServiceImpl implements SpStoreService{
 		return spStoreMapper.deleteByPrimaryKey(storeId);
 	}
 	@Override
-	public String insertStore(String openid) {
+	public String insertStore(String openid,String name,String image) {
+		SpStore store = new SpStore();
 		String  userInfo=null;
 		try {
 			userInfo =WeChatService.getWeChatUserInfo(openid);
@@ -102,35 +111,50 @@ public class SpStoreServiceImpl implements SpStoreService{
 		    	ScWeChat record = new ScWeChat();
 	    		record = scWeChatMapper.selectByOpenId(openid);
 	    		
-		    	SpStore store = new SpStore();
-		    	store.setId(record.getUserid());
-		    	store.setCreateTime(new Date());
-		    	store.setName(nickName);
-		    	store.setStorephoto(headimgurl);
-		    	store.setStatus(0);
-		    	spStoreMapper.insertSelective(store);
+	    		if(record !=null){
+			    	store.setId(record.getUserid());
+			    	store.setCreateTime(new Date());
+			    	store.setName(name);
+			    	store.setStorephoto(image);
+			    	store.setStatus(0);
+			    	spStoreMapper.insertSelective(store);
+	    		}
+		    	
 		    	
 //		    	//初始化高级设置数据
 //		    	GeneratorBaseTable.generatorTable(store.getId()+"");
 		    	if(store.getId()!=null){
 		    		if(record !=null){
-		    			record.setUserid(null);
+		    			record.setUserid("");
 		    			record.setStoreid(store.getId());
 		    			scWeChatMapper.updateByPrimaryKeySelective(record);
 		    		}
+		    		SpPBrand spPBrand = new SpPBrand();
+		    		spPBrand.setStoreId(store.getId());
+		    		spPBrand.setBrandname(store.getName());
+		    		spPBrand.setStatus(0);
+		    	
+					//保存品牌
+		    		spPBrandMapper.insert(spPBrand ) ;
 		    		
+		    		SpPCate spPCate = new SpPCate();
+		    		spPCate.setStoreId(store.getId());
+		    		spPCate.setCatename("服装");
+		    		spPCate.setStauts(0);
+					//保存种类
+		    		spPCateMapper.insert(spPCate ) ;
 		    		//保存高级设置中的客户类型
 		    		insertCustPrice(store.getId());
 		    		//保存数据字段信息
 		    		insertDictionarys(store.getId());
 		    	}
-		    	return store.getId();
+		    	
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return store.getId();
 	}
 	// 默认取 店铺1的初始数据
 	public int insertDictionarys(String storeId){

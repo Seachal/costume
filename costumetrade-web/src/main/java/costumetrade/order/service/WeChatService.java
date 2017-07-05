@@ -17,7 +17,7 @@ public interface WeChatService  {
 	 * @throws IOException 
 	 * @throws ClientProtocolException 
 	 * */
-	public  String getAccessToken() throws Exception;
+	public  String getAccessToken(String appId,String appSecret) throws Exception;
 	
 	/**
 	 * 生成二维码

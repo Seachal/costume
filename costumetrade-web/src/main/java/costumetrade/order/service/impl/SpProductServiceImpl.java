@@ -436,13 +436,16 @@ public class SpProductServiceImpl implements SpProductService{
 		//过滤 启用客户类型
 		//根据启用的价格过滤折扣毛利中类型
 		List<SpCustProdPrice> custList = new ArrayList<SpCustProdPrice>();
-		for(int i=0;i<customs.length;i++){
-			for(int j=0;j<customTypeList.size();j++){
-				if(customs[i].equals(customTypeList.get(j).getCustTypeCode()) ){
-					custList.add(customTypeList.get(j));
+		if(customs!=null && customs.length>0){
+			for(int i=0;i<customs.length;i++){
+				for(int j=0;j<customTypeList.size();j++){
+					if(customs[i].equals(customTypeList.get(j).getCustTypeCode()) ){
+						custList.add(customTypeList.get(j));
+					}
 				}
 			}
 		}
+		
 		List<ScLogisticFee> logisticFees = scLogisticFeeMapper.selectLogisticFees();
 		queryResult.setGradeList(gradeList);
 		queryResult.setCustProdPrice(custList);
@@ -483,6 +486,7 @@ public class SpProductServiceImpl implements SpProductService{
 				queryResult.setIsPattern(product.getIsPattern());
 				queryResult.setStatus(product.getStatus());
 				queryResult.setRaisePrice(product.getRaisePrice());
+				queryResult.setDescription(product.getDescription());
 				if(StringUtil.isNotBlank(product.getRaisePrice())){
 					PatternPrice json =  JSONObject.parseObject(product.getRaisePrice(), PatternPrice.class);
 					queryResult.setPriceJsons(json);
@@ -671,20 +675,26 @@ public class SpProductServiceImpl implements SpProductService{
 		if(productQuery.getCheckAllTag()!=null&&productQuery.getCheckAllTag()){
 			productQuery.setIdArray(null);
 			List<ProductQuery> list = selectProducts(productQuery);
-			if(list!=null&& list.size()>0&&product.getIdArray()!=null&&product.getIdArray().size()>0){
+			if(list!=null&& list.size()>0){
 				for(ProductQuery query : list){
-					for(String id: product.getIdArray()){
-						if(!query.getId().equals(id)){
-							ids.add(query.getId());
+					if(product.getIdArray()!=null&&product.getIdArray().size()>0){
+						for(String id: product.getIdArray()){
+							if(!query.getId().equals(id)){
+								ids.add(query.getId());
+							}
 						}
+					}else{
+						ids.add(query.getId());
 					}
+					
 				}
 			}
 		}
 		if(ids.size()>0){
 			product.setIdArray(ids);
 		}
-		return spProductMapper.updateByIds(product);
+		int update =  spProductMapper.updateByIds(product);
+		return update;
 	}
 
 	@Override
@@ -904,5 +914,36 @@ public class SpProductServiceImpl implements SpProductService{
 			save =spPColorMapper.updates(colors);
 		}
 		return save;
+	}
+
+	@Override
+	public List<SpProduct> enterShareProducts(String openid) {
+		
+		ScWeChat wechat = scWeChatMapper.selectByOpenId(openid);
+		
+		List<Map<String, Object>> maps = new ArrayList<Map<String,Object>>();
+		if(wechat!=null && StringUtil.isNotBlank(wechat.getStoreid())){
+			ProductQuery productQuery =new ProductQuery();
+			productQuery.setStoreId(wechat.getStoreid());
+			maps= spProductMapper.selectProducts(productQuery ,null);	
+		}
+		List<SpProduct> products = new ArrayList<SpProduct>();
+		if(maps.size()>0){
+			for(Map<String, Object> map : maps){
+				SpProduct product = new SpProduct();
+				product.setId((String) map.get("id"));
+				String image = (String) map.get("image");
+				if(StringUtil.isNotBlank(image)){
+					product.setImage(image);
+				}else{
+					product.setImage("");
+				}
+				
+				products.add(product);
+			}
+		}
+		
+		
+		return products;
 	}
 }

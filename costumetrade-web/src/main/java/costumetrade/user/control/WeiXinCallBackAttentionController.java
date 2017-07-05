@@ -65,6 +65,7 @@ public class WeiXinCallBackAttentionController {
 			        for (int n; (n = in.read(b)) != -1;) {  
 			            xmlMsg.append(new String(b, 0, n, "UTF-8"));  
 			        }  
+			        System.out.println(xmlMsg.toString());
 			     // 将xml内容转换为InputMessage对象  
 			        InputMessage inputMsg = (InputMessage) xs.fromXML(xmlMsg.toString());  
 			        Long returnTime = Calendar.getInstance().getTimeInMillis() / 1000;// 返回时间  

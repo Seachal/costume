@@ -2,6 +2,7 @@ package costumetrade.user.service;
 
 import java.util.List;
 
+import costumetrade.order.domain.ScLogisticFee;
 import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpCustomerType;
 import costumetrade.user.domain.SsDataDictionary;
@@ -44,5 +45,7 @@ public interface SsDataDictionaryService {
 	public int saveTypeOrGradeRate(List<SpCustProdPrice> spCustProdPrices);
 	
 	public SpCustProdPrice getTypeOrGradeRate(SpCustProdPrice spCustProdPrice);
+	
+	public int updateLogistics(List<ScLogisticFee> list);
 	
 }

@@ -24,5 +24,5 @@ public interface SpStoreService {
 	public int deleteChainStore(String storeId);
 	
 	
-	public String insertStore(String openid);
+	public String insertStore(String openid,String name,String image);
 }

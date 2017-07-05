@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
+import costumetrade.common.util.StringUtil;
 import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.service.WeChatService;
 import costumetrade.user.domain.ScWeChat;
@@ -62,13 +63,14 @@ public class SpUserController {
 		System.out.println("欢迎进入小程序"+openIdAndKey);
 		ScWeChat chat = null;
 		ScUserQuery resultQuery = new ScUserQuery();
+		resultQuery.setSessionKey(json.getString("session_key"));
 		StoreQuery query = new StoreQuery();
 		if(openid!=null){
 			chat = spUserService.login(openid);
 			query.setOpenid(openid);
 			if(chat != null){
 				query.setStoreId(chat.getStoreid());
-				if(chat.getStoreid()!=null){
+				if(StringUtil.isNotBlank(chat.getStoreid())){
 					if(chat.getEmpid()!=null){
 						resultQuery.setUserIdentity(3);//员工身份
 						resultQuery.setEmpId(chat.getEmpid());
@@ -131,6 +133,21 @@ public class SpUserController {
 		}
 		List<ScStoreAddr> addrs = spUserService.getAddressList(openid);
 		return  ApiResponse.getInstance(addrs);
+	}
+	
+	@RequestMapping("/getUnionId")
+	@ResponseBody
+	public ApiResponse getUnionId(String encryptedData,String iv,String sessionKey) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(StringUtil.isBlank(encryptedData)){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.name());
+			return result;
+		}
+		spUserService.getUnionId(encryptedData,iv,sessionKey);
+		return  ApiResponse.getInstance(result);
 	}
 	@RequestMapping("/saveAddress")
 	@ResponseBody

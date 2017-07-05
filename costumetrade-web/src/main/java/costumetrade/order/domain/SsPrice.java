@@ -74,6 +74,8 @@ public class SsPrice extends Entity {
      *  创建人
      */
     private String createBy;
+    
+    private BigDecimal custPrice;
 
     private static final long serialVersionUID = 1L;
 
@@ -189,6 +191,14 @@ public class SsPrice extends Entity {
 
 	public void setFourthPrice(BigDecimal fourthPrice) {
 		this.fourthPrice = fourthPrice;
+	}
+
+	public BigDecimal getCustPrice() {
+		return custPrice;
+	}
+
+	public void setCustPrice(BigDecimal custPrice) {
+		this.custPrice = custPrice;
 	}
     
     

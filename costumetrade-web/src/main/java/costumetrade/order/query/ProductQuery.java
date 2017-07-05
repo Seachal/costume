@@ -156,6 +156,7 @@ public class ProductQuery extends Entity{
 	
 	private String openid;
     
+
     /**
      *  进货价
      */

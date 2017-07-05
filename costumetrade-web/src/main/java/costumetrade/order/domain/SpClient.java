@@ -33,7 +33,7 @@ public class SpClient extends Entity {
     /**
      *  货品级别
      */
-    private String prodlevels;
+    private String scene;
 
     /**
      *  类型：1：客户，2：供应商，3：朋友
@@ -207,15 +207,17 @@ public class SpClient extends Entity {
 		this.storeId = storeId;
 	}
 
-	public String getProdlevels() {
-        return prodlevels;
-    }
+	
 
-    public void setProdlevels(String prodlevels) {
-        this.prodlevels = prodlevels == null ? null : prodlevels.trim();
-    }
+    public String getScene() {
+		return scene;
+	}
 
-    public String getType() {
+	public void setScene(String scene) {
+		this.scene = scene;
+	}
+
+	public String getType() {
         return type;
     }
 

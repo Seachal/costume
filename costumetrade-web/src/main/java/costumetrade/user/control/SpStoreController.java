@@ -132,7 +132,7 @@ public class SpStoreController {
 			result.setMsg(ResponseInfo.LACK_PARAM.name());
 			return result;
 		}
-		String store = spStoreService.insertStore(openid);
+		String store = spStoreService.insertStore(openid,null,null);
 		
 		if(StringUtil.isBlank(store)){
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);

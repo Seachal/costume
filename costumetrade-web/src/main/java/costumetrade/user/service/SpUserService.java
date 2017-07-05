@@ -32,4 +32,6 @@ public interface SpUserService {
 	public int saveAddress(ScStoreAddr addr);
 	
 	public SpStore getStoreImage(SpStore spStore , List<SpProduct> products);
+	
+	public void getUnionId(String encryptedData,String iv,String sessionKey);
 }

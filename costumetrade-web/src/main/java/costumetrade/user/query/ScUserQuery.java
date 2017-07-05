@@ -22,7 +22,7 @@ public class ScUserQuery extends Entity {
     /**
      *  
      */
-    private String permission;
+    private String sessionKey;
 
     /**
      *  
@@ -68,15 +68,17 @@ public class ScUserQuery extends Entity {
         this.name = name == null ? null : name.trim();
     }
 
-    public String getPermission() {
-        return permission;
-    }
+    
 
-    public void setPermission(String permission) {
-        this.permission = permission == null ? null : permission.trim();
-    }
+    public String getSessionKey() {
+		return sessionKey;
+	}
 
-    public String getMenu() {
+	public void setSessionKey(String sessionKey) {
+		this.sessionKey = sessionKey;
+	}
+
+	public String getMenu() {
         return menu;
     }
 

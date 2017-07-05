@@ -88,5 +88,10 @@ public interface SpProductService {
 	 * 查询商品评价
 	 * */
 	public List<SsProductReview> getReviews(ProductQuery query);
-
+	
+	/***
+	 * 进入分享界面  获取所有货品ID 和图片 1张
+	 * 
+	 * */
+	public List<SpProduct> enterShareProducts(String openid);
 }

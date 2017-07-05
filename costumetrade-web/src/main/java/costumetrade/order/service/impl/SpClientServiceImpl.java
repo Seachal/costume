@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import costumetrade.common.page.Page;
 import costumetrade.common.util.OrderNoGenerator;
 import costumetrade.common.util.PingyinUtil;
+import costumetrade.common.util.StringUtil;
 import costumetrade.order.domain.ScFocusShop;
 /*import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
@@ -307,16 +308,35 @@ public class SpClientServiceImpl implements SpClientService{
 	}
 	@Override
 	public Object scanQRCodeOk(QRCodeScanParam param) {
+		
+		
 		Object object = null;
 		if(param.getType()==1||param.getType()==2||param.getType()==3){
-			object = spClientMapper.selectByPrimaryKey(param.getId());
+			SpClient client = spClientMapper.selectByPrimaryKey(param.getId());
+			if(client!=null && StringUtil.isNotBlank(client.getOpenid())){
+				client = new SpClient();
+				client.setOpenid(client.getOpenid());
+				List<SpClient> clients = spClientMapper.select(client, null);
+				if(clients!=null&& clients.size()>0){
+					if(clients.size()>1){//清楚多余新增的数据
+						object = clients.get(0);
+						clients.remove(0);
+					}
+				}
+			}
 		}else if(param.getType()==4){
 			SpEmployee employee = new SpEmployee();
 			employee = spEmployeeService.employeeInit(param.getId());
 			employee.setStoreId(param.getStoreId());
 			employee.setId(Integer.parseInt(param.getId()));
-			object = spEmployeeMapper.selectByPrimaryKey(employee);
+			employee = spEmployeeMapper.selectByPrimaryKey(employee);
+			if(employee!=null){
+				
+			}
 		}
+		//删除未扫描成功的用户
+		spEmployeeMapper.deleteEmployee(null);
+		spClientMapper.deleteClient(null);		
 		return object;
 	}
 	@Override

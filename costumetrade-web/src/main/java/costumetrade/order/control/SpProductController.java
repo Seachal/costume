@@ -94,6 +94,22 @@ public class SpProductController {
 		return  ApiResponse.getInstance(product);
 	}
 	
+	@RequestMapping("/enterShareProducts")
+	@ResponseBody
+	public ApiResponse enterShareProducts(String openid) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		if(StringUtils.isBlank(openid)){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		List<SpProduct> product = spProductService.enterShareProducts(openid);
+		return  ApiResponse.getInstance(product);
+	}
+	
 	@RequestMapping("/getProductInit")
 	@ResponseBody
 	public ApiResponse getProductInit(ProductQuery query) {
@@ -233,7 +249,7 @@ public class SpProductController {
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		
-		if(productQuery.getStoreId()==null&& (productQuery.getIdArray()==null||productQuery.getIdArray().size() <=0)){
+		if(productQuery.getStoreId()==null){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;

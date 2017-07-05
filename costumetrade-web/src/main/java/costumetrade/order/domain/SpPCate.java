@@ -55,6 +55,8 @@ public class SpPCate extends Entity {
 	 * 当前页码
 	 */
 	private Integer pageNum;
+	
+	private Integer isDefault;
 
     private static final long serialVersionUID = 1L;
 
@@ -145,6 +147,14 @@ public class SpPCate extends Entity {
 
 	public void setStauts(Integer stauts) {
 		this.stauts = stauts;
+	}
+
+	public Integer getIsDefault() {
+		return isDefault;
+	}
+
+	public void setIsDefault(Integer isDefault) {
+		this.isDefault = isDefault;
 	}
     
     

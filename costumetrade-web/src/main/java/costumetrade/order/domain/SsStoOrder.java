@@ -206,6 +206,9 @@ public class SsStoOrder extends Entity {
     
     private Boolean canCancellation;
     
+    private Boolean isContinue = false;//默认库存缺少时，不继续操作
+    
+    private List<String> idArray;
 	
 	public Boolean getCanCancellation() {
 		return canCancellation;
@@ -583,6 +586,22 @@ public class SsStoOrder extends Entity {
 
 	public void setReceiverImage(String receiverImage) {
 		this.receiverImage = receiverImage;
+	}
+
+	public Boolean getIsContinue() {
+		return isContinue;
+	}
+
+	public void setIsContinue(Boolean isContinue) {
+		this.isContinue = isContinue;
+	}
+
+	public List<String> getIdArray() {
+		return idArray;
+	}
+
+	public void setIdArray(List<String> idArray) {
+		this.idArray = idArray;
 	}
     
     

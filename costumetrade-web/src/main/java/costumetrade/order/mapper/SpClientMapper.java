@@ -19,6 +19,7 @@ public interface SpClientMapper {
     
     int updateByPrimaryKeySelective(SpClient record);
     
+    int deleteClient(SpClient record);
     
     List<SpClient> select(@Param("client")SpClient client,@Param("page") Page page);
     

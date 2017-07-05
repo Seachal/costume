@@ -3,6 +3,7 @@ package costumetrade.report.service;
 import java.util.List;
 
 import costumetrade.report.domain.FinanceReportQuery;
+import costumetrade.report.domain.GeneralReportQuery;
 import costumetrade.report.domain.ProductReportQuery;
 import costumetrade.report.domain.PurchaseReportQuery;
 import costumetrade.report.domain.ReportQuery;
@@ -41,4 +42,9 @@ public interface SpReportService {
 	 * 销售排行
 	 * */
 	public List<SaleReportQuery>  saleSortReport(SaleReportQuery query);
+	
+	/**
+	 * 总报表
+	 * */
+	public GeneralReportQuery  generalReport(GeneralReportQuery query);
 }

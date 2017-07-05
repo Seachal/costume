@@ -117,6 +117,8 @@ public class SpEmployee extends Entity implements Serializable{
     
     private String openid ;
     
+    private String scene;
+    
     public String getStoreId() {
 		return storeId;
 	}
@@ -347,6 +349,14 @@ public class SpEmployee extends Entity implements Serializable{
 
 	public void setPrivilegeEmployees(List<SpPrivilegeEmployee> privilegeEmployees) {
 		this.privilegeEmployees = privilegeEmployees;
+	}
+
+	public String getScene() {
+		return scene;
+	}
+
+	public void setScene(String scene) {
+		this.scene = scene;
 	}
 
 	

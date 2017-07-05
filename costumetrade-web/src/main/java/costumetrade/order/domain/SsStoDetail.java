@@ -80,6 +80,8 @@ public class SsStoDetail extends Entity {
      *  修改人
      */
     private String modifyby;
+    
+    private BigDecimal average;
 
     private static final long serialVersionUID = 1L;
 
@@ -202,4 +204,14 @@ public class SsStoDetail extends Entity {
     public void setModifyby(String modifyby) {
         this.modifyby = modifyby == null ? null : modifyby.trim();
     }
+
+	public BigDecimal getAverage() {
+		return average;
+	}
+
+	public void setAverage(BigDecimal average) {
+		this.average = average;
+	}
+    
+    
 }
