@@ -20,7 +20,7 @@ public class SpPCate extends Entity {
      */
     private String storeId;
     
-    private Integer stauts;
+    private Integer status;
 
     /**
      *  助记简码
@@ -141,12 +141,14 @@ public class SpPCate extends Entity {
 		this.pageNum = pageNum;
 	}
 
-	public Integer getStauts() {
-		return stauts;
+
+
+	public Integer getStatus() {
+		return status;
 	}
 
-	public void setStauts(Integer stauts) {
-		this.stauts = stauts;
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 
 	public Integer getIsDefault() {

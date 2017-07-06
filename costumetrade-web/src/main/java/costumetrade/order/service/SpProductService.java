@@ -93,5 +93,5 @@ public interface SpProductService {
 	 * 进入分享界面  获取所有货品ID 和图片 1张
 	 * 
 	 * */
-	public List<SpProduct> enterShareProducts(String openid);
+	public List<SpProduct> enterShareProducts(ProductQuery query);
 }

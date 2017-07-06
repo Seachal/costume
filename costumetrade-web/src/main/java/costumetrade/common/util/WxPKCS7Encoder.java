@@ -4,7 +4,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 
 public class WxPKCS7Encoder {
-	private static final Charset CHARSET = Charset.forName("utf-8");  
+	private static final Charset CHARSET = Charset.forName("UTF-8");  
     private static final int BLOCK_SIZE = 32;  
     /** 
      * 获得对明文进行补位填充的字节. 

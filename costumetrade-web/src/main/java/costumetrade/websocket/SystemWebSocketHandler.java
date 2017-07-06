@@ -15,7 +15,7 @@ import org.springframework.web.socket.WebSocketSession;
 public class SystemWebSocketHandler implements WebSocketHandler{
 	private Logger log = Logger.getLogger(SystemWebSocketHandler.class);  
     
-    private static final ArrayList<WebSocketSession> users = new ArrayList<WebSocketSession>();;  
+    private static final ArrayList<WebSocketSession> users = new ArrayList<WebSocketSession>();
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus)
 			throws Exception {

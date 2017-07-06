@@ -82,7 +82,6 @@ public class SpUserServiceImpl implements SpUserService{
 		if(wechat == null ){
 			we.setOpenid(openId);
 			we.setCreatetime(new Date());
-			
 			if(semployee == null){//不存在店员，就保存新增用户信息
 				String userInfo;
 				try {
@@ -358,30 +357,30 @@ public class SpUserServiceImpl implements SpUserService{
 		return save;
 	}
 	@Override
-	public void getUnionId(String encryptedData,String iv,String sessionKey) {
-		
+	public ScWeChat  getUnionId(String encryptedData,String iv,String sessionKey) {
+		String unionId ="";
+		ScWeChat wechat = new ScWeChat();
         try {  
             AES aes = new AES();  
-            byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData), Base64.decodeBase64(sessionKey), Base64.decodeBase64(iv));  
+            byte[] resultByte = aes.decrypt(Base64.decodeBase64(encryptedData), Base64.decodeBase64(sessionKey), Base64.decodeBase64(iv)); 
+            String u = new String(resultByte, "UTF-8");
+            System.out.println(u+"\n");
             if(null != resultByte && resultByte.length > 0){  
-                String userInfo = new String(WxPKCS7Encoder.decode(resultByte));  
-                System.out.println(userInfo);
+                String userInfo = new String(WxPKCS7Encoder.decode(u.getBytes()));  
+//                
+//                userInfo = new String(userInfo.getBytes(), "UTF-8");
+//                System.out.println(userInfo);
                 JSONObject json = JSON.parseObject(userInfo);
-		    	String unionId = json.getString("unionId"); 
+                unionId = json.getString("unionId"); 
 		    	String openId = json.getString("openId");
 		    	
 		    	String nickName = json.getString("nickName");
 		    	String avatarUrl = json.getString("avatarUrl");
 		    	//把openid字段保存unionID
+		    	login(unionId);
 		    	
-		    	ScWeChat wechat = scWeChatMapper.selectByOpenId(openId);
-	    		
-		    	if(StringUtil.isNotBlank(unionId)){
-		    		wechat.setOpenid(unionId);
-		    	}
-		    	
+		    	wechat = scWeChatMapper.selectByOpenId(unionId);
 		    	if(wechat !=null && wechat.getId()!=null){
-	    			scWeChatMapper.updateByPrimaryKeySelective(wechat);
 	    			//把昵称 头像保存到店铺or 用户
 	    			if(StringUtil.isNotBlank(wechat.getStoreid())){
 			    		SpStore store = new SpStore();
@@ -402,9 +401,10 @@ public class SpUserServiceImpl implements SpUserService{
 		    	
 		    	
             }  
-        } catch (InvalidAlgorithmParameterException e) {  
+        } catch (Exception e) {  
             e.printStackTrace();
         }
+        return wechat;
 	}
 	
 }

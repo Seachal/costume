@@ -615,8 +615,15 @@ public class SpProductServiceImpl implements SpProductService{
 	public void insertSuspendingProduct(SpProduct product,String buyerStoreId){
 		
 		//查询商品类型是否存在买家，不存在，新增
-		SpPCate cate = spPCateMapper.getSpPCate(product.getBrandid(), product.getStoreId());
-		SpPCate cate1 = spPCateMapper.getSpPCateByName(cate.getCatename(), buyerStoreId);
+		SpPCate cate = spPCateMapper.getSpPCate(product.getProducttype(), product.getStoreId());
+		
+		SpPCate cate1 = null;
+		if(cate!=null){
+			cate1 = spPCateMapper.getSpPCateByName(cate.getCatename(), buyerStoreId);
+		}else{
+			return ;
+		}
+		
 		int productType  = 0;
 		if(cate1 == null){
 			SpPCate type = new SpPCate();
@@ -645,6 +652,7 @@ public class SpProductServiceImpl implements SpProductService{
 			product.setBrandid(brandId);
 		}
 		product.setStatus(1);//待处理状态
+		product.setStoreId(buyerStoreId);
 		int save = spProductMapper.insertSelective(product);
 		if(save > 0 ){
 			SsPrice price = new SsPrice();
@@ -676,11 +684,22 @@ public class SpProductServiceImpl implements SpProductService{
 			productQuery.setIdArray(null);
 			List<ProductQuery> list = selectProducts(productQuery);
 			if(list!=null&& list.size()>0){
-				for(ProductQuery query : list){
+				outer:for(ProductQuery query : list){
 					if(product.getIdArray()!=null&&product.getIdArray().size()>0){
+						boolean b =false;
 						for(String id: product.getIdArray()){
 							if(!query.getId().equals(id)){
 								ids.add(query.getId());
+							}else{
+								b=true;
+							}
+						}
+						if(b&&ids.size()>0){
+							for(int i=0;i<ids.size();i++){
+								if(query.getId().equals(ids.get(i))){
+									ids.remove(i);
+									break outer;
+								}
 							}
 						}
 					}else{
@@ -807,6 +826,9 @@ public class SpProductServiceImpl implements SpProductService{
 				chat = spUserService.login(openid);
 			}
 			//查询分享到对方的用户在商铺里面是什么客户级别，根据客户级别显示销售价，如果不属于客户，就默认最低客户级别，显示最高销售价
+			if(chat==null||StringUtil.isBlank(chat.getUserid())){
+				return null;
+			}
 			SpClient client = new SpClient();
 			client.setStoreId(productQuery.getStoreId());
 			client.setType(1+"");
@@ -865,7 +887,6 @@ public class SpProductServiceImpl implements SpProductService{
 				productList.add(product);
 			}
 		}
-		
 		return productList;
 	}
 	@Override
@@ -917,9 +938,9 @@ public class SpProductServiceImpl implements SpProductService{
 	}
 
 	@Override
-	public List<SpProduct> enterShareProducts(String openid) {
+	public List<SpProduct> enterShareProducts(ProductQuery query) {
 		
-		ScWeChat wechat = scWeChatMapper.selectByOpenId(openid);
+		ScWeChat wechat = scWeChatMapper.selectByOpenId(query.getOpenid());
 		
 		List<Map<String, Object>> maps = new ArrayList<Map<String,Object>>();
 		if(wechat!=null && StringUtil.isNotBlank(wechat.getStoreid())){
@@ -927,19 +948,43 @@ public class SpProductServiceImpl implements SpProductService{
 			productQuery.setStoreId(wechat.getStoreid());
 			maps= spProductMapper.selectProducts(productQuery ,null);	
 		}
+		List<String> idArray = query.getIdArray();
 		List<SpProduct> products = new ArrayList<SpProduct>();
 		if(maps.size()>0){
-			for(Map<String, Object> map : maps){
-				SpProduct product = new SpProduct();
-				product.setId((String) map.get("id"));
-				String image = (String) map.get("image");
-				if(StringUtil.isNotBlank(image)){
-					product.setImage(image);
-				}else{
-					product.setImage("");
-				}
+			outer:for(int j=0;j<maps.size();j++){
+				Map<String, Object> map= maps.get(j);
+				String id = (String) map.get("id");
+					if(idArray!=null&&idArray.size()>0){
+						boolean b = false;
+						for(int i=0 ;i<idArray.size();i++){
+							if((!id.equals(idArray.get(i))&&query.getCheckAllTag())||(id.equals(idArray.get(i))&&!query.getCheckAllTag())){
+								SpProduct product = new SpProduct();
+								product.setId((String) map.get("id"));
+								String image = (String) map.get("image");
+								if(StringUtil.isNotBlank(image)){
+									product.setImage(image);
+								}else{
+									product.setImage("");
+								}
+								products.add(product);
+							}
+							if(query.getCheckAllTag()&&id.equals(idArray.get(i))){
+								b=true;
+							}
+						}
+						if(b&&products.size()>0){
+							for(int i=0 ;i<products.size();i++){
+								if(id.equals(products.get(i).getId())){
+									products.remove(i);
+									break outer;
+								}
+							}
+							
+						}
+					}
+					
 				
-				products.add(product);
+				
 			}
 		}
 		

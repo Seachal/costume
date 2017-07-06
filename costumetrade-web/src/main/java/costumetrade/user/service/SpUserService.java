@@ -33,5 +33,5 @@ public interface SpUserService {
 	
 	public SpStore getStoreImage(SpStore spStore , List<SpProduct> products);
 	
-	public void getUnionId(String encryptedData,String iv,String sessionKey);
+	public ScWeChat  getUnionId(String encryptedData,String iv,String sessionKey);
 }

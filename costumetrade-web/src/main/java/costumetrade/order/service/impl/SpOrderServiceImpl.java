@@ -226,10 +226,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 			
 			
 		}
-		if(wechat1.getStoreid().equals(order.getBuyerstoreid())){
-			//采购单计算平均成本价
-			setCustPrice(detail, order, openid);
-		}
+		
 		
 		if(StringUtil.isNotBlank(order.getSellerstoreid())){
 			ssStoDetailMapper.saveDetailStore(detail,order.getSellerstoreid());
@@ -293,7 +290,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 			for(SsPrice price : prices){
 				for(SsStoDetail detail : ssStoDetails){
 					if(detail.getProductid().equals(price.getProductid())){
-						price.setCustPrice(detail.getCount().multiply(detail.getPrice()).add(price.getCustPrice()).divide(detail.getCount().add(BigDecimal.ONE)));
+						price.setCustPrice((detail.getAverage().add(price.getCustPrice())).divide((detail.getCount().add(BigDecimal.ONE)), 2, BigDecimal.ROUND_HALF_UP));
 						updates.add(price);	
 					}
 				}
@@ -512,7 +509,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 					if(stocks != null && stocks.size()>0 ){
 						stockBuyyer = stocks.get(0);
 					}
-					if(stockBuyyer == null ){
+					if(StringUtil.isBlank(stockBuyyer.getStoreid()) ){
 						for(SpProduct p : product){
 							if(p.getId().equals(ssStocks.get(i).getProductid())){
 								p.setPurchaseprice(ssStoDetails.get(i).getPrice());
@@ -529,7 +526,13 @@ public class SpOrderServiceImpl implements SpOrderService{
 					}
 				}
 			}
-		
+			if(param.getOperate() == 5){
+				if(wechat.getStoreid().equals(param.getBuyerstoreid())){
+					//采购单计算平均成本价
+					setCustPrice(ssStoDetails, null, param.getOpenid());
+				}
+			}
+			
 		
 		}else{
 			operate =false;

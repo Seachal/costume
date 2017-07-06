@@ -96,17 +96,17 @@ public class SpProductController {
 	
 	@RequestMapping("/enterShareProducts")
 	@ResponseBody
-	public ApiResponse enterShareProducts(String openid) {
+	public ApiResponse enterShareProducts(ProductQuery query) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		
-		if(StringUtils.isBlank(openid)){
+		if(StringUtils.isBlank(query.getOpenid())){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		List<SpProduct> product = spProductService.enterShareProducts(openid);
+		List<SpProduct> product = spProductService.enterShareProducts(query);
 		return  ApiResponse.getInstance(product);
 	}
 	

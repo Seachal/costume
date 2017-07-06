@@ -61,42 +61,11 @@ public class SpUserController {
 		JSONObject json = JSON.parseObject(openIdAndKey);
 		String openid = json.getString("openid");
 		System.out.println("欢迎进入小程序"+openIdAndKey);
-		ScWeChat chat = null;
+	
 		ScUserQuery resultQuery = new ScUserQuery();
 		resultQuery.setSessionKey(json.getString("session_key"));
-		StoreQuery query = new StoreQuery();
-		if(openid!=null){
-			chat = spUserService.login(openid);
-			query.setOpenid(openid);
-			if(chat != null){
-				query.setStoreId(chat.getStoreid());
-				if(StringUtil.isNotBlank(chat.getStoreid())){
-					if(chat.getEmpid()!=null){
-						resultQuery.setUserIdentity(3);//员工身份
-						resultQuery.setEmpId(chat.getEmpid());
-					}else{
-						resultQuery.setUserIdentity(1);//店家身份
-					}
-					resultQuery.setStoreId(chat.getStoreid());
-				}else{
-					resultQuery.setUserIdentity(2);//普通消费者
-					resultQuery.setUserid(chat.getUserid());
-				}
-			}
-			query = spUserService.getStores(query);
-			resultQuery.setQuery(query);
-			SpEmployee employee = spEmployeeService.getEmployeePrivilege(openid);
-			SpEmployee e = new SpEmployee();
-			if(employee!=null){
-				e.setPrivilegeEmployees(employee.getPrivilegeEmployees());
-				e.setZeroPrice(employee.getZeroPrice());
-				e.setDiscount(employee.getDiscount());
-				e.setModifyPrice(employee.getModifyPrice());
-			}
-			resultQuery.setEmployee(e);
-			
-		}
-		if(chat == null){
+		resultQuery.setOpenid(openid);
+		if(resultQuery == null){
 			result.setData(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
@@ -146,8 +115,39 @@ public class SpUserController {
 			result.setMsg(ResponseInfo.LACK_PARAM.name());
 			return result;
 		}
-		spUserService.getUnionId(encryptedData,iv,sessionKey);
-		return  ApiResponse.getInstance(result);
+		ScWeChat wechat = spUserService.getUnionId(encryptedData,iv,sessionKey);
+		ScUserQuery resultQuery = new ScUserQuery();
+		StoreQuery query = new StoreQuery();
+		if(wechat != null && StringUtil.isNotBlank(wechat.getOpenid())){
+			query.setOpenid(wechat.getOpenid());
+			query.setStoreId(wechat.getStoreid());
+			if(StringUtil.isNotBlank(wechat.getStoreid())){
+				if(wechat.getEmpid()!=null){
+					resultQuery.setUserIdentity(3);//员工身份
+					resultQuery.setEmpId(wechat.getEmpid());
+				}else{
+					resultQuery.setUserIdentity(1);//店家身份
+				}
+				resultQuery.setStoreId(wechat.getStoreid());
+			}else{
+				resultQuery.setUserIdentity(2);//普通消费者
+				resultQuery.setUserid(wechat.getUserid());
+			}
+		}
+		query = spUserService.getStores(query);
+		resultQuery.setQuery(query);
+		SpEmployee employee = spEmployeeService.getEmployeePrivilege(wechat.getOpenid());
+		SpEmployee e = new SpEmployee();
+		if(employee!=null){
+			e.setPrivilegeEmployees(employee.getPrivilegeEmployees());
+			e.setZeroPrice(employee.getZeroPrice());
+			e.setDiscount(employee.getDiscount());
+			e.setModifyPrice(employee.getModifyPrice());
+		}
+		resultQuery.setEmployee(e);
+			
+		
+		return  ApiResponse.getInstance(resultQuery);
 	}
 	@RequestMapping("/saveAddress")
 	@ResponseBody

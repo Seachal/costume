@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 import costumetrade.common.service.GeneratorBaseTable;
+import costumetrade.common.util.StringUtil;
 import costumetrade.order.domain.SpPBrand;
 import costumetrade.order.domain.SpPCate;
 import costumetrade.order.mapper.SpPBrandMapper;
@@ -111,7 +112,7 @@ public class SpStoreServiceImpl implements SpStoreService{
 		    	ScWeChat record = new ScWeChat();
 	    		record = scWeChatMapper.selectByOpenId(openid);
 	    		
-	    		if(record !=null){
+	    		if(record !=null&&StringUtil.isBlank(record.getStoreid())){
 			    	store.setId(record.getUserid());
 			    	store.setCreateTime(new Date());
 			    	store.setName(name);
@@ -119,11 +120,9 @@ public class SpStoreServiceImpl implements SpStoreService{
 			    	store.setStatus(0);
 			    	spStoreMapper.insertSelective(store);
 	    		}
-		    	
-		    	
 //		    	//初始化高级设置数据
 //		    	GeneratorBaseTable.generatorTable(store.getId()+"");
-		    	if(store.getId()!=null){
+		    	if(StringUtil.isNotBlank(store.getId())){
 		    		if(record !=null){
 		    			record.setUserid("");
 		    			record.setStoreid(store.getId());
@@ -140,7 +139,7 @@ public class SpStoreServiceImpl implements SpStoreService{
 		    		SpPCate spPCate = new SpPCate();
 		    		spPCate.setStoreId(store.getId());
 		    		spPCate.setCatename("服装");
-		    		spPCate.setStauts(0);
+		    		spPCate.setStatus(0);
 					//保存种类
 		    		spPCateMapper.insert(spPCate ) ;
 		    		//保存高级设置中的客户类型

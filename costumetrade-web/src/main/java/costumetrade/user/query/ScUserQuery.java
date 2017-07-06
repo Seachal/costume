@@ -41,6 +41,8 @@ public class ScUserQuery extends Entity {
     
     private Integer empId;
     
+    private String openid ;
+    
 
     private static final long serialVersionUID = 1L;
 
@@ -132,6 +134,14 @@ public class ScUserQuery extends Entity {
 
 	public void setEmpId(Integer empId) {
 		this.empId = empId;
+	}
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
 	}
     
     

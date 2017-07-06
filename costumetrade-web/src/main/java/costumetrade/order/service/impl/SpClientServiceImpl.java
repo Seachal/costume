@@ -308,19 +308,24 @@ public class SpClientServiceImpl implements SpClientService{
 	}
 	@Override
 	public Object scanQRCodeOk(QRCodeScanParam param) {
-		
-		
 		Object object = null;
 		if(param.getType()==1||param.getType()==2||param.getType()==3){
 			SpClient client = spClientMapper.selectByPrimaryKey(param.getId());
 			if(client!=null && StringUtil.isNotBlank(client.getOpenid())){
-				client = new SpClient();
-				client.setOpenid(client.getOpenid());
-				List<SpClient> clients = spClientMapper.select(client, null);
+				SpClient cl = new SpClient();
+				cl.setStoreId(param.getStoreId());
+				cl.setType(param.getType()+"");
+				cl.setOpenid(client.getOpenid());
+				List<SpClient> clients = spClientMapper.select(cl, null);
 				if(clients!=null&& clients.size()>0){
-					if(clients.size()>1){//清楚多余新增的数据
+					if(clients.size()>=1){//清楚多余新增的数据
 						object = clients.get(0);
 						clients.remove(0);
+					}
+					if(clients.size()>0){
+						for(SpClient c:clients){
+							spClientMapper.deleteById(c.getId());
+						}
 					}
 				}
 			}
@@ -331,7 +336,21 @@ public class SpClientServiceImpl implements SpClientService{
 			employee.setId(Integer.parseInt(param.getId()));
 			employee = spEmployeeMapper.selectByPrimaryKey(employee);
 			if(employee!=null){
-				
+				SpEmployee e = new SpEmployee();
+				e.setStoreId(param.getStoreId());
+				e.setOpenid(employee.getOpenid());
+				List<SpEmployee> employees = spEmployeeMapper.selects(e);
+				if(employees!=null&& employees.size()>0){
+					if(employees.size()>=1){//清楚多余新增的数据
+						object = employees.get(0);
+						employees.remove(0);
+					}
+					if(employees.size()>0){
+						for(SpEmployee c:employees){
+							spEmployeeMapper.deleteByPrimaryKey(c);
+						}
+					}
+				}
 			}
 		}
 		//删除未扫描成功的用户
@@ -384,11 +403,12 @@ public class SpClientServiceImpl implements SpClientService{
 		//设置卖家 买家
 		OrderQuery q = setSellerAndBuyer(query);
 		if(query.getTimeFrom() == null||StringUtils.isBlank(query.getTimeFrom().toString())){
-			
 	        q.setTimeFrom(new Date());
 		}
 		SpClient client = spClientMapper.selectByPrimaryKey(query.getClientId());
-		
+		if(client==null){
+			return null;
+		}
 		//获取截止到时间的收款，欠款总数
 		List<OrderQuery> querys = ssStoOrderMapper.financialCounting(query);
 		OrderQuery orderQuery = querys.get(0);
@@ -414,7 +434,6 @@ public class SpClientServiceImpl implements SpClientService{
 		dict.setDictGroup("PAY_TYPE");
 		dict.setStoreId(client.getStoreId());
 		List<SsDataDictionary> dicts = ssDataDictionaryMapper.select(dict);
-		
 		
 		pay.setDictionarys(dicts);
 		return pay;

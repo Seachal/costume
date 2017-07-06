@@ -23,4 +23,6 @@ public interface SpEmployeeMapper {
     List<SpEmployee>  getAllEmployees(String subId);
     
     int  deleteEmployee(SpEmployee record );
+    
+    List<SpEmployee>  selects(SpEmployee record);
 }
