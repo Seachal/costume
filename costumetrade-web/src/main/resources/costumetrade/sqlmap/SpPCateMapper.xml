@@ -72,9 +72,9 @@
       <if test="storeId != null">
         storeId,
       </if>
-      <if test="isDefault != null">
+     
         isDefault,
-      </if>
+     
       status,
       <if test="fastcode != null">
         fastcode,

@@ -53,11 +53,10 @@
 		from sp_client
 		where id = #{clientId,jdbcType=VARCHAR}
 	</select>
-	<select id="deleteById" parameterType="java.lang.String"
-		resultMap="BaseResultMap">
+	<delete id="deleteById" parameterType="java.lang.String">
 		delete from sp_client
 		where id = #{clientId,jdbcType=VARCHAR}
-	</select>
+	</delete>
 
 	<select id="select" 
 		resultMap="BaseResultMap">
@@ -129,7 +128,9 @@
 		<if test="client.pointsOp == 'desc'">
 			order by points desc
 		</if>
-		ORDER BY createTime ASC
+		<if test="page ==null">
+		ORDER BY create_time ASC
+		</if>
 		<if test="page !=null">
 		LIMIT #{page.startRow},#{page.pageSize}
 		</if>

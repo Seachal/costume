@@ -68,7 +68,7 @@
       </if>
       <if test="item.firsthPrice != null">
         firsthPrice = #{item.firsthPrice,jdbcType=DECIMAL},
-      </if>custPrice
+      </if>
         modify_time = now(),
       <if test="item.custPrice != null">
         custPrice = #{item.custPrice,jdbcType=DECIMAL},
@@ -107,7 +107,7 @@
   </delete>
   <insert id="insert" parameterType="costumetrade.order.domain.SsPrice">
     insert into ss_pprice (id, storeId, productId, 
-      purchasePrice, tagPrice,firsthPrice, secondPrice, thirdPrice, fourthPrice,fifthPrice,custPrice， modify_time, 
+      purchasePrice, tagPrice,firsthPrice, secondPrice, thirdPrice, fourthPrice,fifthPrice,custPrice, modify_time, 
       modify_by, create_time, create_by
       )
     values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=VARCHAR}, #{productid,jdbcType=VARCHAR}, 
@@ -150,9 +150,7 @@
       <if test="fifthPrice != null">
         fifthPrice,
       </if>
-      <if test="custPrice != null">
         custPrice,
-      </if>
       <if test="modifyTime != null">
         modify_time,
       </if>

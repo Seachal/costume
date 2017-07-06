@@ -54,6 +54,7 @@
 	<select id="avePriceByProducts" parameterType="costumetrade.order.domain.SsStoOrder" resultMap="BaseResultMap">
 		SELECT
 		SUM(detail.price*detail.count)/SUM(detail.count) as average,
+		sum(detail.count) as count,
 		detail.productId,
 		detail.productName AS productName
 		FROM
