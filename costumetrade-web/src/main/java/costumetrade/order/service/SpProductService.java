@@ -7,6 +7,7 @@ import costumetrade.order.domain.SsProductFile;
 import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStock;
 import costumetrade.order.query.ProductQuery;
+import costumetrade.order.query.StockQuery;
 
 
 public interface SpProductService {
@@ -51,7 +52,7 @@ public interface SpProductService {
 	 * 获取商品库存
 	 * 
 	 * */
-	public List<SsStock> takingStock(SpProduct product);
+	public StockQuery takingStock(SpProduct product);
 	/**
 	 * 保存商品库存
 	 * 

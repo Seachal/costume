@@ -68,10 +68,10 @@ public class SpUserServiceImpl implements SpUserService{
 	private SsDataDictionaryMapper ssDataDictionaryMapper;
 	
 	@Override
-	public ScWeChat login(String openId) {
+	public ScWeChat login(String openId,String unionid) {//openid 值和unionID 互换
 		ScWeChat scWeChat =new ScWeChat();
-		ScWeChat wechat = scWeChatMapper.selectByOpenId(openId);
-		//判断是否是平台的新用户，是新用户保存信息，不是，返回用户信息
+		ScWeChat wechat = scWeChatMapper.selectByUnionid(unionid);
+		//判断是否是平台的新用户，是新用户保存信息，不是，返回用户信息  
 		Integer userid =0;
 		int weId = 0;
 		ScWeChat we = new ScWeChat();
@@ -81,11 +81,12 @@ public class SpUserServiceImpl implements SpUserService{
 		SpEmployee semployee = spEmployeeMapper.selectByPrimaryKey(employee);//查询该用户是否是店员，是店员就绑定empid
 		if(wechat == null ){
 			we.setOpenid(openId);
+			we.setUnionid(unionid);
 			we.setCreatetime(new Date());
 			if(semployee == null){//不存在店员，就保存新增用户信息
 				String userInfo;
 				try {
-					userInfo = weChatService.getWeChatUserInfo(openId);
+					userInfo = weChatService.getWeChatUserInfo(unionid);
 					if(userInfo !=null){
 						JSONObject json = JSON.parseObject(userInfo);
 				    	String nickName = json.getString("nickname"); 
@@ -377,9 +378,8 @@ public class SpUserServiceImpl implements SpUserService{
 		    	String nickName = json.getString("nickName");
 		    	String avatarUrl = json.getString("avatarUrl");
 		    	//把openid字段保存unionID
-		    	login(unionId);
+		    	wechat = login(unionId,openId);
 		    	
-		    	wechat = scWeChatMapper.selectByOpenId(unionId);
 		    	if(wechat !=null && wechat.getId()!=null){
 	    			//把昵称 头像保存到店铺or 用户
 	    			if(StringUtil.isNotBlank(wechat.getStoreid())){

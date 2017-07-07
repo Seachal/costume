@@ -18,4 +18,6 @@ public interface ScPrinterInfoMapper {
     int updateByPrimaryKeyWithBLOBs(ScPrinterInfo record);
 
     int updateByPrimaryKey(ScPrinterInfo record);
+    
+    ScPrinterInfo select(ScPrinterInfo record);
 }

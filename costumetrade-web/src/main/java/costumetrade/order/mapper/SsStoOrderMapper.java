@@ -22,7 +22,7 @@ public interface SsStoOrderMapper {
 
     SsStoOrder selectByPrimaryKey(Integer id);
     
-    SsStoOrder selectSupplierByProduct(SpProduct product);
+    List<SsStoOrder> selectSupplierByProduct(SpProduct product);
     
     SsStoOrder selectByOrderNo(@Param("orderNo")String orderNo,@Param("storeId")String storeId);
     

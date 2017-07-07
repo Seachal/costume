@@ -25,6 +25,8 @@ public class SsStoOrder extends Entity {
     private String buyer;
     
     private String seller;
+    
+    private String photo;
     /**
      *  经办人
      */
@@ -602,6 +604,14 @@ public class SsStoOrder extends Entity {
 
 	public void setIdArray(List<String> idArray) {
 		this.idArray = idArray;
+	}
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
 	}
     
     

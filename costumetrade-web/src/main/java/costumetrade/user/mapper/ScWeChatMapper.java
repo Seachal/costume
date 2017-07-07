@@ -18,4 +18,6 @@ public interface ScWeChatMapper {
     int updateByPrimaryKey(ScWeChat record);
     
     ScWeChat selectByOpenId(String openid);
+    
+    ScWeChat selectByUnionid(String unionid);
 }

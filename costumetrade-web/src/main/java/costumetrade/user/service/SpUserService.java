@@ -13,7 +13,7 @@ public interface SpUserService {
 	/**
 	 * 小程序加载页面登录
 	 * */
-	public ScWeChat login(String openId);
+	public ScWeChat login(String openId,String unionid);
 	/**
 	 * 保存个人中心信息
 	 * */

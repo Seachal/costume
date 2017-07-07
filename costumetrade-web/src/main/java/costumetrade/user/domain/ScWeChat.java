@@ -39,6 +39,8 @@ public class ScWeChat extends Entity {
      *  普通用户
      */
     private String userid;
+    
+    private String unionid;
 
     private static final long serialVersionUID = 1L;
 
@@ -97,4 +99,14 @@ public class ScWeChat extends Entity {
     public void setUserid(String userid) {
         this.userid = userid;
     }
+
+	public String getUnionid() {
+		return unionid;
+	}
+
+	public void setUnionid(String unionid) {
+		this.unionid = unionid;
+	}
+    
+    
 }

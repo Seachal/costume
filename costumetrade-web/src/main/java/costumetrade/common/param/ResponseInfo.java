@@ -36,6 +36,7 @@ public enum ResponseInfo {
 	SCAN_EMP_EXCEPTION(1019,"未扫描二维码或者该员工已存在"),
 	RETURN_EXCEPTION(1018,"不允许作废"),
 	ORDER_EXCEPTION(1020,"自家店铺不能下单"),
+	CHANGE_EXCEPTION(1021,"转换格式失败"),
 	;
 
 	public final int code;

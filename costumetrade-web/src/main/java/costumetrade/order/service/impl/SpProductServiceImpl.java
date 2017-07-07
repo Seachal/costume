@@ -51,19 +51,21 @@ import costumetrade.order.mapper.SsStoOrderMapper;
 import costumetrade.order.mapper.SsStockMapper;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.query.Rules;
+import costumetrade.order.query.StockQuery;
 import costumetrade.order.service.SpProductService;
 import costumetrade.order.service.WeChatService;
 import costumetrade.user.domain.PatternPrice;
-import costumetrade.user.domain.PriceJson;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpPrivilege;
 import costumetrade.user.domain.SpStore;
+import costumetrade.user.domain.SpUser;
 import costumetrade.user.domain.SsDataDictionary;
 import costumetrade.user.mapper.ScWeChatMapper;
 import costumetrade.user.mapper.SpCustProdPriceMapper;
 import costumetrade.user.mapper.SpPrivilegeMapper;
 import costumetrade.user.mapper.SpStoreMapper;
+import costumetrade.user.mapper.SpUserMapper;
 import costumetrade.user.mapper.SsDataDictionaryMapper;
 import costumetrade.user.service.SpUserService;
 
@@ -112,7 +114,10 @@ public class SpProductServiceImpl implements SpProductService{
 	private SsStoOrderMapper ssStoOrderMapper;
 	@Autowired
 	private SpPrivilegeMapper spPrivilegeMapper;
-	@Autowired ScLogisticFeeMapper scLogisticFeeMapper;
+	@Autowired 
+	private ScLogisticFeeMapper scLogisticFeeMapper;
+	@Autowired
+	private SpUserMapper spUserMapper;
 	
 	@Override
 	public List<ProductQuery> selectProducts(ProductQuery productQuery) {
@@ -717,7 +722,8 @@ public class SpProductServiceImpl implements SpProductService{
 	}
 
 	@Override
-	public List<SsStock> takingStock(SpProduct product) {
+	public StockQuery takingStock(SpProduct product) {
+		StockQuery result = new StockQuery();
 		//根据storeiD查询集团的storeId
 		SpStore store = spStoreMapper.selectByPrimaryKey(product.getStoreId());
 		List<SpStore> stores = new  ArrayList<SpStore>();
@@ -748,17 +754,12 @@ public class SpProductServiceImpl implements SpProductService{
 			stock.setOtherStoreIds(otherStoreIds);
 		}
 		stocks = ssStockMapper.select(stock);
-		List<SsStock> stockList = new ArrayList<SsStock>();
+		result.setStocks(stocks);
 		//查询对应的供货商
-		SsStoOrder order = ssStoOrderMapper.selectSupplierByProduct(product);
-		if(stocks.size()>0&&order!=null){
-			for(SsStock s : stocks){
-				s.setSupplierStoreId(order.getSellerstoreid());
-				stockList.add(s);
-			}
-		}
-		
-		return stockList;
+		List<SsStoOrder> sellers = ssStoOrderMapper.selectSupplierByProduct(product);
+		result.setSellers(sellers);
+		result.setId(product.getId());
+		return result;
 		
 		
 	}
@@ -822,23 +823,23 @@ public class SpProductServiceImpl implements SpProductService{
 			JSONObject json = JSON.parseObject(openIdAndKey);
 			String openid = json.getString("openid");
 			ScWeChat chat = null;
-			if(openid!=null){//进入小程序认证，
-				chat = spUserService.login(openid);
+			if(StringUtil.isNotBlank(openid)){//进入小程序认证，
+				//chat = spUserService.login(openid);
+				chat =spUserService.login(null,openid);//微信绑定用户表 openid字段和unionID字段值调换
 			}
-			//查询分享到对方的用户在商铺里面是什么客户级别，根据客户级别显示销售价，如果不属于客户，就默认最低客户级别，显示最高销售价
-			if(chat==null||StringUtil.isBlank(chat.getUserid())){
-				return null;
+			if(chat!=null&&StringUtil.isNotBlank(chat.getOpenid())){
+				SpClient client = new SpClient();
+				client.setStoreId(productQuery.getStoreId());
+				client.setType(1+"");
+				client.setOpenid(chat.getOpenid());
+				List<SpClient> clients = spClientMapper.select(client,null);
+				
+				if(clients.size()>0){
+					client = clients.get(0);
+					custTypeCode = Integer.parseInt(client.getCate());
+				}
 			}
-			SpClient client = new SpClient();
-			client.setStoreId(productQuery.getStoreId());
-			client.setType(1+"");
-			client.setUserId(chat.getUserid());
-			List<SpClient> clients = spClientMapper.select(client,null);
 			
-			if(clients.size()>0){
-				client = clients.get(0);
-				custTypeCode = Integer.parseInt(client.getCate());
-			}
 		}
 		List<ProductQuery> products = new ArrayList<ProductQuery>();
 		productQuery.setCode(null);
@@ -851,13 +852,31 @@ public class SpProductServiceImpl implements SpProductService{
 		maps= spProductMapper.selectProducts(productQuery,null);
 		//全选标签控制,先查询所有符合条件的
 		List<Map<String,Object>> maps1 = new ArrayList<Map<String,Object>>();
-		if(maps!=null&& maps.size()>0&&idArray!=null&&idArray.size()>0){
-			for(Map<String, Object> map : maps){
-				for(String id: idArray){
-					if(!map.get("id").equals(id)){
-						maps1.add(map);
+		if(maps!=null&& maps.size()>0){
+			outer:for(Map<String, Object> map : maps){
+				if(idArray!=null&&idArray.size()>0){
+					boolean b =false;
+					for(String id: idArray){
+						if((!id.equals(map.get("id"))&&productQuery.getCheckAllTag())||(id.equals(map.get("id"))&&!productQuery.getCheckAllTag())){
+							maps1.add(map);
+						}
+						if(productQuery.getCheckAllTag()&&id.equals(map.get("id"))){
+							b=true;
+						}
 					}
+					if(b&&maps1.size()>0){
+						for(int i=0 ;i<maps1.size();i++){
+							if(map.get("id").equals(maps1.get(i).get("id"))){
+								products.remove(i);
+								break outer;
+							}
+						}
+						
+					}
+				}else{
+					maps1.add(map);
 				}
+				
 			}
 		}
 		
@@ -981,6 +1000,16 @@ public class SpProductServiceImpl implements SpProductService{
 							}
 							
 						}
+					}else{
+						SpProduct product = new SpProduct();
+						product.setId((String) map.get("id"));
+						String image = (String) map.get("image");
+						if(StringUtil.isNotBlank(image)){
+							product.setImage(image);
+						}else{
+							product.setImage("");
+						}
+						products.add(product);
 					}
 					
 				

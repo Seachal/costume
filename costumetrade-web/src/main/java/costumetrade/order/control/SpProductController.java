@@ -29,6 +29,7 @@ import costumetrade.order.domain.SsProductFile;
 import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStock;
 import costumetrade.order.query.ProductQuery;
+import costumetrade.order.query.StockQuery;
 import costumetrade.order.service.SpProductService;
 import costumetrade.order.service.WeChatService;
 import costumetrade.user.service.SsDataDictionaryService;
@@ -294,7 +295,7 @@ public class SpProductController {
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 	
-		List<SsStock> stocks = spProductService.takingStock(product);
+		StockQuery stocks = spProductService.takingStock(product);
 		if(stocks == null){
 			result.setCode(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);

@@ -19,6 +19,12 @@ public class ScPrinterInfo extends Entity {
      *  打印机编码
      */
     private String printid;
+    
+    private String printType;
+    
+    private String printEnable;
+    
+    private String printUserId;
 
     /**
      *  店铺logo
@@ -162,4 +168,30 @@ public class ScPrinterInfo extends Entity {
     public void setBankmessage(String bankmessage) {
         this.bankmessage = bankmessage == null ? null : bankmessage.trim();
     }
+
+	public String getPrintType() {
+		return printType;
+	}
+
+	public void setPrintType(String printType) {
+		this.printType = printType;
+	}
+
+	public String getPrintEnable() {
+		return printEnable;
+	}
+
+	public void setPrintEnable(String printEnable) {
+		this.printEnable = printEnable;
+	}
+
+	public String getPrintUserId() {
+		return printUserId;
+	}
+
+	public void setPrintUserId(String printUserId) {
+		this.printUserId = printUserId;
+	}
+    
+    
 }
