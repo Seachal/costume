@@ -7,6 +7,7 @@
 		<result column="buyerStoreId" jdbcType="VARCHAR" property="buyerstoreid" />
 		<result column="buyer" jdbcType="VARCHAR" property="buyer" />
 		<result column="seller" jdbcType="VARCHAR" property="seller" />
+		<result column="photo" jdbcType="VARCHAR" property="photo" />
 		<result column="operator" jdbcType="VARCHAR" property="operator" />
 		<result column="payOrderNo" jdbcType="VARCHAR" property="payorderno" />
 		<result column="refundDate" jdbcType="TIMESTAMP" property="refunddate" />
@@ -75,15 +76,20 @@
 	</select>
 
 	<select id="selectSupplierByProduct" parameterType="costumetrade.order.domain.SpProduct"
-		resultType="costumetrade.order.domain.SsStoOrder">
-		SELECT MAX(d.createTime) as
-		createTime,s.sellerStoreId,s.buyerStoreId
+		resultMap="BaseResultMap">
+		SELECT DISTINCT s.sellerStoreId,
+		store.name as seller,
+		store.storePhoto as photo
 		FROM ss_stodetail
 		d
 		LEFT JOIN ss_stoorder s ON
 		s.payOrderNo = d.orderId
-		WHERE
-		d.productId=#{id}
+		LEFT JOIN sp_store store ON store.id = s.sellerStoreId
+		and d.productId=#{id}
+		and s.sellerStoreId is not null
+		<if test="storeId!=null">
+		and s.buyerStoreId=#{storeId}
+		</if>
 	</select>
 	<!-- 查询普通用户的采购单 -->
 	<select id="selectByOrderMemberCount" resultMap="CountResultMap">

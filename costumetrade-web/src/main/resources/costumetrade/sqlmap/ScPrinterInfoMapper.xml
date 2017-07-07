@@ -13,13 +13,16 @@
     <result column="image_alipay" jdbcType="VARCHAR" property="imageAlipay" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="createBy" jdbcType="VARCHAR" property="createby" />
+    <result column="printType" jdbcType="VARCHAR" property="printType" />
+    <result column="printEnable" jdbcType="VARCHAR" property="printEnable" />
+    <result column="printUserId" jdbcType="VARCHAR" property="printUserId" />
   </resultMap>
   <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="costumetrade.user.domain.ScPrinterInfo">
     <result column="bankMessage" jdbcType="LONGVARCHAR" property="bankmessage" />
   </resultMap>
   <sql id="Base_Column_List">
     id, storeId, printId, image_logo, image_code, isPrintCode, isPrintLogo, image_wechat, 
-    image_alipay, create_time, createBy
+    image_alipay, create_time, createBy,printType,printEnable,printUserId
   </sql>
   <sql id="Blob_Column_List">
     bankMessage
@@ -32,18 +35,36 @@
     from sc_printer_info
     where storeId = #{storeId,jdbcType=VARCHAR}
   </select>
+  
+  <select id="select" parameterType="costumetrade.user.domain.ScPrinterInfo" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sc_printer_info
+    where 1=1
+    <if test="storeid!=null">
+    and storeId = #{storeid,jdbcType=VARCHAR}
+    </if>
+    <if test="printid!=null">
+    and printId = #{printid,jdbcType=VARCHAR}
+    </if>
+    <if test="printEnable!=null">
+    and printEnable = #{printEnable}
+    </if>
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sc_printer_info
     where id = #{id,jdbcType=INTEGER}
   </delete>
   <insert id="insert" parameterType="costumetrade.user.domain.ScPrinterInfo">
-    insert into sc_printer_info (id, storeId, printId, 
-      image_logo, image_code, isPrintCode, 
+    insert into sc_printer_info (id, storeId, printId, printType,printEnable,
+      image_logo, image_code, isPrintCode, printUserId,
       isPrintLogo, image_wechat, image_alipay, 
       create_time, createBy, bankMessage
       )
-    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=VARCHAR}, #{printid,jdbcType=VARCHAR}, 
-      #{imageLogo,jdbcType=VARCHAR}, #{imageCode,jdbcType=VARCHAR}, #{isprintcode,jdbcType=INTEGER}, 
+    values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=VARCHAR}, #{printid,jdbcType=VARCHAR}, #{printType,jdbcType=VARCHAR},#{printEnable,jdbcType=VARCHAR},
+      #{imageLogo,jdbcType=VARCHAR}, #{imageCode,jdbcType=VARCHAR}, #{isprintcode,jdbcType=INTEGER}, #{printUserId,jdbcType=INTEGER},
       #{isprintlogo,jdbcType=INTEGER}, #{imageWechat,jdbcType=VARCHAR}, #{imageAlipay,jdbcType=VARCHAR}, 
       #{createTime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR}, #{bankmessage,jdbcType=LONGVARCHAR}
       )
@@ -59,6 +80,15 @@
       </if>
       <if test="printid != null">
         printId,
+      </if>
+      <if test="printType != null">
+        printType,
+      </if>
+       <if test="printEnable != null">
+        printEnable,
+      </if>
+      <if test="printUserId != null">
+        printUserId,
       </if>
       <if test="imageLogo != null">
         image_logo,
@@ -98,6 +128,15 @@
       <if test="printid != null">
         #{printid,jdbcType=VARCHAR},
       </if>
+      <if test="printType != null">
+        #{printType,jdbcType=VARCHAR},
+      </if>
+       <if test="printEnable != null">
+        #{printEnable},
+      </if>
+      <if test="printUserId != null">
+        #{printUserId},
+      </if>
       <if test="imageLogo != null">
         #{imageLogo,jdbcType=VARCHAR},
       </if>
@@ -136,6 +175,15 @@
       <if test="printid != null">
         printId = #{printid,jdbcType=VARCHAR},
       </if>
+      <if test="printType != null">
+        printType = #{printType,jdbcType=VARCHAR},
+      </if>
+      <if test="printEnable != null">
+        printEnable =#{printEnable},
+      </if>
+      <if test="printUserId != null">
+        printUserId =#{printUserId},
+      </if>
       <if test="imageLogo != null">
         image_logo = #{imageLogo,jdbcType=VARCHAR},
       </if>
@@ -170,6 +218,7 @@
     update sc_printer_info
     set storeId = #{storeid,jdbcType=VARCHAR},
       printId = #{printid,jdbcType=VARCHAR},
+      printType = #{printType,jdbcType=VARCHAR},
       image_logo = #{imageLogo,jdbcType=VARCHAR},
       image_code = #{imageCode,jdbcType=VARCHAR},
       isPrintCode = #{isprintcode,jdbcType=INTEGER},
@@ -185,6 +234,7 @@
     update sc_printer_info
     set storeId = #{storeid,jdbcType=VARCHAR},
       printId = #{printid,jdbcType=VARCHAR},
+       printType = #{printType,jdbcType=VARCHAR},
       image_logo = #{imageLogo,jdbcType=VARCHAR},
       image_code = #{imageCode,jdbcType=VARCHAR},
       isPrintCode = #{isprintcode,jdbcType=INTEGER},

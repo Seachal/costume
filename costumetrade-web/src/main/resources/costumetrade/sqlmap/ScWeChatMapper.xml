@@ -9,9 +9,10 @@
     <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
     <result column="createBy" jdbcType="VARCHAR" property="createby" />
     <result column="userId" jdbcType="VARCHAR" property="userid" />
+    <result column="unionid" jdbcType="VARCHAR" property="unionid" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, openId, storeId, empId, createTime, createBy, userId
+    id, openId, storeId, empId, createTime, createBy, userId,unionid
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select 
@@ -25,6 +26,13 @@
     from sc_wechat_bind
     where openId = #{openid,jdbcType=VARCHAR}
   </select>
+  
+  <select id="selectByUnionid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sc_wechat_bind
+    where unionid = #{unionid,jdbcType=VARCHAR}
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sc_wechat_bind
     where id = #{id,jdbcType=INTEGER}
@@ -32,10 +40,10 @@
   <insert id="insert" parameterType="costumetrade.user.domain.ScWeChat">
     insert into sc_wechat_bind (id, openId, storeId, 
       empId, createTime, createBy, 
-      userId)
+      userId,unionid)
     values (#{id,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{storeid,jdbcType=VARCHAR}, 
       #{empid,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR}, 
-      #{userid,jdbcType=VARCHAR})
+      #{userid,jdbcType=VARCHAR},#{unionid,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.user.domain.ScWeChat">
   	<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
@@ -64,6 +72,9 @@
       <if test="userid != null">
         userId,
       </if>
+      <if test="unionid != null">
+        unionid,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -86,6 +97,9 @@
       </if>
       <if test="userid != null">
         #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="unionid != null">
+        #{unionid,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -110,6 +124,9 @@
       <if test="userid != null">
         userId = #{userid,jdbcType=VARCHAR},
       </if>
+      <if test="unionid != null">
+        unionid = #{unionid,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -120,6 +137,7 @@
       empId = #{empid,jdbcType=INTEGER},
       createTime = #{createtime,jdbcType=TIMESTAMP},
       createBy = #{createby,jdbcType=VARCHAR},
+      unionid = #{unionid,jdbcType=VARCHAR},
       userId = #{userid,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
