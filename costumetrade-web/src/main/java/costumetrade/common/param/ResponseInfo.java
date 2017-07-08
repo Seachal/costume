@@ -37,6 +37,7 @@ public enum ResponseInfo {
 	RETURN_EXCEPTION(1018,"不允许作废"),
 	ORDER_EXCEPTION(1020,"自家店铺不能下单"),
 	CHANGE_EXCEPTION(1021,"转换格式失败"),
+	PRINT_EXCEPTION(1022,"该打印机未启用"),
 	;
 
 	public final int code;

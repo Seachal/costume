@@ -13,7 +13,7 @@ public class WebSocketConfig implements WebSocketConfigurer{
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(systemWebSocketHandler(),"/socketHander").addInterceptors(new HandshakeInterceptor()).setAllowedOrigins("wss://touchart.cn");  
+		registry.addHandler(systemWebSocketHandler(),"/socketHander").addInterceptors(new HandshakeInterceptor()).setAllowedOrigins("ws://192.168.2.221");  
         //registry.addHandler(systemWebSocketHandler(),"/webSocketServer/sockjs").setAllowedOrigins("*").withSockJS();
 	}
 	

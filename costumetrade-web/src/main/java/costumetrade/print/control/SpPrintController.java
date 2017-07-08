@@ -62,6 +62,9 @@ public class SpPrintController {
 		if(StringUtil.isBlank(data)){
 			result.setData(ResponseInfo.CHANGE_EXCEPTION.code);
 			result.setMsg(ResponseInfo.CHANGE_EXCEPTION.msg);
+		}else if("1".equals(data)){
+			result.setData(ResponseInfo.PRINT_EXCEPTION.code);
+			result.setMsg(ResponseInfo.PRINT_EXCEPTION.msg);
 		}else{
 			result.setData(data);
 		}

@@ -23,6 +23,7 @@ public interface SpClientMapper {
     
     List<SpClient> select(@Param("client")SpClient client,@Param("page") Page page);
     
-    List<SpClient> selectDistincts(@Param("client")SpClient client
-);
+    List<SpClient> selectDistincts(@Param("client")SpClient client);
+    
+   
 }

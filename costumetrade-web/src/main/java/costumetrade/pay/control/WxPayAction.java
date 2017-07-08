@@ -38,6 +38,8 @@ import costumetrade.pay.res.ResCloseOrder;
 import costumetrade.pay.service.impl.TradeInfoService;
 import costumetrade.pay.utils.IpUtils;
 import costumetrade.pay.utils.WxPayPubHelper;
+import costumetrade.user.domain.ScWeChat;
+import costumetrade.user.mapper.ScWeChatMapper;
 import costumetrade.user.service.SpStoreService;
 
 
@@ -64,6 +66,8 @@ public class WxPayAction  {
 	private TradeInfoService tradeInfoService;
 	@Autowired
 	private SpStoreService spStoreService;
+	@Autowired 
+	private ScWeChatMapper scWeChatMapper;
 
 	@RequestMapping("/orderInput")
 	public String orderInput(HttpServletRequest request,String code) throws Exception {
@@ -89,7 +93,9 @@ public class WxPayAction  {
 		String out_trade_no = OrderNoGenerator.generate("TI", 10);
 		infoReq.setOut_trade_no(out_trade_no);
 		TradeInfo tradeInfo=getTradeInfo(infoReq);
-		infoReq.setOpenid(infoReq.getOpenid());
+		//由于openid和unionID字段值互换，openid实际值是unionID，unionID实际值openid
+		ScWeChat chat = scWeChatMapper.selectByUnionid(infoReq.getOpenid());
+		infoReq.setOpenid("oDy7t0IKwk7Ko6wpa0clZ9WdqnQo");
 		tradeInfoService.insert(tradeInfo);
 		
 		// 生成支付签名,这个签名 给 微信支付的调用使用

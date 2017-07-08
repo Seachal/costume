@@ -258,13 +258,23 @@ public class WeChatServiceImpl implements WeChatService {
     			
     			//加关注
     			ScFocusShop focusShop = new ScFocusShop();
-    			if(StringUtil.isNotBlank(unionid)){
-    				focusShop.setOpenid(unionid);
+    			if(param.getType()==2&&enableBeSupplier){
+    				ScWeChat we = new ScWeChat();
+    				we.setStoreid(param.getStoreId());
+    				we = scWeChatMapper.selectWechat(wechat);
+    				if(we!=null){
+    					focusShop.setOpenid(we.getOpenid());
+    					focusShop.setShopid(wechat.getStoreid());
+    				}
     			}else{
-    				focusShop.setOpenid(message.getFromUserName());
+        			if(StringUtil.isNotBlank(unionid)){
+        				focusShop.setOpenid(unionid);
+        			}else{
+        				focusShop.setOpenid(message.getFromUserName());
+        			}
+        			focusShop.setShopid(param.getStoreId());
     			}
     			
-    			focusShop.setShopid(param.getStoreId());
     			List<ScFocusShop> shops = scFocusShopMapper.select(focusShop);
     			if(shops ==null || shops.size()<=0){
     				focusShop.setCreateTime(new Date());

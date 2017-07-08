@@ -86,4 +86,7 @@ public interface SpOrderService {
 	
 	
 	public List<Object> logisticInit(SsStoOrder ssStoOrder);
+	
+	
+	public List<SsDataDictionary> enterPay(String storeId);
 }

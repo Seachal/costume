@@ -1,7 +1,6 @@
 package costumetrade.order.control;
 
-import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -18,6 +17,7 @@ import com.sf.openapi.express.sample.route.dto.RouteRespDto;
 
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
+import costumetrade.common.util.StringUtil;
 import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.domain.SsCgsorder;
@@ -150,6 +150,31 @@ public class SpOrderController {
 		
 	}
 	
+
+	@RequestMapping("/enterPay")
+	@ResponseBody
+	public ApiResponse enterPay(String storeId) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(StringUtil.isBlank(storeId)){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		
+		List<SsDataDictionary> dicts = spOrderService.enterPay(storeId);
+		
+		if(dicts == null){
+			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			return result;
+		}else{
+			result.setData(dicts);
+			return result;
+		}
+		
+	}
 	
 	@RequestMapping("/getOrder")
 	@ResponseBody

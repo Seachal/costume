@@ -1026,6 +1026,14 @@ public class SpOrderServiceImpl implements SpOrderService{
 		objects.add(spStoOrder);
 		return objects;
 	}
+
+	@Override
+	public List<SsDataDictionary> enterPay(String storeId) {
+		List<String> list = new ArrayList<String>();
+		list.add("PAY_QRCODE");//
+		List<SsDataDictionary> dict = ssDataDictionaryMapper.selectDictionarys(list,storeId);
+		return dict;
+	}
 	
 	
 

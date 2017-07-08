@@ -380,25 +380,25 @@ public class SpUserServiceImpl implements SpUserService{
 		    	//把openid字段保存unionID
 		    	wechat = login(unionId,openId);
 		    	
-		    	if(wechat !=null && wechat.getId()!=null){
-	    			//把昵称 头像保存到店铺or 用户
-	    			if(StringUtil.isNotBlank(wechat.getStoreid())){
-			    		SpStore store = new SpStore();
-			    		store.setName(nickName);
-			    		store.setId(wechat.getStoreid());
-			    		store.setStorephoto(avatarUrl);
-			    		spStoreMapper.updateByPrimaryKeySelective(store);
-			    	}
-	    			//把昵称 头像保存到店铺or 用户
-	    			if(StringUtil.isNotBlank(wechat.getUserid())){
-			    		SpUser user = new SpUser();
-			    		user.setName(nickName);
-			    		user.setId(wechat.getUserid());
-			    		user.setPhoto(avatarUrl);;
-			    		spUserMapper.updateByPrimaryKeySelective(user);
-			    	}
-	    		}
-		    	
+//		    	if(wechat !=null && wechat.getId()!=null){
+//	    			//把昵称 头像保存到店铺or 用户
+//	    			if(StringUtil.isNotBlank(wechat.getStoreid())){
+//			    		SpStore store = new SpStore();
+//			    		store.setName(nickName);
+//			    		store.setId(wechat.getStoreid());
+//			    		store.setStorephoto(avatarUrl);
+//			    		spStoreMapper.updateByPrimaryKeySelective(store);
+//			    	}
+//	    			//把昵称 头像保存到店铺or 用户
+//	    			if(StringUtil.isNotBlank(wechat.getUserid())){
+//			    		SpUser user = new SpUser();
+//			    		user.setName(nickName);
+//			    		user.setId(wechat.getUserid());
+//			    		user.setPhoto(avatarUrl);;
+//			    		spUserMapper.updateByPrimaryKeySelective(user);
+//			    	}
+//	    		}
+//		    	
 		    	
             }  
         } catch (Exception e) {  
