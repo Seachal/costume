@@ -6,19 +6,19 @@ import costumetrade.common.util.ConfigProperties;
 
 public class WxPayConfig {
 	// appid
-	public static String APP_ID = ConfigProperties.getProperty(SPConstents.APP_ID_KEY);
+	public static String APP_ID = "wx0f02d5eacaf954e7";
 	
 	// mch appid
 	//public static String MCH_APP_ID = Config.getConfigValue(SPConstents.CWX_MCH_APP_ID);
 	
 	// JSAPI接口中获取openid，审核后在公众平台开启开发模式后可查看
-	public static String APP_SECRET = ConfigProperties.getProperty(SPConstents.APP_SECRET_KEY);
+	public static String APP_SECRET = "13a29793a995e14ad5ac7d5282e27334";
 	// 受理商ID，身份标识
-	public static String MCH_ID = ConfigProperties.getProperty(SPConstents.CWX_MCH_ID);
+	public static String MCH_ID = "1338697401";
 	// 商户支付密钥Key，装完整数后，配置得到。
-	public static String KEY = ConfigProperties.getProperty(SPConstents.CWX_KEY);
+	public static String KEY = "4d70e8033e26470deaf318b79a1250ce";
 	// 异步回调地址
-	public static String NOTIFY_URL = ConfigProperties.getProperty(SPConstents.CWX_PAY_NOTIFY_URL);
+	public static String NOTIFY_URL = "http://192.168.31.166:8080/return/notify";
 	// 字符编码
 	public static String CHARTSET = "UTF-8";
 	// 加密方式

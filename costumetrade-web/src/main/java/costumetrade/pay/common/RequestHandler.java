@@ -181,7 +181,7 @@ public class RequestHandler {
 				sb.append(k + "=" + v + "&");
 			}
 		}
-		sb.append("key=" +ConfigProperties.getProperty("wx.aes.key"));
+		sb.append("key=" +WxPayConfig.KEY);
 		
 		String sign = MD5Util.MD5Encode(sb.toString(), CHARTSET).toUpperCase();
 		

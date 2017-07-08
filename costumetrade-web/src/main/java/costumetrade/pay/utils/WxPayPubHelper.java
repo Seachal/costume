@@ -44,9 +44,9 @@ public class WxPayPubHelper {
 			reqHandler.init();
 			// 执行统一下单接口 获得预支付id，一下是必填参数
 			// 微信分配的公众账号ID（企业号corpid即为此appId）
-			reqHandler.setParameter("appid","wx3b3c3dff64dafa20"); 
+			reqHandler.setParameter("appid",WxPayConfig.APP_ID); 
 			// 微信支付分配的商户号
-			reqHandler.setParameter("mch_id", "1338697401"); 
+			reqHandler.setParameter("mch_id", WxPayConfig.MCH_ID); 
 			// 终端设备号(门店号或收银设备ID)，注意：PC网页或公众号内支付请传"WEB"
 			reqHandler.setParameter("device_info", payReq.getDevice_info()); 
 			// 随机字符串，不长于32位。推荐随机数生成算法

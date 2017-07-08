@@ -96,6 +96,8 @@ public class WxPayAction  {
 		//由于openid和unionID字段值互换，openid实际值是unionID，unionID实际值openid
 		ScWeChat chat = scWeChatMapper.selectByUnionid(infoReq.getOpenid());
 		infoReq.setOpenid("oDy7t0IKwk7Ko6wpa0clZ9WdqnQo");
+		infoReq.setTotal_fee("33");
+		infoReq.setBody("product info");
 		tradeInfoService.insert(tradeInfo);
 		
 		// 生成支付签名,这个签名 给 微信支付的调用使用
