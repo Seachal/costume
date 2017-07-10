@@ -55,17 +55,11 @@
 			enableUpdateByExample="false" enableDeleteByExample="false"
 			enableSelectByExample="false" selectByExampleQueryId="false">
 		</table>-->
-
-	
-		<table tableName="sp_cust_prod_price"  domainObjectName="SpCustProdPrice"
-
+		<table tableName="sc_upgrade_product"  domainObjectName="ScUpgradeProduct"
 			enableCountByExample="false"
 			enableUpdateByExample="false" enableDeleteByExample="false"
 			enableSelectByExample="false" selectByExampleQueryId="false">
 		</table>
-
-	
-	
 
 	</context>
 </generatorConfiguration>

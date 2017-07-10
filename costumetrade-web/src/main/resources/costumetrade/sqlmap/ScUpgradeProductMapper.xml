@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="costumetrade.product.mapper.ScUpgradeProductMapper">
+  <resultMap id="BaseResultMap" type="costumetrade.product.domain.ScUpgradeProduct">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="memberId" jdbcType="VARCHAR" property="memberid" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="expiredMonth" jdbcType="INTEGER" property="expiredmonth" />
+    <result column="effectiveTime" jdbcType="TIMESTAMP" property="effectivetime" />
+    <result column="expiredTime" jdbcType="TIMESTAMP" property="expiredtime" />
+    <result column="img_1" jdbcType="VARCHAR" property="img1" />
+    <result column="img_2" jdbcType="VARCHAR" property="img2" />
+    <result column="img_3" jdbcType="VARCHAR" property="img3" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="modifyTime" jdbcType="TIMESTAMP" property="modifytime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, memberId, name, price, expiredMonth, effectiveTime, expiredTime, img_1, img_2, 
+    img_3, description, createTime, modifyTime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sc_upgrade_product
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="getAllProduct" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sc_upgrade_product
+  </select> 
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sc_upgrade_product
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="costumetrade.product.domain.ScUpgradeProduct">
+    insert into sc_upgrade_product (id, memberId, name, 
+      price, expiredMonth, effectiveTime, 
+      expiredTime, img_1, img_2, 
+      img_3, description, createTime, 
+      modifyTime)
+    values (#{id,jdbcType=INTEGER}, #{memberid,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, 
+      #{price,jdbcType=DECIMAL}, #{expiredmonth,jdbcType=INTEGER}, #{effectivetime,jdbcType=TIMESTAMP}, 
+      #{expiredtime,jdbcType=TIMESTAMP}, #{img1,jdbcType=VARCHAR}, #{img2,jdbcType=VARCHAR}, 
+      #{img3,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{modifytime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="costumetrade.product.domain.ScUpgradeProduct">
+    insert into sc_upgrade_product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="memberid != null">
+        memberId,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="expiredmonth != null">
+        expiredMonth,
+      </if>
+      <if test="effectivetime != null">
+        effectiveTime,
+      </if>
+      <if test="expiredtime != null">
+        expiredTime,
+      </if>
+      <if test="img1 != null">
+        img_1,
+      </if>
+      <if test="img2 != null">
+        img_2,
+      </if>
+      <if test="img3 != null">
+        img_3,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="createtime != null">
+        createTime,
+      </if>
+      <if test="modifytime != null">
+        modifyTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="memberid != null">
+        #{memberid,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="expiredmonth != null">
+        #{expiredmonth,jdbcType=INTEGER},
+      </if>
+      <if test="effectivetime != null">
+        #{effectivetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiredtime != null">
+        #{expiredtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="img1 != null">
+        #{img1,jdbcType=VARCHAR},
+      </if>
+      <if test="img2 != null">
+        #{img2,jdbcType=VARCHAR},
+      </if>
+      <if test="img3 != null">
+        #{img3,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifytime != null">
+        #{modifytime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.product.domain.ScUpgradeProduct">
+    update sc_upgrade_product
+    <set>
+      <if test="memberid != null">
+        memberId = #{memberid,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="expiredmonth != null">
+        expiredMonth = #{expiredmonth,jdbcType=INTEGER},
+      </if>
+      <if test="effectivetime != null">
+        effectiveTime = #{effectivetime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiredtime != null">
+        expiredTime = #{expiredtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="img1 != null">
+        img_1 = #{img1,jdbcType=VARCHAR},
+      </if>
+      <if test="img2 != null">
+        img_2 = #{img2,jdbcType=VARCHAR},
+      </if>
+      <if test="img3 != null">
+        img_3 = #{img3,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null">
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifytime != null">
+        modifyTime = #{modifytime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="costumetrade.product.domain.ScUpgradeProduct">
+    update sc_upgrade_product
+    set memberId = #{memberid,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      expiredMonth = #{expiredmonth,jdbcType=INTEGER},
+      effectiveTime = #{effectivetime,jdbcType=TIMESTAMP},
+      expiredTime = #{expiredtime,jdbcType=TIMESTAMP},
+      img_1 = #{img1,jdbcType=VARCHAR},
+      img_2 = #{img2,jdbcType=VARCHAR},
+      img_3 = #{img3,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      modifyTime = #{modifytime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
