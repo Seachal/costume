@@ -42,7 +42,10 @@ public class TradeInfoService implements ITradeInfoService {
 	public TradeInfo selectByPrimaryKey(Integer id) {
 		return tradeInfoMapper.selectByPrimaryKey(id);
 	}
-
+	public TradeInfo selectOutTradeNo(String outTradeNo) {
+		return tradeInfoMapper.selectOutTradeNo(outTradeNo);
+	}
+	
 	@Override
 	public int updateByPrimaryKeySelective(TradeInfo record) {
 		return tradeInfoMapper.updateByPrimaryKeySelective(record);

@@ -15,5 +15,8 @@ public interface ITradeInfoService {
     int updateByPrimaryKeySelective(TradeInfo record);
 
     int updateByPrimaryKey(TradeInfo record);
+    
     void updateTradeWithFinancial(String tradeOutNo,String   openid,String transactionId);
+    
+    TradeInfo selectOutTradeNo(String outTradeNo);
 }

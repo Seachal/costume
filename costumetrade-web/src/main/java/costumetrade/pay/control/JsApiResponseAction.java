@@ -4,6 +4,7 @@ package costumetrade.pay.control;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
+import java.util.List;
 import java.util.SortedMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,7 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import costumetrade.pay.common.RequestHandler;
 import costumetrade.pay.common.ResponseHandler;
+import costumetrade.pay.domain.TradeInfo;
 import costumetrade.pay.service.ITradeInfoService;
+import costumetrade.product.domain.ScUpgradeMap;
+import costumetrade.product.domain.ScUpgradeProduct;
+import costumetrade.product.mapper.ScUpgradeMapMapper;
+import costumetrade.product.service.UpgradeProductService;
 
 @RequestMapping("/return")
 @RestController
@@ -29,6 +35,10 @@ public class JsApiResponseAction {
 
 	@Autowired
 	private ITradeInfoService tradeInfoService;
+	@Autowired
+	private UpgradeProductService upgradeProductService;
+	@Autowired
+	private ScUpgradeMapMapper scUpgradeMapMapper;
 	
 	/**
 	 * 接收微信支付返回的通知
@@ -56,13 +66,18 @@ public class JsApiResponseAction {
 			
 			String is_subscribe = resultMap.get("is_subscribe");
 			String out_trade_no = resultMap.get("out_trade_no");
+			TradeInfo tradeInfo = tradeInfoService.selectOutTradeNo(out_trade_no);
+			
 			String transaction_id = resultMap.get("transaction_id");
 			String sign = resultMap.get("sign");
 			String time_end = resultMap.get("time_end");
 			String bank_type = resultMap.get("bank_type");
 			String return_code = resultMap.get("return_code");
 			String openid = resultMap.get("openid");
-			
+			ScUpgradeMap map = new ScUpgradeMap();
+			map.setOpenid(openid);
+			map.setStatus(1);
+			scUpgradeMapMapper.updateByOpenId(map);
 /*			if(!resHandler.isValidSign()){
 				log.error("微信回调 签名失败，反馈信息:"+return_msg);
 				return null;

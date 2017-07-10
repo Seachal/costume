@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="costumetrade.product.mapper.ScUpgradeMapMapper">
+  <resultMap id="BaseResultMap" type="costumetrade.product.domain.ScUpgradeMap">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="openId" jdbcType="VARCHAR" property="openid" />
+    <result column="store_id" jdbcType="VARCHAR" property="storeId" />
+    <result column="product_id" jdbcType="VARCHAR" property="productId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, openId, store_id,product_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sc_upgrade_map
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sc_upgrade_map
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="costumetrade.product.domain.ScUpgradeMap">
+    insert into sc_upgrade_map (id, openId, store_id,product_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{storeId,jdbcType=VARCHAR},, #{productId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="costumetrade.product.domain.ScUpgradeMap">
+    insert into sc_upgrade_map
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="openid != null">
+        openId,
+      </if>
+      <if test="storeId != null">
+        store_id,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="openid != null">
+        #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="storeId != null">
+        #{storeId,jdbcType=VARCHAR},
+      </if>
+       <if test="productId != null">
+        #{productId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.product.domain.ScUpgradeMap">
+    update sc_upgrade_map
+    <set>
+      <if test="openid != null">
+        openId = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="storeId != null">
+        store_id = #{storeId,jdbcType=VARCHAR},
+      </if>
+       <if test="productId != null">
+        product_id = #{productId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+    <update id="updateByOpenId" parameterType="costumetrade.product.domain.ScUpgradeMap">
+    update sc_upgrade_map
+    <set>
+      <if test="openid != null">
+        openId = #{openid,jdbcType=VARCHAR},
+      </if>
+      <if test="storeId != null">
+        store_id = #{storeId,jdbcType=VARCHAR},
+      </if>
+       <if test="productId != null">
+        product_id = #{productId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where openId = #{openid,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateByPrimaryKey" parameterType="costumetrade.product.domain.ScUpgradeMap">
+    update sc_upgrade_map
+    set openId = #{openid,jdbcType=VARCHAR},
+      store_id = #{storeId,jdbcType=VARCHAR},
+      product_id = #{productId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

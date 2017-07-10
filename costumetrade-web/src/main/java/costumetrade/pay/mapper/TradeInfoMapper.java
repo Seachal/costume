@@ -12,7 +12,9 @@ public interface TradeInfoMapper {
     int insertSelective(TradeInfo record);
 
     TradeInfo selectByPrimaryKey(Integer id);
-
+    
+    TradeInfo selectOutTradeNo(String outTradeNo);
+    
     int updateByPrimaryKeySelective(TradeInfo record);
 
     int updateByPrimaryKey(TradeInfo record);

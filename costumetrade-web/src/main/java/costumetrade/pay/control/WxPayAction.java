@@ -13,7 +13,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.impl.cookie.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,6 +37,8 @@ import costumetrade.pay.res.ResCloseOrder;
 import costumetrade.pay.service.impl.TradeInfoService;
 import costumetrade.pay.utils.IpUtils;
 import costumetrade.pay.utils.WxPayPubHelper;
+import costumetrade.product.domain.ScUpgradeMap;
+import costumetrade.product.mapper.ScUpgradeMapMapper;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.mapper.ScWeChatMapper;
 import costumetrade.user.service.SpStoreService;
@@ -68,7 +69,9 @@ public class WxPayAction  {
 	private SpStoreService spStoreService;
 	@Autowired 
 	private ScWeChatMapper scWeChatMapper;
-
+	@Autowired 
+	private ScUpgradeMapMapper scUpgradeMapMapper;
+	
 	@RequestMapping("/orderInput")
 	public String orderInput(HttpServletRequest request,String code) throws Exception {
 		// 获取openID
@@ -99,7 +102,12 @@ public class WxPayAction  {
 		infoReq.setTotal_fee("33");
 		infoReq.setBody("product info");
 		tradeInfoService.insert(tradeInfo);
-		
+		ScUpgradeMap scUpgradeMap = new ScUpgradeMap();
+		scUpgradeMap.setOpenid(infoReq.getOpenid());
+		scUpgradeMap.setStoreId(infoReq.getStoreId());
+		scUpgradeMap.setProductId(infoReq.getProduct_id());
+		scUpgradeMap.setStatus(0);
+		scUpgradeMapMapper.insert(scUpgradeMap);
 		// 生成支付签名,这个签名 给 微信支付的调用使用
 		String prepay_id  = pubHelper.unifiedorder(infoReq);
 		String timestamp =DateUtils.formatDate(new Date(), "yyyyMMddHHmmss");

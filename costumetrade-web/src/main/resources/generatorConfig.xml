@@ -55,7 +55,7 @@
 			enableUpdateByExample="false" enableDeleteByExample="false"
 			enableSelectByExample="false" selectByExampleQueryId="false">
 		</table>-->
-		<table tableName="sc_upgrade_product"  domainObjectName="ScUpgradeProduct"
+		<table tableName="sc_upgrade_map"  domainObjectName="ScUpgradeMap"
 			enableCountByExample="false"
 			enableUpdateByExample="false" enableDeleteByExample="false"
 			enableSelectByExample="false" selectByExampleQueryId="false">

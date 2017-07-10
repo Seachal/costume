@@ -69,6 +69,7 @@ public class PayInfoReq extends WxBaseReq{
 			 */
 		private String 	openid ;
 		
+		private String storeId;
 		
 		public String getBody() {
 			return body;
@@ -163,6 +164,12 @@ public class PayInfoReq extends WxBaseReq{
 		}
 		public void setOpenid(String openid) {
 			this.openid = openid;
+		}
+		public String getStoreId() {
+			return storeId;
+		}
+		public void setStoreId(String storeId) {
+			this.storeId = storeId;
 		}	
 	
 	
