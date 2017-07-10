@@ -85,6 +85,7 @@
 		LEFT JOIN ss_stoorder s ON
 		s.payOrderNo = d.orderId
 		LEFT JOIN sp_store store ON store.id = s.sellerStoreId
+		where 1=1
 		and d.productId=#{id}
 		and s.sellerStoreId is not null
 		<if test="storeId!=null">

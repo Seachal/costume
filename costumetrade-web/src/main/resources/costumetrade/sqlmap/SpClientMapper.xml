@@ -5,7 +5,7 @@
 		<result column="id" jdbcType="VARCHAR" property="id" />
 		<result column="storeId" jdbcType="VARCHAR" property="storeId" />
 		<result column="otherStoreId" jdbcType="VARCHAR" property="otherStoreId" />
-		<result column="userId" jdbcType="VARCHAR" property="userId" />
+		<result column="unionid" jdbcType="VARCHAR" property="unionid" />
 		<result column="openid" jdbcType="VARCHAR" property="openid" />
 		<result column="scene" jdbcType="VARCHAR" property="scene" />
 		<result column="type" jdbcType="VARCHAR" property="type" />
@@ -33,7 +33,7 @@
 		<result column="modify_by" jdbcType="VARCHAR" property="modifyBy" />
 	</resultMap>
 	<sql id="Base_Column_List">
-		id, storeId,otherStoreId,userId,openid, scene,
+		id, storeId,otherStoreId,unionid,openid, scene,
 		type, cate,
 		fastcode,
 		status, nickName, image,
@@ -63,7 +63,7 @@
 		select
 		id, storeId,
 		type, cate,
-		fastcode,
+		fastcode,unionid,openid,
 		 image,
 		telephone,
 		points, 
@@ -81,8 +81,8 @@
 		<if test="client.otherStoreId != null">
 			and otherStoreId = #{client.otherStoreId,jdbcType=VARCHAR}
 		</if>
-		<if test="client.userId != null">
-			and userId = #{client.userId,jdbcType=VARCHAR}
+		<if test="client.unionid != null">
+			and unionid = #{client.unionid,jdbcType=VARCHAR}
 		</if>
 		<if test="client.openid != null">
 			and openid = #{client.openid,jdbcType=VARCHAR}
@@ -152,7 +152,7 @@
 
 	<insert id="insert" parameterType="costumetrade.order.domain.SpClient">
 		insert into sp_client (id,
-		storeId,otherStoreId,userId,openid, scene,
+		storeId,otherStoreId,unionid,openid, scene,
 		type, cate, fastcode,
 		status,
 		nickName, image,
@@ -167,7 +167,7 @@
 		values (#{id,jdbcType=VARCHAR},
 		#{storeId,jdbcType=VARCHAR},
 		#{otherStoreId,jdbcType=VARCHAR},
-		#{userId,jdbcType=VARCHAR},
+		#{unionid,jdbcType=VARCHAR},
 		#{openid,jdbcType=VARCHAR},
 		#{scene,jdbcType=VARCHAR},
 		#{type,jdbcType=VARCHAR}, #{cate,jdbcType=VARCHAR},
@@ -202,8 +202,8 @@
 			<if test="otherStoreId != null">
 				otherStoreId,
 			</if>
-			<if test="userId != null">
-				userId,
+			<if test="unionid != null">
+				unionid,
 			</if>
 			<if test="openid != null">
 				openid,
@@ -291,8 +291,8 @@
 			<if test="otherStoreId != null">
 				#{otherStoreId,jdbcType=VARCHAR},
 			</if>
-			<if test="userId != null">
-				#{userId,jdbcType=VARCHAR},
+			<if test="unionid != null">
+				#{unionid,jdbcType=VARCHAR},
 			</if>
 			<if test="openid != null">
 				#{openid,jdbcType=VARCHAR},
@@ -379,8 +379,8 @@
 			<if test="otherStoreId != null">
 				otherStoreId = #{otherStoreId,jdbcType=VARCHAR},
 			</if>
-			<if test="userId != null">
-				userId = #{userId,jdbcType=VARCHAR},
+			<if test="unionid != null">
+				unionid = #{unionid,jdbcType=VARCHAR},
 			</if>
 			<if test="openid != null">
 				openid = #{openid,jdbcType=VARCHAR},

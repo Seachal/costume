@@ -32,6 +32,8 @@
 		type="costumetrade.report.domain.PurchaseReportQuery">
 		<result column="quantity" jdbcType="DECIMAL" property="quantity" />
 		<result column="amount" jdbcType="DECIMAL" property="amount" />
+		<result column="pucharseAmount" jdbcType="DECIMAL" property="pucharseAmount" />
+		<result column="saleAmount" jdbcType="DECIMAL" property="saleAmount" />
 		<result column="productName" jdbcType="VARCHAR" property="productName" />
 		<result column="productColor" jdbcType="VARCHAR" property="productColor" />
 		<result column="productSize" jdbcType="VARCHAR" property="productSize" />
@@ -164,12 +166,12 @@
 		brand
 		on brand.id =
 		product.brandId and brand.storeId
-		=#{query.storeId}
+		=#{storeId}
 		left join
 		ss_data_dictionary grade
 		on grade.dict_group='PRODUCT_GRADE'
 		and
-		grade.storeId=#{query.storeId} and grade.dict_value = product.grade
+		grade.storeId=#{storeId} and grade.dict_value = product.grade
 	
 		where 1=1
 		and
@@ -216,12 +218,12 @@
 		AND STOCK.createTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
 		
 		
-		<!--  
+	 
 		<if test="query.filter.value !=null">
-			and ${query.filter.field} like CONCAT('%',#{query.filter.value},'%')
+			and ${query.filter.field} = #{query.filter.value}
 		</if>
 		
-		-->
+		
 		<if test="query.productTypeArray != null">
 			and productType.cateName in
 			<foreach collection="query.productTypeArray" item="item"
@@ -252,12 +254,12 @@
 			<foreach collection="query.operatorArray" item="item" index="index"
 				open="(" separator="," close=")"> #{item}</foreach>
 		</if>
-		<!--  
-		<if test="query.filter.field !=null">
+		
+		<if test="query.filter.field !=null ">
 		group by ${query.filter.field}
 		</if>
 		
-		-->
+		
 	    <if test="query.quantityOp == 'asc'">
 			order by quantity asc
 		</if>
@@ -745,11 +747,11 @@ SELECT
 		AND sto.orderTime &lt;=str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
 		GROUP BY sto.payCate2
 		</select>
-	<select id="saleSortReport"  parameterType="costumetrade.report.domain.SaleReportQuery" resultMap="SaleResultMap">
+	<select id="saleSortReport"   resultMap="SaleResultMap">
 		SELECT 
 		  SUM(detail.count) AS quantity,
-		  SUM(CASE WHEN sto.buyerStoreId = #{storeId} THEN detail.price * detail.count ELSE 0 END) AS pucharseAmount,
-		  SUM(CASE WHEN sto.sellerStoreId = #{storeId} THEN detail.price * detail.count ELSE 0 END) AS saleAmount,
+		  SUM(CASE WHEN sto.buyerStoreId = #{query.storeId} THEN detail.price * detail.count ELSE 0 END) AS pucharseAmount,
+		  SUM(CASE WHEN sto.sellerStoreId = #{query.storeId} THEN detail.price * detail.count ELSE 0 END) AS saleAmount,
 		  detail.productId,
 		  detail.productName AS productName,
 		  detail.productColor AS productColor,
@@ -766,10 +768,10 @@ SELECT
 		    ON product.id = detail.productId 
 		  LEFT JOIN sp_pbrand brand 
 		    ON brand.id = product.brandId 
-		    AND brand.storeId = #{storeId} 
+		    AND brand.storeId = #{query.storeId} 
 		  LEFT JOIN ss_data_dictionary grade 
 		    ON grade.dict_group = 'PRODUCT_GRADE' 
-		    AND grade.storeId = #{storeId} 
+		    AND grade.storeId = #{query.storeId} 
 		    AND grade.dict_value = product.grade 
 		  LEFT JOIN sp_employee employee ON employee.id = sto.operator
 		  where 1=1

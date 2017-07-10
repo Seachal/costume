@@ -33,6 +33,16 @@
     from sc_wechat_bind
     where unionid = #{unionid,jdbcType=VARCHAR}
   </select>
+  
+   <select id="selectWechat" parameterType="costumetrade.user.domain.ScWeChat" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sc_wechat_bind
+    where 1=1
+    <if test="storeid!=null">
+    and storeId = #{storeid,jdbcType=VARCHAR}
+    </if>
+  </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sc_wechat_bind
     where id = #{id,jdbcType=INTEGER}
