@@ -1,6 +1,12 @@
 package costumetrade.order.control;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,9 +16,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
 
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
+import costumetrade.common.util.StringUtil;
 import costumetrade.order.domain.ScFocusShop;
 import costumetrade.order.domain.SpClient;
 import costumetrade.order.query.ClientQuery;
@@ -119,7 +132,7 @@ public class SpClientController {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		if(spClient == null ){
+		if(spClient == null ||StringUtil.isBlank(spClient.getStoreId())){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
@@ -152,6 +165,35 @@ public class SpClientController {
 			return result;
 		}
 		return result;
+	}
+	
+	@RequestMapping("/getTwoDimension")
+	@ResponseBody
+	public void getTwoDimension(HttpServletRequest request, HttpServletResponse response
+			) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		//spClientService.getTwoDimension1(null, resp, 200, 200);
+		
+		//二维码参数
+        int width = 200; // 图像宽度  
+        int height = 200; // 图像高度  
+        String format = "png";// 图像类型  
+        Map<EncodeHintType, Object> hints = new HashMap<EncodeHintType, Object>();  
+        hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");  
+        BitMatrix bitMatrix;
+        try {
+			bitMatrix = new MultiFormatWriter().encode("HTTPS://QR.ALIPAY.COM/FKX09481DX4VKLD3NVQYB3",BarcodeFormat.QR_CODE, width, height, hints);
+			 MatrixToImageWriter.writeToStream(bitMatrix, format, response.getOutputStream());
+        } catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+       
+	    
+	     
+		
 	}
 	@RequestMapping("/scanQRCode")
 	@ResponseBody

@@ -145,6 +145,8 @@ public class ProductQuery extends Entity{
     
     private String storeImage;
     
+    private BigDecimal stockNum;
+    
     private BigDecimal salePrice;
     
     private BigDecimal originalPrice;
@@ -313,6 +315,8 @@ public class ProductQuery extends Entity{
 	private Boolean checkAllTag;
 	
 	private Integer countReview;
+	
+	
 	
 	public String getFields() {
 		return fields;
@@ -1034,6 +1038,14 @@ public class ProductQuery extends Entity{
 
 	public void setCountReview(Integer countReview) {
 		this.countReview = countReview;
+	}
+
+	public BigDecimal getStockNum() {
+		return stockNum;
+	}
+
+	public void setStockNum(BigDecimal stockNum) {
+		this.stockNum = stockNum;
 	}
 
 	

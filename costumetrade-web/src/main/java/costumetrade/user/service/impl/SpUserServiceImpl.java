@@ -195,12 +195,16 @@ public class SpUserServiceImpl implements SpUserService{
 		shop.setOpenid(query.getOpenid());
 		List<ScFocusShop> shops = scFocusShopMapper.select(shop);
 		
-		SpStore store = new SpStore();
-		List<String> idArray = new ArrayList<String>();
-		if(query.getStoreId()!=null){
-			idArray.add(query.getStoreId());//商城第一个店铺显示自己的店铺
+		List<SpStore> stores = new ArrayList<SpStore>();
+		SpStore sp = new SpStore();
+		if(StringUtil.isNotBlank(query.getStoreId())){
+			sp =spStoreMapper.selectByPrimaryKey(query.getStoreId());//商城第一个店铺显示自己的店铺
+			if(StringUtil.isNotBlank(sp.getId())){
+				stores.add(sp);
+			}
 		}
 		
+		List<String> idArray = new ArrayList<String>();
 		if(shops != null && shops.size() > 0){
 			for(ScFocusShop s :shops){
 				idArray.add(s.getShopid());
@@ -208,19 +212,27 @@ public class SpUserServiceImpl implements SpUserService{
 			
 			
 		}
+		SpStore store = new SpStore();
 		if(idArray.size()>0){
 			store.setIdArray(idArray);
 		}
-		
+		List<SpStore> storeList  = null;
 		StoreQuery resultQuery = new StoreQuery();
-		List<SpStore> storeList = spStoreMapper.selectStores(store, null);
-		if(store.getIdArray() == null){
-			storeList =new ArrayList<SpStore>();
+		if(store.getIdArray()==null||store.getIdArray().size()<=0){
+			storeList = null;
+		}else{
+			storeList = spStoreMapper.selectStores(store, null);
 		}
 		
-		List<SpStore> stores = new ArrayList<SpStore>();
-		if(storeList !=null && storeList.size()>0 ){
+		if(storeList!=null && storeList.size()>0){
 			for(SpStore spStore :storeList){
+				stores.add(spStore);
+			}
+		}
+		
+		List<SpStore> storelist = new ArrayList<SpStore>();
+		if(stores !=null && stores.size()>0 ){
+			for(SpStore spStore :stores){
 				SpStore sStore = new SpStore();
 				sStore.setId(spStore.getId());
 				sStore.setStorephoto(spStore.getStorephoto());
@@ -228,7 +240,7 @@ public class SpUserServiceImpl implements SpUserService{
 				sStore.setAddress(spStore.getAddress());
 				
 				//查询推广商品图片
-				List<String> images = new ArrayList<String>();
+				
 				
 				List<String> list = new ArrayList<String>();
 				list.add("IMAGE");
@@ -239,10 +251,10 @@ public class SpUserServiceImpl implements SpUserService{
 					sStore.setImages(Arrays.asList(iamge.split(",")));
 				}
 
-				stores.add(sStore);
+				storelist.add(sStore);
 			}
 		}
-		resultQuery.setStoreList(stores);
+		resultQuery.setStoreList(storelist);
 		resultQuery.setOpenid(query.getOpenid());
 		//汇总订单数量
 		OrderCountQuery countQuery = spOrderService.countOrders(query.getOpenid());

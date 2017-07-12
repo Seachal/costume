@@ -46,6 +46,8 @@ public class ProductReportQuery extends Entity {
 	
 	private Integer reportType;
 	
+	private Filter filter;
+	
 	public BigDecimal getQuantity() {
 		return quantity;
 	}
@@ -156,6 +158,14 @@ public class ProductReportQuery extends Entity {
 
 	public void setReportType(Integer reportType) {
 		this.reportType = reportType;
+	}
+
+	public Filter getFilter() {
+		return filter;
+	}
+
+	public void setFilter(Filter filter) {
+		this.filter = filter;
 	}
 
 	

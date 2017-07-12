@@ -38,6 +38,7 @@ public class OrderQuery extends Entity {
     
     private Boolean isContinue = false;//默认库存缺少时，不继续操作
     
+    private Integer orderTypeTag;
     
     /***
      * 
@@ -389,6 +390,14 @@ public class OrderQuery extends Entity {
 
 	public void setPageNum(Integer pageNum) {
 		this.pageNum = pageNum;
+	}
+
+	public Integer getOrderTypeTag() {
+		return orderTypeTag;
+	}
+
+	public void setOrderTypeTag(Integer orderTypeTag) {
+		this.orderTypeTag = orderTypeTag;
 	}
 
 	

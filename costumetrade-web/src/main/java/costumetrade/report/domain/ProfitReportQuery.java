@@ -11,12 +11,14 @@ import costumetrade.order.query.Rules;
 import costumetrade.order.query.Sort;
 import costumetrade.user.domain.SsPayment;
 
-public class SaleReportQuery extends Entity {
+public class ProfitReportQuery extends Entity {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private List<SaleReportQuery> querys;
 	
 	private BigDecimal quantity;
 	
@@ -98,13 +100,9 @@ public class SaleReportQuery extends Entity {
 	private Integer reportType;
 	
 	private BigDecimal grossProfit;
-
+	
 	private BigDecimal profitAmount;
-	
-	private BigDecimal profitRatio;
-	
-	private BigDecimal saleRatio;
-	
+
 	public BigDecimal getQuantity() {
 		return quantity;
 	}
@@ -411,28 +409,20 @@ public class SaleReportQuery extends Entity {
 		this.grossProfit = grossProfit;
 	}
 
+	public List<SaleReportQuery> getQuerys() {
+		return querys;
+	}
+
+	public void setQuerys(List<SaleReportQuery> querys) {
+		this.querys = querys;
+	}
+
 	public BigDecimal getProfitAmount() {
 		return profitAmount;
 	}
 
 	public void setProfitAmount(BigDecimal profitAmount) {
 		this.profitAmount = profitAmount;
-	}
-
-	public BigDecimal getProfitRatio() {
-		return profitRatio;
-	}
-
-	public void setProfitRatio(BigDecimal profitRatio) {
-		this.profitRatio = profitRatio;
-	}
-
-	public BigDecimal getSaleRatio() {
-		return saleRatio;
-	}
-
-	public void setSaleRatio(BigDecimal saleRatio) {
-		this.saleRatio = saleRatio;
 	}
 	
 	

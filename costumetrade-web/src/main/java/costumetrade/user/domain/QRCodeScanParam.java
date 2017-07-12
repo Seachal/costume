@@ -15,6 +15,9 @@ public class QRCodeScanParam extends Entity {
      * 扫描类型 1：加客户，2.加供应商 3.加朋友 4、加员工
      * */
     private Integer type;
+    
+    private String context;
+    
 	public String getStoreId() {
 		return storeId;
 	}
@@ -32,6 +35,12 @@ public class QRCodeScanParam extends Entity {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public String getContext() {
+		return context;
+	}
+	public void setContext(String context) {
+		this.context = context;
 	}
     
 	

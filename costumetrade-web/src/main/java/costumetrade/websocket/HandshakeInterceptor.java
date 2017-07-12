@@ -14,24 +14,16 @@ public class HandshakeInterceptor extends HttpSessionHandshakeInterceptor{
 	    public boolean beforeHandshake(ServerHttpRequest request,  
 	            ServerHttpResponse response, WebSocketHandler wsHandler,  
 	            Map<String, Object> attributes) throws Exception {  
-	        System.out.println("Before Handshake"); 
-	        ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
-	        String fUserName = servletRequest.getServletRequest().getParameter("fUserName");
-	        String tUserName = servletRequest.getServletRequest().getParameter("tUserName");
-	        System.out.println("fUserName:"+fUserName+"tUserName:"+tUserName);
-	        attributes.put("fUserName",fUserName);
-	        attributes.put("tUserName",tUserName);
-//            HttpSession session = servletRequest.getServletRequest().getSession(false);
-//            if (session != null) {
-//                //使用userName区分WebSocketHandler，以便定向发送消息
-//                String fUserName = (String) session.getAttribute("fUserName");
-//                if (fUserName==null) {
-//                	fUserName="default-system";
-//                }
-//                System.out.println("far ::"+fUserName);
-//                attributes.put("fUserName",fUserName);
-//                
-//            }
+		 try {
+			 System.out.println("Before Handshake"); 
+		        ServletServerHttpRequest servletRequest = (ServletServerHttpRequest) request;
+		        String storeId = servletRequest.getServletRequest().getParameter("storeId");
+		        attributes.put("storeId", storeId);
+
+		        System.out.println("storeId:"+storeId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	       
 	       
 	        return true;  

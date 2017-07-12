@@ -94,6 +94,12 @@ public class PurchaseReportQuery extends Entity {
 	private Integer sellerStoreId;
 	
 	private Integer reportType;
+	
+	private Integer groupTag;
+	
+	private BigDecimal pucharseAmount;
+	
+	private BigDecimal saleAmount;
 
 	public BigDecimal getQuantity() {
 		return quantity;
@@ -382,6 +388,30 @@ public class PurchaseReportQuery extends Entity {
 
 	public void setCreateBy(String createBy) {
 		this.createBy = createBy;
+	}
+
+	public Integer getGroupTag() {
+		return groupTag;
+	}
+
+	public void setGroupTag(Integer groupTag) {
+		this.groupTag = groupTag;
+	}
+
+	public BigDecimal getPucharseAmount() {
+		return pucharseAmount;
+	}
+
+	public void setPucharseAmount(BigDecimal pucharseAmount) {
+		this.pucharseAmount = pucharseAmount;
+	}
+
+	public BigDecimal getSaleAmount() {
+		return saleAmount;
+	}
+
+	public void setSaleAmount(BigDecimal saleAmount) {
+		this.saleAmount = saleAmount;
 	}
 	
 	

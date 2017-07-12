@@ -15,6 +15,6 @@ public interface SpPrinterInfoService {
 	 * 保存打印机信息
 	 * 
 	 * */
-	public int saveSpPrinterInfo(ScPrinterInfo spPrinterInfo);
+	public ScPrinterInfo saveSpPrinterInfo(ScPrinterInfo spPrinterInfo);
 
 }

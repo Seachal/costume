@@ -1,6 +1,7 @@
 package costumetrade.report.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,13 +15,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import costumetrade.common.page.Page;
 import costumetrade.common.util.StringUtil;
+import costumetrade.order.domain.SpClient;
+import costumetrade.order.domain.SpPColor;
+import costumetrade.order.domain.SpPSize;
 import costumetrade.order.domain.SsStoOrder;
+import costumetrade.order.mapper.SpClientMapper;
+import costumetrade.order.mapper.SpPColorMapper;
+import costumetrade.order.mapper.SpPSizeMapper;
+import costumetrade.order.mapper.SsStoOrderMapper;
+import costumetrade.order.query.Filter;
 import costumetrade.order.query.Rules;
 import costumetrade.order.service.SpOrderService;
+import costumetrade.report.domain.FilterQuery;
 import costumetrade.report.domain.FinanceReportQuery;
 import costumetrade.report.domain.GeneralReportQuery;
 import costumetrade.report.domain.PayTypeQuery;
 import costumetrade.report.domain.ProductReportQuery;
+import costumetrade.report.domain.ProfitReportQuery;
 import costumetrade.report.domain.PurchaseReportQuery;
 import costumetrade.report.domain.ReportQuery;
 import costumetrade.report.domain.SaleReportQuery;
@@ -54,6 +65,14 @@ public class SpReportServiceImpl implements SpReportService{
 	private SpOrderService spOrderService;
 	@Autowired
 	private SsPaymentMapper ssPaymentMapper;
+	@Autowired
+	private SsStoOrderMapper ssStoOrderMapper;
+	@Autowired
+	private SpPSizeMapper spPSizeMapper;
+	@Autowired
+	private SpPColorMapper spPColorMapper;
+	@Autowired
+	private SpClientMapper spClientMapper;
 	@Override
 	public FinanceReportQuery financeReport(FinanceReportQuery query) {
 		if(query.getTimeFrom() ==null ){
@@ -250,6 +269,10 @@ public class SpReportServiceImpl implements SpReportService{
 			q.setProductName(maps2.get(0).getProductName());
 			q.setStoreId(query.getStoreId());
 			q.setReportType(query.getReportType());
+			Filter filter = new Filter();
+	    	filter.setValue(q.getProductName());
+	    	filter.setField("productName");
+	    	q.setFilter(filter);
 			ReportQuery r =  purchaseReportByProductName(q);
 			
 			reportQuery.setProductReportQuerys(r.getProductReportQuerys());
@@ -292,6 +315,7 @@ public class SpReportServiceImpl implements SpReportService{
 	    	report.setTimeTo(timeTos.get(i));
 	    	report.setStoreId(q.getStoreId());
 	    	report.setReportType(q.getReportType());
+	    	
 	    	querys.add(report);
 	    }
 	    return querys;
@@ -312,8 +336,10 @@ public class SpReportServiceImpl implements SpReportService{
 		//根据时间从，时间到获取8个时间区间，根据时间区间去汇总区间中的采购数量
 		List<ProductReportQuery> querys = getDatePoor(query);
 		//默认查询第一个商品所对应的趋势图
+		Filter filter = query.getFilter();
 		if(querys.size()>0){
 			query = querys.get(0);
+			query.setFilter(filter);
 			querys.remove(0);
 			System.out.println(querys.size());
 		}
@@ -456,9 +482,9 @@ public class SpReportServiceImpl implements SpReportService{
 		//计算毛利值
 		List<SaleReportQuery> list = new ArrayList<SaleReportQuery>();
 		if(querys!=null && querys.size()>0){
-			for(SaleReportQuery q : list){
+			for(SaleReportQuery q : querys){
 				if(q.getSaleAmount() !=null && q.getPucharseAmount()!=null){
-					q.setGrossProfit((q.getSaleAmount().subtract(q.getPucharseAmount())).divide(q.getSaleAmount()));
+					q.setGrossProfit((q.getSaleAmount().subtract(q.getPucharseAmount())).divide(q.getSaleAmount(),2,RoundingMode.HALF_UP));
 					list.add(q);
 				}
 			}
@@ -489,6 +515,8 @@ public class SpReportServiceImpl implements SpReportService{
 				return null;
 			}
 		}
+		Filter filter = new Filter();
+		q.setFilter(filter);
 		//获取库存数
 		List<Map<String,Object>> map =  spReportMapper.realTimeInventory(q, null);
 		if(map!=null && map.size()>0){
@@ -582,13 +610,13 @@ public class SpReportServiceImpl implements SpReportService{
 			}
 		}
 		result.setPayTypeQuery(payTypeQuerys);
-		List<SsStoOrder> orders1 = spOrderService.getOrders(3,null,query.getOpenid(),query.getPageNum());
-		List<SsStoOrder> orders2 = spOrderService.getOrders(4,null,query.getOpenid(),query.getPageNum());
-		List<SsPayment> pays = ssPaymentMapper.selects(query);
+		List<SsStoOrder> orders1 = spOrderService.getOrders(3,null,query.getOpenid(),1);
+//		List<SsStoOrder> orders2 = spOrderService.getOrders(4,null,query.getOpenid(),1);
+//		List<SsPayment> pays = ssPaymentMapper.selects(query);
 		
 		result.setPucharseOrders(orders1);
-		result.setSaleOrders(orders2);
-		result.setPayments(pays);
+//		result.setSaleOrders(orders2);
+//		result.setPayments(pays);
 		return result;
 	}
 	
@@ -604,6 +632,188 @@ public class SpReportServiceImpl implements SpReportService{
 			}
 		}
 		return payTypeQuerys;
+	}
+	@Override
+	public GeneralReportQuery generalReportPage(GeneralReportQuery query) {
+		GeneralReportQuery result = new GeneralReportQuery();
+		List<SsStoOrder> spStoOrders = new ArrayList<SsStoOrder>();
+		SsStoOrder spStoOrder = new SsStoOrder();
+		if(query.getTimeFrom() ==null ){
+			spStoOrder.setTimeFrom(setTimeFrom());
+			query.setTimeFrom(setTimeFrom());
+		}else{
+			spStoOrder.setTimeFrom(query.getTimeFrom());
+		}
+		if(query.getTimeTo() == null){
+			spStoOrder.setTimeTo(setTimeTo());
+			query.setTimeTo(setTimeTo());
+		}else{
+			spStoOrder.setTimeTo(query.getTimeTo());
+		}
+		ScWeChat wechat = scWeChatMapper.selectByOpenId(query.getOpenid());//根据当前操作者的openid 获取当前店铺storeId
+		if(wechat==null||StringUtil.isBlank(wechat.getStoreid())){
+			return null;
+		}
+		Page page = new Page();
+		page.setPageNum(query.getPageNum());
+		
+		spStoOrder.setOrderstatus(5);
+		if(query.getType()==1){
+			spStoOrder.setBuyerstoreid(wechat.getStoreid());
+			spStoOrders = ssStoOrderMapper.selectByOrderStore(spStoOrder,page);
+			result.setPucharseOrders(spStoOrders);
+		}else if(query.getType()==2){
+			spStoOrder.setSellerstoreid(wechat.getStoreid());
+			spStoOrders = ssStoOrderMapper.selectByOrderStore(spStoOrder,page);
+			result.setSaleOrders(spStoOrders);
+		}else if(query.getType()==3){
+			List<SsPayment> pays = ssPaymentMapper.selects(query,page);
+			result.setPayments(pays);
+		}
+		return result;
+	}
+	@Override
+	public ProfitReportQuery profitAnalysis(SaleReportQuery query) {
+		ProfitReportQuery resultQuery = new ProfitReportQuery();
+		if(query.getTimeFrom() ==null ){
+			query.setTimeFrom(setTimeFrom());
+		
+		}
+		if(query.getTimeTo() == null){
+			query.setTimeTo(setTimeTo());
+		}
+		ScWeChat wechat = scWeChatMapper.selectByOpenId(query.getOpenid());//根据当前操作者的openid 获取当前店铺storeId
+		
+		if(wechat !=null){
+			if(wechat.getStoreid()!=null){
+				query.setStoreId(wechat.getStoreid());
+			}else{
+				return null;
+			}
+		}
+		List<SaleReportQuery> resuletList = new ArrayList<SaleReportQuery>();
+		List<SaleReportQuery> resulets = new ArrayList<SaleReportQuery>();
+		
+		List<SaleReportQuery> queryOthers = new ArrayList<SaleReportQuery>();
+		BigDecimal profitAmountTotal = BigDecimal.ZERO;
+		BigDecimal saleAmountTotal = BigDecimal.ZERO;
+		BigDecimal pucharseAmountTotal = BigDecimal.ZERO;
+		List<SaleReportQuery> querys = spReportMapper.profitAnalysis(query);
+		if(querys!=null&&querys.size()>0){
+			int size = querys.size();
+			for(int i=0;i<size;i++){
+				SaleReportQuery q = querys.get(i);
+				if(querys.get(i).getSaleAmount()==null){
+					q.setSaleAmount(BigDecimal.ZERO);
+				}
+				if(querys.get(i).getPucharseAmount()==null){
+					q.setPucharseAmount(BigDecimal.ZERO);
+				}
+				pucharseAmountTotal = pucharseAmountTotal.add(q.getPucharseAmount());
+				saleAmountTotal = saleAmountTotal.add(q.getSaleAmount());
+				profitAmountTotal = profitAmountTotal.add(q.getSaleAmount().subtract(q.getPucharseAmount()));
+				q.setProfitAmount(q.getSaleAmount().subtract(q.getPucharseAmount()));
+				if(i>8){
+					queryOthers.add(q);
+				}else{
+					resulets.add(q);
+				}
+			}
+			size = resulets.size();
+			for(int i=0;i<size;i++){
+				SaleReportQuery q = resulets.get(i);
+				q.setProfitRatio(q.getProfitAmount().divide(profitAmountTotal, 2,  RoundingMode.HALF_UP));
+				q.setSaleRatio(q.getSaleAmount().divide(saleAmountTotal, 2,  RoundingMode.HALF_UP));
+				resuletList.add(q);
+			}
+			//计算其他的
+			if(queryOthers.size()>0){
+				size = queryOthers.size();
+				SaleReportQuery s = new SaleReportQuery();
+				s =setGroupField(query);
+				if(s!=null){
+					s.setSaleAmount(BigDecimal.ZERO);
+					s.setPucharseAmount(BigDecimal.ZERO);
+					s.setProfitAmount(BigDecimal.ZERO);
+					s.setSaleRatio(BigDecimal.ZERO);
+					s.setProfitRatio(BigDecimal.ZERO);
+				}
+				for(int i=0;i<size;i++){
+					s.setSaleAmount(s.getSaleAmount().add(queryOthers.get(i).getSaleAmount()));
+					s.setPucharseAmount(s.getPucharseAmount().add(queryOthers.get(i).getPucharseAmount()));
+					s.setProfitAmount(s.getProfitAmount().add(queryOthers.get(i).getProfitAmount()));
+				}
+				s.setProfitRatio(s.getProfitAmount().divide(profitAmountTotal, 2,  RoundingMode.HALF_UP));
+				s.setSaleRatio(s.getSaleAmount().divide(saleAmountTotal, 2,  RoundingMode.HALF_UP));
+				resuletList.add(s);
+			}
+			
+		}
+		resultQuery.setPucharseAmount(pucharseAmountTotal);
+		resultQuery.setSaleAmount(saleAmountTotal);
+		resultQuery.setGrossProfit(saleAmountTotal.subtract(pucharseAmountTotal).divide(saleAmountTotal, 2,  RoundingMode.HALF_UP));
+		resultQuery.setProfitAmount(profitAmountTotal);
+		resultQuery.setQuerys(resuletList);
+		return resultQuery;
+	}
+	
+	public SaleReportQuery setGroupField(SaleReportQuery query){
+		SaleReportQuery r = new SaleReportQuery();
+		Filter filter = query.getFilter();
+		if(filter!=null){
+			if("productName".equals(filter.getField())){
+				r.setProductName("其他");
+			}else if("productColor".equals(filter.getField())){
+				r.setProductColor("其他");
+			}else if("productSize".equals(filter.getField())){
+				r.setProductSize("其他");
+			}else if("brandName".equals(filter.getField())){
+				r.setBrandName("其他");
+			}else if("operator".equals(filter.getField())){
+				r.setOperator("其他");
+			}else if("clientName".equals(filter.getField())){
+				r.setClientName("其他");
+			}
+		}
+		return r;
+	}
+	@Override
+	public FilterQuery filterQuery(FilterQuery query) {
+		FilterQuery result = new FilterQuery();
+		ScWeChat wechat = scWeChatMapper.selectByOpenId(query.getOpenid());//根据当前操作者的openid 获取当前店铺storeId
+		
+		if(wechat !=null){
+			if(wechat.getStoreid()!=null){
+				query.setStoreId(wechat.getStoreid());
+			}else{
+				return null;
+			}
+		}
+		SpPSize size = new SpPSize();
+		size.setStoreId(query.getStoreId());
+		List<SpPSize> sizes = spPSizeMapper.getSpPSizes(size );
+		
+		SpPColor color = new SpPColor();
+		color.setStoreId(query.getStoreId());
+		List<SpPColor> colors = spPColorMapper.getSpPColors(color , null);
+		
+		SpClient client = new SpClient();
+		client.setStoreId(query.getStoreId());
+		client.setType(2+"");
+		List<SpClient> clientSuppliers = spClientMapper.select(client , null);
+		client.setType(1+"");
+		List<SpClient> clientCustomers = spClientMapper.select(client , null);
+		
+		SpEmployee record= new SpEmployee();
+		record.setStoreId(query.getStoreId());
+		List<SpEmployee> employees = spEmployeeMapper.selects(record);
+		
+		result.setClientCustomers(clientCustomers);
+		result.setClientSuppliers(clientSuppliers);
+		result.setCplorList(colors);
+		result.setSizeList(sizes);
+		result.setEmployeeList(employees);
+		return result;
 	}
 }
 

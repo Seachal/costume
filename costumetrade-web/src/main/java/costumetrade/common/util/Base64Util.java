@@ -94,7 +94,7 @@ public class Base64Util {
         //对字节数组Base64编码
         String base64Data="";
 		try {
-			base64Data = Base64.encodeBase64String(str.getBytes("utf-8"));
+			base64Data = Base64.encodeBase64String(str.getBytes("GBK"));
 			if(StringUtils.isNotEmpty(base64Data)){
 	            base64Data = base64Data.replaceAll("\\+", "*").replaceAll("\\/", "-");
 	        }
@@ -117,6 +117,7 @@ public class Base64Util {
         //读取图片字节数组
         try {
             in = new FileInputStream(file);
+           
             data = new byte[in.available()];
             in.read(data);
             in.close();

@@ -27,7 +27,7 @@ public class SpPrinterInfoServiceImpl implements SpPrinterInfoService{
 
 		return scPrinterInfoMapper.selectByPrimaryKey(storeId);
 	}
-	public int saveSpPrinterInfo(ScPrinterInfo spPrinterInfo) {
+	public ScPrinterInfo saveSpPrinterInfo(ScPrinterInfo spPrinterInfo) {
 		int save = 0;
 		//查询对应打印配置是否存在，存在的话进行update 不存在save
 		ScPrinterInfo printer = scPrinterInfoMapper.selectByPrimaryKey(spPrinterInfo.getStoreid());
@@ -41,9 +41,10 @@ public class SpPrinterInfoServiceImpl implements SpPrinterInfoService{
 		if(printer == null){
 			save = scPrinterInfoMapper.insert(spPrinterInfo) ;
 		}else {
+			spPrinterInfo.setId(printer.getId());
 			save = scPrinterInfoMapper.updateByPrimaryKeySelective(spPrinterInfo);
 		}
-		return save;
+		return spPrinterInfo;
 		
 		 
 	}

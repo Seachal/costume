@@ -1,6 +1,7 @@
 package costumetrade.order.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -123,6 +124,12 @@ public class SpOrderServiceImpl implements SpOrderService{
 					order.setRealcost(order.getTotalamt());
 					order.setDebetamt(order.getTotalamt());
 				}
+				if(wechat1.getStoreid().equals(order.getBuyerstoreid())){
+					param.setOrderTypeTag(1);//采购单
+				}
+				if(wechat1.getStoreid().equals(order.getSellerstoreid())){
+					param.setOrderTypeTag(2);//销售单
+				}
 			}else{
 				if("1".equals(order.getOrdertype())){
 					order.setBuyerstoreid(wechat1.getUserid());
@@ -210,6 +217,9 @@ public class SpOrderServiceImpl implements SpOrderService{
 			order.setOrdertime(new Date());
 			param.setIsContinue(order.getIsContinue());
 			param.setOrderType(2);
+			if(param.getOrderTypeTag()==1){
+				param.setIsContinue(true);
+			}
 			boolean operatestock = orderStock(param,detail);
 			if(!operatestock){
 				return 2;
@@ -271,7 +281,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 				}else{
 					for(SsStoDetail detail : details){
 						if(detail.getProductid().equals(price.getProductid())){
-							price.setCustPrice(detail.getCount().multiply(detail.getPrice()).add(price.getCustPrice()).divide(detail.getCount().add(BigDecimal.ONE)));
+							price.setCustPrice(detail.getCount().multiply(detail.getPrice()).add(price.getCustPrice()).divide(detail.getCount().add(BigDecimal.ONE),2,RoundingMode.HALF_UP));
 						}
 					}
 					updates.add(price);
@@ -423,7 +433,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 			ssStocks.add(stock);
 			ids.add(detail.getProductid());
 		
-			List<SsStock> s = ssStockMapper.select(stock);
+			List<SsStock> s = ssStockMapper.selectStock(stock);
 			if(s == null || s.size()<=0 ){
 				stockTag = false ; //库存不存在时，在库存记录中保存一条负库存记录
 				stock.setCreatetime(new Date());
@@ -457,30 +467,35 @@ public class SpOrderServiceImpl implements SpOrderService{
 				ssStockTransferSeller.add(transfer);
 			}
 			if(param.getOperate() == 3||( param.getOperate() == 5 && param.getOrderType() == 2)){
-				ssStockTransferMapper.insert(ssStockTransferSeller,param.getSellerstoreid());//新增卖家交易记录
-				for(int i=0 ; i< ssStocks.size(); i++){
-					if(ssStocks.get(i).getProductid().equals(ssStock.get(i).getProductid())
-							&& ssStocks.get(i).getProductcolor().equals(ssStock.get(i).getProductcolor())
-							&& ssStocks.get(i).getProductsize().equals(ssStock.get(i).getProductsize())){
-						SsStock stock = new SsStock();
-						//库存不存在时，在库存记录中保存一条负库存记录
-						stock = ssStock.get(i);
-						if(stock.getId() == null){
-							stock.setStocknum(new BigDecimal(0).subtract(stock.getStocknum()));
-							updateSellerStock = ssStockMapper.insertSelective(stock);
-						}else{
-							stock.setStoreid(param.getSellerstoreid());
-							stock.setStocknum(ssStock.get(i).getStocknum().subtract(ssStocks.get(i).getStocknum()));
-							updateSellerStock = ssStockMapper.updateByPrimaryKeySelective(stock); //更新卖家库存
+				if(StringUtil.isNotBlank(param.getSellerstoreid())){
+					ssStockTransferMapper.insert(ssStockTransferSeller,param.getSellerstoreid());//新增卖家交易记录
+					for(int i=0 ; i< ssStocks.size(); i++){
+						if(ssStocks.get(i).getProductid().equals(ssStock.get(i).getProductid())
+								&& ssStocks.get(i).getProductcolor().equals(ssStock.get(i).getProductcolor())
+								&& ssStocks.get(i).getProductsize().equals(ssStock.get(i).getProductsize())){
+							SsStock stock = new SsStock();
+							//库存不存在时，在库存记录中保存一条负库存记录
+							stock = ssStock.get(i);
+							if(stock.getId() == null){
+								stock.setStocknum(new BigDecimal(0).subtract(stock.getStocknum()));
+								updateSellerStock = ssStockMapper.insertSelective(stock);
+							}else{
+								stock.setStoreid(param.getSellerstoreid());
+								stock.setStocknum(ssStock.get(i).getStocknum().subtract(ssStocks.get(i).getStocknum()));
+								updateSellerStock = ssStockMapper.updateByPrimaryKeySelective(stock); //更新卖家库存
+							}
+							//更新卖家的商品销量
+							SpProduct p = spProductMapper.selectByPrimaryKey(ids.get(i), param.getSellerstoreid());
+							if(p!=null){
+								p.setSaleNum(p.getSaleNum().add(ssStocks.get(i).getStocknum()));
+								spProductMapper.updateByPrimaryKeySelective(p);
+							}
+							
+							
 						}
-						
-						
-						//更新卖家的商品销量
-						SpProduct p = spProductMapper.selectByPrimaryKey(ids.get(i), param.getSellerstoreid());
-						p.setSaleNum(p.getSaleNum().add(ssStocks.get(i).getStocknum()));
-						spProductMapper.updateByPrimaryKeySelective(p);
 					}
 				}
+				
 			}
 			/**审核配货逻辑整理：
 			1、确定有没有库存
@@ -489,49 +504,57 @@ public class SpOrderServiceImpl implements SpOrderService{
 			 * 
 			 * */
 			product = spProductMapper.selectById(ids, param.getSellerstoreid());
-			if(wechat.getStoreid() != null && param.getOperate() == 5){//如果买家的角色是店家，那么当买家收货或者开采购单
-				for(SsStockTransfer transfer : transfers){
-					transfer.setStockType(1);//调ru
-					ssStockTransferBuyyer.add(transfer);
-				}
-				ssStockTransferMapper.insert(ssStockTransferBuyyer,param.getBuyerstoreid());//  新增买家交易记录
-				for(int i=0 ; i< ssStocks.size(); i++){
-					SsStock stock = new SsStock();
-					stock = ssStocks.get(i);
-					stock.setStoreid(param.getBuyerstoreid());
-					
-					List<String> otherStoreIds = new ArrayList<String>();
-					otherStoreIds.add(param.getBuyerstoreid());
-					stock.setOtherStoreIds(otherStoreIds );
-					
-					List<SsStock> stocks = ssStockMapper.select(stock);//买家库存，存在更新，不存在新增库存
-					SsStock stockBuyyer = new SsStock();
-					if(stocks != null && stocks.size()>0 ){
-						stockBuyyer = stocks.get(0);
+			if(StringUtil.isNotBlank(param.getBuyerstoreid())){
+				if(wechat.getStoreid() != null && param.getOperate() == 5){//如果买家的角色是店家，那么当买家收货或者开采购单
+					for(SsStockTransfer transfer : transfers){
+						transfer.setStockType(1);//调ru
+						ssStockTransferBuyyer.add(transfer);
 					}
-					if(StringUtil.isBlank(stockBuyyer.getStoreid()) ){
-						for(SpProduct p : product){
-							if(p.getId().equals(ssStocks.get(i).getProductid())){
-								p.setPurchaseprice(ssStoDetails.get(i).getPrice());
-								spProductService.insertSuspendingProduct(p, param.getBuyerstoreid());
+					ssStockTransferMapper.insert(ssStockTransferBuyyer,param.getBuyerstoreid());//  新增买家交易记录
+					for(int i=0 ; i< ssStocks.size(); i++){
+						SsStock stock = new SsStock();
+						stock = ssStocks.get(i);
+						stock.setStoreid(param.getBuyerstoreid());
+						
+						List<String> otherStoreIds = new ArrayList<String>();
+						otherStoreIds.add(param.getBuyerstoreid());
+						stock.setOtherStoreIds(otherStoreIds );
+						
+						List<SsStock> stocks = ssStockMapper.selectStock(stock);//买家库存，存在更新，不存在新增库存
+						SsStock stockBuyyer = new SsStock();
+						if(stocks != null && stocks.size()>0 ){
+							stockBuyyer = stocks.get(0);
+							stock.setId(stockBuyyer.getId());
+						}
+						if(StringUtil.isBlank(stockBuyyer.getStoreid()) ){
+							for(SpProduct p : product){
+								SpProduct pro = spProductMapper.selectByPrimaryKey(p.getId(), param.getBuyerstoreid());
+								if(pro!=null){
+									continue;
+								}
+								if(p.getId().equals(ssStocks.get(i).getProductid())){
+									p.setPurchaseprice(ssStoDetails.get(i).getPrice());
+									spProductService.insertSuspendingProduct(p, param.getBuyerstoreid());
+								}
 							}
+							ssStockMapper.insertSelective(stock);
+						}else{
+							if(stockBuyyer.getStocknum() ==null){
+								stockBuyyer.setStocknum(new BigDecimal(0));
+							}
+							stock.setStocknum(stockBuyyer.getStocknum().add(ssStocks.get(i).getStocknum()));
+							updateSellerStock = ssStockMapper.updateByPrimaryKeySelective(stock); //更新买家库存
 						}
-						ssStockMapper.insertSelective(stock);
-					}else{
-						if(stockBuyyer.getStocknum() ==null){
-							stockBuyyer.setStocknum(new BigDecimal(0));
-						}
-						stock.setStocknum(stockBuyyer.getStocknum().add(ssStocks.get(i).getStocknum()));
-						updateSellerStock = ssStockMapper.updateByPrimaryKeySelective(stock); //更新买家库存
+					}
+				}
+				if(param.getOperate() == 5){
+					if(wechat.getStoreid().equals(param.getBuyerstoreid())){
+						//采购单计算平均成本价
+						setCustPrice(ssStoDetails, null, param.getOpenid());
 					}
 				}
 			}
-			if(param.getOperate() == 5){
-				if(wechat.getStoreid().equals(param.getBuyerstoreid())){
-					//采购单计算平均成本价
-					setCustPrice(ssStoDetails, null, param.getOpenid());
-				}
-			}
+		
 			
 		
 		}else{
@@ -572,20 +595,22 @@ public class SpOrderServiceImpl implements SpOrderService{
 				stock.setProductsize(detail.getProductsize());
 				stock.setStoreid(param.getSellerstoreid());
 				
-				List<String> otherStoreIds = new ArrayList<String>();
-				otherStoreIds.add(param.getSellerstoreid());
-				stock.setOtherStoreIds(otherStoreIds );
+				List<SsStock> ssStockSeller = new ArrayList<SsStock>();
+				if(StringUtil.isNotBlank(param.getSellerstoreid())){
+					List<String> otherStoreIds = new ArrayList<String>();
+					otherStoreIds.add(param.getSellerstoreid());
+					stock.setOtherStoreIds(otherStoreIds );
+					ssStockSeller = ssStockMapper.selectStock(stock);
+				}
 				
-				List<SsStock> ssStockSeller = ssStockMapper.select(stock);
 				List<SsStock> ssStockBuyer = null;
-				if(isStore){//修改卖家库存  加  修改买方库存 减  修改卖方库存  加
+				if(isStore&&StringUtil.isNotBlank(param.getBuyerstoreid())){//修改卖家库存  加  修改买方库存 减  修改卖方库存  加
 					stock.setStoreid(param.getBuyerstoreid());
-					
 					List<String> otherStoreId = new ArrayList<String>();
 					otherStoreId.add(param.getBuyerstoreid());
 					stock.setOtherStoreIds(otherStoreId );
 					
-					ssStockBuyer = ssStockMapper.select(stock);
+					ssStockBuyer = ssStockMapper.selectStock(stock);
 				}
 				if(ssStockSeller!=null&& ssStockSeller.size()>0){
 					stock.setStocknum(ssStockSeller.get(0).getStocknum().add(detail.getCount()));

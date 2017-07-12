@@ -1,18 +1,20 @@
 package costumetrade.print.service.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
+import javax.imageio.ImageIO;
+
+import org.apache.poi.sl.draw.BitmapImageRenderer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import sun.misc.BASE64Encoder;
-
-import com.httpclient.HttpClientUtils;
-
+import costumetrade.common.util.Base64Util;
 import costumetrade.print.service.SpPrintService;
 import costumetrade.user.domain.ScPrinterInfo;
 import costumetrade.user.mapper.ScPrinterInfoMapper;
@@ -25,11 +27,19 @@ public class SpPrintServiceImpl implements SpPrintService{
 	@Override
 	public String gbkImage(CommonsMultipartFile image) {
 		String data = null;
+		
 		try {
+			
+			InputStream is=image.getInputStream();
+			BufferedImage bi=ImageIO.read(is);
+			Image im=(Image)bi; 
+			
+//			BitmapImageRenderer bit = new BitmapImageRenderer();
+//			bit.
 			BASE64Encoder encoder = new BASE64Encoder();  
 			// 通过base64来转化图片
 			data = encoder.encode(image.getBytes());
-			data = new String(data.getBytes(), "gbk");
+			data = new String(data.getBytes(), "GBK");
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -39,15 +49,19 @@ public class SpPrintServiceImpl implements SpPrintService{
 
 	@Override
 	public String gbkText(String text) {
-		BASE64Encoder encoder = new BASE64Encoder();  
+//		BASE64Encoder encoder = new BASE64Encoder();  
 		// 通过base64来转化图片
-		String data = encoder.encode(text.getBytes());
+		//String data = encoder.encode(text.getBytes());
+		String data = null;
 		try {
-			data = new String(data.getBytes(), "gbk");
+//			byte[] binBuffer = text.getBytes("GBK");
+			data = Base64Util.getImageBase64(text);
 		} catch (Exception e) {
 			
 			e.printStackTrace();
 		}
+		
+  
 		return data;
 	}
 

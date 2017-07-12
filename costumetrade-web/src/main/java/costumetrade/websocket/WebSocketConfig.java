@@ -7,14 +7,16 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
-@Configuration  
+@Configuration 
+
 @EnableWebSocket 
 public class WebSocketConfig implements WebSocketConfigurer{
 
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-		registry.addHandler(systemWebSocketHandler(),"/socketHander").addInterceptors(new HandshakeInterceptor()).setAllowedOrigins("ws://192.168.2.221");  
+		registry.addHandler(systemWebSocketHandler(),"/socketHander").addInterceptors(new HandshakeInterceptor()).setAllowedOrigins("ws://192.168.2.221:8080");  
         //registry.addHandler(systemWebSocketHandler(),"/webSocketServer/sockjs").setAllowedOrigins("*").withSockJS();
+		
 	}
 	
 	@Bean  

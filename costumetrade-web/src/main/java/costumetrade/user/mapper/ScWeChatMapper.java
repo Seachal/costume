@@ -24,5 +24,5 @@ public interface ScWeChatMapper {
     
     ScWeChat selectByUnionid(String unionid);
     
-    ScWeChat selectWechat(ScWeChat record);
+    List<ScWeChat> selectWechat(ScWeChat record);
 }

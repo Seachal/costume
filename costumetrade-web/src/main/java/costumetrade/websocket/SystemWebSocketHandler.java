@@ -28,15 +28,9 @@ public class SystemWebSocketHandler implements WebSocketHandler{
 			throws Exception {
 		System.out.println("ConnectionEstablished");  
         log.debug("ConnectionEstablished");  
-        String tUserName= (String) session.getAttributes().get("tUserName");
-        String fUserName= (String) session.getAttributes().get("fUserName");
-        System.out.println("fUserName111:"+fUserName);
-        System.out.println("tUserName111:"+tUserName);
         users.add(session);  
+        //保存监听的打印机信息
         
-        
-//        session.sendMessage(new TextMessage("connect:{tUserName:"+tUserName+",fUserName:"+fUserName+",sendTime:"+new Date()+"}"));  
-//        session.sendMessage(new TextMessage("new_msg"));
 	}
 
 	@Override
@@ -44,17 +38,10 @@ public class SystemWebSocketHandler implements WebSocketHandler{
 			throws Exception {
 		System.out.println("handleMessage" + message.toString());  
         log.debug("handleMessage" + message.toString()); 
-        String fUserName= (String) session.getAttributes().get("fUserName");
-        System.out.println("fUserName:"+fUserName);
-        System.out.println("fUserName:"+message.toString());
-        sendMessageToUser(fUserName,new TextMessage(message.toString()));   
-//        TextMessage mes = new TextMessage((CharSequence) message.getPayload());
-        
-//        String schatMessage = (String) message.getPayload();
-//		System.out.println(schatMessage);
-//		JSONObject jsonObject = JSONObject.fromObject(schatMessage);
-//        session.sendMessage(new TextMessage(jsonObject + "")); 
-//        session.sendMessage(new TextMessage(message + ""));
+        String storeId= (String) session.getAttributes().get("sotreId");
+        char seprator='\uffff';
+        sendMessageToUser(storeId,new TextMessage("rptdata"+seprator+"门店销售"+seprator+"{\"id\":\"170312\",\"name\":\"123\"}"));   
+
 	}
 
 	@Override
@@ -78,9 +65,9 @@ public class SystemWebSocketHandler implements WebSocketHandler{
      * @param userName
      * @param message
      */
-    public void sendMessageToUser(String userName, TextMessage message) {
+    public void sendMessageToUser(String storeId, TextMessage message) {
         for (WebSocketSession user : users) {
-            if (user.getAttributes().get("fUserName").equals(userName)) {
+            if (user.getAttributes().get("storeId").equals(storeId)) {
             	System.out.println("发送消息啦！");
                 try {
                     if (user.isOpen()) {

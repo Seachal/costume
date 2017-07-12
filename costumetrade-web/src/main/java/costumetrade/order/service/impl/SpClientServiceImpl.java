@@ -1,5 +1,6 @@
 package costumetrade.order.service.impl;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -8,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,6 +19,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.client.j2se.MatrixToImageWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 
 import costumetrade.common.page.Page;
 import costumetrade.common.util.OrderNoGenerator;
@@ -38,6 +45,8 @@ import costumetrade.order.query.OrderQuery;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.query.Rules;
 import costumetrade.order.service.SpClientService;
+import costumetrade.order.service.WeChatService;
+import costumetrade.user.domain.InputMessage;
 import costumetrade.user.domain.QRCodeScanParam;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpCustProdPrice;
@@ -76,7 +85,8 @@ public class SpClientServiceImpl implements SpClientService{
 	private SsDataDictionaryMapper ssDataDictionaryMapper;
 	@Autowired
 	private SsStoDetailMapper ssStoDetailMapper;
-
+	@Autowired
+	private WeChatService weChatService;
 	/** 
 	 *  生成web版本二维码 
 	 * @param url 要生成二维码的路径 
@@ -116,13 +126,13 @@ public class SpClientServiceImpl implements SpClientService{
 		if(url!=null && !"".equals(url)){
 			
 			try {
-/*				QRCodeWriter writer = new QRCodeWriter();
+				QRCodeWriter writer = new QRCodeWriter();
 				stream = resp.getOutputStream();
-				BitMatrix m = writer.encode(url, BarcodeFormat.QR_CODE, height, width);
+				BitMatrix m = writer.encode("wxp://f2f0FVWzjOfmcZ652wLtFg4WRz9p4qIQH5xT", BarcodeFormat.QR_CODE, height, width);
 				MatrixToImageWriter.writeToStream(m, "png", stream);
 				BufferedImage image = toBufferedImage(m);
 //				out = new ByteArrayOutputStream();
-				ImageIO.write(image, "png", stream);*/
+				ImageIO.write(image, "png", stream);
 				
 			} catch (Exception e2) {
 				e2.getStackTrace();			
@@ -131,17 +141,17 @@ public class SpClientServiceImpl implements SpClientService{
 		
 	}
 	
-/*	  private static BufferedImage toBufferedImage(BitMatrix matrix) {
+	  private static BufferedImage toBufferedImage(BitMatrix matrix) {
 		  int width = matrix.getWidth();
 		  int height = matrix.getHeight();
 		  BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 		  for (int x = 0; x < width; x++) {
 			  for (int y = 0; y < height; y++) {
-		                  image.setRGB(x, y, matrix.get(x, y) ? BLACK : WHITE);
+		                  image.setRGB(x, y, matrix.get(x, y) ? 200 : 200);
 		      }
 		  }
 		  return image;
-	}*/
+	}
 	@Override
 	public String saveClient(SpClient client) {
 		int operate = 0;
@@ -234,18 +244,37 @@ public class SpClientServiceImpl implements SpClientService{
 		
 		List<String> openids = new ArrayList<String>();
 		if(save>0&&spClient.getStatus()==1){//批量删除，删除关注
+			
+			ScWeChat record = new ScWeChat();
+			
+			record.setStoreid(spClient.getStoreId());
+			List<ScWeChat> chats = scWeChatMapper.selectWechat(record );
+			
 			ScFocusShop shop = new ScFocusShop();
-			List<SpClient> clients = spClientMapper.select(spClient,null);
+			List<SpClient> clients = spClientMapper.select1(spClient);
 			for(SpClient client : clients){
-				openids.add(client.getOpenid());
+				if("2".equals(client.getType())&&chats.size()>0){
+					ScWeChat sc = scWeChatMapper.selectByOpenId(client.getOpenid());
+					openids.add(chats.get(0).getOpenid());
+					if(sc!=null){
+						shop.setShopid(sc.getStoreid());
+					}
+					
+				}else if("1".equals(client.getType())){
+					openids.add(client.getOpenid());
+					shop.setShopid(spClient.getStoreId());
+				}
 			}
 			if(openids.size()>0){
 				shop.setOpenids(openids);
 			}else{
 				shop.setOpenids(null);
 			}
-			shop.setShopid(spClient.getStoreId());
-			scFocusShopMapper.deleteByPrimaryKey(shop);
+			
+			if(StringUtil.isNotBlank(shop.getShopid())&&shop.getOpenids()!=null&&shop.getOpenids().size()>0){
+				scFocusShopMapper.deleteByPrimaryKey(shop);
+			}
+			
 		}
 		return save;
 	}
@@ -321,6 +350,7 @@ public class SpClientServiceImpl implements SpClientService{
 	}
 	@Override
 	public Object scanQRCodeOk(QRCodeScanParam param) {
+		String openid = "";
 		Object object = null;
 		if(param.getType()==1||param.getType()==2||param.getType()==3){
 			SpClient client = spClientMapper.selectByPrimaryKey(param.getId());
@@ -333,6 +363,7 @@ public class SpClientServiceImpl implements SpClientService{
 				if(clients!=null&& clients.size()>0){
 					if(clients.size()>=1){//清楚多余新增的数据
 						object = clients.get(0);
+						openid = clients.get(0).getUnionid();
 						clients.remove(0);
 					}
 					if(clients.size()>0){
@@ -365,6 +396,12 @@ public class SpClientServiceImpl implements SpClientService{
 					}
 				}
 			}
+		}
+		if(StringUtil.isNotBlank(openid)){
+			InputMessage message = new InputMessage();
+			message.setToUserName(openid);
+			message.setContent(param.getContext());
+			weChatService.sendMessage(message );
 		}
 		//删除未扫描成功的用户
 		spEmployeeMapper.deleteEmployee(null);

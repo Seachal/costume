@@ -49,11 +49,14 @@ import costumetrade.order.mapper.SsProductFileMapper;
 import costumetrade.order.mapper.SsProductReviewMapper;
 import costumetrade.order.mapper.SsStoOrderMapper;
 import costumetrade.order.mapper.SsStockMapper;
+import costumetrade.order.query.Filter;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.query.Rules;
 import costumetrade.order.query.StockQuery;
 import costumetrade.order.service.SpProductService;
 import costumetrade.order.service.WeChatService;
+import costumetrade.report.domain.PurchaseReportQuery;
+import costumetrade.report.mapper.SpReportMapper;
 import costumetrade.user.domain.PatternPrice;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpCustProdPrice;
@@ -118,6 +121,8 @@ public class SpProductServiceImpl implements SpProductService{
 	private ScLogisticFeeMapper scLogisticFeeMapper;
 	@Autowired
 	private SpUserMapper spUserMapper;
+	@Autowired
+	private SpReportMapper spReportMapper;
 	
 	@Override
 	public List<ProductQuery> selectProducts(ProductQuery productQuery) {
@@ -359,6 +364,23 @@ public class SpProductServiceImpl implements SpProductService{
 				query.setSalePrice(salePrice);
 				query.setOriginalPrice(query.getTagprice());
 			}
+		}
+		
+		PurchaseReportQuery quer = new PurchaseReportQuery();
+		Filter filter = new Filter();
+		filter.setField("productId");
+		filter.setValue(queryDetail.getId());
+		quer.setFilter(filter);
+		//查询对应商品实时库存
+		List<Map<String, Object>>  maps = spReportMapper.realTimeInventory(quer , null);
+		if(maps!=null&&maps.size()>0){
+			query.setStockNum((BigDecimal)maps.get(0).get("quantity"));
+		}
+		//查询店家名称和头像
+		SpStore store = spStoreMapper.selectByPrimaryKey(queryDetail.getStoreId());
+		if(store!=null){
+			query.setStoreName(store.getName());
+			query.setStoreImage(store.getStorephoto());
 		}
 		List<SsProductReview> productReviews = ssProductReviewMapper.selectReviews(queryDetail,new Page());
 		//查询评价数量

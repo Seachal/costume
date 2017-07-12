@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+import org.springframework.web.socket.TextMessage;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.common.util.StringUtil;
 import costumetrade.print.service.SpPrintService;
 import costumetrade.user.domain.ScPrinterInfo;
+import costumetrade.websocket.SystemWebSocketHandler;
 
 /**
  *
@@ -68,6 +68,25 @@ public class SpPrintController {
 		}else{
 			result.setData(data);
 		}
+		return result;
+	}
+	
+	@RequestMapping("/printer")
+	public ApiResponse printer(String storeId){
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		if(StringUtil.isBlank(storeId)){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}else{
+			SystemWebSocketHandler handler = new SystemWebSocketHandler();
+			 char seprator='\uffff';
+			handler.sendMessageToUser(storeId, new TextMessage("rptdata"+seprator+"报表测试"+seprator+"{\"id\": 123,\"name\": 456}"));
+		}
+		
 		return result;
 	}
 }

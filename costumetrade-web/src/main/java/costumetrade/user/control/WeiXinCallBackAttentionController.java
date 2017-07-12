@@ -43,7 +43,7 @@ public class WeiXinCallBackAttentionController {
 			</xml>
 		 */
 		@RequestMapping(value ="/", method={RequestMethod.POST,RequestMethod.GET})
-		public void callback(String body,HttpServletRequest request,HttpServletResponse response){
+		public void callback(HttpServletRequest request,HttpServletResponse response){
 				
 		        System.out.println("================================微信URL回调测试=========================");  
 		        

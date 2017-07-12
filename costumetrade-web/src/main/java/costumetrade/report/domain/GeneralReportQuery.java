@@ -73,6 +73,8 @@ public class GeneralReportQuery extends Entity {
 	private List<SsPayment> payments;
 	
 	private Integer pageNum;
+	
+	private Integer type;
 
 	public String getOpenid() {
 		return openid;
@@ -342,6 +344,18 @@ public class GeneralReportQuery extends Entity {
 
 	public void setPayments(List<SsPayment> payments) {
 		this.payments = payments;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public List<SsStoOrder> getSaleOrders() {
+		return saleOrders;
 	}
 	
 	

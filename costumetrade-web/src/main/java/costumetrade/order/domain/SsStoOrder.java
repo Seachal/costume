@@ -204,6 +204,9 @@ public class SsStoOrder extends Entity {
     
     private String receiverImage;
     
+    private Date timeFrom;
+	
+	private Date timeTo;
     private static final long serialVersionUID = 1L;
     
     private Boolean canCancellation;
@@ -612,6 +615,22 @@ public class SsStoOrder extends Entity {
 
 	public void setPhoto(String photo) {
 		this.photo = photo;
+	}
+
+	public Date getTimeFrom() {
+		return timeFrom;
+	}
+
+	public void setTimeFrom(Date timeFrom) {
+		this.timeFrom = timeFrom;
+	}
+
+	public Date getTimeTo() {
+		return timeTo;
+	}
+
+	public void setTimeTo(Date timeTo) {
+		this.timeTo = timeTo;
 	}
     
     

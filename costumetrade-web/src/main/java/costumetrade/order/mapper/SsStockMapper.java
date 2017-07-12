@@ -21,4 +21,6 @@ public interface SsStockMapper {
     int updateByPrimaryKey(SsStock record);
     
     int batchUpdate(@Param("stocks")List<SsStock> stocks);
+    
+    List<SsStock> selectStock(SsStock record);
 }

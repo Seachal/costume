@@ -41,4 +41,6 @@ public interface SpReportMapper {
 	List<GeneralReportQuery> generalPayType1(GeneralReportQuery query);
 	
 	List<GeneralReportQuery> generalPayType2(GeneralReportQuery query);
+	
+	List<SaleReportQuery> profitAnalysis(SaleReportQuery query);
 }

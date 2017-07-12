@@ -97,9 +97,9 @@ public class WxPayAction  {
 		infoReq.setOut_trade_no(out_trade_no);
 		TradeInfo tradeInfo=getTradeInfo(infoReq);
 		//由于openid和unionID字段值互换，openid实际值是unionID，unionID实际值openid
-		ScWeChat chat = scWeChatMapper.selectByUnionid(infoReq.getOpenid());
-		infoReq.setOpenid("oDy7t0IKwk7Ko6wpa0clZ9WdqnQo");
-		infoReq.setTotal_fee("33");
+		ScWeChat chat = scWeChatMapper.selectByOpenId(infoReq.getOpenid());
+		infoReq.setOpenid(chat.getUnionid());
+		//infoReq.setTotal_fee("33");
 		infoReq.setBody("product info");
 		tradeInfoService.insert(tradeInfo);
 		ScUpgradeMap scUpgradeMap = new ScUpgradeMap();

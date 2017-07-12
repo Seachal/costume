@@ -26,7 +26,7 @@ public class SpClient extends Entity {
     /**
      *  普通用户ID：针对普通消费者
      */
-    private String userId;
+    private String unionid;
     
     private String openid;
 
@@ -402,12 +402,14 @@ public class SpClient extends Entity {
 		this.otherStoreId = otherStoreId;
 	}
 
-	public String getUserId() {
-		return userId;
+	
+
+	public String getUnionid() {
+		return unionid;
 	}
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public void setUnionid(String unionid) {
+		this.unionid = unionid;
 	}
 
 	public String getOpenid() {

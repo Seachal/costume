@@ -41,13 +41,13 @@ public class SpPrinterController {
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
-		int save = spPrinterInfoService.saveSpPrinterInfo(scPrinterInfo);
-		if(save<=0){
-			result.setCode(ResponseInfo.EXCEPTION.code);
-			result.setMsg(ResponseInfo.EXCEPTION.msg);
+		ScPrinterInfo info = spPrinterInfoService.saveSpPrinterInfo(scPrinterInfo);
+		if(info==null){
+			result.setData(ResponseInfo.NOT_DATA.code);
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
 			return result;
 		}else{
-			result.setData(spPrinterInfoService.getSpPrinterInfos(scPrinterInfo.getStoreid()));
+			result.setData(info);
 		}
 		return result;
 

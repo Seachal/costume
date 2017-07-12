@@ -25,5 +25,6 @@ public interface SpClientMapper {
     
     List<SpClient> selectDistincts(@Param("client")SpClient client);
     
+    List<SpClient> select1(@Param("client")SpClient client);
    
 }

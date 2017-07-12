@@ -3,7 +3,9 @@ package costumetrade.user.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
+import costumetrade.common.page.Page;
 import costumetrade.report.domain.GeneralReportQuery;
 import costumetrade.user.domain.SsPayment;
 @Mapper
@@ -22,5 +24,5 @@ public interface SsPaymentMapper {
     
     SsPayment countRepay(SsPayment record);
     
-    List<SsPayment> selects(GeneralReportQuery query);
+    List<SsPayment> selects(@Param("query")GeneralReportQuery query,@Param("page")Page page);
 }
