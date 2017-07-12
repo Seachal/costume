@@ -290,7 +290,7 @@
 		product.sizes,
 		unit.unit as unit,
 		product.handcount, product.description,store.name as storeName,store.storePhoto as
-		storeImage,
+		storeImage,product.video1,product.video2,product.video3,
 		product.year , product.season, product.image1, product.image2, product.image3,
 		product.image4
 		from sp_product product

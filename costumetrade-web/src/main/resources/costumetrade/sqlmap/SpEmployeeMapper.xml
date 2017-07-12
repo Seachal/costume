@@ -57,6 +57,7 @@
      <if test="openid != null">
       and openid = #{openid,jdbcType=VARCHAR}
       </if>
+      and status =0
   </select>
   <select id="getAllEmployees" parameterType="String"  resultMap="BaseResultMap">
     select 

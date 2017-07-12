@@ -46,6 +46,24 @@
 		<result column="saleAmount" jdbcType="DECIMAL" property="saleAmount" />
 		<result column="purchaseAmount" jdbcType="DECIMAL" property="purchaseAmount" />
 	</resultMap>
+		<resultMap id="SaleResultMap1"
+		type="costumetrade.report.domain.SaleReportQuery">
+		<result column="quantity" jdbcType="DECIMAL" property="quantity" />
+		<result column="amount" jdbcType="DECIMAL" property="amount" />
+		<result column="pucharseAmount" jdbcType="DECIMAL" property="pucharseAmount" />
+		<result column="saleAmount" jdbcType="DECIMAL" property="saleAmount" />
+		<result column="productName" jdbcType="VARCHAR" property="productName" />
+		<result column="productColor" jdbcType="VARCHAR" property="productColor" />
+		<result column="productSize" jdbcType="VARCHAR" property="productSize" />
+		<result column="brandName" jdbcType="VARCHAR" property="brandName" />
+		<result column="gradeName" jdbcType="VARCHAR" property="gradeName" />
+		<result column="storeName" jdbcType="VARCHAR" property="storeName" />
+		<result column="productId" jdbcType="VARCHAR" property="productId" />
+		<result column="clientName" jdbcType="VARCHAR" property="clientName" />
+		<result column="createBy" jdbcType="VARCHAR" property="createBy" />
+		<result column="saleAmount" jdbcType="DECIMAL" property="saleAmount" />
+		<result column="purchaseAmount" jdbcType="DECIMAL" property="purchaseAmount" />
+	</resultMap>
 	<resultMap id="GeneralResultMap"
 		type="costumetrade.report.domain.GeneralReportQuery">
 		<result column="saleAmount" jdbcType="DECIMAL" property="saleAmount" />
@@ -182,8 +200,9 @@
 		<if test="filter.value !=null">
 			and ${filter.field} like CONCAT('%',#{filter.value},'%')
 		</if>
-		
+		<if test="filter.field !=null">
 		group by ${filter.field}
+		</if>
 	    order by quantity desc
 	</select>
 
@@ -214,8 +233,12 @@
 		ON store.id = stock.storeId
 		WHERE 1=1
 		and stock.storeId = #{query.storeId}
+		<!-- 
 		AND STOCK.createTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
 		AND STOCK.createTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
+		
+		 -->
+		
 		
 		
 	 
@@ -293,11 +316,11 @@
 		on brand.id =product.brandId and brand.storeId =#{query.storeId}
 		LEFT JOIN sp_product_type productType ON productType.id =product.productType and
 		productType.storeId =#{query.storeId}
-		<if test="reportType==1"><!-- 采购报表 -->
+		<if test="query.reportType==1"><!-- 采购报表 -->
 		 LEFT JOIN sc_wechat_bind wechat ON wechat.storeId = sto.buyerStoreId
  		 LEFT JOIN sp_client c ON c.openid = wechat.openId
 		</if>
-		<if test="reportType==2"><!-- 销售报表 -->
+		<if test="query.reportType==2"><!-- 销售报表 -->
 			LEFT JOIN sc_wechat_bind wechat ON (wechat.userId = sto.buyerStoreId OR wechat.storeId = sto.buyerStoreId)
   			LEFT JOIN sp_client c ON c.openid = wechat.openId
 		</if>
@@ -379,11 +402,11 @@
 		LEFT JOIN
 		sp_product_type productType ON productType.id =product.productType and
 		productType.storeId =#{query.storeId}
-			<if test="reportType==1"><!-- 采购报表 -->
+			<if test="query.reportType==1"><!-- 采购报表 -->
 		 LEFT JOIN sc_wechat_bind wechat ON wechat.storeId = sto.buyerStoreId
  		 LEFT JOIN sp_client c ON c.openid = wechat.openId
 		</if>
-		<if test="reportType==2"><!-- 销售报表 -->
+		<if test="query.reportType==2"><!-- 销售报表 -->
 			LEFT JOIN sc_wechat_bind wechat ON (wechat.userId = sto.buyerStoreId OR wechat.storeId = sto.buyerStoreId)
   			LEFT JOIN sp_client c ON c.openid = wechat.openId
 		</if>
@@ -422,7 +445,7 @@
 
 	<select id="purchaseReport2" resultMap="PurchaseResultMap">
 		SELECT
-		sum(detail.count) as quantity,
+		sum(case when detail.count is null then 0 else detail.count end) as quantity,
 		#{query.timeFrom} as timeFrom,
 		#{query.timeTo} as timeTo,
 		detail.productName as productName,
@@ -460,7 +483,7 @@
 		<foreach collection="querys" index="index" item="item">
 		union all
 		SELECT
-		sum(detail.count) as quantity,
+		sum(case when detail.count is null then 0 else detail.count end) as quantity,
 		#{query.timeFrom} as timeFrom,
 		#{query.timeTo} as timeTo,
 		detail.productName as productName,
@@ -747,10 +770,10 @@ SELECT
 		AND sto.orderTime &lt;=str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
 		GROUP BY sto.payCate2
 		</select>
-	<select id="saleSortReport"   resultMap="SaleResultMap">
+	<select id="saleSortReport"   resultMap="SaleResultMap1">
 		SELECT 
 		  SUM(detail.count) AS quantity,
-		  SUM(CASE WHEN sto.buyerStoreId = #{query.storeId} THEN detail.price * detail.count ELSE 0 END) AS pucharseAmount,
+		  SUM(CASE WHEN sto.sellerStoreId = #{query.storeId} THEN price.custPrice * detail.count ELSE 0 END) AS pucharseAmount,
 		  SUM(CASE WHEN sto.sellerStoreId = #{query.storeId} THEN detail.price * detail.count ELSE 0 END) AS saleAmount,
 		  detail.productId,
 		  detail.productName AS productName,
@@ -774,13 +797,15 @@ SELECT
 		    AND grade.storeId = #{query.storeId} 
 		    AND grade.dict_value = product.grade 
 		  LEFT JOIN sp_employee employee ON employee.id = sto.operator
+		  LEFT JOIN ss_pprice price ON
+		price.productId = product.id AND price.storeId = product.storeId and price.productId = detail.productId
 		  where 1=1
 		  AND sto.orderStatus = 5 
 		  AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
 		  AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
-		
+		  AND sto.sellerStoreId = #{query.storeId}	
 		<if test="query.filter.value !=null">
-			and ${query.filter.field} like CONCAT('%',#{query.filter.value},'%')
+			and ${query.filter.field} = #{query.filter.value}
 		</if>
 		group by ${query.filter.field}
 	    <if test="query.quantityOp == 'asc'">
@@ -798,5 +823,44 @@ SELECT
 		<if test="page != null">
 			LIMIT #{page.startRow},#{page.pageSize}
 		</if>
+	</select>
+	<select id="profitAnalysis" resultMap="SaleResultMap1">
+	SELECT
+		sum(detail.count) as quantity,
+		SUM(detail.price*detail.count) AS saleAmount,
+		SUM(price.custPrice*detail.count) AS pucharseAmount,
+		detail.productId,
+		detail.productName as productName,
+		detail.productColor as productColor,
+		detail.productSize as productSize,
+		brand.brandName as brandName,
+		grade.dict_text as gradeName,
+		sto.operator as createBy
+		FROM
+		ss_stodetail detail
+		LEFT JOIN ss_stoorder sto 
+		ON sto.payOrderNo = detail.orderId
+		left join sp_product product
+		on product.id=detail.productId and product.storeId = #{storeId}
+		left join sp_pbrand brand
+		on brand.id =product.brandId and brand.storeId=#{storeId}
+		left join
+		ss_data_dictionary grade
+		on grade.dict_group='PRODUCT_GRADE'
+		and grade.storeId=#{storeId} and grade.dict_value = product.grade
+		LEFT JOIN ss_pprice price ON
+		price.productId = product.id AND price.storeId = product.storeId and price.productId = detail.productId
+		where 1=1
+		and sto.sellerStoreId=#{storeId}
+		AND sto.orderTime &gt;=str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
+		AND sto.orderTime &lt;=str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
+		<if test="filter.value !=null">
+			and ${filter.field} like CONCAT('%',#{filter.value},'%')
+		</if>
+		<if test="filter.field !=null">
+		group by ${filter.field}
+		</if>
+	    order by saleAmount desc
+	
 	</select>
 </mapper>

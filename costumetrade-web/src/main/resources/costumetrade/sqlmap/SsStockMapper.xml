@@ -54,6 +54,34 @@
 		) s where 1=1
 		group by s.productId,s.productColor,s.productSize
 	</select>
+	<select id="selectStock" parameterType="costumetrade.order.domain.SsStock"
+		resultMap="BaseResultMap">
+	select
+		stock.id,stock.storeId,stock.productId,stock.productColor,
+		stock.productSize, stock.stockNum, stock.productPrice
+		from ss_stock stock
+		left join sp_product product on product.id =
+		stock.productid and product.storeId = stock.storeId
+		where 1=1
+		
+		<if test="productid != null">
+			and stock.productId = #{productid,jdbcType=VARCHAR}
+		</if>
+		<if test="productcolor != null">
+			and stock.productColor = #{productcolor,jdbcType=VARCHAR}
+		</if>
+		<if test="productsize != null">
+			and stock.productSize = #{productsize,jdbcType=VARCHAR}
+		</if>
+		<if test="stocknum != null">
+			and stock.stockNum &gt;= #{stocknum,jdbcType=DECIMAL}
+		</if>
+		<if test="otherStoreIds != null">
+			and stock.storeId in <foreach collection="otherStoreIds" item="item" index="index" open="(" close=")" separator=",">
+				#{item}
+			</foreach>
+		</if>
+	</select>
 	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
 		delete from ss_stock
 		where id = #{id,jdbcType=INTEGER}
@@ -178,7 +206,9 @@
 		<if test="productsize != null">
 			and productSize = #{productsize,jdbcType=VARCHAR}
 		</if>
-
+		<if test="id!=null">
+			and id = #{id}
+		</if>
 	</update>
 	<update id="updateByPrimaryKey" parameterType="costumetrade.order.domain.SsStock">
 		update ss_stock

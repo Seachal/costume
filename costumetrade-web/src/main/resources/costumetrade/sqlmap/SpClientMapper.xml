@@ -135,7 +135,60 @@
 		LIMIT #{page.startRow},#{page.pageSize}
 		</if>
 	</select>
-	
+	<select id="select1" 
+		resultMap="BaseResultMap">
+		select
+		id, storeId,
+		type, cate,
+		fastcode,unionid,openid,
+		 image,
+		telephone,
+		points, 
+		remarkName, nickName,reallyName
+		
+		from sp_client
+		where 1=1
+		and status ='1'
+		<if test="client.storeId !=null">
+			and storeId = #{client.storeId,jdbcType=VARCHAR}
+		</if>
+		<if test="client.type!=null">
+			and type = #{client.type,jdbcType=VARCHAR}
+		</if>
+		<if test="client.otherStoreId != null">
+			and otherStoreId = #{client.otherStoreId,jdbcType=VARCHAR}
+		</if>
+		<if test="client.unionid != null">
+			and unionid = #{client.unionid,jdbcType=VARCHAR}
+		</if>
+		<if test="client.openid != null">
+			and openid = #{client.openid,jdbcType=VARCHAR}
+		</if>
+		<if test="client.name != null">
+			and (remarkName like CONCAT('%',#{client.name},'%') or nickName like CONCAT('%',#{client.name},'%') or reallyName like CONCAT('%',#{client.name},'%'))
+		</if>
+		<if test="client.scene != null">
+			and scene = #{client.scene,jdbcType=VARCHAR}
+		</if>
+		<if test="client.districtList != null">
+			and district in
+			<foreach collection="client.districtList" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		<if test="client.cateList != null">
+			and cate in
+			<foreach collection="client.cateList" item="item" index="index"
+				open="(" separator="," close=")"> #{item}</foreach>
+			
+		</if>
+		<if test="client.idArray != null">
+			and id in
+			<foreach collection="client.idArray" item="item" index="index"
+				open="(" separator="," close=")"> #{item}</foreach>
+			
+		</if>
+		
+	</select>
 	<select id="selectDistincts" 
 		resultMap="BaseResultMap">
 		select distinct(district)
