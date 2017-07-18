@@ -13,7 +13,7 @@ public interface SpStoreService {
 	/**
 	 * 保存分店
 	 * */
-	public int saveChainStore(SpStore spStore);
+	public String saveChainStore(SpStore spStore);
 	/**
 	 * 查询当前店铺信息
 	 * */

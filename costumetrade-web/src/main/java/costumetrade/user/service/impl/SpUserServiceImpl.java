@@ -1,7 +1,6 @@
 package costumetrade.user.service.impl;
 
 
-import java.security.InvalidAlgorithmParameterException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -30,6 +29,7 @@ import costumetrade.order.mapper.SpProductMapper;
 import costumetrade.order.query.OrderCountQuery;
 import costumetrade.order.service.SpOrderService;
 import costumetrade.order.service.WeChatService;
+import costumetrade.product.service.ShareProductService;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.domain.SpStore;
@@ -40,7 +40,9 @@ import costumetrade.user.mapper.SpEmployeeMapper;
 import costumetrade.user.mapper.SpStoreMapper;
 import costumetrade.user.mapper.SpUserMapper;
 import costumetrade.user.mapper.SsDataDictionaryMapper;
+import costumetrade.user.query.ScUserQuery;
 import costumetrade.user.query.StoreQuery;
+import costumetrade.user.service.SpEmployeeService;
 import costumetrade.user.service.SpUserService;
 
 @Transactional
@@ -66,6 +68,11 @@ public class SpUserServiceImpl implements SpUserService{
 	private ScStoreAddrMapper scStoreAddrMapper;
 	@Autowired
 	private SsDataDictionaryMapper ssDataDictionaryMapper;
+	
+	@Autowired
+	private SpEmployeeService spEmployeeService;
+	@Autowired
+	private ShareProductService shareProductService;
 	
 	@Override
 	public ScWeChat login(String openId,String unionid) {//openid 值和unionID 互换
@@ -104,7 +111,7 @@ public class SpUserServiceImpl implements SpUserService{
 				we.setUserid(userId);
 				we.setCreateby(userid+"");
 			}else{//绑定员工号
-				we.setEmpid(semployee.getId());
+				we.setEmpid(semployee.getId()+"");
 				we.setStoreid(semployee.getStoreId());
 			}
 			weId = scWeChatMapper.insertSelective(we);
@@ -113,7 +120,7 @@ public class SpUserServiceImpl implements SpUserService{
 			if(StringUtils.isBlank(wechat.getEmpid()+"")&&semployee !=null){//绑定员工号
 				wechat.setEmpid(semployee.getId());
 				wechat.setStoreid(semployee.getStoreId());
-				wechat.setUserid(null);
+				wechat.setUserid("");
 				scWeChatMapper.updateByPrimaryKeySelective(wechat);
 			}
 			scWeChat = wechat;
@@ -240,8 +247,6 @@ public class SpUserServiceImpl implements SpUserService{
 				sStore.setAddress(spStore.getAddress());
 				
 				//查询推广商品图片
-				
-				
 				List<String> list = new ArrayList<String>();
 				list.add("IMAGE");
 				List<SsDataDictionary> dict = ssDataDictionaryMapper.selectDictionarys(list,spStore.getId());
@@ -380,9 +385,7 @@ public class SpUserServiceImpl implements SpUserService{
             System.out.println(u+"\n");
             if(null != resultByte && resultByte.length > 0){  
                 String userInfo = new String(WxPKCS7Encoder.decode(u.getBytes()));  
-//                
-//                userInfo = new String(userInfo.getBytes(), "UTF-8");
-//                System.out.println(userInfo);
+
                 JSONObject json = JSON.parseObject(userInfo);
                 unionId = json.getString("unionId"); 
 		    	String openId = json.getString("openId");
@@ -392,31 +395,82 @@ public class SpUserServiceImpl implements SpUserService{
 		    	//把openid字段保存unionID
 		    	wechat = login(unionId,openId);
 		    	
-//		    	if(wechat !=null && wechat.getId()!=null){
-//	    			//把昵称 头像保存到店铺or 用户
-//	    			if(StringUtil.isNotBlank(wechat.getStoreid())){
-//			    		SpStore store = new SpStore();
-//			    		store.setName(nickName);
-//			    		store.setId(wechat.getStoreid());
-//			    		store.setStorephoto(avatarUrl);
-//			    		spStoreMapper.updateByPrimaryKeySelective(store);
-//			    	}
-//	    			//把昵称 头像保存到店铺or 用户
-//	    			if(StringUtil.isNotBlank(wechat.getUserid())){
-//			    		SpUser user = new SpUser();
-//			    		user.setName(nickName);
-//			    		user.setId(wechat.getUserid());
-//			    		user.setPhoto(avatarUrl);;
-//			    		spUserMapper.updateByPrimaryKeySelective(user);
-//			    	}
-//	    		}
-//		    	
+		    	wechat.setName(nickName);
+		    	wechat.setPhoto(avatarUrl);
+		    	if(wechat !=null && wechat.getId()!=null){
+	    			//把昵称 头像保存到店铺or 用户
+	    			if(StringUtil.isNotBlank(wechat.getStoreid())){
+			    		SpStore store = new SpStore();
+			    		store.setName(nickName);
+			    		store.setId(wechat.getStoreid());
+			    		store.setStorephoto(avatarUrl);
+			    		spStoreMapper.updateByPrimaryKeySelective(store);
+			    	}
+	    			//把昵称 头像保存到店铺or 用户
+	    			if(StringUtil.isNotBlank(wechat.getUserid())){
+			    		SpUser user = new SpUser();
+			    		user.setName(nickName);
+			    		user.setId(wechat.getUserid());
+			    		user.setPhoto(avatarUrl);;
+			    		spUserMapper.updateByPrimaryKeySelective(user);
+			    	}
+	    		}
+		    	
 		    	
             }  
         } catch (Exception e) {  
             e.printStackTrace();
         }
         return wechat;
+	}
+	@Override
+	public ScUserQuery getScUser(ScWeChat wechat) {
+		ScUserQuery resultQuery = new ScUserQuery();
+		StoreQuery query = new StoreQuery();
+		if(wechat != null && StringUtil.isNotBlank(wechat.getOpenid())){
+			query.setOpenid(wechat.getOpenid());
+			query.setStoreId(wechat.getStoreid());
+			if(StringUtil.isNotBlank(wechat.getStoreid())){
+				if(StringUtil.isNotBlank(wechat.getEmpid())){
+					resultQuery.setUserIdentity(3);//员工身份
+					resultQuery.setEmpId(wechat.getEmpid());
+				}else{
+					resultQuery.setUserIdentity(1);//店家身份
+				}
+				resultQuery.setStoreId(wechat.getStoreid());
+				SpStore store = spStoreMapper.selectByPrimaryKey(wechat.getStoreid());
+				if(store!=null){
+					resultQuery.setName(store.getName());
+					resultQuery.setPhoto(store.getStorephoto());
+				}
+			}else{
+				resultQuery.setUserIdentity(2);//普通消费者
+				resultQuery.setUserid(wechat.getUserid());
+				SpUser user = spUserMapper.selectByPrimaryKey(wechat.getUserid());
+				if(user!=null){
+					resultQuery.setName(user.getName());
+					resultQuery.setPhoto(user.getPhoto());
+				}
+				resultQuery.setProducts(shareProductService.getAllPromotionalProduct(wechat.getOpenid(), 1));
+			}
+			//如果普通消费者或者店铺名称为空，则默认是微信昵称
+			if(StringUtil.isBlank(resultQuery.getName())){
+				resultQuery.setName(wechat.getName());
+			}
+			resultQuery.setProducts(shareProductService.getAllPromotionalProduct(wechat.getOpenid(), 1));
+		}
+	
+		resultQuery.setQuery(query);
+		SpEmployee employee = spEmployeeService.getEmployeePrivilege(wechat.getOpenid());
+		SpEmployee e = new SpEmployee();
+		if(employee!=null){
+			e.setPrivilegeEmployees(employee.getPrivilegeEmployees());
+			e.setZeroPrice(employee.getZeroPrice());
+			e.setDiscount(employee.getDiscount());
+			e.setModifyPrice(employee.getModifyPrice());
+		}
+		resultQuery.setEmployee(e);
+		return resultQuery;
 	}
 	
 }

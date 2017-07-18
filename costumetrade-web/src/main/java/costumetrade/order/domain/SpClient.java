@@ -176,6 +176,8 @@ public class SpClient extends Entity {
     private List<String> idArray;
     
     private Boolean checkAllTag;
+    
+    private Boolean mallProList;
 
     private static final long serialVersionUID = 1L;
     
@@ -540,6 +542,14 @@ public class SpClient extends Entity {
 
 	public void setCheckAllTag(Boolean checkAllTag) {
 		this.checkAllTag = checkAllTag;
+	}
+
+	public Boolean getMallProList() {
+		return mallProList;
+	}
+
+	public void setMallProList(Boolean mallProList) {
+		this.mallProList = mallProList;
 	}
     
     

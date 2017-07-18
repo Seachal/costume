@@ -60,4 +60,6 @@ public interface SpReportService {
 	public ProfitReportQuery  profitAnalysis(SaleReportQuery query);
 	
 	public FilterQuery filterQuery(FilterQuery query);
+	
+	public ReportQuery saleReport(ProductReportQuery query);
 }

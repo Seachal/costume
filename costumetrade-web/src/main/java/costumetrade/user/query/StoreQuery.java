@@ -3,6 +3,7 @@ package costumetrade.user.query;
 import java.util.List;
 
 import costumetrade.common.Entity;
+import costumetrade.product.domain.ScPromotionalProduct;
 import costumetrade.user.domain.SpStore;
 
 public class StoreQuery extends Entity {
@@ -22,6 +23,8 @@ public class StoreQuery extends Entity {
 	private Integer noticeCount;
 	
 	private String storeId;
+	
+	private List<ScPromotionalProduct> products;
 
 	public List<SpStore> getStoreList() {
 		return storeList;
@@ -69,6 +72,14 @@ public class StoreQuery extends Entity {
 
 	public void setStoreId(String storeId) {
 		this.storeId = storeId;
+	}
+
+	public List<ScPromotionalProduct> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<ScPromotionalProduct> products) {
+		this.products = products;
 	}
 	
 	

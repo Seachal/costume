@@ -1,6 +1,9 @@
 package costumetrade.user.query;
 
+import java.util.List;
+
 import costumetrade.common.Entity;
+import costumetrade.product.domain.ScPromotionalProduct;
 import costumetrade.user.domain.SpEmployee;
 
 public class ScUserQuery extends Entity {
@@ -39,11 +42,17 @@ public class ScUserQuery extends Entity {
     
     private String storeId;
     
-    private Integer empId;
+    private String empId;
     
     private String openid ;
     
+    private String photo;
+    
 
+    
+    
+    private List<ScPromotionalProduct> products;
+    
     private static final long serialVersionUID = 1L;
 
     public String getId() {
@@ -128,11 +137,11 @@ public class ScUserQuery extends Entity {
 		this.storeId = storeId;
 	}
 
-	public Integer getEmpId() {
+	public String getEmpId() {
 		return empId;
 	}
 
-	public void setEmpId(Integer empId) {
+	public void setEmpId(String empId) {
 		this.empId = empId;
 	}
 
@@ -142,6 +151,22 @@ public class ScUserQuery extends Entity {
 
 	public void setOpenid(String openid) {
 		this.openid = openid;
+	}
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+
+	public List<ScPromotionalProduct> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<ScPromotionalProduct> products) {
+		this.products = products;
 	}
     
     

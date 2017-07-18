@@ -8,6 +8,7 @@ import costumetrade.order.domain.SsProductReview;
 import costumetrade.order.domain.SsStock;
 import costumetrade.order.query.ProductQuery;
 import costumetrade.order.query.StockQuery;
+import costumetrade.product.domain.ScPromotionalProduct;
 
 
 public interface SpProductService {
@@ -95,4 +96,10 @@ public interface SpProductService {
 	 * 
 	 * */
 	public List<SpProduct> enterShareProducts(ProductQuery query);
+	/**
+	 * 
+	 * 记录推广数据
+	 * 
+	 * **/
+	public int confirmShareProducts(ScPromotionalProduct products);
 }

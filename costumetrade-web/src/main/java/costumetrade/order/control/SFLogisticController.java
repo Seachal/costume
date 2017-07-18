@@ -22,6 +22,7 @@ import costumetrade.common.param.ResponseInfo;
 import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.domain.YDLogisticsRequest;
 import costumetrade.order.domain.YDLogisticsResponse;
+import costumetrade.order.domain.ZTOLogistics;
 import costumetrade.order.service.SFLogisticsService;
 import costumetrade.order.service.SpOrderService;
 
@@ -64,7 +65,7 @@ public class SFLogisticController {
 	}
 	@RequestMapping("/createOrderToYD")
 	@ResponseBody
-	public ApiResponse createOrderToYD(YDLogisticsRequest request) {
+	public ApiResponse createOrderToYD(@RequestBody YDLogisticsRequest request) {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
@@ -74,11 +75,10 @@ public class SFLogisticController {
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 		}else{
 			if("1".equals(response.getStatus())){//下单成功
-				
 				ScLogistics logistics = new ScLogistics();
 				//logistics.setStoreid(1);//storeId createBy  获取session中的值
-				logistics.setLogisticsname("顺丰");
-				logistics.setLogisticsCode("SF");
+				logistics.setLogisticsname("韵达");
+				logistics.setLogisticsCode("YD");
 				logistics.setCreatetime(new Date());
 				logistics.setCreateby(1+"");
 				logistics.setLogisticsno(response.getMailno());
@@ -90,7 +90,36 @@ public class SFLogisticController {
 		}
 		return  result;
 	}
-
+	
+	@RequestMapping("/createOrderToZTO")
+	@ResponseBody
+	public ApiResponse createOrderToZTO(@RequestBody ZTOLogistics request) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		ZTOLogistics response = sFLogisticsService.createOrderToZTO(request);
+		if(response==null){
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
+		}else{
+			if(response.getReslut()){//下单成功
+				ScLogistics logistics = new ScLogistics();
+				//logistics.setStoreid(1);//storeId createBy  获取session中的值
+				logistics.setLogisticsname("中通");
+				logistics.setLogisticsCode("ZTO");
+				logistics.setCreatetime(new Date());
+				logistics.setCreateby(1+"");
+				logistics.setLogisticsno(response.getOrderCode());
+				logistics.setOrderno(request.getPartnerCode());
+				spOrderService.confirmLogistic(logistics);//物流单号，+订单号 绑定
+			}
+			
+			result.setData(response);
+		}
+		return  result;
+	}
+	
+	
 	@RequestMapping("/querySF")
 	@ResponseBody
 	public ApiResponse querySF(@RequestBody OrderQueryReqDto orderQueryReqDto) {

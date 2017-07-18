@@ -51,7 +51,7 @@ public class SpPrivilegeService implements ISpPrivilegeService {
 	
 	public int deleteByEmployeeId(Long employeeId) {
 		
-		return  spPrivilegeEmployeeMapper.deleteByPrimaryKey(employeeId);
+		return  spPrivilegeEmployeeMapper.deleteByEmployeeId(employeeId);
 	}
 
 	@Override

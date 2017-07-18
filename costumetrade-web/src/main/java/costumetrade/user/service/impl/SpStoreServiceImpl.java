@@ -66,29 +66,45 @@ public class SpStoreServiceImpl implements SpStoreService{
 		return stores;
 	}
 	@Override
-	public int saveChainStore(SpStore spStore) {
+	public String saveChainStore(SpStore spStore) {
 		List<SpStore> stores = null;
 		int update = 0;
-		if(spStore.getId()==null){//新增保存
+		if(StringUtil.isBlank(spStore.getId())){//新增保存
 			stores = spStoreMapper.selectStores(spStore, null); 
+			if(stores !=null && stores.size()>0){
+				update = 2;//该分店已经存在
+			}else{
+				String storeId = new Date().getTime()+"";
+				spStore.setId(storeId);
+				update = spStoreMapper.insertSelective(spStore);
+				//初始化高级设置数据
+		    	//GeneratorBaseTable.generatorTable(spStore.getId()+"");
+		    	if(StringUtil.isNotBlank(spStore.getId())&&update>0){
+		    		SpPBrand spPBrand = new SpPBrand();
+		    		spPBrand.setStoreId(spStore.getId());
+		    		spPBrand.setBrandname(spStore.getName());
+		    		spPBrand.setStatus(0);
+		    	
+					//保存品牌
+		    		spPBrandMapper.insert(spPBrand ) ;
+		    		
+		    		SpPCate spPCate = new SpPCate();
+		    		spPCate.setStoreId(spStore.getId());
+		    		spPCate.setCatename("服装");
+		    		spPCate.setStatus(0);
+					//保存种类
+		    		spPCateMapper.insert(spPCate ) ;
+		    		//保存高级设置中的客户类型
+		    		insertCustPrice(spStore.getId());
+		    		//保存数据字段信息
+		    		insertDictionarys(spStore.getId());
+		    	}
+			}
 		}else{
 			update = spStoreMapper.updateByPrimaryKeySelective(spStore);
 		}
-		if(stores !=null && stores.size()>0){
-			update = 2;//该分店已经存在
-		}else{
-			update = spStoreMapper.insertSelective(spStore);
-			//初始化高级设置数据
-	    	//GeneratorBaseTable.generatorTable(spStore.getId()+"");
-	    	if(spStore.getId()!=null){
-	    	
-	    		//保存高级设置中的客户类型
-	    		insertCustPrice(spStore.getId());
-	    		//保存数据字段信息
-	    		insertDictionarys(spStore.getId());
-	    	}
-		}
-		return update;
+		
+		return spStore.getId();
 	}
 	@Override
 	public SpStore getStore(String storeId) {

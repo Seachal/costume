@@ -28,7 +28,7 @@ public interface SpReportMapper {
 	
 	List<ProductReportQuery> purchaseReport2(@Param("query")ProductReportQuery query,@Param("querys")List<ProductReportQuery> querys);
 	
-	List<PurchaseReportQuery> purchaseReport1(@Param("query")PurchaseReportQuery query);
+	List<PurchaseReportQuery> purchaseReport1(@Param("query")PurchaseReportQuery query,@Param("page")Page page);
 	
 	List<SaleReportQuery> saleSortReport(@Param("query")SaleReportQuery query,@Param("page")Page page);
 	

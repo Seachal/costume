@@ -71,7 +71,7 @@ public interface SpOrderService {
 	 * 查询物流
 	 * */
 	
-	public MessageResp<List<RouteRespDto>> queryLogistic(SsStoOrder ssStoOrder);
+	public Object queryLogistic(SsStoOrder ssStoOrder);
 	
 	/**
 	 * 评价

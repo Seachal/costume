@@ -6,6 +6,7 @@ import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpStore;
+import costumetrade.user.query.ScUserQuery;
 import costumetrade.user.query.StoreQuery;
 
 
@@ -34,4 +35,6 @@ public interface SpUserService {
 	public SpStore getStoreImage(SpStore spStore , List<SpProduct> products);
 	
 	public ScWeChat  getUnionId(String encryptedData,String iv,String sessionKey);
+	
+	public ScUserQuery getScUser(ScWeChat chat);
 }

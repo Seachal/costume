@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import org.apache.http.client.ClientProtocolException;
 
+import costumetrade.order.query.OrderQuery;
 import costumetrade.user.domain.InputMessage;
+import costumetrade.user.domain.ScWeChat;
 
 
 
@@ -32,7 +34,7 @@ public interface WeChatService  {
 	 * @throws ClientProtocolException 
 	 * */
 	
-	public String getOpenIdAndKey(String Code,String appId,String appSecret) throws Exception;
+	public String getOpenIdAndKey(String Code) throws Exception;
 	
 	public String getWechatTwoCode() throws Exception;
 	/**
@@ -49,4 +51,8 @@ public interface WeChatService  {
 	 * 小程序发送消息
 	 * **/
 	public void sendMessage(InputMessage message);
+	
+	public ScWeChat getWeChat(ScWeChat chat);
+	
+	public void sendTemplate(OrderQuery param) throws Exception;
 }

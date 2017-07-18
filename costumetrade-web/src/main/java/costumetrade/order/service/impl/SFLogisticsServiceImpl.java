@@ -1,5 +1,6 @@
 package costumetrade.order.service.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -14,6 +15,7 @@ import org.jboss.logging.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alibaba.fastjson.JSONObject;
 import com.sf.openapi.common.entity.AppInfo;
 import com.sf.openapi.common.entity.HeadMessageReq;
 import com.sf.openapi.common.entity.MessageReq;
@@ -31,11 +33,14 @@ import com.sf.openapi.express.sample.security.dto.TokenRespDto;
 import com.sf.openapi.express.sample.security.tools.SecurityTools;
 
 import costumetrade.common.util.DataSecurity;
+import costumetrade.common.util.DigestUtil;
 import costumetrade.common.util.HttpClient;
 import costumetrade.common.util.OrderNoGenerator;
 import costumetrade.common.util.XMLUtil;
+import costumetrade.common.util.ZTOHttpUtil;
 import costumetrade.order.domain.YDLogisticsRequest;
 import costumetrade.order.domain.YDLogisticsResponse;
+import costumetrade.order.domain.ZTOLogistics;
 import costumetrade.order.service.SFLogisticsService;
 
 @Transactional
@@ -358,5 +363,125 @@ public class SFLogisticsServiceImpl implements SFLogisticsService {
         }  
 	
 		return response;
+	}
+
+	@Override
+	public ZTOLogistics createOrderToZTO(ZTOLogistics request) {
+		ZTOLogistics res = new ZTOLogistics();
+		Map map = new HashMap();
+		try {
+			String data = JSONObject.toJSONString(request);
+			map.put("data", data);
+			map.put("msg_type", "COMMONORDER_CREATE");
+			map.put("data_digest", DigestUtil.digest(data, "1ba059868f79", DigestUtil.UTF8));
+			map.put("company_id", "7b7cda2af7c4485ba32748fec33b54ad");
+			String response = ZTOHttpUtil.post("http://japi.zto.cn/zto/api_utf8/traceInterface", "UTF-8", map);
+			res = JSONObject.parseObject(response, ZTOLogistics.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return res;
+	}
+	
+	public static void main(String[] args) {
+//		Map map = new HashMap();
+//		try {
+//			String data = null;
+//			
+//			data="{"+
+//    "\"partnerCode\": \"13052014201123\","+
+//   " \"type\": \"1\","+
+//   " \"tradeId\": \"270184323432522222\","+
+//   " \"mailNo\": \"1000000000016\","+
+//   "  \"sender\": {"+
+// 
+//   "     \"name\": \"李琳\","+
+//   "     \"company\": \"新南电子商务有限公司\","+
+//   "     \"mobile\": \"13912345678\","+
+//   "     \"phone\": \"021-87654321\","+
+//   "     \"prov\": \"上海市\","+
+//   "     \"city\": \"上海市\","+
+//   "     \"county\": \"青浦区\","+
+//   "     \"address\": \"华新镇华志路123号\","+
+//   " },"+
+//   " \"receiver\": {"+
+// 
+//   "    \"name\": \"杨逸嘉\","+
+//   "     \"company\": \"逸嘉实业有限公司\","+
+//   "     \"mobile\": \"13687654321\","+
+//   "     \"phone\": \"010-22226789\","+
+//   "     \"prov\": \"四川省\","+
+//   "     \"city\":\"成都市\","+
+//   "     \"county\": \"武侯区\","+
+//   "     \"address\": \"育德路497号\","+
+//   " },"+
+//   " \"item\": {"+
+//  
+//   "         \"name\": \"迷你风扇\","+
+//   "         \"category\": \"电子产品\","+
+//   "         \"material\": \"金属\","+
+//   "         \"size\": \"12,11,23\","+
+//   "         \"weight\": \"1\","+
+//   "         \"unitprice\": \"79\","+
+//   "         \"quantity\": \"1\","+
+//   "         \"remark\": \"黑色大号\""+
+//   "     },"+
+//   " \"starttime\": \"2013-05-20 12:00:00\","+
+//   " \"endtime\": \"2013-05-20 15:00:00\","+
+//   " \"weight\": 753,"+
+//   " \"size\": \"12,23,11\","+
+//   " \"quantity\": 2,"+
+//   " \"price\": 12650,"+
+//   " \"freight\": 1000,"+
+//   " \"premium\": 50,"+
+//   " \"packCharges\": 100,"+
+//   " \"otherCharges\": 0,"+
+//   " \"orderSum\": 0,"+
+//   " \"collectMoneytype\": \"CNY\","+
+//   " \"collectSum\": 1200,"+
+//   " \"remark\": \"请勿摔货\""+
+//"}	";
+//			map.put("data", data);
+//			map.put("msg_type", "COMMONORDER_CREATE");
+//			map.put("data_digest", DigestUtil.digest(data, "1ba059868f79", DigestUtil.UTF8));
+//			map.put("company_id", "7b7cda2af7c4485ba32748fec33b54ad");
+//			System.out.println(ZTOHttpUtil.post("http://58.40.16.125:9001/gateway.do", "UTF-8", map));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		ZTOLogistics res = new ZTOLogistics();
+		Map map = new HashMap();
+		String mailNo = "761690680320";
+		try {
+			String data = "['"+mailNo+"']";
+			map.put("data", data);
+			map.put("msg_type", "TRACEINTERFACE_TRACES");
+			map.put("data_digest", DigestUtil.digest(data, "1ba059868f79", DigestUtil.UTF8));
+			map.put("company_id", "7b7cda2af7c4485ba32748fec33b54ad");
+			String response = ZTOHttpUtil.post("http://japi.zto.cn/gateway.do", "UTF-8", map);
+			System.out.println(response);
+			res = JSONObject.parseObject(response, ZTOLogistics.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public ZTOLogistics queryZTO(String mailNo) {
+		ZTOLogistics res = new ZTOLogistics();
+		Map map = new HashMap();
+		try {
+			String data = "['"+mailNo+"']";
+			map.put("data", data);
+			map.put("msg_type", "TRACEINTERFACE_TRACES");
+			map.put("data_digest", DigestUtil.digest(data, "1ba059868f79", DigestUtil.UTF8));
+			map.put("company_id", "7b7cda2af7c4485ba32748fec33b54ad");
+			String response = ZTOHttpUtil.post("http://japi.zto.cn/gateway.do", "UTF-8", map);
+			res = JSONObject.parseObject(response, ZTOLogistics.class);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return res;
 	}
 }

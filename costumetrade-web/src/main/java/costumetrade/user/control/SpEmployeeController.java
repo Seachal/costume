@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
+import costumetrade.common.util.StringUtil;
 import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.domain.SpPrivilegeEmployee;
 import costumetrade.user.service.ISpPrivilegeService;
@@ -79,7 +81,7 @@ public class SpEmployeeController {
 			return result;
 		}
 		spEmployee.setStatus(0);
-		int save = spEmployeeService.saveEmployee(spEmployee);
+		String save = spEmployeeService.saveEmployee(spEmployee);
 		
 		List<SpPrivilegeEmployee> privilegeEmployees = spEmployee.getPrivilegeEmployees();
 		List<SpPrivilegeEmployee> privilegeEmployeeList = new ArrayList<SpPrivilegeEmployee>();
@@ -92,10 +94,12 @@ public class SpEmployeeController {
 			privilegeService.saveSpPrivilegeEmployees(privilegeEmployeeList);
 		}
 
-		if(save<=0){
+		if(StringUtil.isBlank(save)){
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
 			return result;
+		}else{
+			result.setData(save);
 		}
 		return result;
 
@@ -103,7 +107,7 @@ public class SpEmployeeController {
 
 	@RequestMapping("/deleteEmployee")
 	@ResponseBody
-	public ApiResponse deleteEmployee(@RequestParam SpEmployee spEmployee) {
+	public ApiResponse deleteEmployee(@RequestBody SpEmployee spEmployee) {
 
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);

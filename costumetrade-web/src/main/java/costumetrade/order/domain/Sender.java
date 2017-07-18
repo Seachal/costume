@@ -7,8 +7,16 @@ public class Sender extends Entity{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private String id;
 
 	private String name;
+	
+	private String prov;
+	
+	private String county;
+	
+	private String zipcode;
 	
 	private String company;
 	
@@ -86,6 +94,38 @@ public class Sender extends Entity{
 
 	public void setBranch(String branch) {
 		this.branch = branch;
+	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	public String getProv() {
+		return prov;
+	}
+
+	public void setProv(String prov) {
+		this.prov = prov;
+	}
+
+	public String getCounty() {
+		return county;
+	}
+
+	public void setCounty(String county) {
+		this.county = county;
+	}
+
+	public String getZipcode() {
+		return zipcode;
+	}
+
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
 	}
 	
 	

@@ -35,6 +35,8 @@ public class ProductReportQuery extends Entity {
 	private String gradeName;
 	
 	private String storeName;
+	
+	private String clientName;
 
 	private String openid;
 	
@@ -47,6 +49,8 @@ public class ProductReportQuery extends Entity {
 	private Integer reportType;
 	
 	private Filter filter;
+	
+	private Integer pageNum;
 	
 	public BigDecimal getQuantity() {
 		return quantity;
@@ -166,6 +170,22 @@ public class ProductReportQuery extends Entity {
 
 	public void setFilter(Filter filter) {
 		this.filter = filter;
+	}
+
+	public Integer getPageNum() {
+		return pageNum;
+	}
+
+	public void setPageNum(Integer pageNum) {
+		this.pageNum = pageNum;
+	}
+
+	public String getClientName() {
+		return clientName;
+	}
+
+	public void setClientName(String clientName) {
+		this.clientName = clientName;
 	}
 
 	

@@ -9,10 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.common.util.StringUtil;
 import costumetrade.user.domain.SpStore;
+import costumetrade.user.domain.SpUser;
+import costumetrade.user.mapper.SpUserMapper;
 import costumetrade.user.service.ISpPrivilegeService;
 import costumetrade.user.service.SpStoreService;
 
@@ -29,6 +32,8 @@ public class SpStoreController {
 	private SpStoreService spStoreService;
 	@Autowired
 	private ISpPrivilegeService privilegeService;
+	@Autowired
+	private SpUserMapper spUserMapper;
 	
 	@RequestMapping("/getChainStore")
 	@ResponseBody
@@ -60,15 +65,17 @@ public class SpStoreController {
 			return result;
 		}
 		
-		int save = spStoreService.saveChainStore(store);
-		if(save<=0){
+		String id = spStoreService.saveChainStore(store);
+		if(StringUtil.isBlank(id)){
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.name());
 			return result;
-		}else if(save ==2){
+		}else if("2".equals(id)){
 			result.setCode(ResponseInfo.DATA_EXCEPTION.code);
 			result.setMsg(ResponseInfo.DATA_EXCEPTION.name());
 			return result;
+		}else{
+			result.setData(id);
 		}
 		
 		return  result;
@@ -98,24 +105,32 @@ public class SpStoreController {
 	}
 	@RequestMapping("/getStore")
 	@ResponseBody
-	public ApiResponse getStore(String storeId) {
+	public ApiResponse getStore(String storeId,String userId) {
 		
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		if(storeId==null){
-			result.setCode(ResponseInfo.LACK_PARAM.code);
-			result.setMsg(ResponseInfo.LACK_PARAM.name());
-			return result;
+//		if(storeId==null){
+//			result.setCode(ResponseInfo.LACK_PARAM.code);
+//			result.setMsg(ResponseInfo.LACK_PARAM.name());
+//			return result;
+//		}
+		Object obj = new Object();
+		if(StringUtil.isNotBlank(storeId)){
+			SpStore store = spStoreService.getStore(storeId);
+			obj = store;
 		}
-		SpStore store = spStoreService.getStore(storeId);
+		if(StringUtil.isNotBlank(userId)){
+			SpUser user = spUserMapper.selectByPrimaryKey(userId);
+			obj = user;
+		}
 		
-		if(store== null){
+		if(obj== null){
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			return result;
 		}else{
-			result.setData(store);
+			result.setData(obj);
 		}
 		return result;
 		

@@ -25,6 +25,8 @@ public class OrderQuery extends Entity {
     private String buyerstoreid;
 
     private Integer orderType;
+    
+    private String form_id;
     /**
      *  企业ID
      */
@@ -398,6 +400,14 @@ public class OrderQuery extends Entity {
 
 	public void setOrderTypeTag(Integer orderTypeTag) {
 		this.orderTypeTag = orderTypeTag;
+	}
+
+	public String getForm_id() {
+		return form_id;
+	}
+
+	public void setForm_id(String form_id) {
+		this.form_id = form_id;
 	}
 
 	

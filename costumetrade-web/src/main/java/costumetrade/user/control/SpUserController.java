@@ -19,9 +19,13 @@ import costumetrade.common.param.ResponseInfo;
 import costumetrade.common.util.StringUtil;
 import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.service.WeChatService;
+import costumetrade.product.service.ShareProductService;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.domain.SpStore;
+import costumetrade.user.domain.SpUser;
+import costumetrade.user.mapper.SpStoreMapper;
+import costumetrade.user.mapper.SpUserMapper;
 import costumetrade.user.query.ScUserQuery;
 import costumetrade.user.query.StoreQuery;
 import costumetrade.user.service.SpEmployeeService;
@@ -44,12 +48,17 @@ public class SpUserController {
 	private WeChatService weChatService;
 	@Autowired
 	private SpEmployeeService spEmployeeService;
+	@Autowired
+	private SpStoreMapper spStoreMapper;
+	@Autowired
+	private SpUserMapper spUserMapper;
+	@Autowired
+	private ShareProductService shareProductService;
 	
 	@RequestMapping("/login")
 	@ResponseBody
-	public ApiResponse login(String code,String appId,String appSecret) throws Exception {
+	public ApiResponse login(String code,String encryptedData,String iv) throws Exception {
 		ApiResponse result = new ApiResponse();
-		System.out.println("欢迎进入小程序");
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		if(code == null){
@@ -57,21 +66,23 @@ public class SpUserController {
 			result.setMsg(ResponseInfo.LACK_PARAM.name());
 			return result;
 		}
-		String openIdAndKey = weChatService.getOpenIdAndKey(code,appId,appSecret);
+		String openIdAndKey = weChatService.getOpenIdAndKey(code);
 		JSONObject json = JSON.parseObject(openIdAndKey);
 		String openid = json.getString("openid");
-		System.out.println("欢迎进入小程序"+openIdAndKey);
 	
-		ScUserQuery resultQuery = new ScUserQuery();
-		resultQuery.setSessionKey(json.getString("session_key"));
-		resultQuery.setOpenid(openid);
-		if(resultQuery == null){
-			result.setData(ResponseInfo.NOT_DATA.code);
-			result.setMsg(ResponseInfo.NOT_DATA.msg);
-			return result;
-		}else{
-			result.setData(resultQuery);
+		ScWeChat chat = new ScWeChat();
+		if(StringUtil.isNotBlank(openid)){
+			chat.setUnionid(openid);
+			chat = weChatService.getWeChat(chat);
 		}
+	
+		if(chat ==null || StringUtil.isBlank(chat.getOpenid()) ){
+			chat = spUserService.getUnionId(encryptedData,iv,json.getString("session_key"));
+		}
+		ScUserQuery resultQuery = new ScUserQuery();
+		resultQuery = spUserService.getScUser(chat);
+		resultQuery.setOpenid(chat.getOpenid());
+		result.setData(resultQuery);
 		return  result;
 	}
 	@RequestMapping("/saveUserOrStore")
@@ -122,19 +133,34 @@ public class SpUserController {
 			query.setOpenid(wechat.getOpenid());
 			query.setStoreId(wechat.getStoreid());
 			if(StringUtil.isNotBlank(wechat.getStoreid())){
-				if(wechat.getEmpid()!=null){
+				if(StringUtil.isNotBlank(wechat.getEmpid())){
 					resultQuery.setUserIdentity(3);//员工身份
 					resultQuery.setEmpId(wechat.getEmpid());
 				}else{
 					resultQuery.setUserIdentity(1);//店家身份
 				}
 				resultQuery.setStoreId(wechat.getStoreid());
+				SpStore store = spStoreMapper.selectByPrimaryKey(wechat.getStoreid());
+				if(store!=null){
+					resultQuery.setName(store.getName());
+					resultQuery.setPhoto(store.getStorephoto());
+				}
 			}else{
 				resultQuery.setUserIdentity(2);//普通消费者
 				resultQuery.setUserid(wechat.getUserid());
+				SpUser user = spUserMapper.selectByPrimaryKey(wechat.getUserid());
+				if(user!=null){
+					resultQuery.setName(user.getName());
+					resultQuery.setPhoto(user.getPhoto());
+				}
 			}
+			//如果普通消费者或者店铺名称为空，则默认是微信昵称
+			if(StringUtil.isBlank(resultQuery.getName())){
+				resultQuery.setName(wechat.getName());
+			}
+			resultQuery.setProducts(shareProductService.getAllPromotionalProduct(wechat.getOpenid(), 1));
 		}
-		query = spUserService.getStores(query);
+	
 		resultQuery.setQuery(query);
 		SpEmployee employee = spEmployeeService.getEmployeePrivilege(wechat.getOpenid());
 		SpEmployee e = new SpEmployee();
@@ -145,8 +171,6 @@ public class SpUserController {
 			e.setModifyPrice(employee.getModifyPrice());
 		}
 		resultQuery.setEmployee(e);
-			
-		
 		return  ApiResponse.getInstance(resultQuery);
 	}
 	@RequestMapping("/saveAddress")

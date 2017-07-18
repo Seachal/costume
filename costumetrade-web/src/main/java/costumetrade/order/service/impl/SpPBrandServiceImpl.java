@@ -29,8 +29,11 @@ public class SpPBrandServiceImpl implements SpPBrandService{
 		SpPBrand getBrand = spPBrandMapper.getSpPBrandByName(spPBrand.getBrandname(), spPBrand.getStoreId());
 		if(getBrand != null){
 			return ResultTypeEnum.RESULT_EXISTS.getCode();
-		}else {
+		}
+		if(spPBrand!=null&&spPBrand.getId()==null) {
 			save = spPBrandMapper.insert(spPBrand) ;
+		}else{
+			save = spPBrandMapper.updateByPrimaryKeySelective(spPBrand);
 		}
 		return spPBrand.getId();
 		

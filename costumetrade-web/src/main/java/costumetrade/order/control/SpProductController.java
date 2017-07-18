@@ -1,5 +1,6 @@
 package costumetrade.order.control;
 
+import java.io.File;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.commons.fileupload.disk.DiskFileItem;
 import org.apache.commons.lang.StringUtils;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,11 +21,13 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.qiniu.http.Response;
 
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
 import costumetrade.common.util.FTPClientUtils;
 import costumetrade.common.util.StringUtil;
+import costumetrade.common.word.ImageUtils;
 import costumetrade.order.domain.SpProduct;
 import costumetrade.order.domain.SsProductFile;
 import costumetrade.order.domain.SsProductReview;
@@ -32,6 +36,9 @@ import costumetrade.order.query.ProductQuery;
 import costumetrade.order.query.StockQuery;
 import costumetrade.order.service.SpProductService;
 import costumetrade.order.service.WeChatService;
+import costumetrade.product.domain.ScPromotionalProduct;
+import costumetrade.user.domain.ScWeChat;
+import costumetrade.user.service.SpUserService;
 import costumetrade.user.service.SsDataDictionaryService;
 
 /**
@@ -50,6 +57,8 @@ public class SpProductController {
 	private SpProductService spProductService;
 	@Autowired
 	private WeChatService weChatService;
+	@Autowired 
+	private SpUserService spUserService;
 
 	@RequestMapping("/getProducts")
 	@ResponseBody
@@ -64,6 +73,12 @@ public class SpProductController {
 		}
 		if(paramProduct.getStatus() == null){
 			paramProduct.setStatus(0);
+		}
+		if(StringUtil.isBlank(paramProduct.getCode())){
+			paramProduct.setCode(null);
+		}
+		if(StringUtil.isBlank(paramProduct.getName())){
+			paramProduct.setName(null);
 		}
 		if(StringUtils.isNotBlank(paramProduct.getCode())&&StringUtils.isNotBlank(paramProduct.getName())
 				&&paramProduct.getCode().equals(paramProduct.getName())){
@@ -110,7 +125,26 @@ public class SpProductController {
 		List<SpProduct> product = spProductService.enterShareProducts(query);
 		return  ApiResponse.getInstance(product);
 	}
-	
+	@RequestMapping("/confirmShareProducts")
+	@ResponseBody
+	public ApiResponse confirmShareProducts(ScPromotionalProduct products) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		if(StringUtils.isBlank(products.getId())){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		int save = spProductService.confirmShareProducts(products);
+		if(save<=0){
+			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
+			return result;
+		}
+		return  result;
+	}
 	@RequestMapping("/getProductInit")
 	@ResponseBody
 	public ApiResponse getProductInit(ProductQuery query) {
@@ -132,30 +166,54 @@ public class SpProductController {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		if(StringUtils.isBlank(query.getStoreId()+"")){
+		if(StringUtils.isBlank(query.getStoreId()+"")||StringUtils.isBlank(query.getId())){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;
 		}
 		String openid = null;
+		String sessionKey = null;
 		if(StringUtil.isNotBlank(query.getAppId())&&StringUtil.isNotBlank(query.getAppSecret())&&StringUtil.isNotBlank(query.getCode())){
 			String openIdAndKey;
 			try {
-				openIdAndKey = weChatService.getOpenIdAndKey(query.getCode(),query.getAppId(),query.getAppSecret());
+				openIdAndKey = weChatService.getOpenIdAndKey(query.getCode());
 				JSONObject json = JSON.parseObject(openIdAndKey);
 				openid = json.getString("openid");
+				sessionKey = json.getString("session_key");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			
 		}
-		
+		ScWeChat wechat = spUserService.getUnionId(query.getEncryptedData(),query.getIv(),sessionKey);
 		List<Object> obj = new ArrayList<Object>();
-		obj.add(openid);
-		
 		List<ProductQuery> q= spProductService.getShareProduct(query);
-		obj.add(q);
 		
+		List<String> images = new ArrayList<String>();
+		if(q!=null&&q.size()>0){
+			for(int i = 0 ; i < q.size() ; i++){
+				if(i<3){
+					images.add(q.get(i).getImage());
+				}
+			}
+		}
+		obj.add(q);
+		List<String> idArray = query.getIdArray();//
+		//更新分享记录表
+		if(wechat!=null){
+			ScPromotionalProduct products = new ScPromotionalProduct();
+			products.setId(query.getId());
+			products.setRecommendedOpenid(wechat.getOpenid());
+			products.setRecommendedUnionid(wechat.getUnionid());
+			if(idArray!=null&&idArray.size()>0){
+				products.setProducts(StringUtils.join(idArray.toArray(),","));
+			}
+			products.setProductImages(StringUtils.join(images.toArray(),","));
+			products.setCheckAllTag(query.getCheckAllTag());
+			spProductService.confirmShareProducts(products);
+			
+			obj.add(wechat.getOpenid());
+		}
 		return  ApiResponse.getInstance(q);
 	}
 	
@@ -372,10 +430,7 @@ public class SpProductController {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		//设置上传图片路径       upload/日期/
-		SimpleDateFormat format = new SimpleDateFormat("yyyyMM");
-		String date = format.format(new Date());
-		Integer d = Integer.valueOf(date);
+
 		//获取上传文件后缀
 		String fileName = file.getOriginalFilename();
 		String postfix = fileName.substring(fileName.lastIndexOf(".")+1, fileName.length());
@@ -399,36 +454,26 @@ public class SpProductController {
 		UUID uuid=UUID.randomUUID();
         String str = uuid.toString().replaceAll("\\-", ""); 
 		fileName =str+fileName.substring(fileName.lastIndexOf("."), fileName.length());
-		String commonUrl="/touchartImage/imageTomcat/apache-tomcat-7.0.76/webapps/ROOT";
-		String pathOriginal = "/original/"+d+"/"; //原图路径
-		String pathReduce  = "/reduce/"+d+"/"; //缩略图路径
-		String video ="/video/"+d+"/";
-		InputStream input;
-		//ZipInputStream zipInput;
-	
+
 		try {
 			SsProductFile image = new SsProductFile();
-			input = file.getInputStream();
-			//zipInput=new ZipInputStream(new BufferedInputStream(input));
-			boolean upload =false;
+			Response response =null;
+			DiskFileItem fileItem = (DiskFileItem) file.getFileItem();
+			File f = null;
 			if(imagePostfix.contains(postfix)){
-				upload = FTPClientUtils.getInstance().uploadFileToFtp(commonUrl+pathOriginal, fileName, input);
-//				DiskFileItem fileItem = (DiskFileItem) file.getFileItem();
-//				File f = ImageUtils.compressionFile(fileItem.getStoreLocation(),fileName);
-//				FTPClientUtils.getInstance().uploadFileToFtp(commonUrl+pathReduce, fileName,new FileInputStream(f));
-				
+				f= ImageUtils.compressionFile(fileItem.getStoreLocation(),fileName);
 				image.setFilename(file.getOriginalFilename());
-				image.setUrl(pathOriginal+fileName);
-				image.setResizeFixUrl(pathReduce+fileName);
+				image.setUrl(fileName);
 			}else if(videoPostfix.contains(postfix)){
-				upload = FTPClientUtils.getInstance().uploadFileToFtp(commonUrl+video, fileName, input);
+				f = fileItem.getStoreLocation();
 				image.setFilename(file.getOriginalFilename());
-				image.setUrl(video+fileName);
+				image.setUrl(fileName);
 			}else{
 				result.setCode(ResponseInfo.FILE_FORMAT.code);
 				result.setMsg(ResponseInfo.FILE_FORMAT.msg);
 			}
-			if(upload){
+			response = costumetrade.common.util.ImageUtils.upload(f, fileName, "image");
+			if(response!=null&&response.isOK()){
 				result.setData(image);
 			}else{
 				result.setCode(ResponseInfo.UPLOAD_EXCEPTION.code);

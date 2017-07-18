@@ -94,7 +94,7 @@ public class SpEmployee extends Entity implements Serializable{
     /**
      *  员工编号:
      */
-    private Integer id;
+    private String id;
     
     private String weChatNo;
     
@@ -127,11 +127,11 @@ public class SpEmployee extends Entity implements Serializable{
 		this.storeId = storeId;
 	}
 
-	public Integer getId() {
+	public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

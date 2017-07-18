@@ -158,7 +158,9 @@ public class ProductQuery extends Entity{
 	
 	private String openid;
     
-
+	private String encryptedData;
+	
+	private String iv;
     /**
      *  进货价
      */
@@ -274,7 +276,7 @@ public class ProductQuery extends Entity{
 	private List<String> productSeasonArray; // 商品季节
 	private String saleOp;
 	private List<String> grades;
-	private String productManagerQuery;
+	private Integer productManagerQuery;
 	/**
 	 * 货品列表查询  结束
 	 */
@@ -904,11 +906,11 @@ public class ProductQuery extends Entity{
 		this.appSecret = appSecret;
 	}
 
-	public String getProductManagerQuery() {
+	public Integer getProductManagerQuery() {
 		return productManagerQuery;
 	}
 
-	public void setProductManagerQuery(String productManagerQuery) {
+	public void setProductManagerQuery(Integer productManagerQuery) {
 		this.productManagerQuery = productManagerQuery;
 	}
 
@@ -1046,6 +1048,22 @@ public class ProductQuery extends Entity{
 
 	public void setStockNum(BigDecimal stockNum) {
 		this.stockNum = stockNum;
+	}
+
+	public String getEncryptedData() {
+		return encryptedData;
+	}
+
+	public void setEncryptedData(String encryptedData) {
+		this.encryptedData = encryptedData;
+	}
+
+	public String getIv() {
+		return iv;
+	}
+
+	public void setIv(String iv) {
+		this.iv = iv;
 	}
 
 	

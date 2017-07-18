@@ -13,6 +13,7 @@ import com.sf.openapi.express.sample.security.dto.TokenRespDto;
 
 import costumetrade.order.domain.YDLogisticsRequest;
 import costumetrade.order.domain.YDLogisticsResponse;
+import costumetrade.order.domain.ZTOLogistics;
 
 
 public interface SFLogisticsService {
@@ -44,4 +45,14 @@ public interface SFLogisticsService {
 	 * 查询韵达订单
 	 * */
 	public List<YDLogisticsResponse> queryOrderYD(YDLogisticsRequest request);
+
+	/**
+	 * 中通下单
+	 * */
+	public ZTOLogistics createOrderToZTO(ZTOLogistics request);
+	
+	/**
+	 * 中通订单查询
+	 * */
+	public ZTOLogistics queryZTO(String mailNo);
 }

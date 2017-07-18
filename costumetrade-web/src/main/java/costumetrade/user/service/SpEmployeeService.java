@@ -15,7 +15,7 @@ public interface SpEmployeeService {
 	 * 保存员工信息
 	 * 
 	 * */
-	public int saveEmployee(SpEmployee spEmployee);
+	public String saveEmployee(SpEmployee spEmployee);
 	
 	/**
 	 * 删除员工信息

@@ -22,5 +22,7 @@ public interface SpPrivilegeEmployeeMapper {
 
     int updateByPrimaryKey(SpPrivilegeEmployee record);
     
-    int saveSpPrivilegeEmployees(@Param("list")List<SpPrivilegeEmployee>  privilegeEmployees);
+    int saveSpPrivilegeEmployees(@Param("list")List<SpPrivilegeEmployee>  list);
+    
+    int deleteByEmployeeId(Long employeeId);
 }

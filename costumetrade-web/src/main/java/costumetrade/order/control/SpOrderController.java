@@ -30,6 +30,7 @@ import costumetrade.order.query.OrderDetailQuery;
 import costumetrade.order.query.OrderQuery;
 import costumetrade.order.service.SpOrderService;
 import costumetrade.order.service.SpProductService;
+import costumetrade.order.service.WeChatService;
 import costumetrade.user.domain.SsDataDictionary;
 
 /**
@@ -45,7 +46,8 @@ public class SpOrderController {
 	private SpOrderService spOrderService;
 	@Autowired
 	private SpProductService spProductService;
-
+	@Autowired
+	private WeChatService weChatService;
 	@Autowired
     private HttpSession httpSession;
 	
@@ -65,16 +67,24 @@ public class SpOrderController {
 		List<SsStoDetail> details = param.getStoDetails();
 
 		Integer save = spOrderService.saveOrders(details,order,param.getOpenid());
+		
+		if("1".equals(order.getOrdertype())){
+			System.out.println("orderType"+order.getOrdertype());
+			try {
+				weChatService.sendTemplate(param);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		if(save <=0){
 			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 		}else if(save ==3){//自家店铺不能下单
-			result.setCode(ResponseInfo.SUCCESS.code);
 			result.setMsg(ResponseInfo.ORDER_EXCEPTION.msg);
 			result.setData(ResponseInfo.ORDER_EXCEPTION.code);
 			return result;
 		}else if(save ==2){//库存不够
-			result.setCode(ResponseInfo.SUCCESS.code);
 			result.setMsg(ResponseInfo.NO_STOCK.msg);
 			result.setData(ResponseInfo.NO_STOCK.code);
 			return result;
@@ -104,7 +114,7 @@ public class SpOrderController {
 		}
 		List<SsDataDictionary> dicts = spOrderService.orderFeeInit(openid);
 		if(dicts == null){
-			result.setCode(ResponseInfo.NOT_DATA.code);
+			result.setData(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);
 		}else{
 			result.setData(dicts);
@@ -264,12 +274,12 @@ public class SpOrderController {
 			result.setData(ResponseInfo.OPERATE_EXPIRED.code);
 			return result;
 		}else if(operate == 2){//缺少库存
-			result.setCode(ResponseInfo.SUCCESS.code);
+			result.setCode(ResponseInfo.NO_STOCK.code);
 			result.setMsg(ResponseInfo.NO_STOCK.msg);
 			result.setData(ResponseInfo.NO_STOCK.code);
 			return result;
 		}else if(operate == 3){//不允许作废
-			result.setCode(ResponseInfo.SUCCESS.code);
+			result.setCode(ResponseInfo.RETURN_EXCEPTION.code);
 			result.setMsg(ResponseInfo.RETURN_EXCEPTION.msg);
 			result.setData(ResponseInfo.RETURN_EXCEPTION.code);
 			return result;
@@ -348,8 +358,12 @@ public class SpOrderController {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(StringUtil.isBlank(ssStoOrder.getPayorderno())){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+		}
 		//scLogistics.setCreateby((String) httpSession.getAttribute("clientId"));
-		MessageResp<List<RouteRespDto>> response = spOrderService.queryLogistic(ssStoOrder);
+		Object response = spOrderService.queryLogistic(ssStoOrder);
 		if(response == null){
 			result.setCode(ResponseInfo.NOT_DATA.code);
 			result.setMsg(ResponseInfo.NOT_DATA.msg);

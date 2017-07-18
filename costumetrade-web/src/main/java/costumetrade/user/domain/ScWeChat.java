@@ -23,7 +23,7 @@ public class ScWeChat extends Entity {
     /**
      *  员工编号
      */
-    private Integer empid;
+    private String empid;
 
     /**
      *  创建时间
@@ -41,6 +41,12 @@ public class ScWeChat extends Entity {
     private String userid;
     
     private String unionid;
+    
+    private String name ;
+    
+    private String photo;
+    
+    private String buyyer;
 
     private static final long serialVersionUID = 1L;
 
@@ -68,11 +74,11 @@ public class ScWeChat extends Entity {
         this.storeid = storeid;
     }
 
-    public Integer getEmpid() {
+    public String getEmpid() {
         return empid;
     }
 
-    public void setEmpid(Integer empid) {
+    public void setEmpid(String empid) {
         this.empid = empid;
     }
 
@@ -106,6 +112,30 @@ public class ScWeChat extends Entity {
 
 	public void setUnionid(String unionid) {
 		this.unionid = unionid;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPhoto() {
+		return photo;
+	}
+
+	public void setPhoto(String photo) {
+		this.photo = photo;
+	}
+
+	public String getBuyyer() {
+		return buyyer;
+	}
+
+	public void setBuyyer(String buyyer) {
+		this.buyyer = buyyer;
 	}
     
     

@@ -34,9 +34,9 @@ import costumetrade.order.domain.SsStoDetail;
 import costumetrade.order.domain.SsStoOrder;
 import costumetrade.order.domain.SsStock;
 import costumetrade.order.domain.SsStockTransfer;
+import costumetrade.order.domain.YDLogisticsRequest;
 import costumetrade.order.mapper.ScLogisticsMapper;
 import costumetrade.order.mapper.ScStoreAddrMapper;
-import costumetrade.order.mapper.SpCartMapper;
 import costumetrade.order.mapper.SpClientMapper;
 import costumetrade.order.mapper.SpProductMapper;
 import costumetrade.order.mapper.SsCgsorderMapper;
@@ -70,8 +70,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 	private SsStoDetailMapper ssStoDetailMapper;
 	@Autowired
 	private SsStoOrderMapper ssStoOrderMapper;
-	@Autowired
-	private SpCartMapper spCartMapper;
+	
 	@Autowired
 	private SsFinancialMapper ssFinancialMapper;
 	@Autowired
@@ -200,6 +199,11 @@ public class SpOrderServiceImpl implements SpOrderService{
 				count = count.add(d.getCount());
 				d1.setCreateby(order.getOperator());
 				d1.setCreatetime(new Date());
+				if("1".equals(order.getOrdertype())){
+					d1.setStoreid(order.getSellerstoreid());
+				}else if("2".equals(order.getOrdertype())){
+					d1.setStoreid(wechat1.getStoreid());
+				}
 				detail.add(d1);
 			}
 			order.setPayorderno(orderNo+"");
@@ -234,6 +238,8 @@ public class SpOrderServiceImpl implements SpOrderService{
 			record.setPayType(order.getPaycate1());
 			ssFinancialMapper.insertSelective(record );
 			
+			//计算积分
+			
 			
 		}
 		
@@ -246,6 +252,18 @@ public class SpOrderServiceImpl implements SpOrderService{
 		save = ssStoOrderMapper.insertStore(order,order.getBuyerstoreid());
 		return save;
 
+	}
+	
+	public void calculatePoints(OrderQuery param){
+		ScWeChat record = new ScWeChat();
+		
+		if(param.getOrderTypeTag()==1&&StringUtil.isNotBlank(param.getSellerstoreid())){//采购单
+			record.setStoreid(param.getSellerstoreid());
+		}
+		if(param.getOrderTypeTag()==2&&StringUtil.isNotBlank(param.getBuyerstoreid())){//销售单
+			
+		}
+		scWeChatMapper.selectWechat(record );
 	}
 	
 	public void  setCustPrice(List<SsStoDetail> details,SsStoOrder order,String openid){
@@ -756,14 +774,8 @@ public class SpOrderServiceImpl implements SpOrderService{
 			status.add(5);
 		}
 		if(orderStatus!=null&&orderStatus == 5){
-			status.add(1);
-			status.add(2);
-			status.add(3);
-			status.add(4);
 			status.add(5);
-			status.add(6);
 			status.add(7);
-			status.add(8);
 		}
 		spStoOrder.setStatus(status);
 		
@@ -836,21 +848,26 @@ public class SpOrderServiceImpl implements SpOrderService{
 		return save ;
 	}
 	@Override
-	public MessageResp<List<RouteRespDto>> queryLogistic(SsStoOrder ssStoOrder) {
+	public Object queryLogistic(SsStoOrder ssStoOrder) {
+		Object obj = new MessageResp<List<RouteRespDto>>();
 		ScLogistics Logistics = new ScLogistics();
 		Logistics.setOrderno(ssStoOrder.getPayorderno());
-		Logistics.setStoreid(ssStoOrder.getSellerstoreid());
 		Logistics = scLogisticsMapper.selectByLogistic(Logistics);
-		if(Logistics != null && "顺丰".equals(Logistics.getLogisticsname())){
+		if(Logistics != null && "SF".equals(Logistics.getLogisticsname())){
 			RouteReqDto routeReqDto = new RouteReqDto();
 			routeReqDto.setMethodType(1);
 			routeReqDto.setTrackingNumber(Logistics.getLogisticsno());
 			routeReqDto.setTrackingType(1);
-			return sFLogisticsService.queryRouteSF(routeReqDto);
-		}else{
-			return null;
+			obj = sFLogisticsService.queryRouteSF(routeReqDto);
+		}else if(Logistics != null && "YD".equals(Logistics.getLogisticsCode())){
+			YDLogisticsRequest request = new YDLogisticsRequest();
+			request.setOrderId(ssStoOrder.getPayorderno());
+			request.setMailno(Logistics.getLogisticsno());
+			obj =sFLogisticsService.queryOrderYD(request );
+		}else if(Logistics != null && "ZTO".equals(Logistics.getLogisticsCode())){
+			obj =sFLogisticsService.queryZTO(Logistics.getLogisticsno());
 		}
-		
+		return obj;
 	}
 	@Override
 	public int saveReview(SsProductReview ssProductReview) {

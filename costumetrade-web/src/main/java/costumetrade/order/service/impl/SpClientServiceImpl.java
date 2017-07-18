@@ -377,7 +377,7 @@ public class SpClientServiceImpl implements SpClientService{
 			SpEmployee employee = new SpEmployee();
 			employee = spEmployeeService.employeeInit(param.getId());
 			employee.setStoreId(param.getStoreId());
-			employee.setId(Integer.parseInt(param.getId()));
+			employee.setId(param.getId());
 			employee = spEmployeeMapper.selectByPrimaryKey(employee);
 			if(employee!=null){
 				SpEmployee e = new SpEmployee();
@@ -397,7 +397,7 @@ public class SpClientServiceImpl implements SpClientService{
 				}
 			}
 		}
-		if(StringUtil.isNotBlank(openid)){
+		if(StringUtil.isNotBlank(openid)&&StringUtil.isNotBlank(param.getContext())){
 			InputMessage message = new InputMessage();
 			message.setToUserName(openid);
 			message.setContent(param.getContext());

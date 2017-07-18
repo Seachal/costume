@@ -82,6 +82,8 @@ public class SsStoDetail extends Entity {
     private String modifyby;
     
     private BigDecimal average;
+    
+    private String image;
 
     private static final long serialVersionUID = 1L;
 
@@ -211,6 +213,14 @@ public class SsStoDetail extends Entity {
 
 	public void setAverage(BigDecimal average) {
 		this.average = average;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
 	}
     
     

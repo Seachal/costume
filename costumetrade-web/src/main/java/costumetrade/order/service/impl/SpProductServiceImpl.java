@@ -55,6 +55,8 @@ import costumetrade.order.query.Rules;
 import costumetrade.order.query.StockQuery;
 import costumetrade.order.service.SpProductService;
 import costumetrade.order.service.WeChatService;
+import costumetrade.product.domain.ScPromotionalProduct;
+import costumetrade.product.mapper.ScPromotionalProductMapper;
 import costumetrade.report.domain.PurchaseReportQuery;
 import costumetrade.report.mapper.SpReportMapper;
 import costumetrade.user.domain.PatternPrice;
@@ -123,6 +125,8 @@ public class SpProductServiceImpl implements SpProductService{
 	private SpUserMapper spUserMapper;
 	@Autowired
 	private SpReportMapper spReportMapper;
+	@Autowired
+	private ScPromotionalProductMapper scPromotionalProductMapper;
 	
 	@Override
 	public List<ProductQuery> selectProducts(ProductQuery productQuery) {
@@ -159,21 +163,29 @@ public class SpProductServiceImpl implements SpProductService{
 		List<String> grades = null;
 		int custTypeCode =1;
 		client = getClientByopenId(productQuery);
-		if(client !=null&&client.getId()!=null){
-			SpCustProdPrice spCustProdPrice = new SpCustProdPrice();
-			spCustProdPrice.setCustTypeCode(client.getCate());
-			spCustProdPrice.setStoreid(productQuery.getStoreId());
-			List<SpCustProdPrice> custProdPrice = spCustProdPriceMapper.select(spCustProdPrice);
-			
-			if(custProdPrice.size() > 0 ){
-				spCustProdPrice =custProdPrice.get(0);
-				grades = setGrages(Integer.parseInt(spCustProdPrice.getProdgrade()));
-				custTypeCode = Integer.parseInt(spCustProdPrice.getCustTypeCode());
+		if(client !=null){
+	
+			if(client.getMallProList()){
+				SpCustProdPrice spCustProdPrice = new SpCustProdPrice();
+				spCustProdPrice.setCustTypeCode(client.getCate());
+				spCustProdPrice.setStoreid(productQuery.getStoreId());
+				List<SpCustProdPrice> custProdPrice = spCustProdPriceMapper.select(spCustProdPrice);
+				
+				if(custProdPrice.size() > 0 ){
+					spCustProdPrice =custProdPrice.get(0);
+					grades = setGrages(Integer.parseInt(spCustProdPrice.getProdgrade()));
+					custTypeCode = Integer.parseInt(spCustProdPrice.getCustTypeCode());
+				}
+				productQuery.setGrades(grades);
+				productQuery.setCustTypeCode(custTypeCode);
+				
+			}else{
+				productQuery.setProductManagerQuery(1);//表示货品管理查询
+				productQuery.setGrades(null);
+				productQuery.setCustTypeCode(null);
 			}
-			productQuery.setGrades(grades);
-			productQuery.setCustTypeCode(custTypeCode);
 		}else{
-			productQuery.setProductManagerQuery("1");//表示货品管理查询
+			productQuery.setProductManagerQuery(1);//表示货品管理查询
 			productQuery.setGrades(null);
 			productQuery.setCustTypeCode(null);
 		}
@@ -318,17 +330,17 @@ public class SpProductServiceImpl implements SpProductService{
 		boolean mallProList = false; //false 表示后端商品管理
 		if(weChat!=null){
 			//针对商城的商品查询，货品管理的商品查询不需要对价格显示设置和商品等级
-			if(weChat.getStoreid()!=null&&(!weChat.getStoreid().equals(productQuery.getStoreId()))){
+			if(StringUtil.isNotBlank(weChat.getStoreid())&&(!weChat.getStoreid().equals(productQuery.getStoreId()))){
 				//client.setOtherStoreId(weChat.getStoreid());
 				mallProList =true ;
-			}else if(weChat.getUserid()!=null){
+			}else if(StringUtil.isNotBlank(weChat.getUserid())){
 				//client.setUserId(weChat.getUserid());
 				
 				mallProList =true ;
 			}
 			if(StringUtil.isNotBlank(productQuery.getOpenid())){
 				client.setOpenid(productQuery.getOpenid());
-				mallProList =true ;
+				//mallProList =true ;
 			}
 			client.setStoreId(productQuery.getStoreId());
 			client.setType(1+"");
@@ -339,6 +351,7 @@ public class SpProductServiceImpl implements SpProductService{
 		if(clients !=null && clients.size() > 0 && mallProList){
 			client = clients.get(0);
 		}
+		client.setMallProList(mallProList);
 		return client;
 	}
 	@Override
@@ -371,6 +384,7 @@ public class SpProductServiceImpl implements SpProductService{
 		filter.setField("productId");
 		filter.setValue(queryDetail.getId());
 		quer.setFilter(filter);
+		quer.setStoreId(queryDetail.getStoreId());
 		//查询对应商品实时库存
 		List<Map<String, Object>>  maps = spReportMapper.realTimeInventory(quer , null);
 		if(maps!=null&&maps.size()>0){
@@ -831,19 +845,24 @@ public class SpProductServiceImpl implements SpProductService{
 	public List<ProductQuery> getShareProduct(ProductQuery productQuery) {
 		String openIdAndKey= null;
 		boolean skipShare = false;
+		String openid = null;
 		if(!StringUtil.isBlank(productQuery.getCode())){//这是code指小程序加载时传的code，不是商品code，用来获取openid !"".equals(productQuery.getCode())
 			try {
-				openIdAndKey = weChatService.getOpenIdAndKey(productQuery.getCode(), productQuery.getAppId(), productQuery.getAppSecret());
-				System.out.println(openIdAndKey);
+				openIdAndKey = weChatService.getOpenIdAndKey(productQuery.getCode());
+				
+				JSONObject json = JSON.parseObject(openIdAndKey);
+				openid = json.getString("openid");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			skipShare = true;
 		}
+		if(StringUtil.isNotBlank(productQuery.getOpenid())){
+			openid = productQuery.getOpenid();
+		}
 		Integer custTypeCode =1;
-		if(skipShare){
-			JSONObject json = JSON.parseObject(openIdAndKey);
-			String openid = json.getString("openid");
+		if(skipShare||StringUtil.isNotBlank(productQuery.getOpenid())){
+			
 			ScWeChat chat = null;
 			if(StringUtil.isNotBlank(openid)){//进入小程序认证，
 				//chat = spUserService.login(openid);
@@ -980,9 +999,7 @@ public class SpProductServiceImpl implements SpProductService{
 
 	@Override
 	public List<SpProduct> enterShareProducts(ProductQuery query) {
-		
 		ScWeChat wechat = scWeChatMapper.selectByOpenId(query.getOpenid());
-		
 		List<Map<String, Object>> maps = new ArrayList<Map<String,Object>>();
 		if(wechat!=null && StringUtil.isNotBlank(wechat.getStoreid())){
 			ProductQuery productQuery =new ProductQuery();
@@ -1033,13 +1050,43 @@ public class SpProductServiceImpl implements SpProductService{
 						}
 						products.add(product);
 					}
-					
-				
-				
+	
 			}
 		}
-		
-		
 		return products;
+	}
+
+	@Override
+	public int confirmShareProducts(ScPromotionalProduct products) {
+		int save = 0;
+		ScPromotionalProduct p = scPromotionalProductMapper.selectByPrimaryKey(products.getId());
+		if(p!=null){
+			save = scPromotionalProductMapper.updateByPrimaryKeySelective(products);
+		}else{
+			ScWeChat chat = null;
+			SpStore store = new SpStore();
+			if(StringUtil.isNotBlank(products.getStoreid())){
+				chat = new ScWeChat();
+				chat.setStoreid(products.getStoreid());
+				List<ScWeChat> chats = scWeChatMapper.selectWechat(chat);
+				if(chats!=null&&chats.size()>0){
+					chat = chats.get(0);
+				}
+				//查找推荐人名称：推荐人头像
+				store = spStoreMapper.selectByPrimaryKey(products.getStoreid());
+			}
+			if(chat!=null){
+				products.setPromoterId(chat.getId()+"");
+				products.setCreateBy(chat.getId()+"");
+			}
+			if(StringUtil.isNotBlank(store.getId())){
+				products.setPhoto(store.getStorephoto());
+				products.setPromoterName(store.getName());
+				products.setPromoterAddress(store.getAddress());
+			}
+			products.setCreateTime(new Date());
+			save = scPromotionalProductMapper.insertSelective(products);
+		}
+		return save;
 	}
 }

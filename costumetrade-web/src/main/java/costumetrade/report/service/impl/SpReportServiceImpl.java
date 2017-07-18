@@ -123,12 +123,12 @@ public class SpReportServiceImpl implements SpReportService{
 				if(StringUtil.isNotBlank(createBy)){
 					ScWeChat we = scWeChatMapper.selectByPrimaryKey(Integer.parseInt(createBy));
 					if(we!=null){
-						if(StringUtil.isNotBlank(we.getEmpid()+"")){//操作者是员工
+						if(we.getEmpid()!=null){//操作者是员工
 							SpEmployee e  = new SpEmployee();
 							e.setId(we.getEmpid());
 							e = spEmployeeMapper.selectByPrimaryKey(e);
 							createBy = e.getName();
-						}else if(StringUtil.isNotBlank(we.getStoreid()+"")){//操作者是店家
+						}else if(StringUtil.isNotBlank(we.getStoreid())){//操作者是店家
 							SpStore store = new SpStore();
 							store = spStoreMapper.selectByPrimaryKey(we.getStoreid());
 							createBy = store.getName();
@@ -183,10 +183,7 @@ public class SpReportServiceImpl implements SpReportService{
 		if(query.getTimeTo() == null){
 			query.setTimeTo(setTimeTo());
 		}
-		
-		
 		ScWeChat wechat = scWeChatMapper.selectByOpenId(query.getOpenid());//根据当前操作者的openid 获取当前店铺storeId
-		
 		if(wechat !=null){
 			if(wechat.getStoreid()!=null){
 				query.setStoreId(wechat.getStoreid());
@@ -194,7 +191,6 @@ public class SpReportServiceImpl implements SpReportService{
 				return null;
 			}
 		}
-	
 		if(query.getSort() != null){
 			if("quantityOp".equals(query.getSort().getValue())){
 				query.setQuantityOp(query.getSort().getOp());
@@ -243,23 +239,24 @@ public class SpReportServiceImpl implements SpReportService{
 		}
 		Page page = new Page();
 		page.setPageNum(query.getPageNum());
-		//通过过滤查询条件，找到商品 商品列表默认十个
-		List<PurchaseReportQuery> maps1 =  spReportMapper.purchaseReport3(query,page);
-		List<String> productNames = new ArrayList<String>();
-		if(maps1 !=null&& maps1.size()>0){
-			for(PurchaseReportQuery q : maps1){
-				productNames.add(q.getProductName());
-			}
-		}
-		//通过商品，再根据商品分组汇总
+//		//通过过滤查询条件，找到商品 商品列表默认十个
+//		List<PurchaseReportQuery> maps1 =  spReportMapper.purchaseReport3(query,page);
+//		List<String> productNames = new ArrayList<String>();
+//		if(maps1 !=null&& maps1.size()>0){
+//			for(PurchaseReportQuery q : maps1){
+//				productNames.add(q.getProductName());
+//			}
+//		}
+//		//通过商品，再根据商品分组汇总
+//		List<PurchaseReportQuery> maps2 = null;
+//		if(productNames.size()>0){
+//			query.setProductNameArray(productNames);
+//			
+//		}
 		List<PurchaseReportQuery> maps2 = null;
-		if(productNames.size()>0){
-			query.setProductNameArray(productNames);
-			maps2 =spReportMapper.purchaseReport1(query);
-		}
-		
+		maps2 =spReportMapper.purchaseReport1(query,page);
 		List<ProductReportQuery> maps3 =null;
-		if(maps2 !=null){
+		if(maps2 !=null&&maps2.size()>0){
 			
 			reportQuery.setPurchaseReportQuerys(maps2);
 			
@@ -269,19 +266,27 @@ public class SpReportServiceImpl implements SpReportService{
 			q.setProductName(maps2.get(0).getProductName());
 			q.setStoreId(query.getStoreId());
 			q.setReportType(query.getReportType());
+			
 			Filter filter = new Filter();
-	    	filter.setValue(q.getProductName());
-	    	filter.setField("productName");
+			if(query.getReportType()==3){
+				filter.setValue(q.getClientName());
+		    	filter.setField("clientName");
+			}else{
+				
+		    	filter.setValue(q.getProductName());
+		    	filter.setField("productName");
+			}
+			
 	    	q.setFilter(filter);
 			ReportQuery r =  purchaseReportByProductName(q);
 			
 			reportQuery.setProductReportQuerys(r.getProductReportQuerys());
 		}
-		
+		reportQuery.setPurchaseReportQuerys(maps2);
 		return reportQuery;
 	}
 	
-	public  List<ProductReportQuery> getDatePoor(ProductReportQuery q) {
+	public  List<ProductReportQuery> getDatePoor(ProductReportQuery q,int region) {
 		 
 	    long nh = 1000 * 60 * 60;
 	    // long ns = 1000;
@@ -289,12 +294,12 @@ public class SpReportServiceImpl implements SpReportService{
 	    long diff = q.getTimeTo().getTime()-q.getTimeFrom().getTime();
 	    // 计算差多少小时
 	    long hour = diff / nh +1;
-	    long timeInterval = hour / 8;
+	    long timeInterval = hour / region;
 	    List<Date> timeFroms = new ArrayList<Date>();
 	    timeFroms.add(q.getTimeFrom());
 	    List<Date> timeTos = new ArrayList<Date>();
 	    Date startDate = q.getTimeFrom();
-	    for(int i=0;i<7; i++){
+	    for(int i=0;i<region -1; i++){
 	    	Calendar c=Calendar.getInstance();
 		    c.setTime(startDate);
 		    c.add(Calendar.HOUR_OF_DAY, Integer.parseInt(timeInterval+""));
@@ -322,8 +327,69 @@ public class SpReportServiceImpl implements SpReportService{
 	}
 	@Override
 	public ReportQuery purchaseReportByProductName(ProductReportQuery query) {
+		if(query.getTimeFrom() ==null ){
+			query.setTimeFrom(setTimeFrom());
+		}
+		if(query.getTimeTo() == null){
+			query.setTimeTo(setTimeTo());
+		}
 		ScWeChat wechat = scWeChatMapper.selectByOpenId(query.getOpenid());//根据当前操作者的openid 获取当前店铺storeId
+		if(wechat !=null){
+			if(wechat.getStoreid()!=null){
+				query.setStoreId(wechat.getStoreid());
+			}else{
+				return null;
+			}
+		}
+		Page page = new Page();
+		page.setPageNum(query.getPageNum());
+		List<PurchaseReportQuery> maps2 = null;
 		
+		PurchaseReportQuery q = new PurchaseReportQuery();
+		q.setTimeFrom(query.getTimeFrom());
+		q.setTimeTo(query.getTimeTo());
+		q.setStoreId(query.getStoreId());
+		q.setReportType(query.getReportType());
+		Filter filter = query.getFilter();
+		filter.setValue(null);
+		q.setFilter(filter);
+		maps2 =spReportMapper.purchaseReport1(q ,page);
+		
+		ReportQuery reportQuery =new ReportQuery();
+		
+		//根据时间从，时间到获取8个时间区间，根据时间区间去汇总区间中的采购数量
+		List<ProductReportQuery> querys = getDatePoor(query,8);
+		//默认查询第一个商品所对应的趋势图
+		if(querys.size()>0){
+			query = querys.get(0);
+			query.setFilter(filter);
+			querys.remove(0);
+			System.out.println(querys.size());
+		}
+		List<ProductReportQuery> maps3 =null;
+		query.setFilter(query.getFilter());
+		maps3 =  spReportMapper.purchaseReport2(query,querys);
+		reportQuery.setProductReportQuerys(maps3);
+		reportQuery.setPurchaseReportQuerys(maps2);
+		return reportQuery;
+	}
+	
+	public ReportQuery saleReport(ProductReportQuery query) {
+		if(query.getTimeFrom() ==null ){
+			Calendar   cal   =   Calendar.getInstance();
+			cal.add(Calendar.DATE,   -7);
+			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH),  
+		       		 0, 0, 0); 
+			query.setTimeFrom(cal.getTime());
+		}
+		if(query.getTimeTo() == null){
+			Calendar   cal   =   Calendar.getInstance();
+			cal.add(Calendar.DATE,   -1);
+			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH),  
+		       		 23, 59, 59); 
+			query.setTimeTo(cal.getTime());
+		}
+		ScWeChat wechat = scWeChatMapper.selectByOpenId(query.getOpenid());//根据当前操作者的openid 获取当前店铺storeId
 		if(wechat !=null){
 			if(wechat.getStoreid()!=null){
 				query.setStoreId(wechat.getStoreid());
@@ -332,18 +398,17 @@ public class SpReportServiceImpl implements SpReportService{
 			}
 		}
 		ReportQuery reportQuery =new ReportQuery();
-		
 		//根据时间从，时间到获取8个时间区间，根据时间区间去汇总区间中的采购数量
-		List<ProductReportQuery> querys = getDatePoor(query);
+		List<ProductReportQuery> querys = getDatePoor(query,7);
 		//默认查询第一个商品所对应的趋势图
-		Filter filter = query.getFilter();
 		if(querys.size()>0){
 			query = querys.get(0);
-			query.setFilter(filter);
+			query.setFilter(null);
 			querys.remove(0);
-			System.out.println(querys.size());
 		}
-		 List<ProductReportQuery> maps3 =null;
+		query.setReportType(2);
+		List<ProductReportQuery> maps3 =null;
+		query.setFilter(null);
 		maps3 =  spReportMapper.purchaseReport2(query,querys);
 		reportQuery.setProductReportQuerys(maps3);
 		return reportQuery;
@@ -368,8 +433,6 @@ public class SpReportServiceImpl implements SpReportService{
 		if(query.getSort() != null){
 			if("quantityOp".equals(query.getSort().getValue())){
 				query.setQuantityOp(query.getSort().getOp());
-			}else if("amountOp".equals(query.getSort().getValue())){
-				query.setAmountOp(query.getSort().getOp());
 			}
 		}
 		List<Rules> rules = query.getRules();
@@ -397,8 +460,8 @@ public class SpReportServiceImpl implements SpReportService{
 		mapList1 = getMaps(maps1, query);
 		
 		ReportQuery reportQuery = new ReportQuery();
-		reportQuery .setInvReportQuerys(mapList1);
-		return null;
+		reportQuery.setInvReportQuerys(mapList1);
+		return reportQuery;
 	}
 	@Override
 	public ReportQuery employeeReport(PurchaseReportQuery query) {
@@ -484,7 +547,11 @@ public class SpReportServiceImpl implements SpReportService{
 		if(querys!=null && querys.size()>0){
 			for(SaleReportQuery q : querys){
 				if(q.getSaleAmount() !=null && q.getPucharseAmount()!=null){
-					q.setGrossProfit((q.getSaleAmount().subtract(q.getPucharseAmount())).divide(q.getSaleAmount(),2,RoundingMode.HALF_UP));
+					if(q.getSaleAmount().compareTo(BigDecimal.ZERO)==0){
+						q.setGrossProfit(BigDecimal.ZERO);
+					}else{
+						q.setGrossProfit((q.getSaleAmount().subtract(q.getPucharseAmount())).divide(q.getSaleAmount(),2,RoundingMode.HALF_UP));
+					}
 					list.add(q);
 				}
 			}
@@ -722,8 +789,17 @@ public class SpReportServiceImpl implements SpReportService{
 			size = resulets.size();
 			for(int i=0;i<size;i++){
 				SaleReportQuery q = resulets.get(i);
-				q.setProfitRatio(q.getProfitAmount().divide(profitAmountTotal, 2,  RoundingMode.HALF_UP));
-				q.setSaleRatio(q.getSaleAmount().divide(saleAmountTotal, 2,  RoundingMode.HALF_UP));
+				if(profitAmountTotal.compareTo(BigDecimal.ZERO)==0){
+					q.setProfitRatio(BigDecimal.ZERO);
+				}else{
+					q.setProfitRatio(q.getProfitAmount().divide(profitAmountTotal, 2,  RoundingMode.HALF_UP));
+				}
+				if(saleAmountTotal.compareTo(BigDecimal.ZERO)==0){
+					q.setSaleRatio(BigDecimal.ZERO);
+				}else{
+					q.setSaleRatio(q.getSaleAmount().divide(saleAmountTotal, 2,  RoundingMode.HALF_UP));
+				}
+				
 				resuletList.add(q);
 			}
 			//计算其他的
@@ -743,15 +819,29 @@ public class SpReportServiceImpl implements SpReportService{
 					s.setPucharseAmount(s.getPucharseAmount().add(queryOthers.get(i).getPucharseAmount()));
 					s.setProfitAmount(s.getProfitAmount().add(queryOthers.get(i).getProfitAmount()));
 				}
-				s.setProfitRatio(s.getProfitAmount().divide(profitAmountTotal, 2,  RoundingMode.HALF_UP));
-				s.setSaleRatio(s.getSaleAmount().divide(saleAmountTotal, 2,  RoundingMode.HALF_UP));
+				if(profitAmountTotal.compareTo(BigDecimal.ZERO)==0){
+					s.setProfitRatio(BigDecimal.ZERO);
+				}else{
+					s.setProfitRatio(s.getProfitAmount().divide(profitAmountTotal, 2,  RoundingMode.HALF_UP));
+				}
+				if(saleAmountTotal.compareTo(BigDecimal.ZERO)==0){
+					s.setSaleRatio(BigDecimal.ZERO);
+				}else{
+					s.setSaleRatio(s.getSaleAmount().divide(saleAmountTotal, 2,  RoundingMode.HALF_UP));
+				}
+				
 				resuletList.add(s);
 			}
 			
 		}
 		resultQuery.setPucharseAmount(pucharseAmountTotal);
 		resultQuery.setSaleAmount(saleAmountTotal);
-		resultQuery.setGrossProfit(saleAmountTotal.subtract(pucharseAmountTotal).divide(saleAmountTotal, 2,  RoundingMode.HALF_UP));
+		if(saleAmountTotal.compareTo(BigDecimal.ZERO)==0){
+			resultQuery.setGrossProfit(BigDecimal.ZERO);
+		}else{
+			resultQuery.setGrossProfit(saleAmountTotal.subtract(pucharseAmountTotal).divide(saleAmountTotal, 2,  RoundingMode.HALF_UP));
+		}
+		
 		resultQuery.setProfitAmount(profitAmountTotal);
 		resultQuery.setQuerys(resuletList);
 		return resultQuery;

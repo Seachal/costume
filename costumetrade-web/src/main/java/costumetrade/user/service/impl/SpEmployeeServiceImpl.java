@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import costumetrade.common.util.StringUtil;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpCustProdPrice;
 import costumetrade.user.domain.SpEmployee;
@@ -84,9 +85,9 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 		return spEmployeeMapper.getAllEmployees(subId);
 	}
 	@Override
-	public int saveEmployee(SpEmployee spEmployee) {
+	public String saveEmployee(SpEmployee spEmployee) {
 		int save = 0;
-		if(spEmployee.getId() != null){
+		if(StringUtil.isNotBlank(spEmployee.getId())){
 			SpEmployee getEmployee = spEmployeeMapper.selectByPrimaryKey(spEmployee);
 			if(getEmployee != null){
 				save = spEmployeeMapper.updateByPrimaryKeySelective(spEmployee);
@@ -120,7 +121,7 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 		employee.setEmployeeId(Long.parseLong(empId));
 		List<SpPrivilegeEmployee> privilegeEmployees = spPrivilegeEmployeeMapper.getEmployeeSpPrivilegeList(employee);
 		SpEmployee emp =new SpEmployee();
-		emp.setId(Integer.parseInt(empId));
+		emp.setId(empId);
 		emp = spEmployeeMapper.selectByPrimaryKey(emp);
 		emp.setPrivilegeEmployees(privilegeEmployees);
 		return emp;
