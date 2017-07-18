@@ -169,6 +169,7 @@
 		grade.dict_text as gradeName,
 		sto.operator as createBy
 		
+		
 		FROM
 		ss_stodetail detail
 		LEFT JOIN
@@ -178,7 +179,7 @@
 		left join
 		sp_product product
 		on
-		product.id=detail.productId
+		product.id=detail.productId AND product.storeId = #{storeId} 
 		left join
 		sp_pbrand
 		brand
@@ -190,15 +191,12 @@
 		on grade.dict_group='PRODUCT_GRADE'
 		and
 		grade.storeId=#{storeId} and grade.dict_value = product.grade
-	
 		where 1=1
-		and
-		sto.buyerStoreId=#{storeId}
-		AND STO.sellerStoreId <![CDATA[ <> ]]>STO.buyerStoreId
+		and sto.sellerStoreId = #{storeId}
 		AND sto.orderTime &gt;=str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
 		AND sto.orderTime &lt;=str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
 		<if test="filter.value !=null">
-			and ${filter.field} like CONCAT('%',#{filter.value},'%')
+			and ${filter.field} =#{filter.value}
 		</if>
 		<if test="filter.field !=null">
 		group by ${filter.field}
@@ -221,7 +219,7 @@
 		FROM
 		ss_stock stock
 		LEFT JOIN sp_product product
-		ON product.id = stock.productId
+		ON product.id = stock.productId AND product.storeId = #{query.storeId} 
 		LEFT JOIN sp_pbrand brand
 		ON brand.id = product.brandId
 		AND brand.storeId = stock.storeId
@@ -233,20 +231,9 @@
 		ON store.id = stock.storeId
 		WHERE 1=1
 		and stock.storeId = #{query.storeId}
-		<!-- 
-		AND STOCK.createTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
-		AND STOCK.createTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
-		
-		 -->
-		
-		
-		
-	 
 		<if test="query.filter.value !=null">
 			and ${query.filter.field} = #{query.filter.value}
 		</if>
-		
-		
 		<if test="query.productTypeArray != null">
 			and productType.cateName in
 			<foreach collection="query.productTypeArray" item="item"
@@ -289,12 +276,7 @@
 		<if test="query.quantityOp == 'desc'">
 			order by quantity desc
 		</if>
-		<if test="query.amountOp == 'asc'">
-			order by amount asc
-		</if>
-		<if test="query.amountOp == 'desc'">
-			order by amount desc
-		</if>
+	
 		<if test="page != null">
 			LIMIT #{page.startRow},#{page.pageSize}
 		</if>
@@ -302,36 +284,123 @@
 	<select id="purchaseReport3" resultMap="PurchaseResultMap">
 		SELECT 
 		detail.productName as productName,
-		(CASE WHEN c.remarkName IS NOT NULL THEN c.remarkName 
-       WHEN c.reallyName IS NOT NULL THEN c.reallyName
-       WHEN c.nickName IS NOT NULL THEN c.nickName ELSE c.nickName END) AS clientName
+		cli.clientName
 		FROM
 		ss_stodetail detail
 		LEFT JOIN
 		ss_stoorder sto
 		ON sto.payOrderNo = detail.orderId
 		left join sp_product product
-		on product.id=detail.productId
+		on product.id=detail.productId AND product.storeId = #{query.storeId} 
 		left join sp_pbrand brand
 		on brand.id =product.brandId and brand.storeId =#{query.storeId}
 		LEFT JOIN sp_product_type productType ON productType.id =product.productType and
 		productType.storeId =#{query.storeId}
 		<if test="query.reportType==1"><!-- 采购报表 -->
-		 LEFT JOIN sc_wechat_bind wechat ON wechat.storeId = sto.buyerStoreId
- 		 LEFT JOIN sp_client c ON c.openid = wechat.openId
+		LEFT JOIN 
+	    (SELECT c.id,
+	      MAX(c.create_time),
+	      (
+	        CASE
+	          WHEN c.remarkName IS NOT NULL 
+	          THEN c.remarkName 
+	          WHEN c.reallyName IS NOT NULL 
+	          THEN c.reallyName 
+	          WHEN c.nickName IS NOT NULL 
+	          THEN c.nickName 
+	          ELSE c.nickName 
+	        END
+	      ) AS clientName,
+	      sto.payOrderNo 
+	    FROM
+	      ss_stoorder sto 
+	      LEFT JOIN sc_wechat_bind chat 
+	        ON  chat.storeId = sto.sellerStoreId
+	        AND (sto.sellerStoreId <![CDATA[ <> ]]> ""  AND sto.sellerStoreId IS NOT NULL) 
+	      LEFT JOIN sp_client c 
+	        ON sto.buyerStoreId = c.storeId 
+	        AND c.openid = chat.openId 
+	    WHERE 1 = 1 
+	      AND sto.buyerStoreId = #{query.storeId}
+	      AND sto.orderStatus = 5) cli ON cli.payOrderNo = sto.payOrderNo
 		</if>
 		<if test="query.reportType==2"><!-- 销售报表 -->
-			LEFT JOIN sc_wechat_bind wechat ON (wechat.userId = sto.buyerStoreId OR wechat.storeId = sto.buyerStoreId)
-  			LEFT JOIN sp_client c ON c.openid = wechat.openId
+		LEFT JOIN 
+	    (SELECT c.id,
+	      MAX(c.create_time),
+	      (
+	        CASE
+	          WHEN c.remarkName IS NOT NULL 
+	          THEN c.remarkName 
+	          WHEN c.reallyName IS NOT NULL 
+	          THEN c.reallyName 
+	          WHEN c.nickName IS NOT NULL 
+	          THEN c.nickName 
+	          ELSE c.nickName 
+	        END
+	      ) AS clientName,
+	      sto.payOrderNo 
+	    FROM
+	      ss_stoorder sto 
+	      LEFT JOIN sc_wechat_bind chat 
+	        ON (
+	          chat.userId = sto.buyerStoreId 
+	          OR chat.storeId = sto.buyerStoreId
+	        ) 
+	        AND (
+	           sto.buyerStoreId <![CDATA[ <> ]]> "" 
+	          AND sto.buyerStoreId IS NOT NULL
+	        ) 
+	      LEFT JOIN sp_client c 
+	        ON sto.sellerStoreId = c.storeId 
+	        AND c.openid = chat.openId 
+	    WHERE 1 = 1 
+	      AND sto.sellerStoreId = #{query.storeId}
+	      AND sto.orderStatus = 5) cli ON cli.payOrderNo = sto.payOrderNo
+		</if>
+		<if test="query.reportType==3"><!--会员报表 -->
+		LEFT JOIN 
+	    (SELECT c.id,
+	      MAX(c.create_time),
+	      (
+	        CASE
+	          WHEN c.remarkName IS NOT NULL 
+	          THEN c.remarkName 
+	          WHEN c.reallyName IS NOT NULL 
+	          THEN c.reallyName 
+	          WHEN c.nickName IS NOT NULL 
+	          THEN c.nickName 
+	          ELSE c.nickName 
+	        END
+	      ) AS clientName,
+	      sto.payOrderNo 
+	    FROM
+	      ss_stoorder sto 
+	      LEFT JOIN sc_wechat_bind chat 
+	        ON (
+	          chat.userId = sto.buyerStoreId 
+	          OR chat.storeId = sto.buyerStoreId
+	        ) 
+	        AND (
+	           sto.buyerStoreId <![CDATA[ <> ]]> "" 
+	          AND sto.buyerStoreId IS NOT NULL
+	        ) 
+	      LEFT JOIN sp_client c 
+	        ON sto.sellerStoreId = c.storeId 
+	        AND c.openid = chat.openId and c.type=1
+	    WHERE 1 = 1 
+	      AND sto.sellerStoreId = #{query.storeId}
+	      AND sto.orderStatus = 5) cli ON cli.payOrderNo = sto.payOrderNo
 		</if>
 		where 1=1
 		AND sto.orderStatus ='5'
 		<if test="query.reportType==1"><!-- 采购报表 -->
 			and sto.buyerStoreId=#{query.storeId}
-			AND wechat.storeId IS NOT NULL
 		</if>
 		<if test="query.reportType==2"><!-- 销售报表 -->
-		    AND (wechat.userId IS NOT NULL OR wechat.storeId IS NOT NULL)
+			and sto.sellerStoreId=#{query.storeId}
+		</if>
+		<if test="query.reportType==3"><!-- 会员报表 -->
 			and sto.sellerStoreId=#{query.storeId}
 		</if>
 		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
@@ -363,7 +432,7 @@
 				index="index" open="(" separator="," close=")"> #{item}</foreach>
 		</if>
 		<if test="query.clientIdArray != null">
-			and c.id in
+			and cli.id in
 			<foreach collection="query.clientIdArray" item="item" index="index"
 				open="(" separator="," close=")"> #{item}</foreach>
 		</if>
@@ -373,7 +442,7 @@
 				open="(" separator="," close=")"> #{item}</foreach>
 		</if>
 		<if test="query.filter.value !=null">
-			and ${query.filter.field} like CONCAT('%',#{query.filter.value},'%')
+			and ${query.filter.field} =#{query.filter.value}
 		</if>
 		group by ${query.filter.field}
 		<if test="page != null">
@@ -385,46 +454,167 @@
 		sum(detail.count) as quantity,
 		SUM(detail.price*detail.count) AS amount,
 		detail.productName as productName,
-		(CASE WHEN c.remarkName IS NOT NULL THEN c.remarkName 
-       WHEN c.reallyName IS NOT NULL THEN c.reallyName
-       WHEN c.nickName IS NOT NULL THEN c.nickName ELSE c.nickName END) AS clientName
+		cli.clientName
 		FROM
 		ss_stodetail detail
 		LEFT JOIN
 		ss_stoorder sto
 		ON sto.payOrderNo = detail.orderId
 		left join sp_product product
-		on
-		product.id=detail.productId
+		on product.id=detail.productId AND product.storeId = #{query.storeId} 
 		left join sp_pbrand brand
-		on brand.id =
-		product.brandId and brand.storeId =#{query.storeId}
+		on brand.id = product.brandId and brand.storeId =#{query.storeId}
 		LEFT JOIN
 		sp_product_type productType ON productType.id =product.productType and
 		productType.storeId =#{query.storeId}
-			<if test="query.reportType==1"><!-- 采购报表 -->
-		 LEFT JOIN sc_wechat_bind wechat ON wechat.storeId = sto.buyerStoreId
- 		 LEFT JOIN sp_client c ON c.openid = wechat.openId
+		<if test="query.reportType==1"><!-- 采购报表 -->
+		LEFT JOIN 
+	    (SELECT c.id,
+	      MAX(c.create_time),
+	      (
+	        CASE
+	          WHEN c.remarkName IS NOT NULL 
+	          THEN c.remarkName 
+	          WHEN c.reallyName IS NOT NULL 
+	          THEN c.reallyName 
+	          WHEN c.nickName IS NOT NULL 
+	          THEN c.nickName 
+	          ELSE c.nickName 
+	        END
+	      ) AS clientName,
+	      sto.payOrderNo 
+	    FROM
+	      ss_stoorder sto 
+	      LEFT JOIN sc_wechat_bind chat 
+	        ON  chat.storeId = sto.sellerStoreId
+	        AND (sto.sellerStoreId <![CDATA[ <> ]]> ""  AND sto.sellerStoreId IS NOT NULL) 
+	      LEFT JOIN sp_client c 
+	        ON sto.buyerStoreId = c.storeId 
+	        AND c.openid = chat.openId 
+	    WHERE 1 = 1 
+	      AND sto.buyerStoreId = #{query.storeId}
+	      AND sto.orderStatus = 5) cli ON cli.payOrderNo = sto.payOrderNo
 		</if>
 		<if test="query.reportType==2"><!-- 销售报表 -->
-			LEFT JOIN sc_wechat_bind wechat ON (wechat.userId = sto.buyerStoreId OR wechat.storeId = sto.buyerStoreId)
-  			LEFT JOIN sp_client c ON c.openid = wechat.openId
+		LEFT JOIN 
+	    (SELECT c.id,
+	      MAX(c.create_time),
+	      (
+	        CASE
+	          WHEN c.remarkName IS NOT NULL 
+	          THEN c.remarkName 
+	          WHEN c.reallyName IS NOT NULL 
+	          THEN c.reallyName 
+	          WHEN c.nickName IS NOT NULL 
+	          THEN c.nickName 
+	          ELSE c.nickName 
+	        END
+	      ) AS clientName,
+	      sto.payOrderNo 
+	    FROM
+	      ss_stoorder sto 
+	      LEFT JOIN sc_wechat_bind chat 
+	        ON (
+	          chat.userId = sto.buyerStoreId 
+	          OR chat.storeId = sto.buyerStoreId
+	        ) 
+	        AND (
+	           sto.buyerStoreId <![CDATA[ <> ]]> "" 
+	          AND sto.buyerStoreId IS NOT NULL
+	        ) 
+	      LEFT JOIN sp_client c 
+	        ON sto.sellerStoreId = c.storeId 
+	        AND c.openid = chat.openId 
+	    WHERE 1 = 1 
+	      AND sto.sellerStoreId = #{query.storeId}
+	      AND sto.orderStatus = 5) cli ON cli.payOrderNo = sto.payOrderNo
+		</if>
+		<if test="query.reportType==3"><!--会员报表 -->
+		LEFT JOIN 
+	    (SELECT c.id,
+	      MAX(c.create_time),
+	      (
+	        CASE
+	          WHEN c.remarkName IS NOT NULL 
+	          THEN c.remarkName 
+	          WHEN c.reallyName IS NOT NULL 
+	          THEN c.reallyName 
+	          WHEN c.nickName IS NOT NULL 
+	          THEN c.nickName 
+	          ELSE c.nickName 
+	        END
+	      ) AS clientName,
+	      sto.payOrderNo 
+	    FROM
+	      ss_stoorder sto 
+	      LEFT JOIN sc_wechat_bind chat 
+	        ON (
+	          chat.userId = sto.buyerStoreId 
+	          OR chat.storeId = sto.buyerStoreId
+	        ) 
+	        AND (
+	           sto.buyerStoreId <![CDATA[ <> ]]> "" 
+	          AND sto.buyerStoreId IS NOT NULL
+	        ) 
+	      LEFT JOIN sp_client c 
+	        ON sto.sellerStoreId = c.storeId 
+	        AND c.openid = chat.openId and c.type=1
+	    WHERE 1 = 1 
+	      AND sto.sellerStoreId = #{query.storeId}
+	      AND sto.orderStatus = 5) cli ON cli.payOrderNo = sto.payOrderNo
 		</if>
 		where 1=1
 		AND sto.orderStatus ='5'
 		<if test="query.reportType==1"><!-- 采购报表 -->
 			and sto.buyerStoreId=#{query.storeId}
-			AND wechat.storeId IS NOT NULL
+			
 		</if>
 		<if test="query.reportType==2"><!-- 销售报表 -->
 			and sto.sellerStoreId=#{query.storeId}
-			AND (wechat.userId IS NOT NULL OR wechat.storeId IS NOT NULL)
+			
+		</if>
+		<if test="query.reportType==3"><!-- 会员报表 -->
+			and sto.sellerStoreId=#{query.storeId}
 		</if>
 		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
 		AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
-
+		<if test="query.productTypeArray != null">
+			and productType.cateName in
+			<foreach collection="query.productTypeArray" item="item"
+				index="index" open="(" separator="," close=")">#{item}</foreach>
+		</if>
+		<if test="query.productBrandArray != null">
+			and brand.brandName in
+			<foreach collection="query.productBrandArray" item="item"
+				index="index" open="(" separator="," close=")">#{item}</foreach>
+		</if>
+		<if test="query.productSeasonArray != null">
+			and product.season in
+			<foreach collection="query.productSeasonArray" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		<if test="query.productColorArray != null">
+			and detail.productColor in
+			<foreach collection="query.productColorArray" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		<if test="query.productSizeArray != null">
+			and detail.productSize in
+			<foreach collection="query.productSizeArray" item="item"
+				index="index" open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		<if test="query.clientIdArray != null">
+			and cli.id in
+			<foreach collection="query.clientIdArray" item="item" index="index"
+				open="(" separator="," close=")"> #{item}</foreach>
+		</if>
+		<if test="query.operatorArray != null">
+			and sto.operator in
+			<foreach collection="query.operatorArray" item="item" index="index"
+				open="(" separator="," close=")"> #{item}</foreach>
+		</if>
 		<if test="query.filter.value !=null">
-			and ${query.filter.field} like CONCAT('%',#{query.filter.value},'%')
+			and ${query.filter.field} = #{query.filter.value}
 		</if>
 		group by ${query.filter.field}
 		<if test="query.quantityOp == 'asc'">
@@ -439,19 +629,20 @@
 		<if test="query.amountOp == 'desc'">
 			order by amount desc
 		</if>
-	
+		<if test="page != null">
+			LIMIT #{page.startRow},#{page.pageSize}
+		</if>
 
 	</select>
 
 	<select id="purchaseReport2" resultMap="PurchaseResultMap">
 		SELECT
 		sum(case when detail.count is null then 0 else detail.count end) as quantity,
+		sum(case when detail.count*detail.price is null then 0 else detail.count*detail.pric end) as amount,
 		#{query.timeFrom} as timeFrom,
 		#{query.timeTo} as timeTo,
 		detail.productName as productName,
-		(CASE WHEN c.remarkName IS NOT NULL THEN c.remarkName 
-       WHEN c.reallyName IS NOT NULL THEN c.reallyName
-       WHEN c.nickName IS NOT NULL THEN c.nickName ELSE c.nickName END) AS clientName
+		cli.clientName
 		FROM
 		ss_stodetail detail
 		LEFT
@@ -459,37 +650,126 @@
 		ON sto.payOrderNo =
 		detail.orderId
 		<if test="query.reportType==1"><!-- 采购报表 -->
-		 LEFT JOIN sc_wechat_bind wechat ON wechat.storeId = sto.buyerStoreId
- 		 LEFT JOIN sp_client c ON c.openid = wechat.openId
+		LEFT JOIN 
+	    (SELECT c.id,
+	      MAX(c.create_time),
+	      (
+	        CASE
+	          WHEN c.remarkName IS NOT NULL 
+	          THEN c.remarkName 
+	          WHEN c.reallyName IS NOT NULL 
+	          THEN c.reallyName 
+	          WHEN c.nickName IS NOT NULL 
+	          THEN c.nickName 
+	          ELSE c.nickName 
+	        END
+	      ) AS clientName,
+	      sto.payOrderNo 
+	    FROM
+	      ss_stoorder sto 
+	      LEFT JOIN sc_wechat_bind chat 
+	        ON  chat.storeId = sto.sellerStoreId
+	        AND (sto.sellerStoreId <![CDATA[ <> ]]> ""  AND sto.sellerStoreId IS NOT NULL) 
+	      LEFT JOIN sp_client c 
+	        ON sto.buyerStoreId = c.storeId 
+	        AND c.openid = chat.openId 
+	    WHERE 1 = 1 
+	      AND sto.buyerStoreId = #{query.storeId}
+	      AND sto.orderStatus = 5) cli ON cli.payOrderNo = sto.payOrderNo
 		</if>
 		<if test="query.reportType==2"><!-- 销售报表 -->
-			LEFT JOIN sc_wechat_bind wechat ON (wechat.userId = sto.buyerStoreId OR wechat.storeId = sto.buyerStoreId)
-  			LEFT JOIN sp_client c ON c.openid = wechat.openId
+		LEFT JOIN 
+	    (SELECT c.id,
+	      MAX(c.create_time),
+	      (
+	        CASE
+	          WHEN c.remarkName IS NOT NULL 
+	          THEN c.remarkName 
+	          WHEN c.reallyName IS NOT NULL 
+	          THEN c.reallyName 
+	          WHEN c.nickName IS NOT NULL 
+	          THEN c.nickName 
+	          ELSE c.nickName 
+	        END
+	      ) AS clientName,
+	      sto.payOrderNo 
+	    FROM
+	      ss_stoorder sto 
+	      LEFT JOIN sc_wechat_bind chat 
+	        ON (
+	          chat.userId = sto.buyerStoreId 
+	          OR chat.storeId = sto.buyerStoreId
+	        ) 
+	        AND (
+	           sto.buyerStoreId <![CDATA[ <> ]]> "" 
+	          AND sto.buyerStoreId IS NOT NULL
+	        ) 
+	      LEFT JOIN sp_client c 
+	        ON sto.sellerStoreId = c.storeId 
+	        AND c.openid = chat.openId 
+	    WHERE 1 = 1 
+	      AND sto.sellerStoreId = #{query.storeId}
+	      AND sto.orderStatus = 5) cli ON cli.payOrderNo = sto.payOrderNo
+		</if>
+		<if test="query.reportType==3"><!-- 会员报表 -->
+		LEFT JOIN 
+	    (SELECT c.id,
+	      MAX(c.create_time),
+	      (
+	        CASE
+	          WHEN c.remarkName IS NOT NULL 
+	          THEN c.remarkName 
+	          WHEN c.reallyName IS NOT NULL 
+	          THEN c.reallyName 
+	          WHEN c.nickName IS NOT NULL 
+	          THEN c.nickName 
+	          ELSE c.nickName 
+	        END
+	      ) AS clientName,
+	      sto.payOrderNo 
+	    FROM
+	      ss_stoorder sto 
+	      LEFT JOIN sc_wechat_bind chat 
+	        ON (
+	          chat.userId = sto.buyerStoreId 
+	          OR chat.storeId = sto.buyerStoreId
+	        ) 
+	        AND (
+	           sto.buyerStoreId <![CDATA[ <> ]]> "" 
+	          AND sto.buyerStoreId IS NOT NULL
+	        ) 
+	      LEFT JOIN sp_client c 
+	        ON sto.sellerStoreId = c.storeId 
+	        AND c.openid = chat.openId and c.type=1
+	    WHERE 1 = 1 
+	      AND sto.sellerStoreId = #{query.storeId}
+	      AND sto.orderStatus = 5) cli ON cli.payOrderNo = sto.payOrderNo
 		</if>
 		where 1=1
 		AND sto.orderStatus ='5'
 		<if test="query.reportType==1"><!-- 采购报表 -->
 			and sto.buyerStoreId=#{query.storeId}
-			
 		</if>
 		<if test="query.reportType==2"><!-- 销售报表 -->
+			and sto.sellerStoreId=#{query.storeId}
+		</if>
+		<if test="query.reportType==3"><!-- 会员报表 -->
 			and sto.sellerStoreId=#{query.storeId}
 		</if>
 		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
 		AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
 		<if test="query.filter.value !=null">
-			and ${query.filter.field} like CONCAT('%',#{query.filter.value},'%')
+			and ${query.filter.field} = #{query.filter.value}
 		</if>
 		<foreach collection="querys" index="index" item="item">
 		union all
 		SELECT
 		sum(case when detail.count is null then 0 else detail.count end) as quantity,
+		sum(case when detail.count*detail.price is null then 0 else detail.count*detail.pric end) as amount,
 		#{query.timeFrom} as timeFrom,
 		#{query.timeTo} as timeTo,
 		detail.productName as productName,
-		(CASE WHEN c.remarkName IS NOT NULL THEN c.remarkName 
-       WHEN c.reallyName IS NOT NULL THEN c.reallyName
-       WHEN c.nickName IS NOT NULL THEN c.nickName ELSE c.nickName END) AS clientName
+		cli.clientName
 		FROM
 		ss_stodetail detail
 		LEFT
@@ -497,25 +777,116 @@
 		ON sto.payOrderNo =
 		detail.orderId
 		<if test="query.reportType==1"><!-- 采购报表 -->
-		 LEFT JOIN sc_wechat_bind wechat ON wechat.storeId = sto.buyerStoreId
- 		 LEFT JOIN sp_client c ON c.openid = wechat.openId
+		LEFT JOIN 
+	    (SELECT c.id,
+	      MAX(c.create_time),
+	      (
+	        CASE
+	          WHEN c.remarkName IS NOT NULL 
+	          THEN c.remarkName 
+	          WHEN c.reallyName IS NOT NULL 
+	          THEN c.reallyName 
+	          WHEN c.nickName IS NOT NULL 
+	          THEN c.nickName 
+	          ELSE c.nickName 
+	        END
+	      ) AS clientName,
+	      sto.payOrderNo 
+	    FROM
+	      ss_stoorder sto 
+	      LEFT JOIN sc_wechat_bind chat 
+	        ON  chat.storeId = sto.sellerStoreId
+	        AND (sto.sellerStoreId <![CDATA[ <> ]]> ""  AND sto.sellerStoreId IS NOT NULL) 
+	      LEFT JOIN sp_client c 
+	        ON sto.buyerStoreId = c.storeId 
+	        AND c.openid = chat.openId 
+	    WHERE 1 = 1 
+	      AND sto.buyerStoreId = #{query.storeId}
+	      AND sto.orderStatus = 5) cli ON cli.payOrderNo = sto.payOrderNo
 		</if>
 		<if test="query.reportType==2"><!-- 销售报表 -->
-			LEFT JOIN sc_wechat_bind wechat ON (wechat.userId = sto.buyerStoreId OR wechat.storeId = sto.buyerStoreId)
-  			LEFT JOIN sp_client c ON c.openid = wechat.openId
+		LEFT JOIN 
+	    (SELECT c.id,
+	      MAX(c.create_time),
+	      (
+	        CASE
+	          WHEN c.remarkName IS NOT NULL 
+	          THEN c.remarkName 
+	          WHEN c.reallyName IS NOT NULL 
+	          THEN c.reallyName 
+	          WHEN c.nickName IS NOT NULL 
+	          THEN c.nickName 
+	          ELSE c.nickName 
+	        END
+	      ) AS clientName,
+	      sto.payOrderNo 
+	    FROM
+	      ss_stoorder sto 
+	      LEFT JOIN sc_wechat_bind chat 
+	        ON (
+	          chat.userId = sto.buyerStoreId 
+	          OR chat.storeId = sto.buyerStoreId
+	        ) 
+	        AND (
+	           sto.buyerStoreId <![CDATA[ <> ]]> "" 
+	          AND sto.buyerStoreId IS NOT NULL
+	        ) 
+	      LEFT JOIN sp_client c 
+	        ON sto.sellerStoreId = c.storeId 
+	        AND c.openid = chat.openId 
+	    WHERE 1 = 1 
+	      AND sto.sellerStoreId = #{query.storeId}
+	      AND sto.orderStatus = 5) cli ON cli.payOrderNo = sto.payOrderNo
 		</if>
-			where 1=1
-			AND sto.orderStatus ='5'
-			<if test="query.reportType==1"><!-- 采购报表 -->
-				and sto.buyerStoreId=#{query.storeId}
-			</if>
-			<if test="query.reportType==2"><!-- 销售报表 -->
-				and sto.sellerStoreId=#{query.storeId}
-			</if>
+		<if test="query.reportType==3"><!-- 会员报表 -->
+		LEFT JOIN 
+	    (SELECT c.id,
+	      MAX(c.create_time),
+	      (
+	        CASE
+	          WHEN c.remarkName IS NOT NULL 
+	          THEN c.remarkName 
+	          WHEN c.reallyName IS NOT NULL 
+	          THEN c.reallyName 
+	          WHEN c.nickName IS NOT NULL 
+	          THEN c.nickName 
+	          ELSE c.nickName 
+	        END
+	      ) AS clientName,
+	      sto.payOrderNo 
+	    FROM
+	      ss_stoorder sto 
+	      LEFT JOIN sc_wechat_bind chat 
+	        ON (
+	          chat.userId = sto.buyerStoreId 
+	          OR chat.storeId = sto.buyerStoreId
+	        ) 
+	        AND (
+	           sto.buyerStoreId <![CDATA[ <> ]]> "" 
+	          AND sto.buyerStoreId IS NOT NULL
+	        ) 
+	      LEFT JOIN sp_client c 
+	        ON sto.sellerStoreId = c.storeId 
+	        AND c.openid = chat.openId and c.type=1
+	    WHERE 1 = 1 
+	      AND sto.sellerStoreId = #{query.storeId}
+	      AND sto.orderStatus = 5) cli ON cli.payOrderNo = sto.payOrderNo
+		</if>
+		where 1=1
+		AND sto.orderStatus ='5'
+		<if test="query.reportType==1"><!-- 采购报表 -->
+			and sto.buyerStoreId=#{query.storeId}
+		</if>
+		<if test="query.reportType==2"><!-- 销售报表 -->
+			and sto.sellerStoreId=#{query.storeId}
+		</if>
+		<if test="query.reportType==3"><!-- 会员报表 -->
+			and sto.sellerStoreId=#{query.storeId}
+		</if>
 			AND sto.orderTime &gt;=str_to_date(#{item.timeFrom},'%Y-%m-%d %H:%i:%s')
 			AND sto.orderTime &lt;=str_to_date(#{item.timeTo},'%Y-%m-%d %H:%i:%s')
 			<if test="query.filter.value !=null">
-			and ${query.filter.field} like CONCAT('%',#{query.filter.value},'%')
+			and ${query.filter.field} =#{query.filter.value}
 			</if>
 		
 		</foreach>
@@ -539,7 +910,7 @@
 		  LEFT JOIN ss_stoorder sto 
 		    ON sto.payOrderNo = detail.orderId 
 		  LEFT JOIN sp_product product 
-		    ON product.id = detail.productId 
+		    ON product.id = detail.productId  AND product.storeId = #{query.storeId} 
 		  LEFT JOIN sp_pbrand brand 
 		    ON brand.id = product.brandId 
 		    AND brand.storeId = #{query.storeId} 
@@ -554,7 +925,7 @@
 		AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
 		AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
 		<if test="query.filter.value !=null">
-			and ${query.filter.field} like CONCAT('%',#{query.filter.value},'%')
+			and ${query.filter.field} =#{query.filter.value}
 		</if>
 		
 		group by ${query.filter.field}
@@ -575,7 +946,7 @@
 		</if>
 	</select>
 	<select id="generalOrder" parameterType="costumetrade.report.domain.GeneralReportQuery" resultMap="GeneralResultMap">
-SELECT 
+	SELECT 
 		  SUM(
 		    CASE
 		      WHEN sto.buyerStoreId = #{storeId} and sto.orderStatus=5
@@ -781,14 +1152,15 @@ SELECT
 		  detail.productSize AS productSize,
 		  brand.brandName AS brandName,
 		  grade.dict_text AS gradeName,
-		  employee.reallyName AS createBy
+		  employee.reallyName AS createBy,
+		  cli.clientName
 		
 		FROM
 		  ss_stodetail detail 
 		  LEFT JOIN ss_stoorder sto 
 		    ON sto.payOrderNo = detail.orderId 
 		  LEFT JOIN sp_product product 
-		    ON product.id = detail.productId 
+		    ON product.id = detail.productId AND product.storeId = #{query.storeId} 
 		  LEFT JOIN sp_pbrand brand 
 		    ON brand.id = product.brandId 
 		    AND brand.storeId = #{query.storeId} 
@@ -799,11 +1171,44 @@ SELECT
 		  LEFT JOIN sp_employee employee ON employee.id = sto.operator
 		  LEFT JOIN ss_pprice price ON
 		price.productId = product.id AND price.storeId = product.storeId and price.productId = detail.productId
+			LEFT JOIN 
+	    (SELECT 
+	      MAX(c.create_time),
+	      (
+	        CASE
+	          WHEN c.remarkName IS NOT NULL 
+	          THEN c.remarkName 
+	          WHEN c.reallyName IS NOT NULL 
+	          THEN c.reallyName 
+	          WHEN c.nickName IS NOT NULL 
+	          THEN c.nickName 
+	          ELSE c.nickName 
+	        END
+	      ) AS clientName,
+	      sto.payOrderNo 
+	    FROM
+	      ss_stoorder sto 
+	      LEFT JOIN sc_wechat_bind chat 
+	        ON (
+	          chat.userId = sto.buyerStoreId 
+	          OR chat.storeId = sto.buyerStoreId
+	        ) 
+	        AND (
+	           sto.buyerStoreId <![CDATA[ <> ]]> "" 
+	          AND sto.buyerStoreId IS NOT NULL
+	        ) 
+	      LEFT JOIN sp_client c 
+	        ON sto.sellerStoreId = c.storeId 
+	        AND c.openid = chat.openId 
+	    WHERE 1 = 1 
+	      AND sto.sellerStoreId = #{query.storeId}
+	      AND sto.orderStatus = 5) cli ON cli.payOrderNo = sto.payOrderNo
 		  where 1=1
 		  AND sto.orderStatus = 5 
 		  AND sto.orderTime &gt;=str_to_date(#{query.timeFrom},'%Y-%m-%d %H:%i:%s')
 		  AND sto.orderTime &lt;=str_to_date(#{query.timeTo},'%Y-%m-%d %H:%i:%s')
 		  AND sto.sellerStoreId = #{query.storeId}	
+		 
 		<if test="query.filter.value !=null">
 			and ${query.filter.field} = #{query.filter.value}
 		</if>
@@ -835,7 +1240,8 @@ SELECT
 		detail.productSize as productSize,
 		brand.brandName as brandName,
 		grade.dict_text as gradeName,
-		sto.operator as createBy
+		sto.operator as createBy,
+		cli.clientName
 		FROM
 		ss_stodetail detail
 		LEFT JOIN ss_stoorder sto 
@@ -850,12 +1256,44 @@ SELECT
 		and grade.storeId=#{storeId} and grade.dict_value = product.grade
 		LEFT JOIN ss_pprice price ON
 		price.productId = product.id AND price.storeId = product.storeId and price.productId = detail.productId
+		LEFT JOIN 
+	    (SELECT 
+	      MAX(c.create_time),
+	      (
+	        CASE
+	          WHEN c.remarkName IS NOT NULL 
+	          THEN c.remarkName 
+	          WHEN c.reallyName IS NOT NULL 
+	          THEN c.reallyName 
+	          WHEN c.nickName IS NOT NULL 
+	          THEN c.nickName 
+	          ELSE c.nickName 
+	        END
+	      ) AS clientName,
+	      sto.payOrderNo 
+	    FROM
+	      ss_stoorder sto 
+	      LEFT JOIN sc_wechat_bind chat 
+	        ON (
+	          chat.userId = sto.buyerStoreId 
+	          OR chat.storeId = sto.buyerStoreId
+	        ) 
+	        AND (
+	           sto.buyerStoreId <![CDATA[ <> ]]> "" 
+	          AND sto.buyerStoreId IS NOT NULL
+	        ) 
+	      LEFT JOIN sp_client c 
+	        ON sto.sellerStoreId = c.storeId 
+	        AND c.openid = chat.openId 
+	    WHERE 1 = 1 
+	      AND sto.sellerStoreId = #{storeId}
+	      AND sto.orderStatus = 5) cli ON cli.payOrderNo = sto.payOrderNo
 		where 1=1
 		and sto.sellerStoreId=#{storeId}
 		AND sto.orderTime &gt;=str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
 		AND sto.orderTime &lt;=str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
 		<if test="filter.value !=null">
-			and ${filter.field} like CONCAT('%',#{filter.value},'%')
+			and ${filter.field} =#{filter.value}=
 		</if>
 		<if test="filter.field !=null">
 		group by ${filter.field}

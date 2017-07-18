@@ -5,7 +5,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="openId" jdbcType="VARCHAR" property="openid" />
     <result column="storeId" jdbcType="VARCHAR" property="storeid" />
-    <result column="empId" jdbcType="INTEGER" property="empid" />
+    <result column="empId" jdbcType="VARCHAR" property="empid" />
     <result column="createTime" jdbcType="TIMESTAMP" property="createtime" />
     <result column="createBy" jdbcType="VARCHAR" property="createby" />
     <result column="userId" jdbcType="VARCHAR" property="userid" />
@@ -42,6 +42,15 @@
     <if test="storeid!=null">
     and storeId = #{storeid,jdbcType=VARCHAR}
     </if>
+    <if test="buyyer!=null">
+    and (storeId = #{buyyer,jdbcType=VARCHAR} or userId = #{buyyer})
+    </if>
+    <if test="unionid !=null">
+    and unionid = #{unionid,jdbcType=VARCHAR}
+    </if>
+    <if test="openid !=null">
+    and openId = #{openid,jdbcType=VARCHAR}
+    </if>
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
     delete from sc_wechat_bind
@@ -52,7 +61,7 @@
       empId, createTime, createBy, 
       userId,unionid)
     values (#{id,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{storeid,jdbcType=VARCHAR}, 
-      #{empid,jdbcType=INTEGER}, #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR}, 
+      #{empid,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, #{createby,jdbcType=VARCHAR}, 
       #{userid,jdbcType=VARCHAR},#{unionid,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.user.domain.ScWeChat">
@@ -97,7 +106,7 @@
         #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="empid != null">
-        #{empid,jdbcType=INTEGER},
+        #{empid,jdbcType=VARCHAR},
       </if>
       <if test="createtime != null">
         #{createtime,jdbcType=TIMESTAMP},
@@ -123,7 +132,7 @@
         storeId = #{storeid,jdbcType=VARCHAR},
       </if>
       <if test="empid != null">
-        empId = #{empid,jdbcType=INTEGER},
+        empId = #{empid,jdbcType=VARCHAR},
       </if>
       <if test="createtime != null">
         createTime = #{createtime,jdbcType=TIMESTAMP},
@@ -144,7 +153,7 @@
     update sc_wechat_bind
     set openId = #{openid,jdbcType=VARCHAR},
       storeId = #{storeid,jdbcType=VARCHAR},
-      empId = #{empid,jdbcType=INTEGER},
+      empId = #{empid,jdbcType=VARCHAR},
       createTime = #{createtime,jdbcType=TIMESTAMP},
       createBy = #{createby,jdbcType=VARCHAR},
       unionid = #{unionid,jdbcType=VARCHAR},

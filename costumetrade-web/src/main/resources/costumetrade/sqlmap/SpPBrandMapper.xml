@@ -178,51 +178,23 @@
     update sp_pbrand
     <set>
       <if test="storeId != null">
-        #{storeId,jdbcType=VARCHAR},
+        storeId =  #{storeId,jdbcType=VARCHAR},
       </if>
       <if test="status != null">
-        #{status,jdbcType=INTEGER},
+       status = #{status,jdbcType=INTEGER},
       </if>
       <if test="isDefault != null">
-        #{isDefault,jdbcType=INTEGER},
+       isDefault = #{isDefault,jdbcType=INTEGER},
       </if>
       <if test="brandname != null">
-        #{brandname,jdbcType=VARCHAR},
+       brandName = #{brandname,jdbcType=VARCHAR},
       </if>
       <if test="fastcode != null">
-        #{fastcode,jdbcType=VARCHAR},
+       fastcode = #{fastcode,jdbcType=VARCHAR},
       </if>
-      <if test="profitD0 != null">
-        #{profitD0,jdbcType=DECIMAL},
-      </if>
-      <if test="profitD1 != null">
-        #{profitD1,jdbcType=DECIMAL},
-      </if>
-      <if test="profitD2 != null">
-        #{profitD2,jdbcType=DECIMAL},
-      </if>
-      <if test="profitD3 != null">
-        #{profitD3,jdbcType=DECIMAL},
-      </if>
-      <if test="profitD4 != null">
-        #{profitD4,jdbcType=DECIMAL},
-      </if>
-      <if test="profitD5 != null">
-        #{profitD5,jdbcType=DECIMAL},
-      </if>
-      <if test="profitPrecise != null">
-        #{profitPrecise,jdbcType=DECIMAL},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="createBy != null">
-        #{createBy,jdbcType=VARCHAR},
-      </if>
-      NOW(),
-      <if test="modifyBy != null">
-        #{modifyBy,jdbcType=VARCHAR},
-      </if>
+     
+      modify_time =NOW(),
+     
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>

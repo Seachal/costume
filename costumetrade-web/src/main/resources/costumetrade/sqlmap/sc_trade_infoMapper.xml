@@ -23,7 +23,7 @@
     select 
     <include refid="Base_Column_List" />
     from sc_trade_info
-    where tradeNo = #{tradeNo,jdbcType=STRING}
+    where tradeNo = #{tradeNo,jdbcType=VARCHAR}
   </select>  
   
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">

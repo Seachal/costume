@@ -23,7 +23,7 @@
   <insert id="insert" parameterType="costumetrade.product.domain.ScUpgradeMap">
     insert into sc_upgrade_map (id, openId, store_id,product_id
       )
-    values (#{id,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{storeId,jdbcType=VARCHAR},, #{productId,jdbcType=VARCHAR}
+    values (#{id,jdbcType=INTEGER}, #{openid,jdbcType=VARCHAR}, #{storeId,jdbcType=VARCHAR}, #{productId,jdbcType=VARCHAR}
       )
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.product.domain.ScUpgradeMap">

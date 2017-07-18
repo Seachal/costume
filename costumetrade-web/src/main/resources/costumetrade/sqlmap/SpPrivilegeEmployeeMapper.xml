@@ -55,7 +55,7 @@
 		insert into sp_privilege_employee
 		(privilege_id,
 		employee_id,create_date, modify_date) values
-		<foreach collection="privilegeEmployees" item="item" index="index"
+		<foreach collection="list" item="item" index="index"
 			separator=",">(
 			#{item.privilegeId,jdbcType=BIGINT},#{item.employeeId,jdbcType=BIGINT},NOW(),NOW())
 		</foreach>

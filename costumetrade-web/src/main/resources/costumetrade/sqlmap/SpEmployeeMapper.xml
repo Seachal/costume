@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="costumetrade.user.mapper.SpEmployeeMapper">
   <resultMap id="BaseResultMap" type="costumetrade.user.domain.SpEmployee">
-  	<id column="id" jdbcType="INTEGER" property="id" />
+  	<id column="id" jdbcType="VARCHAR" property="id" />
     <result column="storeId" jdbcType="VARCHAR" property="storeId" />
     <result column="status" jdbcType="INTEGER" property="status" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -36,7 +36,7 @@
        and storeId = #{storeId,jdbcType=VARCHAR}
       </if>
      <if test="id != null">
-      and id = #{id,jdbcType=INTEGER}
+      and id = #{id,jdbcType=VARCHAR}
       </if>
      <if test="openid != null">
       and openid = #{openid,jdbcType=VARCHAR}
@@ -52,10 +52,13 @@
        and storeId = #{storeId,jdbcType=VARCHAR}
       </if>
      <if test="id != null">
-      and id = #{id,jdbcType=INTEGER}
+      and id = #{id,jdbcType=VARCHAR}
       </if>
      <if test="openid != null">
       and openid = #{openid,jdbcType=VARCHAR}
+      </if>
+      <if test="scene != null">
+      and scene = #{scene}
       </if>
       and status =0
   </select>
@@ -71,7 +74,7 @@
     delete from sp_employee
     where storeId = #{storeId,jdbcType=VARCHAR}
       <if test="id != null">
-      and id = #{id,jdbcType=INTEGER}
+      and id = #{id,jdbcType=VARCHAR}
       </if>
   </delete>
   
@@ -81,13 +84,13 @@
 		and scene > 0
 	</delete>
   <insert id="insert" parameterType="costumetrade.user.domain.SpEmployee"  useGeneratedKeys="true" keyProperty="id">
-    insert into sp_employee (storeId, status, 
+    insert into sp_employee (id,storeId, status, 
        create_time, create_by, 
       modify_time, modify_by, 
       reallyName, openid, phoneBack, 
       telephone, address, addressBack, 
       birthdate, nickName,discount,zeroPrice,scene,modifyPrice)
-    values (#{storeId,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+    values (#{id},#{storeId,jdbcType=VARCHAR}, 0, 
       #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}, 
       #{modifyTime,jdbcType=TIMESTAMP}, #{modifyBy,jdbcType=VARCHAR}, 
       #{reallyName,jdbcType=VARCHAR}, #{openid,jdbcType=VARCHAR}, #{phoneBack,jdbcType=VARCHAR}, 
@@ -104,11 +107,7 @@
       <if test="id != null">
         id,
       </if>
-      <if test="status != null">
         status,
-      </if>
-    
-   
       <if test="createTime != null">
         create_time,
       </if>
@@ -166,12 +165,9 @@
         #{storeId,jdbcType=VARCHAR},
       </if>
       <if test="id != null">
-        #{id,jdbcType=INTEGER},
+        #{id,jdbcType=VARCHAR},
       </if>
-      <if test="status != null">
-        #{status,jdbcType=INTEGER},
-      </if>
-    
+      0,
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -231,7 +227,6 @@
       <if test="status != null">
         status = #{status,jdbcType=INTEGER},
       </if>
-     
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -284,8 +279,8 @@
         modifyPrice =#{modifyPrice,jdbcType=VARCHAR},
       </if>
     </set>
-    where storeId = #{storeId,jdbcType=VARCHAR}
-      and id = #{id,jdbcType=INTEGER}
+    where 1=1
+     and  id = #{id,jdbcType=VARCHAR}
   </update>
   
   <update id="updateByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployee">
@@ -310,6 +305,6 @@
       nickName = #{nickName,jdbcType=VARCHAR}
       
     where storeId = #{storeId,jdbcType=VARCHAR}
-      and id = #{id,jdbcType=INTEGER}
+      and id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

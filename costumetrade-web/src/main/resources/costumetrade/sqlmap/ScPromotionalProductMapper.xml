@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="costumetrade.product.mapper.ScPromotionalProductMapper">
+  <resultMap id="BaseResultMap" type="costumetrade.product.domain.ScPromotionalProduct">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="storeId" jdbcType="VARCHAR" property="storeid" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="photo" jdbcType="VARCHAR" property="photo" />
+    <result column="products" jdbcType="VARCHAR" property="products" />
+    <result column="create_by" jdbcType="VARCHAR" property="createBy" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="recommended_openid" jdbcType="VARCHAR" property="recommendedOpenid" />
+    <result column="promoter_id" jdbcType="VARCHAR" property="promoterId" />
+    <result column="recommended_unionid" jdbcType="VARCHAR" property="recommendedUnionid" />
+    <result column="promoter_name" jdbcType="VARCHAR" property="promoterName" />
+    <result column="checkAllTag" jdbcType="BOOLEAN" property="checkAllTag" />
+    <result column="promoter_address" jdbcType="VARCHAR" property="promoterAddress" />
+    <result column="product_images" jdbcType="VARCHAR" property="productImages" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, storeId, title, photo, products, create_by, create_time, recommended_openid, 
+    promoter_id, recommended_unionid, promoter_name,checkAllTag,promoter_address,product_images
+  </sql>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sc_promotional_product
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getAllPromotionals"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sc_promotional_product
+    where 1=1
+    <if test="product.storeid != null">
+      and  storeId = #{product.storeid,jdbcType=VARCHAR}
+      </if>
+      <if test="product.title != null">
+     and   title = #{product.title,jdbcType=VARCHAR}
+      </if>
+      <if test="product.photo != null">
+      and  photo = #{product.photo,jdbcType=VARCHAR}
+      </if>
+      <if test="product.products != null">
+      and  products = #{product.products,jdbcType=VARCHAR}
+      </if>
+      <if test="product.createBy != null">
+       and create_by = #{product.createBy,jdbcType=VARCHAR}
+      </if>
+      <if test="product.createTime != null">
+      and  create_time = #{product.createTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="product.recommendedOpenid != null">
+      and  recommended_openid = #{product.recommendedOpenid,jdbcType=VARCHAR}
+      </if>
+      <if test="product.promoterId != null">
+      and  promoter_id = #{product.promoterId,jdbcType=VARCHAR}
+      </if>
+      <if test="product.recommendedUnionid != null">
+      and  recommended_unionid = #{product.recommendedUnionid,jdbcType=VARCHAR}
+      </if>
+      <if test="product.promoterName != null">
+       and promoter_name = #{product.promoterName,jdbcType=VARCHAR}
+      </if>
+      <if test="product.checkAllTag != null">
+       and checkAllTag = #{product.checkAllTag}
+      </if>
+      <if test="product.promoterAddress != null">
+       and promoter_address = #{product.promoterAddress}
+      </if>
+      <if test="page != null">
+		LIMIT #{page.startRow},#{page.pageSize}
+	  </if>
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from sc_promotional_product
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="costumetrade.product.domain.ScPromotionalProduct">
+    insert into sc_promotional_product (id, storeId, title, 
+      photo, products, create_by, 
+      create_time, recommended_openid, promoter_id, 
+      recommended_unionid, promoter_name,checkAllTag,promoter_address,product_images)
+    values (#{id,jdbcType=VARCHAR}, #{storeid,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{photo,jdbcType=VARCHAR}, #{products,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{recommendedOpenid,jdbcType=VARCHAR}, #{promoterId,jdbcType=VARCHAR}, 
+      #{recommendedUnionid,jdbcType=VARCHAR}, #{promoterName,jdbcType=VARCHAR}, #{checkAllTag}, #{promoterAddress}, #{productImages})
+  </insert>
+  <insert id="insertSelective" parameterType="costumetrade.product.domain.ScPromotionalProduct">
+    insert into sc_promotional_product
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="storeid != null">
+        storeId,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="photo != null">
+        photo,
+      </if>
+      <if test="products != null">
+        products,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="recommendedOpenid != null">
+        recommended_openid,
+      </if>
+      <if test="promoterId != null">
+        promoter_id,
+      </if>
+      <if test="recommendedUnionid != null">
+        recommended_unionid,
+      </if>
+      <if test="promoterName != null">
+        promoter_name,
+      </if>
+      <if test="checkAllTag != null">
+        checkAllTag,
+      </if>
+       <if test="promoterAddress != null">
+        promoter_address,
+      </if>
+      <if test="productImages != null">
+        product_images,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="storeid != null">
+        #{storeid,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="products != null">
+        #{products,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recommendedOpenid != null">
+        #{recommendedOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="promoterId != null">
+        #{promoterId,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendedUnionid != null">
+        #{recommendedUnionid,jdbcType=VARCHAR},
+      </if>
+      <if test="promoterName != null">
+        #{promoterName,jdbcType=VARCHAR},
+      </if>
+      <if test="checkAllTag != null">
+        #{checkAllTag},
+      </if>
+      <if test="promoterAddress != null">
+        #{promoterAddress},
+      </if>
+      <if test="productImages != null">
+        #{productImages},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="costumetrade.product.domain.ScPromotionalProduct">
+    update sc_promotional_product
+    <set>
+      <if test="storeid != null">
+        storeId = #{storeid,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null">
+        photo = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="products != null">
+        products = #{products,jdbcType=VARCHAR},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="recommendedOpenid != null">
+        recommended_openid = #{recommendedOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="promoterId != null">
+        promoter_id = #{promoterId,jdbcType=VARCHAR},
+      </if>
+      <if test="recommendedUnionid != null">
+        recommended_unionid = #{recommendedUnionid,jdbcType=VARCHAR},
+      </if>
+      <if test="promoterName != null">
+        promoter_name = #{promoterName,jdbcType=VARCHAR},
+      </if>
+      <if test="checkAllTag != null">
+        checkAllTag = #{checkAllTag},
+      </if>
+      <if test="promoterAddress != null">
+        promoter_address = #{promoterAddress},
+      </if>
+       <if test="productImages != null">
+        product_images = #{productImages},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="costumetrade.product.domain.ScPromotionalProduct">
+    update sc_promotional_product
+    set storeId = #{storeid,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      photo = #{photo,jdbcType=VARCHAR},
+      products = #{products,jdbcType=VARCHAR},
+      create_by = #{createBy,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      recommended_openid = #{recommendedOpenid,jdbcType=VARCHAR},
+      promoter_id = #{promoterId,jdbcType=VARCHAR},
+      recommended_unionid = #{recommendedUnionid,jdbcType=VARCHAR},
+      promoter_name = #{promoterName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

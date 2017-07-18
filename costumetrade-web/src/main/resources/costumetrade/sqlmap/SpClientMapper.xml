@@ -72,6 +72,7 @@
 		from sp_client
 		where 1=1
 		and status ='0'
+		AND  scene  &lt; 0
 		<if test="client.storeId !=null">
 			and storeId = #{client.storeId,jdbcType=VARCHAR}
 		</if>
@@ -88,7 +89,7 @@
 			and openid = #{client.openid,jdbcType=VARCHAR}
 		</if>
 		<if test="client.name != null">
-			and (remarkName like CONCAT('%',#{client.name},'%') or nickName like CONCAT('%',#{client.name},'%') or reallyName like CONCAT('%',#{client.name},'%'))
+			and (remarkName =#{client.name} or nickName =#{client.name} or reallyName =#{client.name})
 		</if>
 		<if test="client.scene != null">
 			and scene = #{client.scene,jdbcType=VARCHAR}
@@ -165,7 +166,7 @@
 			and openid = #{client.openid,jdbcType=VARCHAR}
 		</if>
 		<if test="client.name != null">
-			and (remarkName like CONCAT('%',#{client.name},'%') or nickName like CONCAT('%',#{client.name},'%') or reallyName like CONCAT('%',#{client.name},'%'))
+			and (remarkName =#{client.name} or nickName =#{client.name} or reallyName =#{client.name})
 		</if>
 		<if test="client.scene != null">
 			and scene = #{client.scene,jdbcType=VARCHAR}
