@@ -7,7 +7,7 @@ import costumetrade.user.domain.ScPrinterInfo;
 
 public interface SpPrintService {
 
-	public String gbkImage(CommonsMultipartFile image);
+	public String gbkImage(String storeId);
 	
 	public String gbkText(String text);
 	

@@ -17,31 +17,35 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import sun.misc.BASE64Encoder;
 import costumetrade.common.util.Base64Util;
+import costumetrade.common.util.StringUtil;
 import costumetrade.print.service.SpPrintService;
 import costumetrade.user.domain.ScPrinterInfo;
+import costumetrade.user.domain.SpStore;
 import costumetrade.user.mapper.ScPrinterInfoMapper;
+import costumetrade.user.mapper.SpStoreMapper;
 
 @Transactional
 @Service
 public class SpPrintServiceImpl implements SpPrintService{
 	@Autowired
 	private ScPrinterInfoMapper scPrinterInfoMapper;
+	@Autowired
+	private SpStoreMapper spStoreMapper;
 	@Override
-	public String gbkImage(CommonsMultipartFile image) {
+	public String gbkImage(String storeId) {
 		String data = null;
 		
+		String weUrl = null;
+		if(StringUtil.isNotBlank(storeId)){
+			SpStore store = spStoreMapper.selectByPrimaryKey(storeId);
+			if(store!=null){
+				weUrl = store.getWeUrl();
+			}
+		}
+		if(StringUtil.isNotBlank(weUrl)){
+			
+		}
 		try {
-			
-			InputStream is=image.getInputStream();
-			BufferedImage bi=ImageIO.read(is);
-			Image im=(Image)bi; 
-			
-//			BitmapImageRenderer bit = new BitmapImageRenderer();
-//			bit.
-			BASE64Encoder encoder = new BASE64Encoder();  
-			// 通过base64来转化图片
-			data = encoder.encode(image.getBytes());
-			data = new String(data.getBytes(), "GBK");
 			
 		} catch (Exception e) {
 			e.printStackTrace();

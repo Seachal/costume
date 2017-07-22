@@ -29,16 +29,21 @@ public class SpPrintController {
 	private SpPrintService spPrintService;
 	
 	@RequestMapping("/gbk")
-	public ApiResponse gbk(@RequestParam(value = "image", required = false)CommonsMultipartFile image,@RequestParam(value = "text", required = false)String text){
+	public ApiResponse gbk(@RequestParam(value = "storeId", required = false)String storeId,@RequestParam(value = "text", required = false)String text){
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		String data = null;
 		if(StringUtil.isNotBlank(text)){
-			data = spPrintService.gbkText(text);
-		}else{
-			data = spPrintService.gbkImage(image);
+			String t = spPrintService.gbkText(text);
+			data = t;
 		}
+		if(StringUtil.isNotBlank(storeId)){
+			String i = spPrintService.gbkImage(storeId);
+			data = data+i;
+		}
+			
+		
 		if(StringUtil.isBlank(data)){
 			result.setData(ResponseInfo.CHANGE_EXCEPTION.code);
 			result.setMsg(ResponseInfo.CHANGE_EXCEPTION.msg);
