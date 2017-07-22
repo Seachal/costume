@@ -4,6 +4,8 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import javax.imageio.ImageIO;
 
@@ -49,17 +51,31 @@ public class SpPrintServiceImpl implements SpPrintService{
 
 	@Override
 	public String gbkText(String text) {
-//		BASE64Encoder encoder = new BASE64Encoder();  
+		BASE64Encoder encoder = new BASE64Encoder();  
 		// 通过base64来转化图片
-		//String data = encoder.encode(text.getBytes());
-		String data = null;
+		String gbk ="";
 		try {
-//			byte[] binBuffer = text.getBytes("GBK");
-			data = Base64Util.getImageBase64(text);
-		} catch (Exception e) {
-			
+//			String utf8 = new String(text.getBytes( "UTF-8"));  
+//    	    System.out.println(utf8);  
+//    	    String unicode = new String(utf8.getBytes(),"UTF-8");   
+//    	    System.out.println(unicode);  
+    	    gbk  = new String(text.getBytes("GBK"),"GBK");  
+			//text = new String(text.getBytes("GB2312"),"GBK");
+			//getEncoding(text);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		String data = encoder.encode(gbk.getBytes());
+//		getEncoding(text);
+//		String data = null;
+//		try {
+////			byte[] binBuffer = text.getBytes("GBK");
+//			data = Base64Util.getImageBase64(text);
+//		} catch (Exception e) {
+//			
+//			e.printStackTrace();
+//		}
 		
   
 		return data;
@@ -78,6 +94,76 @@ public class SpPrintServiceImpl implements SpPrintService{
 		}
 		 
 
+	}
+	
+    public static String getEncoding(String str) { 
+    	
+        String encode = "GBK";        
+       try {        
+           if (str.equals(new String(str.getBytes(encode), encode))) {        
+                String s = encode;        
+               return s;        
+            }        
+        } catch (Exception exception) {        
+        }        
+        encode = "ISO-8859-1";        
+       try {        
+           if (str.equals(new String(str.getBytes(encode), encode))) {        
+                String s1 = encode;        
+               return s1;        
+            }        
+        } catch (Exception exception1) {        
+        }        
+        encode = "UTF-8";        
+       try {        
+           if (str.equals(new String(str.getBytes(encode), encode))) {        
+                String s2 = encode;        
+               return s2;        
+            }        
+        } catch (Exception exception2) {        
+        }        
+        encode = "GBK";        
+       try {        
+           if (str.equals(new String(str.getBytes(encode), encode))) {        
+                String s3 = encode;        
+               return s3;        
+            }        
+        } catch (Exception exception3) {        
+        }        
+       return "";        
+    }   
+    public static void main(String[] args) {
+    	String text ="女粉丝的快感和反思呢市供热女";
+    	getEncoding(text);
+    	try {
+//    		String utf8 = new String(text.getBytes( "GBK")); 
+//    		
+//			String s = new String(text.getBytes("gbk"),"gbk");
+//			
+//			String unicode = new String(utf8.getBytes("GBK"),"GBK"); 
+//			getEncoding(unicode);
+//			System.out.println(unicode); 
+//			
+//			String gbk1=URLEncoder.encode(text,"GBK");
+//			getEncoding(gbk1);
+//			
+//			String gbk = new String(unicode.getBytes("GBK"));  
+    		
+
+
+    	    String utf8 = new String(text.getBytes( "GBK"),"GBK");  
+    	    System.out.println(utf8);  
+    	    String unicode = new String(utf8.getBytes(),"UTF-8");   
+    	    System.out.println(unicode);  
+    	    String gbk = new String(unicode.getBytes("GBK"));  
+    	      
+    	    System.out.println(gbk);  
+			getEncoding(gbk);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	 
 	}
 	
 }

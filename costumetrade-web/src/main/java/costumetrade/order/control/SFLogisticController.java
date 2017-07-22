@@ -19,6 +19,7 @@ import com.sf.openapi.express.sample.route.dto.RouteRespDto;
 
 import costumetrade.common.param.ApiResponse;
 import costumetrade.common.param.ResponseInfo;
+import costumetrade.common.util.StringUtil;
 import costumetrade.order.domain.ScLogistics;
 import costumetrade.order.domain.YDLogisticsRequest;
 import costumetrade.order.domain.YDLogisticsResponse;
@@ -44,10 +45,14 @@ public class SFLogisticController {
 	@RequestMapping("/orderSF")
 	@ResponseBody
 	public ApiResponse orderSF(@RequestBody OrderReqDto orderReqDto) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
 		MessageResp<OrderRespDto> response = new MessageResp<OrderRespDto>();
 		response = sFLogisticsService.orderSF(orderReqDto);
+		System.out.println("response:"+response);
 		MessageResp<OrderQueryRespDto> response1 =null;
-		if(response.getHead().getTransType()==4200){//下单成功
+		if(response!=null){//下单成功||response.getHead().getTransType()==4200
 			OrderQueryReqDto orderQueryReqDto = new OrderQueryReqDto();
 			orderQueryReqDto.setOrderId(orderReqDto.getOrderId());
 			response1 = sFLogisticsService.querySF(orderQueryReqDto);
@@ -57,9 +62,15 @@ public class SFLogisticController {
 			logistics.setLogisticsCode("SF");
 			logistics.setCreatetime(new Date());
 			logistics.setCreateby(1+"");
-			logistics.setLogisticsno(response1.getBody().getMailNo());
-			logistics.setOrderno(orderReqDto.getOrderId());
-			spOrderService.confirmLogistic(logistics);//物流单号，+订单号 绑定
+			if(response1!=null&&StringUtil.isNotBlank(response1.getBody().getMailNo())){
+				logistics.setLogisticsno(response1.getBody().getMailNo());
+				logistics.setOrderno(orderReqDto.getOrderId());
+				spOrderService.confirmLogistic(logistics);//物流单号，+订单号 绑定
+			}
+			result.setData(response);
+		}else{
+			result.setData(response);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 		}
 		return  ApiResponse.getInstance(response1);
 	}
@@ -71,7 +82,7 @@ public class SFLogisticController {
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		YDLogisticsResponse response = sFLogisticsService.createOrderToYD(request);
 		if(response==null){
-			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setData(response);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 		}else{
 			if("1".equals(response.getStatus())){//下单成功
@@ -99,10 +110,10 @@ public class SFLogisticController {
 		result.setMsg(ResponseInfo.SUCCESS.msg);
 		ZTOLogistics response = sFLogisticsService.createOrderToZTO(request);
 		if(response==null){
-			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setData(response);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 		}else{
-			if(response.getReslut()){//下单成功
+			if(response.getResult()){//下单成功
 				ScLogistics logistics = new ScLogistics();
 				//logistics.setStoreid(1);//storeId createBy  获取session中的值
 				logistics.setLogisticsname("中通");

@@ -4,6 +4,7 @@ import java.util.List;
 
 import costumetrade.common.Entity;
 import costumetrade.product.domain.ScPromotionalProduct;
+import costumetrade.report.domain.ReportQuery;
 import costumetrade.user.domain.SpEmployee;
 
 public class ScUserQuery extends Entity {
@@ -49,7 +50,9 @@ public class ScUserQuery extends Entity {
     private String photo;
     
 
+    private ReportQuery report;
     
+    private Integer fansCount;
     
     private List<ScPromotionalProduct> products;
     
@@ -167,6 +170,22 @@ public class ScUserQuery extends Entity {
 
 	public void setProducts(List<ScPromotionalProduct> products) {
 		this.products = products;
+	}
+
+	public ReportQuery getReport() {
+		return report;
+	}
+
+	public void setReport(ReportQuery report) {
+		this.report = report;
+	}
+
+	public Integer getFansCount() {
+		return fansCount;
+	}
+
+	public void setFansCount(Integer fansCount) {
+		this.fansCount = fansCount;
 	}
     
     

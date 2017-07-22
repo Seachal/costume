@@ -120,6 +120,8 @@ public class SpStore extends Entity {
     private List<String > idArray;
     
     private static final long serialVersionUID = 1L;
+   
+    private String bankmessage;
 
     public String getId() {
         return id;
@@ -328,6 +330,14 @@ public class SpStore extends Entity {
 
 	public void setImages(List<String> images) {
 		this.images = images;
+	}
+
+	public String getBankmessage() {
+		return bankmessage;
+	}
+
+	public void setBankmessage(String bankmessage) {
+		this.bankmessage = bankmessage;
 	}
 
 	

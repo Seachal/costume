@@ -185,14 +185,22 @@ public class SpProductController {
 			}
 			
 		}
-		ScWeChat wechat = spUserService.getUnionId(query.getEncryptedData(),query.getIv(),sessionKey);
+		ScWeChat chat = new ScWeChat();
+		if(StringUtil.isNotBlank(openid)){
+			chat.setUnionid(openid);
+			chat = weChatService.getWeChat(chat);
+		}
+	
+		if(chat ==null || StringUtil.isBlank(chat.getOpenid()) ){
+			chat = spUserService.getUnionId(query.getEncryptedData(),query.getIv(),sessionKey);
+		}
 		List<Object> obj = new ArrayList<Object>();
 		List<ProductQuery> q= spProductService.getShareProduct(query);
 		
 		List<String> images = new ArrayList<String>();
 		if(q!=null&&q.size()>0){
 			for(int i = 0 ; i < q.size() ; i++){
-				if(i<3){
+				if(i<8){
 					images.add(q.get(i).getImage());
 				}
 			}
@@ -200,19 +208,24 @@ public class SpProductController {
 		obj.add(q);
 		List<String> idArray = query.getIdArray();//
 		//更新分享记录表
-		if(wechat!=null){
+		if(chat!=null){
 			ScPromotionalProduct products = new ScPromotionalProduct();
 			products.setId(query.getId());
-			products.setRecommendedOpenid(wechat.getOpenid());
-			products.setRecommendedUnionid(wechat.getUnionid());
+			if(StringUtil.isNotBlank(chat.getStoreid())){
+				products.setRecommendedId(chat.getStoreid());
+			}else{
+				products.setRecommendedId(chat.getUserid()); 
+			}
+			products.setShareType(1+"");
+			products.setReadTime(new Date());
+			products.setReadStatus(1+"");
 			if(idArray!=null&&idArray.size()>0){
-				products.setProducts(StringUtils.join(idArray.toArray(),","));
+				products.setProductIds(StringUtils.join(idArray.toArray(),","));
 			}
 			products.setProductImages(StringUtils.join(images.toArray(),","));
-			products.setCheckAllTag(query.getCheckAllTag());
 			spProductService.confirmShareProducts(products);
 			
-			obj.add(wechat.getOpenid());
+			obj.add(chat.getOpenid());
 		}
 		return  ApiResponse.getInstance(q);
 	}

@@ -7,7 +7,11 @@ import costumetrade.product.domain.ScUpgradeProduct;
 
 public interface ShareProductService {
 
-	List<ScPromotionalProduct> getAllPromotionalProduct(String openid,Integer pageNum);
+	List<ScPromotionalProduct> getAllPromotionalProduct(String storeId,String openid,Integer pageNum);
 	
 	public ScPromotionalProduct getPromotionalProduct(String id);
+	
+	public int saveShareInfoToCustomers(ScPromotionalProduct product);
+	
+	List<ScPromotionalProduct> getGroupPromotionalProduct(String openid,Integer pageNum);
 }

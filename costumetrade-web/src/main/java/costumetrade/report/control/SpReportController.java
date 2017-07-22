@@ -113,6 +113,23 @@ public class SpReportController {
 		}
 		return  result;
 	}
+	
+	@RequestMapping("/saleReport")
+	@ResponseBody
+	public ApiResponse saleReport(@RequestBody ProductReportQuery query) {
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		
+		ReportQuery reports = spReportService.saleReport(query);
+		if(reports == null ){
+			result.setMsg(ResponseInfo.NOT_DATA.msg);
+			result.setData(ResponseInfo.NOT_DATA.code);
+		}else{
+			result.setData(reports);
+		}
+		return  result;
+	}
 	@RequestMapping("/purchaseReport")
 	@ResponseBody
 	public ApiResponse purchaseReport(@RequestBody PurchaseReportQuery query) {

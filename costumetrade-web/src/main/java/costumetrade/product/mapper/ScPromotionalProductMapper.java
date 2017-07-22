@@ -21,5 +21,9 @@ public interface ScPromotionalProductMapper {
 
     int updateByPrimaryKey(ScPromotionalProduct record);
     
-    List<ScPromotionalProduct> getAllPromotionals(@Param("product") ScPromotionalProduct product,@Param("page") Page page);
+    List<ScPromotionalProduct> getAllPromotionals(@Param("product")ScPromotionalProduct product,@Param("page")Page page);
+    
+    List<ScPromotionalProduct> getGroupPromotionals(@Param("product")ScPromotionalProduct product,@Param("page")Page page);
+    
+    int inserts(@Param("list")List<ScPromotionalProduct> list);
 }

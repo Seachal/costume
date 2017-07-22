@@ -120,7 +120,6 @@ public class SpOrderController {
 			result.setData(dicts);
 		}
 		return result;
-		
 	}
 	@RequestMapping("/saveOrderFee")
 	@ResponseBody
@@ -219,8 +218,8 @@ public class SpOrderController {
 		Integer orderType  = Integer.parseInt(order.getOrdertype()) ;
 		Integer orderStatus =  order.getOrderstatus();
 		String openid = order.getOpenid();
-		
-		List<SsStoOrder> query = spOrderService.getOrders(orderType,orderStatus,openid,order.getPageNum());
+		String payOrderNo = order.getPayorderno();
+		List<SsStoOrder> query = spOrderService.getOrders(orderType,orderStatus,openid,order.getPageNum(),payOrderNo);
 		
 		if(query.size() < 0){
 			result.setCode(ResponseInfo.NOT_DATA.code);
@@ -349,7 +348,6 @@ public class SpOrderController {
 			result.setData(objects);
 		}
 		return result;
-		
 	}
 	
 	@RequestMapping("/queryLogistic")

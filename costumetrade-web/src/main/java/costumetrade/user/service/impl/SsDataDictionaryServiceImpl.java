@@ -71,6 +71,9 @@ public class SsDataDictionaryServiceImpl implements SsDataDictionaryService{
 		store.setStoreId(storeId);
 		List<String> images = spUserService.getStoreImage(store,products).getImages();
 		
+		SpStore s = spStoreMapper.selectByPrimaryKey(storeId);
+		query.setStore(s);
+		
 		query.setDatas(datas);
 		query.setLogisticFees(logisticFees);
 		query.setCustomerCusts(customerCusts);

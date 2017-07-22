@@ -8,32 +8,32 @@ public class Item extends Entity{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private String name;
+	private String name="";
 	
-	private String number;
+	private String number="";
 	
-	private String remark;
+	private String remark="";
 	
-	private String id ;
+	private String id ="";
 	
-	private String category;
+	private String category="";
 	
-	private String material;
+	private String material="";
 	
-	private String size;
+	private String size="";
 	
-	private String weight;
+	private String weight="";
 	
-	private String unitprice;
+	private String unitprice="";
 	
-	private String quantity;
+	private String quantity="";
 
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = name == null ? "" : name.trim();
 	}
 
 	public String getNumber() {
@@ -41,7 +41,7 @@ public class Item extends Entity{
 	}
 
 	public void setNumber(String number) {
-		this.number = number;
+		this.number = number== null ? "" : number.trim();
 	}
 
 	public String getRemark() {
@@ -49,7 +49,7 @@ public class Item extends Entity{
 	}
 
 	public void setRemark(String remark) {
-		this.remark = remark;
+		this.remark = remark== null ? "" : remark.trim();
 	}
 
 	public String getId() {
@@ -57,7 +57,7 @@ public class Item extends Entity{
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		this.id = id== null ? "" : id.trim();
 	}
 
 	public String getCategory() {
@@ -65,7 +65,7 @@ public class Item extends Entity{
 	}
 
 	public void setCategory(String category) {
-		this.category = category;
+		this.category = category== null ? "" : category.trim();
 	}
 
 	public String getMaterial() {
@@ -73,7 +73,7 @@ public class Item extends Entity{
 	}
 
 	public void setMaterial(String material) {
-		this.material = material;
+		this.material = material== null ? "" : material.trim();
 	}
 
 	public String getSize() {
@@ -81,7 +81,7 @@ public class Item extends Entity{
 	}
 
 	public void setSize(String size) {
-		this.size = size;
+		this.size = size== null ? "" : size.trim();
 	}
 
 	public String getWeight() {
@@ -89,7 +89,7 @@ public class Item extends Entity{
 	}
 
 	public void setWeight(String weight) {
-		this.weight = weight;
+		this.weight = weight== null ? "" : weight.trim();
 	}
 
 	public String getUnitprice() {
@@ -97,7 +97,7 @@ public class Item extends Entity{
 	}
 
 	public void setUnitprice(String unitprice) {
-		this.unitprice = unitprice;
+		this.unitprice = unitprice== null ? "" : unitprice.trim();
 	}
 
 	public String getQuantity() {
@@ -105,7 +105,7 @@ public class Item extends Entity{
 	}
 
 	public void setQuantity(String quantity) {
-		this.quantity = quantity;
+		this.quantity = quantity== null ? "" : quantity.trim();
 	}
 	
 	

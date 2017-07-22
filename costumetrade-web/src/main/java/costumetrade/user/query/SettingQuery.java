@@ -57,6 +57,8 @@ public class SettingQuery extends Entity {
 	
 	private List<String> images;
 	
+	private SpStore store;
+	
 	public List<SsDataDictionary> getPayQRCodes() {
 		return payQRCodes;
 	}
@@ -129,6 +131,12 @@ public class SettingQuery extends Entity {
 	public void setImages(List<String> images) {
 		this.images = images;
 	}
-   
+	public SpStore getStore() {
+		return store;
+	}
+	public void setStore(SpStore store) {
+		this.store = store;
+	}
+	
 	
 }

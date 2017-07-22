@@ -132,7 +132,7 @@ public class SpClientController {
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
-		if(spClient == null ||StringUtil.isBlank(spClient.getStoreId())){
+		if(spClient == null ||StringUtil.isBlank(spClient.getStoreId())||StringUtil.isBlank(spClient.getType())){
 			result.setCode(ResponseInfo.LACK_PARAM.code);
 			result.setMsg(ResponseInfo.LACK_PARAM.msg);
 			return result;

@@ -495,19 +495,19 @@ public class SpOrderServiceImpl implements SpOrderService{
 							//库存不存在时，在库存记录中保存一条负库存记录
 							stock = ssStock.get(i);
 							if(stock.getId() == null){
-								stock.setStocknum(new BigDecimal(0).subtract(stock.getStocknum()));
+								stock.setStocknum(new BigDecimal(0).subtract(ssStocks.get(i).getStocknum()));
 								updateSellerStock = ssStockMapper.insertSelective(stock);
 							}else{
 								stock.setStoreid(param.getSellerstoreid());
-								stock.setStocknum(ssStock.get(i).getStocknum().subtract(ssStocks.get(i).getStocknum()));
+								stock.setStocknum(stock.getStocknum().subtract(ssStocks.get(i).getStocknum()));
 								updateSellerStock = ssStockMapper.updateByPrimaryKeySelective(stock); //更新卖家库存
 							}
-							//更新卖家的商品销量
-							SpProduct p = spProductMapper.selectByPrimaryKey(ids.get(i), param.getSellerstoreid());
-							if(p!=null){
-								p.setSaleNum(p.getSaleNum().add(ssStocks.get(i).getStocknum()));
-								spProductMapper.updateByPrimaryKeySelective(p);
-							}
+//							//更新卖家的商品销量
+//							SpProduct p = spProductMapper.selectByPrimaryKey(ids.get(i), param.getSellerstoreid());
+//							if(p!=null){
+//								p.setSaleNum(p.getSaleNum().add(ssStocks.get(i).getStocknum()));
+//								spProductMapper.updateByPrimaryKeySelective(p);
+//							}
 							
 							
 						}
@@ -723,7 +723,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 	}
 	@Override
 	public List<SsStoOrder> getOrders(Integer orderType, Integer orderStatus,
-			String openid,Integer pageNum) {
+			String openid,Integer pageNum,String payOrderNo) {
 		
 		ScWeChat wechat = scWeChatMapper.selectByOpenId(openid);
 		SsStoOrder spStoOrder = new SsStoOrder();
@@ -801,6 +801,7 @@ public class SpOrderServiceImpl implements SpOrderService{
 				//count = ssStoOrderMapper.selectByOrderStoreCount(spStoOrder);
 			}
 		}
+		spStoOrder.setPayorderno(payOrderNo);
 		spStoOrders = ssStoOrderMapper.selectByOrderStore(spStoOrder,page);
 		OrderQuery query = new OrderQuery();
 		List<SsStoOrder> spStoOrders1 = new ArrayList<SsStoOrder>();
@@ -1005,63 +1006,41 @@ public class SpOrderServiceImpl implements SpOrderService{
 	public List<Object> logisticInit(SsStoOrder ssStoOrder) {
 		List<Object> objects = new ArrayList<Object>();
 		
+		List<SsStoOrder> ssStoOrders = ssStoOrderMapper.selectByOrderStore(ssStoOrder,null);
 		SsStoOrder spStoOrder = new SsStoOrder();
-		List<SsStoOrder> ssStoOrders = ssStoOrderMapper.selectByOrderStore(spStoOrder,null);
 		if(ssStoOrders!=null && ssStoOrders.size()>0){
+			
 			spStoOrder = ssStoOrders.get(0);
 			ScStoreAddr record = new ScStoreAddr();
 			if(StringUtil.isNotBlank(spStoOrder.getShipaddress())){
-				
+				record.setUserid(spStoOrder.getBuyerstoreid());
 				record.setAddress(spStoOrder.getShipaddress());
 				List<ScStoreAddr> records=  scStoreAddrMapper.selectAddr(record);
-				if(records!=null){//收货人
+				if(records!=null&&records.size()>0){//收货人
 					record = records.get(0);
-					if("SF".equals(spStoOrder.getLogisticsCode())){
-						DeliverConsigneeInfoDto deliver = new DeliverConsigneeInfoDto();
-						deliver.setAddress(record.getAddress());
-						deliver.setCity(record.getCity());
-						deliver.setContact(record.getContact());
-						deliver.setMobile(record.getPhone());
-						deliver.setTel(record.getPhone());
-						deliver.setProvince(record.getProvince());
-						deliver.setCounty(record.getDistrict());
-						objects.add(deliver);
-					}else{
-						Sender receiver = new Sender();
-						receiver.setAddress(record.getAddress());
-						receiver.setCity(record.getProvince()+","+record.getCity()+","+record.getCity());
-						receiver.setMobile(record.getPhone());
-						receiver.setName(record.getContact());
-						receiver.setPhone(record.getPhone());
-						objects.add(receiver);
-					}
+					Sender receiver = new Sender();
+					receiver.setAddress(record.getAddress());
+					receiver.setCity(record.getProvince()+","+record.getCity()+","+record.getCity());
+					receiver.setMobile(record.getPhone());
+					receiver.setName(record.getContact());
+					receiver.setPhone(record.getPhone());
+					objects.add(receiver);
 				}
 			}
 			if(StringUtil.isNotBlank(spStoOrder.getLogisticsCode())){
+				record = new ScStoreAddr();
 				record.setUserid(spStoOrder.getSellerstoreid());
 				record.setIsdefault(1);
 				List<ScStoreAddr> records=  scStoreAddrMapper.selectAddr(record);
-				if(records!=null){//发货人
+				if(records!=null&&records.size()>0){//发货人
 					record = records.get(0);
-					if("SF".equals(spStoOrder.getLogisticsCode())){
-						DeliverConsigneeInfoDto deliver = new DeliverConsigneeInfoDto();
-						deliver.setAddress(record.getAddress());
-						deliver.setCity(record.getCity());
-						deliver.setContact(record.getContact());
-						deliver.setMobile(record.getPhone());
-						deliver.setTel(record.getPhone());
-						deliver.setProvince(record.getProvince());
-						deliver.setCounty(record.getDistrict());
-						objects.add(deliver);
-					}else{
-						Sender sender = new Sender();
-						sender.setAddress(record.getAddress());
-						sender.setCity(record.getProvince()+","+record.getCity()+","+record.getCity());
-						sender.setMobile(record.getPhone());
-						sender.setName(record.getContact());
-						sender.setPhone(record.getPhone());
-						objects.add(sender);
-					}
+					Sender sender = new Sender();
+					sender.setAddress(record.getAddress());
+					sender.setCity(record.getProvince()+","+record.getCity()+","+record.getCity());
+					sender.setMobile(record.getPhone());
+					sender.setName(record.getContact());
+					sender.setPhone(record.getPhone());
+					objects.add(sender);
 				}
 			}
 		}
@@ -1074,6 +1053,17 @@ public class SpOrderServiceImpl implements SpOrderService{
 		List<String> list = new ArrayList<String>();
 		list.add("PAY_QRCODE");//
 		List<SsDataDictionary> dict = ssDataDictionaryMapper.selectDictionarys(list,storeId);
+		
+		SpStore store = spStoreMapper.selectByPrimaryKey(storeId);
+		if(dict!=null&&dict.size()>0){
+			SsDataDictionary dic = new SsDataDictionary();
+			if(store!=null){
+				dic.setStoreId(storeId);
+				dic.setDictText("银行卡信息");
+				dic.setDictValue(store.getDescription());
+			}
+			dict.add(dic);
+		}
 		return dict;
 	}
 	

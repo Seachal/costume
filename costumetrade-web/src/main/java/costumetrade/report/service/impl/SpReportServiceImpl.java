@@ -377,14 +377,13 @@ public class SpReportServiceImpl implements SpReportService{
 	public ReportQuery saleReport(ProductReportQuery query) {
 		if(query.getTimeFrom() ==null ){
 			Calendar   cal   =   Calendar.getInstance();
-			cal.add(Calendar.DATE,   -7);
+			cal.add(Calendar.DATE,   -6);
 			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH),  
 		       		 0, 0, 0); 
 			query.setTimeFrom(cal.getTime());
 		}
 		if(query.getTimeTo() == null){
 			Calendar   cal   =   Calendar.getInstance();
-			cal.add(Calendar.DATE,   -1);
 			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH),  
 		       		 23, 59, 59); 
 			query.setTimeTo(cal.getTime());
@@ -403,12 +402,12 @@ public class SpReportServiceImpl implements SpReportService{
 		//默认查询第一个商品所对应的趋势图
 		if(querys.size()>0){
 			query = querys.get(0);
-			query.setFilter(null);
+			query.setFilter(new Filter());
 			querys.remove(0);
 		}
 		query.setReportType(2);
 		List<ProductReportQuery> maps3 =null;
-		query.setFilter(null);
+		query.setFilter(new Filter());
 		maps3 =  spReportMapper.purchaseReport2(query,querys);
 		reportQuery.setProductReportQuerys(maps3);
 		return reportQuery;
@@ -677,7 +676,7 @@ public class SpReportServiceImpl implements SpReportService{
 			}
 		}
 		result.setPayTypeQuery(payTypeQuerys);
-		List<SsStoOrder> orders1 = spOrderService.getOrders(3,null,query.getOpenid(),1);
+		List<SsStoOrder> orders1 = spOrderService.getOrders(3,null,query.getOpenid(),1,null);
 //		List<SsStoOrder> orders2 = spOrderService.getOrders(4,null,query.getOpenid(),1);
 //		List<SsPayment> pays = ssPaymentMapper.selects(query);
 		

@@ -8,36 +8,36 @@ public class Sender extends Entity{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private String id;
+	private String id="";
 
-	private String name;
+	private String name="";
 	
-	private String prov;
+	private String prov="";
 	
-	private String county;
+	private String county="";
 	
-	private String zipcode;
+	private String zipcode="";
 	
-	private String company;
+	private String company="";
 	
-	private String city;
+	private String city="";
 	
-	private String address;
+	private String address="";
 	
-	private String postcode;
+	private String postcode="";
 	
-	private String phone;
+	private String phone="";
 	
-	private String mobile;
+	private String mobile="";
 	
-	private String branch;
+	private String branch="";
 
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		this.name = name  == null ? "" : name.trim();
 	}
 
 	public String getCompany() {
@@ -45,7 +45,7 @@ public class Sender extends Entity{
 	}
 
 	public void setCompany(String company) {
-		this.company = company;
+		this.company = company == null ? "" : company.trim();
 	}
 
 	public String getCity() {
@@ -53,7 +53,7 @@ public class Sender extends Entity{
 	}
 
 	public void setCity(String city) {
-		this.city = city;
+		this.city = city == null ? "" : city.trim();
 	}
 
 	public String getAddress() {
@@ -61,7 +61,7 @@ public class Sender extends Entity{
 	}
 
 	public void setAddress(String address) {
-		this.address = address;
+		this.address = address == null ? "" : address.trim();
 	}
 
 	public String getPostcode() {
@@ -69,7 +69,7 @@ public class Sender extends Entity{
 	}
 
 	public void setPostcode(String postcode) {
-		this.postcode = postcode;
+		this.postcode = postcode == null ? "" : postcode.trim();
 	}
 
 	public String getPhone() {
@@ -77,7 +77,7 @@ public class Sender extends Entity{
 	}
 
 	public void setPhone(String phone) {
-		this.phone = phone;
+		this.phone = phone == null ? "" : phone.trim();
 	}
 
 	public String getMobile() {
@@ -85,7 +85,7 @@ public class Sender extends Entity{
 	}
 
 	public void setMobile(String mobile) {
-		this.mobile = mobile;
+		this.mobile = mobile == null ? "" : mobile.trim();
 	}
 
 	public String getBranch() {
@@ -93,7 +93,7 @@ public class Sender extends Entity{
 	}
 
 	public void setBranch(String branch) {
-		this.branch = branch;
+		this.branch = branch == null ? "" : branch.trim();
 	}
 
 	public String getId() {
@@ -101,7 +101,7 @@ public class Sender extends Entity{
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		this.id = id == null ? "" : id.trim();
 	}
 
 	public String getProv() {
@@ -109,7 +109,7 @@ public class Sender extends Entity{
 	}
 
 	public void setProv(String prov) {
-		this.prov = prov;
+		this.prov = prov == null ? "" : prov.trim();
 	}
 
 	public String getCounty() {
@@ -117,7 +117,7 @@ public class Sender extends Entity{
 	}
 
 	public void setCounty(String county) {
-		this.county = county;
+		this.county = county == null ? "" : county.trim();
 	}
 
 	public String getZipcode() {
@@ -125,7 +125,7 @@ public class Sender extends Entity{
 	}
 
 	public void setZipcode(String zipcode) {
-		this.zipcode = zipcode;
+		this.zipcode = zipcode == null ? "" : zipcode.trim();
 	}
 	
 	

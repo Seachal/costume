@@ -94,7 +94,8 @@ public class Base64Util {
         //对字节数组Base64编码
         String base64Data="";
 		try {
-			base64Data = Base64.encodeBase64String(str.getBytes("GBK"));
+			str = new String(str.getBytes("GB2312"),"GBK");
+			base64Data = Base64.encodeBase64String(str.getBytes());
 			if(StringUtils.isNotEmpty(base64Data)){
 	            base64Data = base64Data.replaceAll("\\+", "*").replaceAll("\\/", "-");
 	        }

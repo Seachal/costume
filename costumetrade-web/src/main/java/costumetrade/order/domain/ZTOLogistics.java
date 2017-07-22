@@ -13,40 +13,40 @@ public class ZTOLogistics extends Entity {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private String type;
+	private String type="";
 	
-	private String tradeId;
+	private String tradeId="";
 	
-	private String mailNo;
-	private String partnerCode;
+	private String mailNo="";
+	private String partnerCode="";
 	
-	private String siteName;
+	private String siteName="";
 	
-	private String starttime;
+	private String starttime="";
 	
-	private String endtime;
+	private String endtime="";
 	
-	private String weight;
+	private String weight="";
 	
-	private String size;
+	private String size="";
 	
-	private String quantity;
+	private String quantity="";
 	
-	private String price;
+	private String price="";
 	
-	private String freight;
+	private String freight="";
 	
-	private String premium;
+	private String premium="";
 	
-	private String packCharges;
+	private String packCharges="";
 	
-	private String otherCharges;
+	private String otherCharges="";
 	
-	private String orderSum;
+	private String orderSum="";
 	
-	private String collectMoneytype;
+	private String collectMoneytype="";
 	
-	private Item collectSum;
+	private String collectSum="";
 	
 	private Sender sender;
 	
@@ -54,15 +54,15 @@ public class ZTOLogistics extends Entity {
 	
 	private Item item;
 	
-	private String remark;
+	private String remark="";
 	
-	private Boolean reslut;
+	private Boolean result;
 	
-	private String reason;
+	private String reason="";
 	
-	private String orderCode;
+	private String orderCode="";
 	
-	private String billCode;
+	private String billCode="";
 	
 	private List<Trace> traces;
 
@@ -202,11 +202,11 @@ public class ZTOLogistics extends Entity {
 		this.collectMoneytype = collectMoneytype;
 	}
 
-	public Item getCollectSum() {
+	public String getCollectSum() {
 		return collectSum;
 	}
 
-	public void setCollectSum(Item collectSum) {
+	public void setCollectSum(String collectSum) {
 		this.collectSum = collectSum;
 	}
 
@@ -242,13 +242,7 @@ public class ZTOLogistics extends Entity {
 		this.item = item;
 	}
 
-	public Boolean getReslut() {
-		return reslut;
-	}
 
-	public void setReslut(Boolean reslut) {
-		this.reslut = reslut;
-	}
 
 	public String getReason() {
 		return reason;
@@ -280,6 +274,14 @@ public class ZTOLogistics extends Entity {
 
 	public void setTraces(List<Trace> traces) {
 		this.traces = traces;
+	}
+
+	public Boolean getResult() {
+		return result;
+	}
+
+	public void setResult(Boolean result) {
+		this.result = result;
 	}
 	
 	

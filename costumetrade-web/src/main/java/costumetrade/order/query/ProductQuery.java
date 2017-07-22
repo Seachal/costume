@@ -271,6 +271,7 @@ public class ProductQuery extends Entity{
     private Integer custTypeCode;
 	private String timeUpOp; // 升序为asc，降序为desc
 	private String priceOp; // 升序为asc，降序为desc
+	private String hottestOp;// 升序为asc，降序为desc
 	private List<String> productTypeArray; // 商品类别
 	private List<String> productBrandArray; // 商品品牌
 	private List<String> productSeasonArray; // 商品季节
@@ -318,7 +319,7 @@ public class ProductQuery extends Entity{
 	
 	private Integer countReview;
 	
-	
+	private String shareId;
 	
 	public String getFields() {
 		return fields;
@@ -1064,6 +1065,22 @@ public class ProductQuery extends Entity{
 
 	public void setIv(String iv) {
 		this.iv = iv;
+	}
+
+	public String getHottestOp() {
+		return hottestOp;
+	}
+
+	public void setHottestOp(String hottestOp) {
+		this.hottestOp = hottestOp;
+	}
+
+	public String getShareId() {
+		return shareId;
+	}
+
+	public void setShareId(String shareId) {
+		this.shareId = shareId;
 	}
 
 	

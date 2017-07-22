@@ -72,7 +72,7 @@ public class SpPrintController {
 	}
 	
 	@RequestMapping("/printer")
-	public ApiResponse printer(String storeId){
+	public ApiResponse printer(String storeId,String data,String reportName){
 		ApiResponse result = new ApiResponse();
 		result.setCode(ResponseInfo.SUCCESS.code);
 		result.setMsg(ResponseInfo.SUCCESS.msg);
@@ -84,7 +84,7 @@ public class SpPrintController {
 		}else{
 			SystemWebSocketHandler handler = new SystemWebSocketHandler();
 			 char seprator='\uffff';
-			handler.sendMessageToUser(storeId, new TextMessage("rptdata"+seprator+"报表测试"+seprator+"{\"id\": 123,\"name\": 456}"));
+			handler.sendMessageToUser(storeId, new TextMessage("rptdata"+seprator+reportName+seprator+data));
 		}
 		
 		return result;

@@ -1,5 +1,6 @@
 package costumetrade.order.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import costumetrade.order.domain.SpProduct;
@@ -102,4 +103,6 @@ public interface SpProductService {
 	 * 
 	 * **/
 	public int confirmShareProducts(ScPromotionalProduct products);
+	
+	public BigDecimal setPrice(ProductQuery product,int custTypeCode);
 }

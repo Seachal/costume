@@ -35,7 +35,7 @@ public interface SpOrderService {
 	/*
 	 * 查询订单列表
 	 * */
-	public List<SsStoOrder> getOrders(Integer orderType, Integer orderStatus , String openid,Integer pageNum);
+	public List<SsStoOrder> getOrders(Integer orderType, Integer orderStatus , String openid,Integer pageNum,String payOrderNo);
 	
 	/*
 	 * 订单取消

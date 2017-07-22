@@ -208,36 +208,11 @@ public class SpClientServiceImpl implements SpClientService{
 	}
 	@Override
 	public int updateClients(SpClient spClient) {
-		SpClient c = new SpClient();
 		List<String> ids = new ArrayList<String>();
 		if(spClient.getCheckAllTag()!=null&&spClient.getCheckAllTag()){
-			c.setType(spClient.getType());
-			c.setStoreId(spClient.getStoreId());
-			List<SpClient> clients = spClientMapper.select(c,null);
-			if(clients!=null && clients.size()>0&&spClient.getIdArray()!=null){
-				outer:for(SpClient s : clients){
-					boolean b=false;
-					for(String id : spClient.getIdArray()){
-						if(!s.getId().equals(id)){
-							ids.add(s.getId());
-						}else{
-							b=true;
-						}
-					}
-					if(b&&ids.size()>0){
-						for(int i=0;i<ids.size();i++){
-							if(s.getId().equals(ids.get(i))){
-								ids.remove(i);
-								break outer;
-							}
-						}
-					}
-				}
-				
-			}
-			
+			ids = getIds(spClient);
 		}
-		if(ids.size()>0){
+		if(ids!=null&&ids.size()>0){
 			spClient.setIdArray(ids);
 		}
 		int save = spClientMapper.updateByPrimaryKeySelective(spClient);
@@ -541,6 +516,42 @@ public class SpClientServiceImpl implements SpClientService{
 			}
 		}
 		return results;
+	}
+	@Override
+	public List<String> getIds(SpClient spClient) {
+		SpClient c = new SpClient();
+		List<String> ids = new ArrayList<String>();
+		if(spClient.getCheckAllTag()!=null&&spClient.getCheckAllTag()){
+			c.setType(spClient.getType());
+			c.setStoreId(spClient.getStoreId());
+			List<SpClient> clients = spClientMapper.select(c,null);
+			if(clients!=null && clients.size()>0){
+				outer:for(SpClient s : clients){
+					if(spClient.getIdArray()!=null&&spClient.getIdArray().size()>0){
+						boolean b=false;
+						for(String id : spClient.getIdArray()){
+							if(!s.getId().equals(id)){
+								ids.add(s.getId());
+							}else{
+								b=true;
+							}
+						}
+						if(b&&ids.size()>0){
+							for(int i=0;i<ids.size();i++){
+								if(s.getId().equals(ids.get(i))){
+									ids.remove(i);
+									break outer;
+								}
+							}
+						}
+					}else{
+						ids.add(s.getId());
+					}
+					
+				}
+			}
+		}
+		return ids;
 	}
 	
 }

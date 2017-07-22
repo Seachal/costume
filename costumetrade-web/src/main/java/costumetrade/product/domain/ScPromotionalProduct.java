@@ -1,9 +1,11 @@
 package costumetrade.product.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 import costumetrade.common.Entity;
+import costumetrade.order.query.ProductQuery;
 
 public class ScPromotionalProduct extends Entity {
     /**
@@ -12,9 +14,9 @@ public class ScPromotionalProduct extends Entity {
     private String id;
 
     /**
-     *  店铺
+     *  推荐人店铺ID
      */
-    private String storeid;
+    private String promoterStoreid;
 
     /**
      *  标题
@@ -22,14 +24,14 @@ public class ScPromotionalProduct extends Entity {
     private String title;
 
     /**
-     *  推荐人头像
+     *  推荐人店铺头像
      */
-    private String photo;
+    private String promoterPhoto;
 
     /**
-     *  货品
+     *  货品id数组
      */
-    private String products;
+    private String productIds;
 
     /**
      *  创建人
@@ -42,32 +44,63 @@ public class ScPromotionalProduct extends Entity {
     private Date createTime;
 
     /**
-     *  被推荐人openid
+     *  被推荐人：普通消费者userID 店铺是storeId
      */
-    private String recommendedOpenid;
+    private String recommendedId;
 
     /**
-     *  推荐人
-     */
-    private String promoterId;
-
-    /**
-     *  被推荐人unionid
-     */
-    private String recommendedUnionid;
-
-    /**
-     *  推荐人名称
+     *  推荐人店铺名称
      */
     private String promoterName;
-    
+
+    /**
+     *  全选标志
+     */
     private Boolean checkAllTag;
-    
+
+    /**
+     *  地址
+     */
     private String promoterAddress;
+
+    /**
+     *  默认展示图片
+     */
+    private String productImages;
+
+    /**
+     *  分享类型1、微信分享 2、粉丝分享
+     */
+    private String shareType;
+
+    /**
+     *  分享员工
+     */
+    private String shareEmployee;
+
+    /**
+     *  0、未读，1、已读
+     */
+    private String readStatus;
+
+    /**
+     *  阅读时间
+     */
+    private Date readTime;
+    
+    private Integer readCount;
     
     private List<String> images;
     
-    private String productImages;
+    private BigDecimal noReadCount;
+    
+    private List<String> clientIds;
+    
+    private String openid ;
+    
+    private List<String> productIdArray;
+    
+    private List<ProductQuery> products;
 
     private static final long serialVersionUID = 1L;
 
@@ -79,12 +112,12 @@ public class ScPromotionalProduct extends Entity {
         this.id = id == null ? null : id.trim();
     }
 
-    public String getStoreid() {
-        return storeid;
+    public String getPromoterStoreid() {
+        return promoterStoreid;
     }
 
-    public void setStoreid(String storeid) {
-        this.storeid = storeid == null ? null : storeid.trim();
+    public void setPromoterStoreid(String promoterStoreid) {
+        this.promoterStoreid = promoterStoreid == null ? null : promoterStoreid.trim();
     }
 
     public String getTitle() {
@@ -95,20 +128,20 @@ public class ScPromotionalProduct extends Entity {
         this.title = title == null ? null : title.trim();
     }
 
-    public String getPhoto() {
-        return photo;
+    public String getPromoterPhoto() {
+        return promoterPhoto;
     }
 
-    public void setPhoto(String photo) {
-        this.photo = photo == null ? null : photo.trim();
+    public void setPromoterPhoto(String promoterPhoto) {
+        this.promoterPhoto = promoterPhoto == null ? null : promoterPhoto.trim();
     }
 
-    public String getProducts() {
-        return products;
+    public String getProductIds() {
+        return productIds;
     }
 
-    public void setProducts(String products) {
-        this.products = products == null ? null : products.trim();
+    public void setProductIds(String productIds) {
+        this.productIds = productIds == null ? null : productIds.trim();
     }
 
     public String getCreateBy() {
@@ -127,28 +160,12 @@ public class ScPromotionalProduct extends Entity {
         this.createTime = createTime;
     }
 
-    public String getRecommendedOpenid() {
-        return recommendedOpenid;
+    public String getRecommendedId() {
+        return recommendedId;
     }
 
-    public void setRecommendedOpenid(String recommendedOpenid) {
-        this.recommendedOpenid = recommendedOpenid == null ? null : recommendedOpenid.trim();
-    }
-
-    public String getPromoterId() {
-        return promoterId;
-    }
-
-    public void setPromoterId(String promoterId) {
-        this.promoterId = promoterId == null ? null : promoterId.trim();
-    }
-
-    public String getRecommendedUnionid() {
-        return recommendedUnionid;
-    }
-
-    public void setRecommendedUnionid(String recommendedUnionid) {
-        this.recommendedUnionid = recommendedUnionid == null ? null : recommendedUnionid.trim();
+    public void setRecommendedId(String recommendedId) {
+        this.recommendedId = recommendedId == null ? null : recommendedId.trim();
     }
 
     public String getPromoterName() {
@@ -159,7 +176,8 @@ public class ScPromotionalProduct extends Entity {
         this.promoterName = promoterName == null ? null : promoterName.trim();
     }
 
-	public Boolean getCheckAllTag() {
+  
+    public Boolean getCheckAllTag() {
 		return checkAllTag;
 	}
 
@@ -168,12 +186,52 @@ public class ScPromotionalProduct extends Entity {
 	}
 
 	public String getPromoterAddress() {
-		return promoterAddress;
-	}
+        return promoterAddress;
+    }
 
-	public void setPromoterAddress(String promoterAddress) {
-		this.promoterAddress = promoterAddress;
-	}
+    public void setPromoterAddress(String promoterAddress) {
+        this.promoterAddress = promoterAddress == null ? null : promoterAddress.trim();
+    }
+
+    public String getProductImages() {
+        return productImages;
+    }
+
+    public void setProductImages(String productImages) {
+        this.productImages = productImages == null ? null : productImages.trim();
+    }
+
+    public String getShareType() {
+        return shareType;
+    }
+
+    public void setShareType(String shareType) {
+        this.shareType = shareType == null ? null : shareType.trim();
+    }
+
+    public String getShareEmployee() {
+        return shareEmployee;
+    }
+
+    public void setShareEmployee(String shareEmployee) {
+        this.shareEmployee = shareEmployee == null ? null : shareEmployee.trim();
+    }
+
+    public String getReadStatus() {
+        return readStatus;
+    }
+
+    public void setReadStatus(String readStatus) {
+        this.readStatus = readStatus == null ? null : readStatus.trim();
+    }
+
+    public Date getReadTime() {
+        return readTime;
+    }
+
+    public void setReadTime(Date readTime) {
+        this.readTime = readTime;
+    }
 
 	public List<String> getImages() {
 		return images;
@@ -183,15 +241,53 @@ public class ScPromotionalProduct extends Entity {
 		this.images = images;
 	}
 
-	public String getProductImages() {
-		return productImages;
+	public Integer getReadCount() {
+		return readCount;
 	}
 
-	public void setProductImages(String productImages) {
-		this.productImages = productImages;
+	public void setReadCount(Integer readCount) {
+		this.readCount = readCount;
 	}
 
-	
+	public BigDecimal getNoReadCount() {
+		return noReadCount;
+	}
+
+	public void setNoReadCount(BigDecimal noReadCount) {
+		this.noReadCount = noReadCount;
+	}
+
+	public List<String> getClientIds() {
+		return clientIds;
+	}
+
+	public void setClientIds(List<String> clientIds) {
+		this.clientIds = clientIds;
+	}
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
+
+	public List<String> getProductIdArray() {
+		return productIdArray;
+	}
+
+	public void setProductIdArray(List<String> productIdArray) {
+		this.productIdArray = productIdArray;
+	}
+
+	public List<ProductQuery> getProducts() {
+		return products;
+	}
+
+	public void setProducts(List<ProductQuery> products) {
+		this.products = products;
+	}
     
     
 }

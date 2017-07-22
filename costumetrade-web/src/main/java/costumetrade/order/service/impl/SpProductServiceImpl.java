@@ -1,6 +1,7 @@
 package costumetrade.order.service.impl;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -137,6 +138,8 @@ public class SpProductServiceImpl implements SpProductService{
 				productQuery.setPriceOp(productQuery.getSort().getOp());
 			}else if("saleOp".equals(productQuery.getSort().getValue())){
 				productQuery.setSaleOp(productQuery.getSort().getOp());
+			}else if("hottestOp".equals(productQuery.getSort().getValue())){
+				productQuery.setHottestOp(productQuery.getSort().getOp());
 			}
 		}
 		List<Rules> rules = productQuery.getRules();
@@ -403,6 +406,16 @@ public class SpProductServiceImpl implements SpProductService{
 			query.setCountReview(countReview.getCountReview());
 		}
 		query.setProductReviews(productReviews);
+		
+		//控制分享记录已读
+		if(StringUtil.isNotBlank(queryDetail.getShareId())){
+			ScPromotionalProduct products = new ScPromotionalProduct();
+			products.setId(queryDetail.getShareId());
+			products.setReadStatus(1+"");
+			products.setReadTime(new Date());
+			confirmShareProducts(products);
+			//scPromotionalProductMapper.updateByPrimaryKeySelective(products );
+		}
 		return query;
 	}
 
@@ -566,20 +579,37 @@ public class SpProductServiceImpl implements SpProductService{
 	@Override
 	public String saveProduct(SpProduct product) {
 		// 查询货号是否存在
-		if(product.getId() != null){
+		if(StringUtil.isNotBlank(product.getId())){
 			product.setStatus(0);
 			spProductMapper.updateByPrimaryKeySelective(product);
-			//判断是否需保存价格
+			
 			SsPrice price = new SsPrice();
+			price = ssPriceMapper.select(product.getStoreId(), product.getId());
+			//判断是否需保存价格
 			price.setFifthPrice(product.getFifthPrice());
 			price.setFirsthPrice(product.getFirsthPrice());
 			price.setStoreid(product.getStoreId());
 			price.setFourthPrice(product.getFourthPrice());
 			price.setProductid(product.getId());
-			price.setPurchaseprice(product.getPurchaseprice());
+			if(product.getPurchaseprice()==null ||product.getPurchaseprice().compareTo(BigDecimal.ZERO)==0){
+				price.setPurchaseprice(null);
+				price.setCustPrice(null);
+			}else{
+				price.setPurchaseprice(product.getPurchaseprice());
+			}
 			price.setTagprice(product.getTagprice());
 			price.setThirdPrice(product.getThirdPrice());
 			price.setSecondPrice(product.getSecondPrice());
+			if(price.getCustPrice()!=null){
+				if(price.getCustPrice().compareTo(BigDecimal.ZERO)==0){
+					price.setCustPrice(product.getPurchaseprice());
+				}else{
+					if(price.getPurchaseprice().compareTo(BigDecimal.ZERO)!=0){
+						price.setCustPrice(price.getPurchaseprice().add(price.getCustPrice()).divide(new BigDecimal(2), 2, RoundingMode.HALF_UP));
+					}
+				}
+			}
+			
 			price.setModifyTime(new Date());
 			ssPriceMapper.updateByPrimaryKeySelective(price);
 			
@@ -616,6 +646,7 @@ public class SpProductServiceImpl implements SpProductService{
 				price.setFourthPrice(product.getFourthPrice());
 				price.setTagprice(product.getTagprice());
 				price.setProductid(product.getId());
+				price.setCustPrice(product.getPurchaseprice());
 				price.setCreateTime(new Date());
 				price.setModifyTime(new Date());
 				price.setCreateBy(product.getCreateBy());
@@ -769,16 +800,15 @@ public class SpProductServiceImpl implements SpProductService{
 		SsStock stock = new SsStock();
 		stock.setProductid(product.getId());
 		stock.setStoreid(product.getStoreId());
-		List<String> otherStoreIds = null;
+		List<String> otherStoreIds = new ArrayList<String>();;
 		
-		if(store.getParentid()!=null&&store.getInventoryShare()==1){//分店//查询允许共享的店铺
+		if(store!=null && StringUtil.isNotBlank(store.getParentid())&&store.getInventoryShare()==1){//分店//查询允许共享的店铺
 			store = new SpStore();
 			store.setParentid(store.getParentid());
 			store.setInventoryShare(1);//允许共享
 			stores = spStoreMapper.selectStores(store, null);//查询允许共享的店铺
 			
 			if(stores.size()>0){
-				otherStoreIds = new ArrayList<String>();
 				for(SpStore store1 :stores){
 					if(store1.getId()!=product.getStoreId()){
 						otherStoreIds.add(store1.getId());
@@ -786,9 +816,12 @@ public class SpProductServiceImpl implements SpProductService{
 					
 				}
 			}
-			otherStoreIds.add(product.getStoreId());
-			stock.setOtherStoreIds(otherStoreIds);
+			
 		}
+		
+		otherStoreIds.add(product.getStoreId());
+		
+		stock.setOtherStoreIds(otherStoreIds);
 		stocks = ssStockMapper.select(stock);
 		result.setStocks(stocks);
 		//查询对应的供货商
@@ -1061,26 +1094,29 @@ public class SpProductServiceImpl implements SpProductService{
 		int save = 0;
 		ScPromotionalProduct p = scPromotionalProductMapper.selectByPrimaryKey(products.getId());
 		if(p!=null){
-			save = scPromotionalProductMapper.updateByPrimaryKeySelective(products);
+			if(!p.getPromoterStoreid().equals(products.getRecommendedId())){
+				products.setReadCount(p.getReadCount()+1);
+				save = scPromotionalProductMapper.updateByPrimaryKeySelective(products);
+			}
+			
 		}else{
 			ScWeChat chat = null;
 			SpStore store = new SpStore();
-			if(StringUtil.isNotBlank(products.getStoreid())){
+			if(StringUtil.isNotBlank(products.getPromoterStoreid())){
 				chat = new ScWeChat();
-				chat.setStoreid(products.getStoreid());
+				chat.setStoreid(products.getPromoterStoreid());
 				List<ScWeChat> chats = scWeChatMapper.selectWechat(chat);
 				if(chats!=null&&chats.size()>0){
 					chat = chats.get(0);
 				}
 				//查找推荐人名称：推荐人头像
-				store = spStoreMapper.selectByPrimaryKey(products.getStoreid());
+				store = spStoreMapper.selectByPrimaryKey(products.getPromoterStoreid());
 			}
 			if(chat!=null){
-				products.setPromoterId(chat.getId()+"");
 				products.setCreateBy(chat.getId()+"");
 			}
-			if(StringUtil.isNotBlank(store.getId())){
-				products.setPhoto(store.getStorephoto());
+			if(store !=null && StringUtil.isNotBlank(store.getId())){
+				products.setPromoterPhoto(store.getStorephoto());
 				products.setPromoterName(store.getName());
 				products.setPromoterAddress(store.getAddress());
 			}

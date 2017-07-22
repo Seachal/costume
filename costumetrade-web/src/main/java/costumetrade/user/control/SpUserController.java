@@ -20,6 +20,9 @@ import costumetrade.common.util.StringUtil;
 import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.service.WeChatService;
 import costumetrade.product.service.ShareProductService;
+import costumetrade.report.domain.ProductReportQuery;
+import costumetrade.report.domain.ReportQuery;
+import costumetrade.report.service.SpReportService;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpEmployee;
 import costumetrade.user.domain.SpStore;
@@ -54,6 +57,8 @@ public class SpUserController {
 	private SpUserMapper spUserMapper;
 	@Autowired
 	private ShareProductService shareProductService;
+	@Autowired
+	private SpReportService spReportService;
 	
 	@RequestMapping("/login")
 	@ResponseBody
@@ -145,6 +150,7 @@ public class SpUserController {
 					resultQuery.setName(store.getName());
 					resultQuery.setPhoto(store.getStorephoto());
 				}
+				
 			}else{
 				resultQuery.setUserIdentity(2);//普通消费者
 				resultQuery.setUserid(wechat.getUserid());
@@ -158,7 +164,7 @@ public class SpUserController {
 			if(StringUtil.isBlank(resultQuery.getName())){
 				resultQuery.setName(wechat.getName());
 			}
-			resultQuery.setProducts(shareProductService.getAllPromotionalProduct(wechat.getOpenid(), 1));
+			resultQuery.setProducts(shareProductService.getGroupPromotionalProduct(wechat.getOpenid(), 1));
 		}
 	
 		resultQuery.setQuery(query);

@@ -100,6 +100,8 @@ public class PurchaseReportQuery extends Entity {
 	private BigDecimal pucharseAmount;
 	
 	private BigDecimal saleAmount;
+	
+	private BigDecimal primeCost;
 
 	public BigDecimal getQuantity() {
 		return quantity;
@@ -412,6 +414,14 @@ public class PurchaseReportQuery extends Entity {
 
 	public void setSaleAmount(BigDecimal saleAmount) {
 		this.saleAmount = saleAmount;
+	}
+
+	public BigDecimal getPrimeCost() {
+		return primeCost;
+	}
+
+	public void setPrimeCost(BigDecimal primeCost) {
+		this.primeCost = primeCost;
 	}
 	
 	

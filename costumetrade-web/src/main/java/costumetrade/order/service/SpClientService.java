@@ -64,4 +64,6 @@ public interface SpClientService {
 	 * 客户补货  or 供应商补货
 	 * */
 	public List<ProductQuery> clientReplenishment(OrderQuery query);
+	
+	public List<String> getIds(SpClient spClient);
 }
