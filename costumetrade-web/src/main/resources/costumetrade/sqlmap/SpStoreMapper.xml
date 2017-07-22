@@ -9,7 +9,7 @@
     <result column="storePhoto" jdbcType="VARCHAR" property="storephoto" />
     <result column="inventoryShare" jdbcType="INTEGER" property="inventoryShare" />
     <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="server" jdbcType="VARCHAR" property="server" />
+    <result column="bankmessage" jdbcType="VARCHAR" property="bankmessage" />
     <result column="contact" jdbcType="VARCHAR" property="contact" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
     <result column="cphone" jdbcType="VARCHAR" property="cphone" />
@@ -26,7 +26,7 @@
     <result column="description" jdbcType="VARCHAR" property="description" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, parentId, storePhoto, status,name,storeType, inventoryShare,server, contact, phone, cphone, address, create_time, 
+    id, parentId, storePhoto, status,name,storeType, inventoryShare,bankmessage, contact, phone, cphone, address, create_time, 
     create_by, modify_time, modify_by, we_ticket, we_url, region, wechat, birthday, description
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -73,14 +73,14 @@
   </update>
   <insert id="insert" parameterType="costumetrade.user.domain.SpStore">
     insert into sp_store (id, parentId, storePhoto,status,storeType,inventoryShare, 
-      name, server, contact, 
+      name, bankmessage, contact, 
       phone, cphone, address, 
       create_time, create_by, modify_time, 
       modify_by, we_ticket, we_url, 
       region, wechat, birthday, 
       description)
     values (#{id,jdbcType=VARCHAR}, #{parentid,jdbcType=VARCHAR}, #{storephoto,jdbcType=VARCHAR},0, #{storeType,jdbcType=INTEGER},#{inventoryShare,jdbcType=INTEGER},
-      #{name,jdbcType=VARCHAR}, #{server,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{bankmessage,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
       #{phone,jdbcType=VARCHAR}, #{cphone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
       NOW(), #{createBy,jdbcType=VARCHAR}, NOW(), 
       #{modifyBy,jdbcType=VARCHAR}, #{weTicket,jdbcType=VARCHAR}, #{weUrl,jdbcType=VARCHAR}, 
@@ -110,8 +110,8 @@
       <if test="name != null">
         name,
       </if>
-      <if test="server != null">
-        server,
+      <if test="bankmessage != null">
+        bankmessage,
       </if>
       <if test="contact != null">
         contact,
@@ -176,8 +176,8 @@
       <if test="name != null">
         #{name,jdbcType=VARCHAR},
       </if>
-      <if test="server != null">
-        #{server,jdbcType=VARCHAR},
+      <if test="bankmessage != null">
+        #{bankmessage,jdbcType=VARCHAR},
       </if>
       <if test="contact != null">
         #{contact,jdbcType=VARCHAR},
@@ -240,8 +240,8 @@
       <if test="name != null">
         name = #{name,jdbcType=VARCHAR},
       </if>
-      <if test="server != null">
-        server = #{server,jdbcType=VARCHAR},
+      <if test="bankmessage != null">
+        bankmessage = #{bankmessage,jdbcType=VARCHAR},
       </if>
       <if test="contact != null">
         contact = #{contact,jdbcType=VARCHAR},
@@ -294,7 +294,7 @@
       status = #{status,jdbcType=INTEGER},
       inventoryShare = #{inventoryShare,jdbcType=INTEGER},
       name = #{name,jdbcType=VARCHAR},
-      server = #{server,jdbcType=VARCHAR},
+      bankmessage = #{bankmessage,jdbcType=VARCHAR},
       contact = #{contact,jdbcType=VARCHAR},
       phone = #{phone,jdbcType=VARCHAR},
       cphone = #{cphone,jdbcType=VARCHAR},

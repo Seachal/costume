@@ -25,7 +25,7 @@
 		<result column="productId" jdbcType="VARCHAR" property="productId" />
 		<result column="clientName" jdbcType="VARCHAR" property="clientName" />
 		<result column="createBy" jdbcType="VARCHAR" property="createBy" />
-
+        <result column="primeCost" jdbcType="DECIMAL" property="primeCost" />
 	</resultMap>
 	
 	<resultMap id="SaleResultMap"
@@ -638,17 +638,17 @@
 	<select id="purchaseReport2" resultMap="PurchaseResultMap">
 		SELECT
 		sum(case when detail.count is null then 0 else detail.count end) as quantity,
-		sum(case when detail.count*detail.price is null then 0 else detail.count*detail.pric end) as amount,
+		sum(case when detail.count*detail.price is null then 0 else detail.count*detail.price end) as amount,
+		sum(case when detail.count*price.custPrice is null then 0 else detail.count*price.custPrice end) as primeCost,
 		#{query.timeFrom} as timeFrom,
 		#{query.timeTo} as timeTo,
 		detail.productName as productName,
 		cli.clientName
 		FROM
 		ss_stodetail detail
-		LEFT
-		JOIN ss_stoorder sto
-		ON sto.payOrderNo =
-		detail.orderId
+		LEFT JOIN ss_stoorder sto ON sto.payOrderNo =detail.orderId
+		 LEFT JOIN ss_pprice price ON
+		price.productId = detail.productId AND price.storeId = detail.storeId 
 		<if test="query.reportType==1"><!-- 采购报表 -->
 		LEFT JOIN 
 	    (SELECT c.id,
@@ -765,7 +765,8 @@
 		union all
 		SELECT
 		sum(case when detail.count is null then 0 else detail.count end) as quantity,
-		sum(case when detail.count*detail.price is null then 0 else detail.count*detail.pric end) as amount,
+		sum(case when detail.count*detail.price is null then 0 else detail.count*detail.price end) as amount,
+		sum(case when detail.count*price.custPrice is null then 0 else detail.count*price.custPrice end) as primeCost,
 		#{query.timeFrom} as timeFrom,
 		#{query.timeTo} as timeTo,
 		detail.productName as productName,
@@ -776,6 +777,8 @@
 		JOIN ss_stoorder sto
 		ON sto.payOrderNo =
 		detail.orderId
+		 LEFT JOIN ss_pprice price ON
+		price.productId = detail.productId AND price.storeId = detail.storeId 
 		<if test="query.reportType==1"><!-- 采购报表 -->
 		LEFT JOIN 
 	    (SELECT c.id,

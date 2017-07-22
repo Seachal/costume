@@ -219,6 +219,7 @@
 			<foreach collection="spStoOrder.status" item="item" index="index"
 				separator="," open="(" close=")">#{item,jdbcType=INTEGER}</foreach>
 		</if>
+		
 		ORDER BY stoorder.orderTime DESC
 		<if test="page!=null">
 			LIMIT #{page.startRow},#{page.pageSize}
@@ -257,7 +258,7 @@
 	<select id="financialCounting" parameterType="costumetrade.order.query.OrderQuery" resultMap="AccountResultMap">
 		SELECT
 		'期初' begining,
-		SUM(CASE WHEN sto.orderStatus =6 THEN sto.debetAmt  ELSE 0 END) AS receivable ,
+		SUM(CASE WHEN sto.orderStatus =5 THEN sto.debetAmt  ELSE 0 END) AS receivable ,
 		SUM(CASE WHEN sto.orderStatus =7 THEN sto.realcost ELSE 0 END) AS payable
 		FROM
 		ss_stoorder sto
@@ -272,14 +273,14 @@
 		</if>
 		and sto.sellerStoreId = #{sellerstoreid}
 		and sto.buyerStoreId =#{buyerstoreid}
-		AND ((sto.debetAmt >0 AND sto.orderStatus=6) OR STO.orderStatus=7)
+		AND ((sto.debetAmt >0 AND sto.orderStatus=5) OR STO.orderStatus=7)
 		
 		<if test="timeTo !=null">
 		UNION
 		ALL
 		SELECT
 		'期末' begining,
-		SUM(CASE WHEN sto.orderStatus =6 THEN sto.debetAmt  ELSE 0 END) AS receivable ,
+		SUM(CASE WHEN sto.orderStatus =5 THEN sto.debetAmt  ELSE 0 END) AS receivable ,
 		SUM(CASE WHEN sto.orderStatus =7 THEN sto.realcost ELSE 0 END) AS payable
 		FROM
 		ss_stoorder sto
@@ -292,7 +293,7 @@
 		AND sto.orderTime &lt;=str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
 		and sto.sellerStoreId = #{sellerstoreid}
 		and sto.buyerStoreId =#{buyerstoreid}
-		AND ((sto.debetAmt >0  AND sto.orderStatus=6) OR STO.orderStatus=7)
+		AND ((sto.debetAmt >0  AND sto.orderStatus=5) OR STO.orderStatus=7)
 		</if>
 	</select>
 	<select id="financialCountingOrders" parameterType="costumetrade.order.query.OrderQuery"  resultMap="BaseResultMap">
@@ -317,7 +318,7 @@
 		and sto.buyerStoreId =#{buyerstoreid}
 		AND sto.orderTime &gt;= str_to_date(#{timeFrom},'%Y-%m-%d %H:%i:%s')
 		AND sto.orderTime &lt;= str_to_date(#{timeTo},'%Y-%m-%d %H:%i:%s')
-		AND ((sto.totalAmt>sto.realcost AND sto.orderStatus=6) OR STO.orderStatus=7)
+		AND ((sto.totalAmt>sto.realcost AND sto.orderStatus=5) OR STO.orderStatus=7)
 		UNION ALL
 		SELECT
 		(CASE WHEN pay.billType =1 THEN '收客户欠款' 

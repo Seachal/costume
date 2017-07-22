@@ -54,7 +54,7 @@
 			WHEN product.image4 IS NOT NULL THEN product.image4 ELSE product.image END) as image
 		from ss_stodetail d
 		left join
-		sp_product product on product.id=detail.productId AND product.storeId = d.storeId 
+		sp_product product on product.id=d.productId AND product.storeId = d.storeId 
 		where d.orderId = #{orderNo,jdbcType=VARCHAR}
 		<if test="storeId !=null">
 		and d.storeId = #{storeId,jdbcType=VARCHAR}
@@ -114,6 +114,7 @@
 		LEFT JOIN sp_product product 
 		ON product.id = detail.productId and product.storeId = detail.storeId
 		WHERE 1 = 1
+		and product.status =0
 		AND sto.buyerStoreId = #{query.buyerstoreid}
 		AND sto.sellerStoreId = #{query.sellerstoreid}
 		

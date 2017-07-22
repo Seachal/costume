@@ -3,26 +3,29 @@
 <mapper namespace="costumetrade.product.mapper.ScPromotionalProductMapper">
   <resultMap id="BaseResultMap" type="costumetrade.product.domain.ScPromotionalProduct">
     <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="storeId" jdbcType="VARCHAR" property="storeid" />
+    <result column="promoter_storeid" jdbcType="VARCHAR" property="promoterStoreid" />
     <result column="title" jdbcType="VARCHAR" property="title" />
-    <result column="photo" jdbcType="VARCHAR" property="photo" />
-    <result column="products" jdbcType="VARCHAR" property="products" />
+    <result column="promoter_photo" jdbcType="VARCHAR" property="promoterPhoto" />
+    <result column="product_ids" jdbcType="VARCHAR" property="productIds" />
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="recommended_openid" jdbcType="VARCHAR" property="recommendedOpenid" />
-    <result column="promoter_id" jdbcType="VARCHAR" property="promoterId" />
-    <result column="recommended_unionid" jdbcType="VARCHAR" property="recommendedUnionid" />
+    <result column="recommended_id" jdbcType="VARCHAR" property="recommendedId" />
     <result column="promoter_name" jdbcType="VARCHAR" property="promoterName" />
-    <result column="checkAllTag" jdbcType="BOOLEAN" property="checkAllTag" />
+    <result column="checkAllTag" jdbcType="BIT" property="checkAllTag" />
     <result column="promoter_address" jdbcType="VARCHAR" property="promoterAddress" />
     <result column="product_images" jdbcType="VARCHAR" property="productImages" />
+    <result column="share_type" jdbcType="VARCHAR" property="shareType" />
+    <result column="share_employee" jdbcType="VARCHAR" property="shareEmployee" />
+    <result column="read_status" jdbcType="VARCHAR" property="readStatus" />
+    <result column="read_time" jdbcType="TIMESTAMP" property="readTime" />
+    <result column="read_count" jdbcType="INTEGER" property="readCount" />
+    <result column="noReadCount" jdbcType="DECIMAL" property="noReadCount" />
   </resultMap>
-  
   <sql id="Base_Column_List">
-    id, storeId, title, photo, products, create_by, create_time, recommended_openid, 
-    promoter_id, recommended_unionid, promoter_name,checkAllTag,promoter_address,product_images
+    id, promoter_storeid, title, promoter_photo, product_ids, create_by, create_time, 
+    recommended_id, promoter_name, checkAllTag, promoter_address, product_images, share_type, 
+    share_employee, read_status, read_time,read_count
   </sql>
-  
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
@@ -35,59 +38,113 @@
     <include refid="Base_Column_List" />
     from sc_promotional_product
     where 1=1
-    <if test="product.storeid != null">
-      and  storeId = #{product.storeid,jdbcType=VARCHAR}
+     <if test="product.promoterStoreid != null">
+      and  promoter_storeid = #{product.promoterStoreid,jdbcType=VARCHAR}
       </if>
-      <if test="product.title != null">
-     and   title = #{product.title,jdbcType=VARCHAR}
+      <if test="product.promoterPhoto != null">
+       and promoter_photo = #{product.promoterPhoto,jdbcType=VARCHAR}
       </if>
-      <if test="product.photo != null">
-      and  photo = #{product.photo,jdbcType=VARCHAR}
+      <if test="product.productIds != null">
+       and product_ids = #{product.productIds,jdbcType=VARCHAR}
       </if>
-      <if test="product.products != null">
-      and  products = #{product.products,jdbcType=VARCHAR}
-      </if>
-      <if test="product.createBy != null">
-       and create_by = #{product.createBy,jdbcType=VARCHAR}
-      </if>
-      <if test="product.createTime != null">
-      and  create_time = #{product.createTime,jdbcType=TIMESTAMP}
-      </if>
-      <if test="product.recommendedOpenid != null">
-      and  recommended_openid = #{product.recommendedOpenid,jdbcType=VARCHAR}
-      </if>
-      <if test="product.promoterId != null">
-      and  promoter_id = #{product.promoterId,jdbcType=VARCHAR}
-      </if>
-      <if test="product.recommendedUnionid != null">
-      and  recommended_unionid = #{product.recommendedUnionid,jdbcType=VARCHAR}
+      <if test="product.recommendedId != null">
+       and recommended_id = #{product.recommendedId,jdbcType=VARCHAR}
       </if>
       <if test="product.promoterName != null">
        and promoter_name = #{product.promoterName,jdbcType=VARCHAR}
       </if>
-      <if test="product.checkAllTag != null">
-       and checkAllTag = #{product.checkAllTag}
+      <if test="product.shareType != null">
+       and share_type = #{product.shareType,jdbcType=VARCHAR}
       </if>
-      <if test="product.promoterAddress != null">
-       and promoter_address = #{product.promoterAddress}
+      <if test="product.shareEmployee != null">
+       and share_employee = #{product.shareEmployee,jdbcType=VARCHAR}
       </if>
+      <if test="product.readStatus != null">
+       and read_status = #{product.readStatus,jdbcType=VARCHAR}
+      </if>
+      <if test="product.readTime != null">
+       and read_time = #{product.readTime,jdbcType=TIMESTAMP}
+      </if>
+    	order by create_time desc
       <if test="page != null">
 		LIMIT #{page.startRow},#{page.pageSize}
 	  </if>
   </select>
+  
+    <select id="getGroupPromotionals"  resultMap="BaseResultMap">
+    select 
+    id, promoter_storeid, title, promoter_photo, product_ids, max(create_time) create_time, 
+    recommended_id, promoter_name, checkAllTag, promoter_address, product_images, share_type, 
+    share_employee, sum(case when read_status = 0 then 1 else 0 end) noReadCount, read_status
+    from sc_promotional_product
+    where 1=1
+    and recommended_id is not null
+     <if test="product.promoterStoreid != null">
+      and  promoter_storeid = #{product.promoterStoreid,jdbcType=VARCHAR}
+      </if>
+      <if test="product.promoterPhoto != null">
+       and promoter_photo = #{product.promoterPhoto,jdbcType=VARCHAR}
+      </if>
+      <if test="product.productIds != null">
+       and product_ids = #{product.productIds,jdbcType=VARCHAR}
+      </if>
+      <if test="product.recommendedId != null">
+       and recommended_id = #{product.recommendedId,jdbcType=VARCHAR}
+      </if>
+      <if test="product.promoterName != null">
+       and promoter_name = #{product.promoterName,jdbcType=VARCHAR}
+      </if>
+      <if test="product.shareType != null">
+       and share_type = #{product.shareType,jdbcType=VARCHAR}
+      </if>
+      <if test="product.shareEmployee != null">
+       and share_employee = #{product.shareEmployee,jdbcType=VARCHAR}
+      </if>
+      <if test="product.readStatus != null">
+       and read_status = #{product.readStatus,jdbcType=VARCHAR}
+      </if>
+      <if test="product.readTime != null">
+       and read_time = #{product.readTime,jdbcType=TIMESTAMP}
+      </if>
+    	group by promoter_storeid
+      <if test="page != null">
+		LIMIT #{page.startRow},#{page.pageSize}
+	  </if>
+  </select>
+  
   <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
     delete from sc_promotional_product
     where id = #{id,jdbcType=VARCHAR}
   </delete>
+  
+   <insert id="inserts" >
+    insert into sc_promotional_product (id, promoter_storeid, title, 
+      promoter_photo, product_ids, create_by, 
+      create_time, recommended_id, promoter_name, 
+      checkAllTag, promoter_address, product_images, 
+      share_type, share_employee, read_status, 
+      read_time,read_count)
+    values <foreach collection="list" index="index" item="item" separator=","> (#{item.id,jdbcType=VARCHAR}, #{item.promoterStoreid,jdbcType=VARCHAR}, #{item.title,jdbcType=VARCHAR}, 
+      #{item.promoterPhoto,jdbcType=VARCHAR}, #{item.productIds,jdbcType=VARCHAR}, #{item.createBy,jdbcType=VARCHAR}, 
+      #{item.createTime,jdbcType=TIMESTAMP}, #{item.recommendedId,jdbcType=VARCHAR}, #{item.promoterName,jdbcType=VARCHAR}, 
+      #{item.checkAllTag,jdbcType=BIT}, #{item.promoterAddress,jdbcType=VARCHAR}, #{item.productImages,jdbcType=VARCHAR}, 
+      #{item.shareType,jdbcType=VARCHAR}, #{item.shareEmployee,jdbcType=VARCHAR}, #{item.readStatus,jdbcType=VARCHAR}, 
+      #{item.readTime,jdbcType=TIMESTAMP},#{item.readCount})</foreach>
+  </insert>
+  
   <insert id="insert" parameterType="costumetrade.product.domain.ScPromotionalProduct">
-    insert into sc_promotional_product (id, storeId, title, 
-      photo, products, create_by, 
-      create_time, recommended_openid, promoter_id, 
-      recommended_unionid, promoter_name,checkAllTag,promoter_address,product_images)
-    values (#{id,jdbcType=VARCHAR}, #{storeid,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
-      #{photo,jdbcType=VARCHAR}, #{products,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
-      #{createTime,jdbcType=TIMESTAMP}, #{recommendedOpenid,jdbcType=VARCHAR}, #{promoterId,jdbcType=VARCHAR}, 
-      #{recommendedUnionid,jdbcType=VARCHAR}, #{promoterName,jdbcType=VARCHAR}, #{checkAllTag}, #{promoterAddress}, #{productImages})
+    insert into sc_promotional_product (id, promoter_storeid, title, 
+      promoter_photo, product_ids, create_by, 
+      create_time, recommended_id, promoter_name, 
+      checkAllTag, promoter_address, product_images, 
+      share_type, share_employee, read_status, 
+      read_time,read_count)
+    values (#{id,jdbcType=VARCHAR}, #{promoterStoreid,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{promoterPhoto,jdbcType=VARCHAR}, #{productIds,jdbcType=VARCHAR}, #{createBy,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{recommendedId,jdbcType=VARCHAR}, #{promoterName,jdbcType=VARCHAR}, 
+      #{checkAllTag,jdbcType=BIT}, #{promoterAddress,jdbcType=VARCHAR}, #{productImages,jdbcType=VARCHAR}, 
+      #{shareType,jdbcType=VARCHAR}, #{shareEmployee,jdbcType=VARCHAR}, #{readStatus,jdbcType=VARCHAR}, 
+      #{readTime,jdbcType=TIMESTAMP},#{readCount})
   </insert>
   <insert id="insertSelective" parameterType="costumetrade.product.domain.ScPromotionalProduct">
     insert into sc_promotional_product
@@ -95,17 +152,17 @@
       <if test="id != null">
         id,
       </if>
-      <if test="storeid != null">
-        storeId,
+      <if test="promoterStoreid != null">
+        promoter_storeid,
       </if>
       <if test="title != null">
         title,
       </if>
-      <if test="photo != null">
-        photo,
+      <if test="promoterPhoto != null">
+        promoter_photo,
       </if>
-      <if test="products != null">
-        products,
+      <if test="productIds != null">
+        product_ids,
       </if>
       <if test="createBy != null">
         create_by,
@@ -113,14 +170,8 @@
       <if test="createTime != null">
         create_time,
       </if>
-      <if test="recommendedOpenid != null">
-        recommended_openid,
-      </if>
-      <if test="promoterId != null">
-        promoter_id,
-      </if>
-      <if test="recommendedUnionid != null">
-        recommended_unionid,
+      <if test="recommendedId != null">
+        recommended_id,
       </if>
       <if test="promoterName != null">
         promoter_name,
@@ -128,28 +179,43 @@
       <if test="checkAllTag != null">
         checkAllTag,
       </if>
-       <if test="promoterAddress != null">
+      <if test="promoterAddress != null">
         promoter_address,
       </if>
       <if test="productImages != null">
         product_images,
+      </if>
+      <if test="shareType != null">
+        share_type,
+      </if>
+      <if test="shareEmployee != null">
+        share_employee,
+      </if>
+      <if test="readStatus != null">
+        read_status,
+      </if>
+      <if test="readTime != null">
+        read_time,
+      </if>
+      <if test="readCount != null">
+        read_count,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
         #{id,jdbcType=VARCHAR},
       </if>
-      <if test="storeid != null">
-        #{storeid,jdbcType=VARCHAR},
+      <if test="promoterStoreid != null">
+        #{promoterStoreid,jdbcType=VARCHAR},
       </if>
       <if test="title != null">
         #{title,jdbcType=VARCHAR},
       </if>
-      <if test="photo != null">
-        #{photo,jdbcType=VARCHAR},
+      <if test="promoterPhoto != null">
+        #{promoterPhoto,jdbcType=VARCHAR},
       </if>
-      <if test="products != null">
-        #{products,jdbcType=VARCHAR},
+      <if test="productIds != null">
+        #{productIds,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null">
         #{createBy,jdbcType=VARCHAR},
@@ -157,43 +223,52 @@
       <if test="createTime != null">
         #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="recommendedOpenid != null">
-        #{recommendedOpenid,jdbcType=VARCHAR},
-      </if>
-      <if test="promoterId != null">
-        #{promoterId,jdbcType=VARCHAR},
-      </if>
-      <if test="recommendedUnionid != null">
-        #{recommendedUnionid,jdbcType=VARCHAR},
+      <if test="recommendedId != null">
+        #{recommendedId,jdbcType=VARCHAR},
       </if>
       <if test="promoterName != null">
         #{promoterName,jdbcType=VARCHAR},
       </if>
       <if test="checkAllTag != null">
-        #{checkAllTag},
+        #{checkAllTag,jdbcType=BIT},
       </if>
       <if test="promoterAddress != null">
-        #{promoterAddress},
+        #{promoterAddress,jdbcType=VARCHAR},
       </if>
       <if test="productImages != null">
-        #{productImages},
+        #{productImages,jdbcType=VARCHAR},
+      </if>
+      <if test="shareType != null">
+        #{shareType,jdbcType=VARCHAR},
+      </if>
+      <if test="shareEmployee != null">
+        #{shareEmployee,jdbcType=VARCHAR},
+      </if>
+      <if test="readStatus != null">
+        #{readStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="readTime != null">
+        #{readTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="readCount != null">
+        #{readCount},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="costumetrade.product.domain.ScPromotionalProduct">
     update sc_promotional_product
     <set>
-      <if test="storeid != null">
-        storeId = #{storeid,jdbcType=VARCHAR},
+      <if test="promoterStoreid != null">
+        promoter_storeid = #{promoterStoreid,jdbcType=VARCHAR},
       </if>
       <if test="title != null">
         title = #{title,jdbcType=VARCHAR},
       </if>
-      <if test="photo != null">
-        photo = #{photo,jdbcType=VARCHAR},
+      <if test="promoterPhoto != null">
+        promoter_photo = #{promoterPhoto,jdbcType=VARCHAR},
       </if>
-      <if test="products != null">
-        products = #{products,jdbcType=VARCHAR},
+      <if test="productIds != null">
+        product_ids = #{productIds,jdbcType=VARCHAR},
       </if>
       <if test="createBy != null">
         create_by = #{createBy,jdbcType=VARCHAR},
@@ -201,42 +276,56 @@
       <if test="createTime != null">
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
-      <if test="recommendedOpenid != null">
-        recommended_openid = #{recommendedOpenid,jdbcType=VARCHAR},
-      </if>
-      <if test="promoterId != null">
-        promoter_id = #{promoterId,jdbcType=VARCHAR},
-      </if>
-      <if test="recommendedUnionid != null">
-        recommended_unionid = #{recommendedUnionid,jdbcType=VARCHAR},
+      <if test="recommendedId != null">
+        recommended_id = #{recommendedId,jdbcType=VARCHAR},
       </if>
       <if test="promoterName != null">
         promoter_name = #{promoterName,jdbcType=VARCHAR},
       </if>
       <if test="checkAllTag != null">
-        checkAllTag = #{checkAllTag},
+        checkAllTag = #{checkAllTag,jdbcType=BIT},
       </if>
       <if test="promoterAddress != null">
-        promoter_address = #{promoterAddress},
+        promoter_address = #{promoterAddress,jdbcType=VARCHAR},
       </if>
-       <if test="productImages != null">
-        product_images = #{productImages},
+      <if test="productImages != null">
+        product_images = #{productImages,jdbcType=VARCHAR},
+      </if>
+      <if test="shareType != null">
+        share_type = #{shareType,jdbcType=VARCHAR},
+      </if>
+      <if test="shareEmployee != null">
+        share_employee = #{shareEmployee,jdbcType=VARCHAR},
+      </if>
+      <if test="readStatus != null">
+        read_status = #{readStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="readTime != null">
+        read_time = #{readTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="readCount != null">
+        read_count = #{readCount},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="costumetrade.product.domain.ScPromotionalProduct">
     update sc_promotional_product
-    set storeId = #{storeid,jdbcType=VARCHAR},
+    set promoter_storeid = #{promoterStoreid,jdbcType=VARCHAR},
       title = #{title,jdbcType=VARCHAR},
-      photo = #{photo,jdbcType=VARCHAR},
-      products = #{products,jdbcType=VARCHAR},
+      promoter_photo = #{promoterPhoto,jdbcType=VARCHAR},
+      product_ids = #{productIds,jdbcType=VARCHAR},
       create_by = #{createBy,jdbcType=VARCHAR},
       create_time = #{createTime,jdbcType=TIMESTAMP},
-      recommended_openid = #{recommendedOpenid,jdbcType=VARCHAR},
-      promoter_id = #{promoterId,jdbcType=VARCHAR},
-      recommended_unionid = #{recommendedUnionid,jdbcType=VARCHAR},
-      promoter_name = #{promoterName,jdbcType=VARCHAR}
+      recommended_id = #{recommendedId,jdbcType=VARCHAR},
+      promoter_name = #{promoterName,jdbcType=VARCHAR},
+      checkAllTag = #{checkAllTag,jdbcType=BIT},
+      promoter_address = #{promoterAddress,jdbcType=VARCHAR},
+      product_images = #{productImages,jdbcType=VARCHAR},
+      share_type = #{shareType,jdbcType=VARCHAR},
+      share_employee = #{shareEmployee,jdbcType=VARCHAR},
+      read_status = #{readStatus,jdbcType=VARCHAR},
+      read_time = #{readTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>

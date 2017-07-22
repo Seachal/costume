@@ -166,18 +166,19 @@
 			WHEN product.image1 IS NOT NULL THEN product.image1
 			WHEN product.image2 IS NOT NULL THEN product.image2
 			WHEN product.image3 IS NOT NULL THEN product.image3
-			WHEN product.image4 IS NOT NULL THEN product.image4 ELSE product.image END) as image,
+			WHEN product.image4 IS NOT NULL THEN product.image4 ELSE product.image END) AS image,
 		price.purchasePrice, price.tagPrice, price.firsthPrice,
 		price.secondPrice, price.thirdPrice,
-		price.fourthPrice,price.fifthPrice,product.saleNum
+		price.fourthPrice,price.fifthPrice,product.salMonth,
+		CASE SIGN(sl_tb) WHEN 1 THEN ROUND((sl-sl_tb)*100/sl_tb,2) ELSE 0 END  hottest
 		FROM sp_product product
 		LEFT JOIN ss_pprice price ON
 		price.productId = product.id AND price.storeId = product.storeId
 		LEFT JOIN sp_pbrand brand ON brand.id = product.brandId
-		LEFT JOIN sp_product_type productType ON productType.id =
-		product.productType
+		LEFT JOIN sp_product_type productType ON productType.id =product.productType
+		LEFT JOIN temp_sale sale ON sale.StoreId = product.storeId AND sale.productId = product.id
 		WHERE 1=1
-		and product.status = 0
+		AND product.status = 0
 		<if test="product.storeId!=null">
 		    and  product.storeId = #{product.storeId,jdbcType=INTEGER}
 		</if>
@@ -266,12 +267,17 @@
 		<if test="product.priceOp == 'desc' and product.productManagerQuery == 1">
 			order by price.tagPrice desc
 		</if>
-	
 		<if test="product.saleOp == 'asc'">
-			order by product.saleNum asc
+			order by product.salMonth asc
 		</if>
 		<if test="product.saleOp == 'desc'">
-			order by product.saleNum desc
+			order by product.salMonth desc
+		</if>
+		<if test="product.hottestOp == 'asc'">
+			order by hottest asc
+		</if>
+		<if test="product.hottestOp == 'desc'">
+			order by hottest desc
 		</if>
 		<if test="page != null">
 		LIMIT #{page.startRow},#{page.pageSize}

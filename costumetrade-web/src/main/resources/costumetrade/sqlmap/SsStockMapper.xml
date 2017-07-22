@@ -42,16 +42,16 @@
 		<if test="productsize != null">
 			and stock.productSize = #{productsize,jdbcType=VARCHAR}
 		</if>
-		<if test="stocknum != null">
-			and stock.stockNum &gt;= #{stocknum,jdbcType=DECIMAL}
-		</if>
+	
 		<if test="otherStoreIds != null">
 			and stock.storeId in <foreach collection="otherStoreIds" item="item" index="index" open="(" close=")" separator=",">
 				#{item}
 			</foreach>
 
 		</if>
+		
 		) s where 1=1
+		
 		group by s.productId,s.productColor,s.productSize
 	</select>
 	<select id="selectStock" parameterType="costumetrade.order.domain.SsStock"
@@ -73,9 +73,7 @@
 		<if test="productsize != null">
 			and stock.productSize = #{productsize,jdbcType=VARCHAR}
 		</if>
-		<if test="stocknum != null">
-			and stock.stockNum &gt;= #{stocknum,jdbcType=DECIMAL}
-		</if>
+	
 		<if test="otherStoreIds != null">
 			and stock.storeId in <foreach collection="otherStoreIds" item="item" index="index" open="(" close=")" separator=",">
 				#{item}
