@@ -65,6 +65,8 @@ public class SpPrintServiceImpl implements SpPrintService{
 //    	    System.out.println(unicode);  
 //    	    gbk  = new String(text.getBytes("GBK"),"GBK");  
 			gbk = encoder.encode(text.getBytes("GBK"));
+			//去除加密太长造成的自动回车换行
+			gbk = gbk.replaceAll("\r\n", "");
 			//text = new String(text.getBytes("GB2312"),"GBK");
 			//getEncoding(text);
 		} catch (UnsupportedEncodingException e) {
