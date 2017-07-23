@@ -63,14 +63,15 @@ public class SpPrintServiceImpl implements SpPrintService{
 //    	    System.out.println(utf8);  
 //    	    String unicode = new String(utf8.getBytes(),"UTF-8");   
 //    	    System.out.println(unicode);  
-    	    gbk  = new String(text.getBytes("GBK"),"GBK");  
+//    	    gbk  = new String(text.getBytes("GBK"),"GBK");  
+			gbk = encoder.encode(text.getBytes("GBK"));
 			//text = new String(text.getBytes("GB2312"),"GBK");
 			//getEncoding(text);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		String data = encoder.encode(gbk.getBytes());
+		
 //		getEncoding(text);
 //		String data = null;
 //		try {
@@ -82,7 +83,7 @@ public class SpPrintServiceImpl implements SpPrintService{
 //		}
 		
   
-		return data;
+		return gbk;
 	}
 
 	@Override
