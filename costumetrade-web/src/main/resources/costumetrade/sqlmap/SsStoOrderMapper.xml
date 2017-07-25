@@ -770,41 +770,7 @@
 		</set>
 		where payOrderNo = #{payorderno,jdbcType=VARCHAR};
 
-		update
-		ss_member_stoorder
-		<set>
-			<if test="orderstatus != null">
-				orderStatus = #{orderstatus,jdbcType=INTEGER},
-			</if>
-			<if test="operator != null">
-				operator = #{operator},
-			</if>
-			<if test="paycate1 != null">
-				paycate1 = #{paycate1},
-			</if>
-			<if test="paycost1 != null">
-				paycost1 = #{paycost1},
-			</if>
-			<if test="paycate2 != null">
-				paycate2 = #{paycate2},
-			</if>
-			<if test="paycost2 != null">
-				paycost2 = #{paycost2},
-			</if>
-			<if test="realcost != null">
-				realcost = #{realcost},
-			</if>
-			<if test="debetamt != null">
-				debetamt = #{debetamt},
-			</if>
-			<if test="freight != null">
-				freight = #{freight},
-			</if>
-			<if test="logisticsCode != null">
-				logisticsCode = #{logisticsCode},
-			</if>
-		</set>
-		where payOrderNo = #{payorderno,jdbcType=VARCHAR};
+		
 	</update>
 
 	<update id="updateByPrimaryKeySelectiveStore" parameterType="costumetrade.order.domain.SsStoOrder">

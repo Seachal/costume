@@ -68,6 +68,7 @@
     from sp_employee
     where 
  	storeId = #{storeId,jdbcType=VARCHAR}
+ 	and scene &lt; 0
   </select>
   
   <delete id="deleteByPrimaryKey" parameterType="costumetrade.user.domain.SpEmployee">
@@ -76,6 +77,7 @@
       <if test="id != null">
       and id = #{id,jdbcType=VARCHAR}
       </if>
+    
   </delete>
   
   <delete id="deleteEmployee" parameterType="costumetrade.user.domain.SpEmployee">

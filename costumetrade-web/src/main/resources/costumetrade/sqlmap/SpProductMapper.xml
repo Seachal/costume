@@ -178,12 +178,15 @@
 		LEFT JOIN sp_product_type productType ON productType.id =product.productType
 		LEFT JOIN temp_sale sale ON sale.StoreId = product.storeId AND sale.productId = product.id
 		WHERE 1=1
-		AND product.status = 0
+		
 		<if test="product.storeId!=null">
 		    and  product.storeId = #{product.storeId,jdbcType=INTEGER}
 		</if>
 		<if test="product.status != null">
 			and product.status =#{product.status}
+		</if>
+		<if test="product.status == null">
+		AND product.status = 0
 		</if>
 		<if test="product.codeAndName == null">
 			<if test="product.code != null">

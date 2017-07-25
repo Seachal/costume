@@ -85,6 +85,9 @@
 			<if test="item.custpricejson != null">
 				custPriceJson = #{item.custpricejson,jdbcType=VARCHAR},
 			</if>
+			<if test="item.discpricejson != null">
+				discPriceJson = #{item.discpricejson,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where id = #{item.id,jdbcType=INTEGER}
 		</foreach>

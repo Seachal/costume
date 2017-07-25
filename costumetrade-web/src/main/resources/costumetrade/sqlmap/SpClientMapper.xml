@@ -112,10 +112,10 @@
 			
 		</if>
 		<if test="client.nameOp == 'asc'">
-			order by reallyName asc
+			order by fastcode asc
 		</if>
 		<if test="client.nameOp == 'desc'">
-			order by reallyName desc
+			order by fastcode desc
 		</if>
 		<if test="client.timeOp == 'asc'">
 			order by create_time asc

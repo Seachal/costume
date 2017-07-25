@@ -112,7 +112,7 @@
       )
     values (#{id,jdbcType=INTEGER}, #{storeid,jdbcType=VARCHAR}, #{productid,jdbcType=VARCHAR}, 
       #{purchaseprice,jdbcType=DECIMAL}, #{tagprice,jdbcType=DECIMAL}, #{firsthPrice,jdbcType=DECIMAL}, 
-      #{secondPrice,jdbcType=DECIMAL}, #{thirdPrice,jdbcType=DECIMAL},#{fourthPrice,jdbcType=DECIMAL}, #{fifthPrice,jdbcType=DECIMAL},0,
+      #{secondPrice,jdbcType=DECIMAL}, #{thirdPrice,jdbcType=DECIMAL},#{fourthPrice,jdbcType=DECIMAL}, #{fifthPrice,jdbcType=DECIMAL},#{custPrice,jdbcType=DECIMAL},
        #{modifyTime,jdbcType=TIMESTAMP}, 
       #{modifyBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{createBy,jdbcType=VARCHAR}
       )
@@ -150,7 +150,9 @@
       <if test="fifthPrice != null">
         fifthPrice,
       </if>
+      <if test="custPrice != null">
         custPrice,
+        </if>
       <if test="modifyTime != null">
         modify_time,
       </if>
@@ -195,7 +197,9 @@
       <if test="fifthPrice != null">
         #{fifthPrice,jdbcType=DECIMAL},
       </if>
-      0,
+      <if test="custPrice != null">
+        #{custPrice,jdbcType=DECIMAL},
+      </if>
       <if test="modifyTime != null">
         #{modifyTime,jdbcType=TIMESTAMP},
       </if>
