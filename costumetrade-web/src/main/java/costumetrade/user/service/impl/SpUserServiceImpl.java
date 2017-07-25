@@ -99,19 +99,19 @@ public class SpUserServiceImpl implements SpUserService{
 			we.setUnionid(unionid);
 			we.setCreatetime(new Date());
 			if(semployee == null){//不存在店员，就保存新增用户信息
-				String userInfo;
-				try {
-					userInfo = weChatService.getWeChatUserInfo(unionid);
-					if(userInfo !=null){
-						JSONObject json = JSON.parseObject(userInfo);
-				    	String nickName = json.getString("nickname"); 
-				    	String headimgurl = json.getString("headimgurl");
-				    	user.setName(nickName);
-				    	user.setPhoto(headimgurl);
-				    }
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+//				String userInfo;
+//				try {
+//					userInfo = weChatService.getWeChatUserInfo(unionid);
+//					if(userInfo !=null){
+//						JSONObject json = JSON.parseObject(userInfo);
+//				    	String nickName = json.getString("nickname"); 
+//				    	String headimgurl = json.getString("headimgurl");
+//				    	user.setName(nickName);
+//				    	user.setPhoto(headimgurl);
+//				    }
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
 				String userId = new Date().getTime()+"";
 				user.setId(userId);
 				user.setCreateTime(new Date());
@@ -136,6 +136,24 @@ public class SpUserServiceImpl implements SpUserService{
 		
 		return scWeChat;
 	}
+	
+	public ScWeChat bindEmployee(String openId){
+		SpEmployee employee = new SpEmployee();
+		employee.setOpenid(openId);
+		SpEmployee semployee = spEmployeeMapper.selectByPrimaryKey(employee);//查询该用户是否是店员，是店员就绑定empid
+		
+		ScWeChat wechat = scWeChatMapper.selectByOpenId(openId);
+		if(wechat!=null&&semployee!=null){
+			if(wechat.getId()!=null&&StringUtil.isNotBlank(semployee.getId())){
+				wechat.setEmpid(semployee.getId());
+				wechat.setUserid("");
+				wechat.setStoreid(semployee.getStoreId());
+				scWeChatMapper.updateByPrimaryKeySelective(wechat);
+			}
+		}
+		return wechat;
+	}
+	
 	@Override
 	public int saveUserOrStore(SpStore spStore) {
 		int save = 0;

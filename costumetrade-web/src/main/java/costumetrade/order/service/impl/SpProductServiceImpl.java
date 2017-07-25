@@ -484,6 +484,7 @@ public class SpProductServiceImpl implements SpProductService{
 				prodPrice.setCustTypeCode(price.getCustTypeCode());
 				prodPrice.setCusttypename(price.getCusttypename());
 				prodPrice.setCustpricejson(price.getCustpricejson());
+				prodPrice.setDiscpricejson(price.getDiscpricejson());
 				customTypeList.add(prodPrice);
 			}
 		}
@@ -1095,7 +1096,11 @@ public class SpProductServiceImpl implements SpProductService{
 		ScPromotionalProduct p = scPromotionalProductMapper.selectByPrimaryKey(products.getId());
 		if(p!=null){
 			if(!p.getPromoterStoreid().equals(products.getRecommendedId())){
-				products.setReadCount(p.getReadCount()+1);
+				if(p.getReadCount()==null){
+					products.setReadCount(1);
+				}else{
+					products.setReadCount(p.getReadCount()+1);
+				}
 				save = scPromotionalProductMapper.updateByPrimaryKeySelective(products);
 			}
 			

@@ -2,9 +2,11 @@ package costumetrade.user.control;
 
 
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,8 +22,6 @@ import costumetrade.common.util.StringUtil;
 import costumetrade.order.domain.ScStoreAddr;
 import costumetrade.order.service.WeChatService;
 import costumetrade.product.service.ShareProductService;
-import costumetrade.report.domain.ProductReportQuery;
-import costumetrade.report.domain.ReportQuery;
 import costumetrade.report.service.SpReportService;
 import costumetrade.user.domain.ScWeChat;
 import costumetrade.user.domain.SpEmployee;
@@ -45,6 +45,7 @@ import costumetrade.user.service.SpUserService;
 @RequestMapping("/user")
 @Controller
 public class SpUserController {
+	public static Logger logger = Logger.getLogger(SpUserController.class);
 	@Autowired
 	private SpUserService spUserService;
 	@Autowired
@@ -71,21 +72,39 @@ public class SpUserController {
 			result.setMsg(ResponseInfo.LACK_PARAM.name());
 			return result;
 		}
+		logger.info("开始1：");
 		String openIdAndKey = weChatService.getOpenIdAndKey(code);
+		logger.info("结束1：");
 		JSONObject json = JSON.parseObject(openIdAndKey);
 		String openid = json.getString("openid");
 	
 		ScWeChat chat = new ScWeChat();
 		if(StringUtil.isNotBlank(openid)){
+			
 			chat.setUnionid(openid);
+			logger.info("开始2：");
 			chat = weChatService.getWeChat(chat);
+			logger.info("结束2：");
 		}
 	
 		if(chat ==null || StringUtil.isBlank(chat.getOpenid()) ){
+			logger.info("开始3：");
 			chat = spUserService.getUnionId(encryptedData,iv,json.getString("session_key"));
+			logger.info("结束3：");
+		}else{
+			logger.info("开始4：");
+			ScWeChat chatE =spUserService.bindEmployee(chat.getOpenid());
+			logger.info("结束4：");
+			if(chatE!=null){
+				chat.setEmpid(chatE.getEmpid());
+				chat.setUserid(chatE.getUserid());
+				chat.setStoreid(chatE.getStoreid());
+			}
 		}
 		ScUserQuery resultQuery = new ScUserQuery();
+		logger.info("开始5：");
 		resultQuery = spUserService.getScUser(chat);
+		logger.info("结束5：");
 		resultQuery.setOpenid(chat.getOpenid());
 		result.setData(resultQuery);
 		return  result;

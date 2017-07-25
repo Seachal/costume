@@ -58,6 +58,8 @@ public class SpStoreServiceImpl implements SpStoreService{
 	private SpPBrandMapper spPBrandMapper;
 	@Autowired
 	private SpPCateMapper spPCateMapper;
+	@Autowired 
+	private WeChatService weChatService;
 	@Override
 	public List<SpStore> getChainStore(String storeId) {
 		SpStore store = new SpStore();
@@ -119,12 +121,12 @@ public class SpStoreServiceImpl implements SpStoreService{
 		SpStore store = new SpStore();
 		String  userInfo=null;
 		try {
-			userInfo =WeChatService.getWeChatUserInfo(openid);
-			if(userInfo !=null){
-				JSONObject json = JSON.parseObject(userInfo);
-		    	String nickName = json.getString("nickname"); 
-		    	String headimgurl = json.getString("headimgurl");
-		    	
+			//userInfo =WeChatService.getWeChatUserInfo(openid);
+			//if(userInfo !=null){
+//				JSONObject json = JSON.parseObject(userInfo);
+//		    	String nickName = json.getString("nickname"); 
+//		    	String headimgurl = json.getString("headimgurl");
+//		    	
 		    	ScWeChat record = new ScWeChat();
 	    		record = scWeChatMapper.selectByOpenId(openid);
 	    		
@@ -134,6 +136,9 @@ public class SpStoreServiceImpl implements SpStoreService{
 			    	store.setName(name);
 			    	store.setStorephoto(image);
 			    	store.setStatus(0);
+			    	
+			    	String qccode = weChatService.getLimitTwoCode(record.getUserid());
+			    	store.setWeUrl(qccode);
 			    	spStoreMapper.insertSelective(store);
 	    		}
 //		    	//初始化高级设置数据
@@ -164,7 +169,7 @@ public class SpStoreServiceImpl implements SpStoreService{
 		    		insertDictionarys(store.getId());
 		    	}
 		    	
-			}
+			//}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -264,5 +269,6 @@ public class SpStoreServiceImpl implements SpStoreService{
 		
 		
 	}
+
 	
 }

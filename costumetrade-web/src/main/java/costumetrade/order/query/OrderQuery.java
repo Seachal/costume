@@ -42,6 +42,13 @@ public class OrderQuery extends Entity {
     
     private Integer orderTypeTag;
     
+    private Integer payStatus;
+    
+    /**
+     *  支付方式一
+     */
+    private String paycate1;
+    
     /***
      * 
      * 对账 期初 期末查询 开始
@@ -408,6 +415,22 @@ public class OrderQuery extends Entity {
 
 	public void setForm_id(String form_id) {
 		this.form_id = form_id;
+	}
+
+	public Integer getPayStatus() {
+		return payStatus;
+	}
+
+	public void setPayStatus(Integer payStatus) {
+		this.payStatus = payStatus;
+	}
+
+	public String getPaycate1() {
+		return paycate1;
+	}
+
+	public void setPaycate1(String paycate1) {
+		this.paycate1 = paycate1;
 	}
 
 	

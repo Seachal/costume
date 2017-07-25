@@ -71,6 +71,8 @@ public class SsDataDictionaryController {
 			result.setCode(ResponseInfo.EXCEPTION.code);
 			result.setMsg(ResponseInfo.EXCEPTION.msg);
 			return result;
+		}else{
+			result.setData(spCustProdPrices);
 		}
 		return result;
 		

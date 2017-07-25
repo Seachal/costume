@@ -353,7 +353,28 @@ public class SpClientController {
 		
 		return result;
 	}
+	@RequestMapping("/getFansCount")
+	@ResponseBody
+	public ApiResponse getFansCount(String storeId){
+		ApiResponse result = new ApiResponse();
+		result.setCode(ResponseInfo.SUCCESS.code);
+		result.setMsg(ResponseInfo.SUCCESS.msg);
+		if(StringUtil.isNotBlank(storeId)){
+			result.setCode(ResponseInfo.LACK_PARAM.code);
+			result.setMsg(ResponseInfo.LACK_PARAM.msg);
+			return result;
+		}
+		Integer fans = spClientService.getFansCount(storeId);
+		if(fans == null){
+			result.setData(ResponseInfo.OPERATE_EXPIRED.code);
+			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
+			return result;
+		}else{
+			result.setData(fans);
+		}
+		
+		return result;
+	}
 	
-
 	
 }

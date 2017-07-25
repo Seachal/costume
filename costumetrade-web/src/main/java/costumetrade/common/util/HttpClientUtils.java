@@ -14,14 +14,19 @@ import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.cookie.params.CookieSpecPNames;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,6 +100,27 @@ public class HttpClientUtils {
 			throw new RuntimeException("读取返回内容出错,请求url："+url);
 		}
 		
+	}
+	
+    public static String get(String url, String encoding) throws ClientProtocolException, IOException {
+		DefaultHttpClient httpclient = new DefaultHttpClient();
+		try {
+			httpclient.getParams().setBooleanParameter(CookieSpecPNames.SINGLE_COOKIE_HEADER, true);
+			//log.info("GET "+url);
+			HttpGet httpget = new HttpGet(url);
+			httpget.addHeader(
+					"User-Agent",
+					"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; .NET CLR 2.0.50727; .NET CLR 3.0.04506.648; .NET CLR 3.5.21022)");
+			HttpResponse response = httpclient.execute(httpget);
+			//log.info(response.getStatusLine().getStatusCode());
+			HttpEntity entity = response.getEntity();
+			return EntityUtils.toString(entity, encoding);
+		}
+		finally {
+			if(httpclient!=null) {
+				httpclient.getConnectionManager().shutdown();
+			}
+		}
 	}
 
 }

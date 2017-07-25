@@ -268,17 +268,14 @@ public class SpOrderController {
 		int operate = spOrderService.orderOperate(param);
 		
 		if(operate <= 0){
-			result.setCode(ResponseInfo.OPERATE_EXPIRED.code);
 			result.setMsg(ResponseInfo.OPERATE_EXPIRED.msg);
 			result.setData(ResponseInfo.OPERATE_EXPIRED.code);
 			return result;
 		}else if(operate == 2){//缺少库存
-			result.setCode(ResponseInfo.NO_STOCK.code);
 			result.setMsg(ResponseInfo.NO_STOCK.msg);
 			result.setData(ResponseInfo.NO_STOCK.code);
 			return result;
 		}else if(operate == 3){//不允许作废
-			result.setCode(ResponseInfo.RETURN_EXCEPTION.code);
 			result.setMsg(ResponseInfo.RETURN_EXCEPTION.msg);
 			result.setData(ResponseInfo.RETURN_EXCEPTION.code);
 			return result;

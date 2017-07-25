@@ -3,6 +3,7 @@ package costumetrade.user.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -97,10 +98,11 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 		}
 		ScWeChat record = new ScWeChat();
 		record = scWeChatMapper.selectByOpenId(spEmployee.getOpenid());
-		if(record !=null){
-			record.setUserid(null);
+		if(record !=null&&record.getId()!=null){
+			record.setUserid("");
 			record.setStoreid(spEmployee.getStoreId());
 			scWeChatMapper.updateByPrimaryKeySelective(record);
+			
 		}
 	
 		return spEmployee.getId();
@@ -109,10 +111,21 @@ public class SpEmployeeServiceImpl implements SpEmployeeService{
 	}
 	@Override
 	public int deleteEmployee(SpEmployee spEmployee) {
-		if(spEmployee.getId() == null){
+		SpEmployee emp = new SpEmployee();
+		if(StringUtil.isBlank(spEmployee.getId())){
 			return 0;
+		}else{
+			emp = spEmployeeMapper.selectByPrimaryKey(spEmployee);
 		}
-		return spEmployeeMapper.deleteByPrimaryKey(spEmployee);
+		int save = spEmployeeMapper.deleteByPrimaryKey(spEmployee);
+		if(save>0&&StringUtil.isNotBlank(emp.getOpenid())){
+			ScWeChat we = scWeChatMapper.selectByOpenId(emp.getOpenid());
+			if(we!=null && we.getId()!=null&&StringUtil.isNotBlank(we.getEmpid())){
+				scWeChatMapper.deleteByPrimaryKey(we.getId());
+			}
+			
+		}
+		return save;
 	}
 	@Override
 	public SpEmployee getEmployee(String empId) {

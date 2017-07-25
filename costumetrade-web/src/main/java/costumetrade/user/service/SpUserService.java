@@ -37,4 +37,7 @@ public interface SpUserService {
 	public ScWeChat  getUnionId(String encryptedData,String iv,String sessionKey);
 	
 	public ScUserQuery getScUser(ScWeChat chat);
+	
+	public ScWeChat bindEmployee(String openId);
+
 }

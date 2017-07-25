@@ -55,11 +55,12 @@ public class SFLogisticsServiceImpl implements SFLogisticsService {
 
 	public MessageResp<TokenRespDto> getAccessToken() {
 		// 测试URL
-		String urlRef = "https://open-sbox.sf-express.com/public/v1.0/security/access_token/sf_appid/"
+		String urlRef = "https://"+ConfigProperties.getProperty("sf.url")+"/public/v1.0/security/access_token/sf_appid/"
 				+ "{sf_appid}/sf_appkey/{sf_appkey}";
 		AppInfo appInfo = new AppInfo();
 		appInfo.setAppId("00026897");
 		appInfo.setAppKey("9A08DFCE2DC4765E4FB3011C4C395C70");
+
 		MessageReq<TokenReqDto> accessTokenReq = new MessageReq<TokenReqDto>();
 		HeadMessageReq head = new HeadMessageReq();
 		head.setTransType(301);// 获取access_token
@@ -80,7 +81,7 @@ public class SFLogisticsServiceImpl implements SFLogisticsService {
 	public MessageResp<OrderRespDto> orderSF(OrderReqDto orderReqDto) {
 		MessageReq<OrderReqDto> orderReq = new MessageReq<OrderReqDto>();
 		// 测试URL
-		String url = "https://open-sbox.sf-express.com/rest/v1.0/order/access_token/{access_token}/sf_appid/{sf_appid}/sf_appkey/{sf_appkey}";
+		String url = "https://"+ConfigProperties.getProperty("sf.url")+"/rest/v1.0/order/access_token/{access_token}/sf_appid/{sf_appid}/sf_appkey/{sf_appkey}";
 		AppInfo appInfo = new AppInfo();
 		appInfo.setAppId("00026897");
 		appInfo.setAppKey("9A08DFCE2DC4765E4FB3011C4C395C70");
@@ -117,7 +118,7 @@ public class SFLogisticsServiceImpl implements SFLogisticsService {
 	public MessageResp<OrderQueryRespDto> querySF(
 			OrderQueryReqDto orderQueryReqDto) {
 		// 测试URL
-		String url = "https://open-sbox.sf-express.com/rest/v1.0/order/query/access_token/{access_token}/"
+		String url = "https://"+ConfigProperties.getProperty("sf.url")+"/rest/v1.0/order/query/access_token/{access_token}/"
 				+ "sf_appid/{sf_appid}/sf_appkey/{sf_appkey}";
 
 		AppInfo appInfo = new AppInfo();
@@ -153,7 +154,7 @@ public class SFLogisticsServiceImpl implements SFLogisticsService {
 	@Override
 	public MessageResp<List<RouteRespDto>> queryRouteSF(RouteReqDto routeReqDto) {
 		// 测试环境
-		String url = "https://open-sbox.sf-express.com/rest/v1.0/route/query/access_token/{access_token}/"
+		String url = "https://"+ConfigProperties.getProperty("sf.url")+"/rest/v1.0/route/query/access_token/{access_token}/"
 				+ "sf_appid/{sf_appid}/sf_appkey/{sf_appkey}";
 		// 正式环境
 		// String url =
@@ -339,7 +340,7 @@ public class SFLogisticsServiceImpl implements SFLogisticsService {
 	        			||ele.element("msg")!=null
 	        			||ele.element("print_file")!=null
 	        			||ele.element("order_status")!=null
-	        			||ele.element("mailno")!=null
+	        			||ele.element("mail_no")!=null
 	        			||ele.element("pdf_info")!=null
 	        			||ele.element("order_serial_no")!=null){
 	        		resp.setStatus(ele.element("status").getText());
@@ -347,7 +348,7 @@ public class SFLogisticsServiceImpl implements SFLogisticsService {
 		        	resp.setMsg(ele.element("msg").getText());
 		        	//resp.setPrintFile(ele.element("print_file").getText());
 		        	//resp.setOrderStatus(ele.element("order_status").getText());
-		        	resp.setMailno(ele.element("mailno").getText());
+		        	resp.setMailno(ele.element("mail_no").getText());
 		        	resp.setOrderId(ele.element("order_serial_no").getText());
 		        	//resp.setPdfInfo(ele.element("pdf_info").getText());
 		        	response.add(resp);

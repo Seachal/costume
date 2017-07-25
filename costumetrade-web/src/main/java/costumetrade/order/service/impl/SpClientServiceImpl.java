@@ -553,5 +553,19 @@ public class SpClientServiceImpl implements SpClientService{
 		}
 		return ids;
 	}
+	@Override
+	public Integer getFansCount(String storeId) {
+		SpClient client = new SpClient();
+		client.setStoreId(storeId);
+		client.setType(1+"");
+		//查询粉丝数
+		List<SpClient> clients =  spClientMapper.select(client , null);
+		if(clients!=null){
+			return clients.size();
+		}else{
+			return 0;
+		}
+		
+	}
 	
 }

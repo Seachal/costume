@@ -55,4 +55,6 @@ public interface WeChatService  {
 	public ScWeChat getWeChat(ScWeChat chat);
 	
 	public void sendTemplate(OrderQuery param) throws Exception;
+	
+	public String getLimitTwoCode(String sceneStr) throws Exception;
 }

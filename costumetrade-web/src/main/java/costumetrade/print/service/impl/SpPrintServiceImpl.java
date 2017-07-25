@@ -73,18 +73,6 @@ public class SpPrintServiceImpl implements SpPrintService{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-//		getEncoding(text);
-//		String data = null;
-//		try {
-////			byte[] binBuffer = text.getBytes("GBK");
-//			data = Base64Util.getImageBase64(text);
-//		} catch (Exception e) {
-//			
-//			e.printStackTrace();
-//		}
-		
-  
 		return gbk;
 	}
 
@@ -99,8 +87,6 @@ public class SpPrintServiceImpl implements SpPrintService{
 			return print.getPrintUserId();
 
 		}
-		 
-
 	}
 	
     public static String getEncoding(String str) { 

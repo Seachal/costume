@@ -119,6 +119,24 @@ public class WeChatServiceImpl implements WeChatService {
 		return ticketUrl;
 	}
 	
+	public String getLimitTwoCode(String sceneStr) throws Exception{
+		
+		
+		String APP_ID="wx223537d8341fd657";//微信公众号测试号
+		String APP_SECRET="11f146a95fdf222f899cd385615061f4";
+//		String APP_ID="wx763d2ab0aa1a1bc5";//微信公众号 正式
+//		String APP_SECRET="65bc54299a5a43c632ab3f3a0da7e26d";
+		String chat = getAccessToken(APP_ID,APP_SECRET);
+		JSONObject json = JSON.parseObject(chat);
+
+		String url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token="+json.getString("access_token");
+		String param ="{'action_name': 'QR_LIMIT_STR_SCENE', 'action_info': {'scene': {'scene_str': '"+sceneStr+"'}}}";//
+		JSONObject jsonObject = HttpPostUtil.sendHTTPSPostRequestJSON(url, JSONObject.parseObject(param));
+		
+		String ticketUrl ="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket="+jsonObject.getString("ticket");
+	
+		return ticketUrl;
+	}
 	/**
 	 * 根据微信登录方法得到code，
 	 * @throws IOException 
@@ -166,7 +184,6 @@ public class WeChatServiceImpl implements WeChatService {
 		String eventKey = message.getEventKey();
 		eventKey=eventKey.replace("qrscene_",""); 
 
-		System.out.println(eventKey);
 
     	String userInfo =null;
     	QRCodeScanParam param = new QRCodeScanParam();
@@ -208,27 +225,37 @@ public class WeChatServiceImpl implements WeChatService {
     	String nickName = json.getString("nickname"); 
     	String headimgurl = json.getString("headimgurl");
     	String unionid = json.getString("unionid");
-    	ScWeChat wechat = scWeChatMapper.selectByOpenId(message.getFromUserName());
+    	ScWeChat wechat = scWeChatMapper.selectByOpenId(unionid);
     	SpUser user = new SpUser();
     	SpStore store = new SpStore();
     	boolean enableBeCustomer = true;
     	boolean enableBeSupplier = true;
     	boolean enableBeFriend = true;
+    	boolean enableBeEmployee = true;
     	if(wechat !=null&& wechat.getId() !=null){
-    		if(wechat.getStoreid() != null){
+    		System.out.println("gvsdbbbbbbbbbbbbbbbbbbbbbbbbbbbbb======="
+					+ "++++++++++++++++++++++++++++++");
+    		if(StringUtil.isNotBlank(wechat.getStoreid())){
+    			System.out.println("fdaskas======="
+    					+ "++++++++++++++++++++++++++++++");
+    			if(param.getType()==4){
+    				System.out.println("fdaskas==================");
+    				return -1;//所有属于店铺的员工或者店主，不能加yu
+    			}
     			store = spStoreMapper.selectByPrimaryKey(wechat.getStoreid());
-    		}else if(wechat.getUserid()!=null){
+    		}else if(StringUtil.isNotBlank(wechat.getUserid())){
     			user = spUserMapper.selectByPrimaryKey(wechat.getUserid());
     		}
-    		
     		if(StringUtil.isNotBlank(wechat.getUserid())&&(param.getType()==2||param.getType()==3)){
     			enableBeSupplier =false;
     			enableBeFriend =false;
-    		}else if(StringUtil.isNotBlank(wechat.getEmpid()) &&(param.getType()==2||param.getType()==3||param.getType()==1)){
+    		}
+    		if((StringUtil.isNotBlank(wechat.getEmpid())||(StringUtil.isBlank(wechat.getEmpid())&&param.getStoreId().equals(wechat.getStoreid()))) &&(param.getType()==2||param.getType()==3||param.getType()==1)){
     			enableBeCustomer =false;
     			enableBeSupplier =false;
     			enableBeFriend =false;
     		}
+    		
     	}
     	System.out.println("enableBeCustomer:"+enableBeCustomer+",enableBeSupplier:"+enableBeCustomer+",enableBeFriend:"+enableBeFriend+"," );
     	 /**
@@ -239,7 +266,7 @@ public class WeChatServiceImpl implements WeChatService {
     	 * 控制店员不能加客户/供应商、朋友
     	 * 控制普通消费者不能加 供应商、朋友
     	 * */
-    	if(param != null&&param.getStoreId()!=null){
+    	if(param != null&&StringUtil.isNotBlank(param.getStoreId())){
     		if((param.getType()==1&&enableBeCustomer)
     				||(param.getType()==2&&enableBeSupplier)
     				||(param.getType()==3&&enableBeFriend)){
@@ -428,5 +455,23 @@ public class WeChatServiceImpl implements WeChatService {
 		}
 		
 		
+	}
+	
+	public static void main(String[] args) throws Exception {
+		String APP_ID="wx223537d8341fd657";//微信公众号测试号
+		String APP_SECRET="11f146a95fdf222f899cd385615061f4";
+//		String APP_ID="wx763d2ab0aa1a1bc5";//微信公众号 正式
+//		String APP_SECRET="65bc54299a5a43c632ab3f3a0da7e26d";
+		String url1 ="https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid="+APP_ID+"&secret="+APP_SECRET;
+		String chat = costumetrade.common.util.HttpClientUtils.get(url1, "utf-8");
+		JSONObject json = JSON.parseObject(chat);
+
+		String url = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token="+json.getString("access_token");
+		String param ="{'action_name': 'QR_LIMIT_STR_SCENE', 'action_info': {'scene': {'scene_str': '"+1234+"'}}}";//
+		JSONObject jsonObject = HttpPostUtil.sendHTTPSPostRequestJSON(url, JSONObject.parseObject(param));
+		
+		String ticketUrl ="https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket="+jsonObject.getString("ticket");
+		System.out.println(ticketUrl);
+	
 	}
 }

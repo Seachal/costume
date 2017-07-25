@@ -66,4 +66,6 @@ public interface SpClientService {
 	public List<ProductQuery> clientReplenishment(OrderQuery query);
 	
 	public List<String> getIds(SpClient spClient);
+	
+	public Integer getFansCount(String storeId);
 }

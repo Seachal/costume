@@ -377,6 +377,13 @@ public class SpOrderServiceImpl implements SpOrderService{
 		spStoOrder.setSellerstoreid(param.getSellerstoreid());
 		spStoOrder.setBuyerstoreid(param.getBuyerstoreid());
 		spStoOrder.setPayorderno(param.getOrderNo());
+		
+		SsStoOrder order = new SsStoOrder();
+		List<SsStoOrder> stos =  ssStoOrderMapper.selectByOrderStore(spStoOrder, null);
+		if(stos!=null&&stos.size()>0){
+			order = stos.get(0);
+		}
+		
 		spStoOrder.setOrderstatus(param.getOperate());
 		
 		/**审核配货逻辑整理：
@@ -402,6 +409,27 @@ public class SpOrderServiceImpl implements SpOrderService{
 			boolean o = orderCancellation(param);
 			if(!o){
 				return 3;
+			}
+		}
+		//设置欠款金额
+		if(param.getOperate() == 2 ){
+			if(param.getPayable()!=null&&StringUtil.isNotBlank(order.getPayorderno())){
+				if(param.getPayStatus()==1){
+					spStoOrder.setPaycost1(param.getPayable());
+					spStoOrder.setDebetamt(order.getTotalamt().subtract(param.getPayable()));
+				}else if(param.getPayStatus()==2){
+					spStoOrder.setPaycost1(BigDecimal.ZERO);
+					spStoOrder.setDebetamt(param.getPayable());
+				}
+				if(order.getDebetamt().compareTo(BigDecimal.ZERO)==0){
+					spStoOrder.setDebetamt(order.getTotalamt().subtract(param.getPayable()));
+				}else{
+					spStoOrder.setDebetamt(order.getDebetamt().subtract(param.getPayable()));
+					spStoOrder.setPaycost1(order.getPaycost1().add(param.getPayable()));
+				}
+			}
+			if(StringUtil.isBlank(order.getPaycate1())){
+				spStoOrder.setPaycate1(param.getPaycate1());
 			}
 		}
 		operate = ssStoOrderMapper.updateByPrimaryKeySelectiveStore(spStoOrder);
